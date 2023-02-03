@@ -8,8 +8,8 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class BlogCategoryRelationship
     {
-        public string BlogID { get; set; }
-        public string BlogCategoryID { get; set; } // İkisi composite key olacak
+        public Guid BlogID { get; set; }
+        public Guid BlogCategoryID { get; set; } // İkisi composite key olarak ayarlandı.
 
         public Blog Blog { get; set; }
         public BlogCategory BlogCategory { get; set; }
