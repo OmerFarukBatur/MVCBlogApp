@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Domain.Entities.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVCBlogApp.Domain.Entities
 {
@@ -6,6 +7,11 @@ namespace MVCBlogApp.Domain.Entities
     {
         public string CategoryName { get; set; }
         public string CategoryDescription { get; set; }
-        public virtual ICollection<BlogCategoryRelationship> Blogs { get; set; }
+        public int StatusID { get; set; }
+        public int LangID { get; set; }
+
+       
+        public virtual Status Status { get; set; }
+        public virtual IList<X_BlogCategory> X_BlogCategory { get; set; }
     }
 }
