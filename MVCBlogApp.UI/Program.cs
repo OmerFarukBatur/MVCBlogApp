@@ -1,10 +1,12 @@
 using MVCBlogApp.Persistence;
+using MVCBlogApp.Persistence.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPersistenceServices();
+
 
 var app = builder.Build();
 

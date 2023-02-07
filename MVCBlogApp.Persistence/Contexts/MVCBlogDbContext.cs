@@ -12,6 +12,7 @@ namespace MVCBlogApp.Persistence.Contexts
 
         }
 
+        #region DbSet
         public DbSet<User> User { get; set; }
         public DbSet<Auth> Auth { get; set; }
         public DbSet<Status> Status { get; set; }
@@ -112,6 +113,8 @@ namespace MVCBlogApp.Persistence.Contexts
         public DbSet<_Examination> _Examination { get; set; }
         public DbSet<Lab> Lab { get; set; }
         public DbSet<SLeftNavigation> SLeftNavigation { get; set; }
+        #endregion
+
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
