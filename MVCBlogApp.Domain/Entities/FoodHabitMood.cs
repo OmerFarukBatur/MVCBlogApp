@@ -11,6 +11,5 @@ namespace MVCBlogApp.Domain.Entities
         public bool? Happy { get; set; }
         public bool? All { get; set; }
         public virtual MembersInformation MembersInformation { get; set; }
-
     }
 }

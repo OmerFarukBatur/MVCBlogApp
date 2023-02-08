@@ -4,10 +4,9 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class MembersAuth : BaseEntity
     {
-       public string MembersAuthName { get; set; }
+        public string MembersAuthName { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual IList<Members> Members { get; set; }
-
-
     }
 }

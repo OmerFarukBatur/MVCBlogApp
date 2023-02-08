@@ -13,6 +13,5 @@ namespace MVCBlogApp.Domain.Entities
         public DateTime BirtDate { get; set; }
 
         public virtual Members Members { get; set; }
-
     }
 }

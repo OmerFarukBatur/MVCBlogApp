@@ -5,6 +5,8 @@ namespace MVCBlogApp.Domain.Entities
     public class Languages : BaseEntity
     {
         public string Language { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual IList<Navigation> Navigation { get; set; }
         public virtual IList<TaylanK> TaylanK { get; set; }
@@ -18,6 +20,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual IList<Banner> Banner { get; set; }
         public virtual IList<Carousel> Carousel { get; set; }
         public virtual IList<Video> Video { get; set; }
-
     }
 }

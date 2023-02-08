@@ -12,6 +12,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual Languages Languages { get; set; }
         public virtual IList<WorkshopCategory> WorkshopCategory { get; set; }
         public virtual IList<Workshop> Workshop { get; set; }
-
     }
 }

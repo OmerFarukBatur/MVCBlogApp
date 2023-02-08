@@ -18,6 +18,7 @@ namespace MVCBlogApp.Domain.Entities
         public int WSEducationID { get; set; }
         public int WSTypeID { get; set; }
 
+        public DateTime CreateDate { get; set; }
         public int CreateUserID { get; set; }
         public int StatusID { get; set; }
 

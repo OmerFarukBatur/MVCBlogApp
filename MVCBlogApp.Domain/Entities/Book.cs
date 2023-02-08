@@ -5,7 +5,6 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class Book : BaseEntity
     {
-        
         public string BookName { get; set; }
         public int? PublicationYear { get; set; }
         public string UrlRoot { get; set; }
@@ -14,6 +13,7 @@ namespace MVCBlogApp.Domain.Entities
         public string Controller { get; set; }
         public string Action { get; set; }
         public int? CreateUserID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? StatusID { get; set; }
         public bool IsMainPage { get; set; }
         public int? Orders { get; set; }

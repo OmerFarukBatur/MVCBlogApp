@@ -5,7 +5,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class Event : BaseEntity
     {
-       [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -14,7 +14,7 @@ namespace MVCBlogApp.Domain.Entities
         public DateTime StartDatetime { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
-        //[Remote(action: "ValidateDates", controller: "Calendar", areaName:"Yonetim", AdditionalFields = nameof(StartDatetime), ErrorMessage = "Bu Tarih Aralığı Uygun Değil")]
+        //[Remote(action: "ValidateDates", controller: "Calendar", areaName: "Yonetim", AdditionalFields = nameof(StartDatetime), ErrorMessage = "Bu Tarih Aralığı Uygun Değil")]
         public DateTime FinishDatetime { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
@@ -22,8 +22,8 @@ namespace MVCBlogApp.Domain.Entities
 
         public int CreateUserID { get; set; }
         public int StatusID { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         public virtual EventCategory EventCategory { get; set; }
-
     }
 }

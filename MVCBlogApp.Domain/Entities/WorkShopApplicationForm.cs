@@ -7,7 +7,7 @@ namespace MVCBlogApp.Domain.Entities
     {
         public int WorkShopID { get; set; }
 
-        [Display(Name ="Adı Soyadı")]
+        [Display(Name = "Adı Soyadı")]
         public string NameSurname { get; set; }
         [Display(Name = "Mail Adresi")]
         public string Email { get; set; }
@@ -39,13 +39,9 @@ namespace MVCBlogApp.Domain.Entities
 
         [Display(Name = "Onay Verildi mi?")]
         public bool IsApprove { get; set; }
+        public DateTime CreateDateTime { get; set; }
 
         public virtual HearAboutUS HearAboutUS { get; set; }
         public virtual Workshop Workshop { get; set; }
-
-       
-
-
-
     }
 }

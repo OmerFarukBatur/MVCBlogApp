@@ -16,6 +16,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual IList<FixMealSize> FixMealSizes { get; set; }
         public virtual IList<FixOptimum> FixOptimums { get; set; }
         public virtual IList<FixPulse> FixPulses { get; set; }
-
     }
 }

@@ -9,6 +9,7 @@ namespace MVCBlogApp.Domain.Entities
         public string MetaDescription { get; set; }
         public string CategoryName { get; set; }
         public int? ParentID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? CreateUserID { get; set; }
         public int? StatusID { get; set; }
         public int? LangID { get; set; }

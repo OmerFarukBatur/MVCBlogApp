@@ -17,7 +17,9 @@ namespace MVCBlogApp.Domain.Entities
         public int? Orders { get; set; }
         public string CoverImgUrl { get; set; }
         public DateTime? ArticleDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? CreateUserID { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public int? UpdateUserID { get; set; }
         public int? NavigationID { get; set; }
         public int? StatusID { get; set; }
@@ -31,7 +33,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual Languages Languages { get; set; }
         public virtual Status Status { get; set; }
         public virtual ArticleCategory ArticleCategory { get; set; }
-
-       
     }
 }

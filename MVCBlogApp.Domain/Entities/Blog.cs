@@ -14,8 +14,10 @@ namespace MVCBlogApp.Domain.Entities
         public string Contents { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public int? CreateUserID { get; set; }        
-        public int? UpdateUserID { get; set; }        
+        public int? CreateUserID { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public int? UpdateUserID { get; set; }
+        public DateTime? UpdateDate { get; set; }
         public int? LangID { get; set; }
         public int? StatusID { get; set; }
         public int? BlogCategoryID { get; set; }
@@ -29,14 +31,11 @@ namespace MVCBlogApp.Domain.Entities
         public bool? IsNewsComponent { get; set; }
 
         public virtual Status Status { get; set; }
-      
+
         public virtual Languages Languages { get; set; }
         public virtual IList<X_BlogCategory> X_BlogCategory { get; set; }
         public virtual IList<ImageBlog> ImageBlog { get; set; }
         public virtual User User { get; set; }
         public virtual BlogType BlogType { get; set; }
-
-
-
     }
 }

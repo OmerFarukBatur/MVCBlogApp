@@ -35,6 +35,8 @@ namespace MVCBlogApp.Domain.Entities
         public string GetDrugged { get; set; }
         public string DoYouUseVitaminAndMinerals { get; set; }
         public string OtherMessage { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         public virtual IList<FoodHabitMood> FoodHabitsMoods { get; set; }
         public virtual IList<AllergyProducingFoods> AllergyProducingFoods { get; set; }
@@ -45,6 +47,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual IList<DiseasesDiabetes> DiseasesDiabetes { get; set; }
         public virtual IList<DiseasesDigestiveDisorders> DiseasesDigestiveDisorders { get; set; }
         public virtual IList<DiseasesFamilyMembers> DiseasesFamilyMembers { get; set; }
-
     }
 }

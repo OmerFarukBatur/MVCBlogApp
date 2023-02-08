@@ -8,7 +8,5 @@ namespace MVCBlogApp.Domain.Entities
         public string Url { get; set; }
         public int Type { get; set; }
         public int LangID { get; set; }
-       
-
     }
 }

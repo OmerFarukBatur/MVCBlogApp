@@ -13,9 +13,10 @@ namespace MVCBlogApp.Domain.Entities
         public string MetaTitle { get; set; }
         public string MetaKey { get; set; }
         public string MetaDescription { get; set; }
-       
-        
+
+
         public int? StatusID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? LangID { get; set; }
         public string ImageUrl { get; set; }
 

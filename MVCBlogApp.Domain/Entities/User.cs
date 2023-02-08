@@ -5,7 +5,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class User : BaseEntity
     {
-       [Required]
+        [Required]
         public string UserName { get; set; }
 
         [Required]
@@ -16,7 +16,10 @@ namespace MVCBlogApp.Domain.Entities
 
         public int AuthID { get; set; }
 
+        public DateTime CreateDate { get; set; }
         public int? CreateUserID { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime? ModifiedDate { get; set; }
         public int? ModifiedUserID { get; set; }
 
         //İlişkiler

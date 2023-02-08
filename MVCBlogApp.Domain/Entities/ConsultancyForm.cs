@@ -5,7 +5,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class ConsultancyForm : BaseEntity
     {
-        [Display(Name ="Tip")]
+        [Display(Name = "Tip")]
         public int ConsultancyFormTypeID { get; set; }
         [Display(Name = "Adı Soyadı")]
         public string NameSurname { get; set; }
@@ -20,7 +20,8 @@ namespace MVCBlogApp.Domain.Entities
         [Display(Name = "Tip")]
         public int StatusID { get; set; }
 
-        public virtual ConsultancyFormType ConsultancyFormType { get; set; }
+        public DateTime CreateDate { get; set; }
 
+        public virtual ConsultancyFormType ConsultancyFormType { get; set; }
     }
 }

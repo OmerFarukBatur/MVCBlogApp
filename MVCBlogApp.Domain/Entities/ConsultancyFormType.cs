@@ -7,7 +7,5 @@ namespace MVCBlogApp.Domain.Entities
         public string ConsultancyFormTypeName { get; set; }
 
         public virtual IList<ConsultancyForm> ConsultancyForm { get; set; }
-
-
     }
 }

@@ -116,22 +116,22 @@ namespace MVCBlogApp.Persistence.Contexts
         #endregion
 
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            //ChangeTracker: Entityler üzerinden yapılan değişiklikleri ya da yeni eklenen verinin yakalanmasını sağlayan propertdir. Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
-            var datas = ChangeTracker
-                .Entries<BaseEntity>();
-            foreach (var data in datas)
-            {
-                _ = data.State switch
-                {
-                    EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
-                    EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow,
-                    _ => DateTime.UtcNow
-                };
-            }
-            return await base.SaveChangesAsync(cancellationToken);
-        }
+        //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    //ChangeTracker: Entityler üzerinden yapılan değişiklikleri ya da yeni eklenen verinin yakalanmasını sağlayan propertdir. Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
+        //    var datas = ChangeTracker
+        //        .Entries<BaseEntity>();
+        //    foreach (var data in datas)
+        //    {
+        //        _ = data.State switch
+        //        {
+        //            EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
+        //            EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow,
+        //            _ => DateTime.UtcNow
+        //        };
+        //    }
+        //    return await base.SaveChangesAsync(cancellationToken);
+        //}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

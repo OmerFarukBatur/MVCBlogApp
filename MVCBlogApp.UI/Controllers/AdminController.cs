@@ -24,7 +24,7 @@ namespace MVCBlogApp.UI.Controllers
             
             //_context.Genders.Add(genders);
             //_context.SaveChanges();
-            var a = await _context.Genders.FirstOrDefaultAsync();
+            //var a = await _context.Genders.FirstOrDefaultAsync();
             
             return View();
         }

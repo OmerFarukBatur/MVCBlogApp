@@ -11,6 +11,7 @@ namespace MVCBlogApp.Domain.Entities
         public string Description { get; set; }
         public bool? IsRead { get; set; }
         public int? StatusID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public virtual Status Status { get; set; }
         public int? ContactCategoryID { get; set; }
 

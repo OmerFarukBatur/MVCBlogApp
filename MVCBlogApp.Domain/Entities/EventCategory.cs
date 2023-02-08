@@ -8,6 +8,5 @@ namespace MVCBlogApp.Domain.Entities
         public string EventClassName { get; set; }
 
         public virtual IList<Event> Event { get; set; }
-
     }
 }

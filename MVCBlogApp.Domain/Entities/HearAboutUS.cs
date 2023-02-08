@@ -8,7 +8,5 @@ namespace MVCBlogApp.Domain.Entities
         public int LangID { get; set; }
 
         public virtual IList<WorkShopApplicationForm> WorkShopApplicationForm { get; set; }
-    }
-
-    
+    }    
 }

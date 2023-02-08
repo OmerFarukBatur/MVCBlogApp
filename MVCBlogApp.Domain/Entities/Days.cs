@@ -7,6 +7,5 @@ namespace MVCBlogApp.Domain.Entities
         public string DayName { get; set; }
 
         public virtual IList<_DaysMeal> _DaysMeal { get; set; }
-
     }
 }

@@ -16,13 +16,13 @@ namespace MVCBlogApp.Domain.Entities
         public string Controller { get; set; }
         public string Action { get; set; }
         public string FontAwesomeIcon { get; set; }
+        public bool IsActive { get; set; }
         public int LangID { get; set; }
         public int Type { get; set; }
         public bool IsAdmin { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         //İlişkiler
         public virtual Languages Languages { get; set; }
-
-
     }
 }

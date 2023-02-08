@@ -14,7 +14,10 @@ namespace MVCBlogApp.Domain.Entities
 
         public int MembersAuthID { get; set; }
 
+        public DateTime? CreateDate { get; set; }
+
         public int? CreateUserID { get; set; }
+        public bool IsActive { get; set; }
 
         //İlişkiler
         public virtual MembersAuth MembersAuth { get; set; }
@@ -22,6 +25,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual IList<D_Appointment> D_Appointment { get; set; }
         public virtual IList<AppointmentDetail> AppointmentDetail { get; set; }
         public virtual IList<Lab> Lab { get; set; }
-
     }
 }

@@ -7,6 +7,5 @@ namespace MVCBlogApp.Domain.Entities
         public decimal IntervalMin { get; set; }
         public decimal IntervalMax { get; set; }
         public string IntervalDescription { get; set; }
-
     }
 }

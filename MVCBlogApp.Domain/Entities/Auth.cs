@@ -7,7 +7,6 @@ namespace MVCBlogApp.Domain.Entities
     {
         public string AuthName { get; set; }
 
-
         //İlişkiler
         public virtual IList<User> User { get; set; }
     }

@@ -13,13 +13,12 @@ namespace MVCBlogApp.Domain.Entities
         public int Interval { get; set; }
         public bool IsCompleted { get; set; }
         public int UserID { get; set; }
+        public DateTime CreateDate { get; set; }
         public int CreateUserID { get; set; }
         public int StatusID { get; set; }
 
         public virtual IList<AppointmentDetail> AppointmentDetail { get; set; }
         public virtual Members Members { get; set; }
         public virtual User User { get; set; }
-       
-
     }
 }

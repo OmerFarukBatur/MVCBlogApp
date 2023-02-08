@@ -25,6 +25,7 @@ namespace MVCBlogApp.Domain.Entities
         public string Metakey { get; set; }
         public string Metatitle { get; set; }
         public string Metadescription { get; set; }
+        public string CreateDate { get; set; }
         public int UserID { get; set; }
 
         public int LangID { get; set; }
@@ -32,8 +33,5 @@ namespace MVCBlogApp.Domain.Entities
         public virtual User User { get; set; }
         public virtual Languages Languages { get; set; }
         public virtual Status Status { get; set; }
-
-
-
     }
 }

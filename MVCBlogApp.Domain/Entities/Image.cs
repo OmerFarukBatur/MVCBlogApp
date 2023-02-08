@@ -8,6 +8,7 @@ namespace MVCBlogApp.Domain.Entities
         public string ImageUrl { get; set; }
         public bool IsCover { get; set; }
         public int? CreateUserID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? StatusID { get; set; }
         public virtual Status Status { get; set; }
     }

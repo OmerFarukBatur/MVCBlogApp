@@ -11,5 +11,6 @@ namespace MVCBlogApp.Domain.Entities
         public string CompanySector { get; set; }
         public string Message { get; set; }
         public int StatusID { get; set; }
+        public DateTime CreateDatetime { get; set; }
     }
 }

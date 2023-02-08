@@ -9,8 +9,5 @@ namespace MVCBlogApp.Domain.Entities
         public string ImgName { get; set; }
         public string ImgUrl { get; set; }
         public int StatusID { get; set; }
-
-        
-
     }
 }

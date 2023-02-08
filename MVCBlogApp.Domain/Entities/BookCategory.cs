@@ -6,6 +6,7 @@ namespace MVCBlogApp.Domain.Entities
     {
         public string CategoryName { get; set; }
         public int? CreateUserID { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? StatusID { get; set; }
         public virtual IList<X_BookCategory> X_BookCategories { get; set; }
         public virtual Status Status { get; set; }
