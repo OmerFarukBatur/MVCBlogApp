@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
+using MVCBlogApp.Application.Features.Queries.Home.Login;
 using MVCBlogApp.UI.Models;
 using System.Diagnostics;
 
@@ -31,6 +32,18 @@ namespace MVCBlogApp.UI.Controllers
         {
             CreateUserCommandResponse response = await _mediator.Send(request);
             return View(response);
+        }
+
+        //[HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginQueryRequest request)
+        {
+            LoginQueryResponse response = await _mediator.Send(request);
+            return Ok();
         }
 
         public IActionResult Privacy()
