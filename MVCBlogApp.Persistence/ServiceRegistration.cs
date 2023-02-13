@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Repositories._DaysMeal;
 using MVCBlogApp.Application.Repositories._Examination;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
@@ -177,6 +178,7 @@ using MVCBlogApp.Persistence.Repositories.WorkshopEducation;
 using MVCBlogApp.Persistence.Repositories.WorkshopType;
 using MVCBlogApp.Persistence.Repositories.X_BlogCategory;
 using MVCBlogApp.Persistence.Repositories.X_BookCategory;
+using MVCBlogApp.Persistence.Services;
 
 namespace MVCBlogApp.Persistence
 {
@@ -459,7 +461,7 @@ namespace MVCBlogApp.Persistence
             #endregion
 
             #region Services
-
+            services.AddScoped<IAuthService,AuthService>();
             #endregion
 
             // Identity mekanizması için gerekli tablo eklenmesi

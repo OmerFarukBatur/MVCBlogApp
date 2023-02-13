@@ -1,11 +1,12 @@
+using MVCBlogApp.Application;
 using MVCBlogApp.Persistence;
-using MVCBlogApp.Persistence.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPersistenceServices();
+builder.Services.AddApplicationServices();
 
 
 var app = builder.Build();
@@ -27,6 +28,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Admin}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

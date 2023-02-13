@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
 using MVCBlogApp.UI.Models;
 using System.Diagnostics;
 
@@ -8,14 +10,27 @@ namespace MVCBlogApp.UI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        private readonly IMediator _mediator;
+        
+
+        public HomeController(ILogger<HomeController> logger,IMediator mediator)
         {
+            _mediator = mediator;
             _logger = logger;
         }
 
+
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(CreateUserCommandRequest request)
+        {
+            CreateUserCommandResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         public IActionResult Privacy()

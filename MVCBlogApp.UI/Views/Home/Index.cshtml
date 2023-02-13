@@ -1,8 +1,45 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="login-form-bg h-100">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-xl-6">
+                <div class="form-input-content">
+                    <div class="card login-form mb-0">
+                        <div class="card-body pt-5">
+
+                            <a class="text-center" href="index.html"> <h4>Kayıt Ol</h4></a>
+
+                            <form class="mt-5 mb-5 login-input" asp-controller="Home" asp-action="Index" method="post">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Ad" name="name" maxlength="50" min="2" required>
+                                </div>
+                                 <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Soyad" name="surname" maxlength="50" min="2" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Şifre" name="password" min="6" required>
+                                </div>
+                                <button class="btn login-form__btn submit w-100" type="submit">Kayıt Ol</button>
+                            </form>
+                            <p class="mt-5 login-form__footer">Hesabın varsa şimdi <a href="page-login.html" class="text-primary">Giriş Yap </a></p>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/javascript">
+    if(@Model =! null){
+        alert(@Model);
+    }
+    
+</script>
