@@ -34,7 +34,7 @@ namespace MVCBlogApp.UI.Controllers
             return View(response);
         }
 
-        //[HttpGet]
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
