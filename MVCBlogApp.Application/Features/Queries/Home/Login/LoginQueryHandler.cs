@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,16 @@ namespace MVCBlogApp.Application.Features.Queries.Home.Login
 {
     public class LoginQueryHandler : IRequestHandler<LoginQueryRequest, LoginQueryResponse>
     {
-        public Task<LoginQueryResponse> Handle(LoginQueryRequest request, CancellationToken cancellationToken)
+        private readonly IAuthService _authService;
+
+        public LoginQueryHandler(IAuthService authService)
         {
-            throw new NotImplementedException();
+            _authService = authService;
+        }
+
+        public async Task<LoginQueryResponse> Handle(LoginQueryRequest request, CancellationToken cancellationToken)
+        {
+           return await _authService.Login(request);
         }
     }
 }

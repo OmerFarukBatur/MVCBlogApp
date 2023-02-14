@@ -26,7 +26,8 @@ namespace MVCBlogApp.Application.Features.Commands.Home.CreateUser
             {
                 return new CreateUserCommandResponse() 
                 { 
-                    Message = "Girilen bilgiler geçerli değil lüften tekrardan gerekli alanları doldurunuz."
+                    Message = "Girilen bilgiler geçerli değil lüften tekrardan gerekli alanları doldurunuz.",
+                    StatusCode = false
                 };
             }
             

@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
+using MVCBlogApp.Application.Features.Queries.Home.Login;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -18,12 +16,14 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersReadRepository _membersReadRepository;
         private readonly IMembersWriteRepository _membersWriteRepository;
         private readonly IMembersAuthReadRepository _membersAuthReadRepository;
+        private readonly IUserReadRepository _userReadRepository;
 
-        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository)
+        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository, IUserReadRepository userReadRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersWriteRepository = membersWriteRepository;
             _membersAuthReadRepository = membersAuthReadRepository;
+            _userReadRepository = userReadRepository;
         }
 
         public (byte[] passwordSalt, byte[] passwordHash) CreatePasswordHash(string password)
@@ -34,9 +34,26 @@ namespace MVCBlogApp.Persistence.Services
             {
                 passwordSalt = hmac.Key,
                 passwordHash = hmac.ComputeHash(Encoding.UTF32.GetBytes(password))
-            };            
+            };
         }
 
+        public bool VerifyPasswordHash(string Password, byte[] userpasswordHash, byte[] userpasswordSalt)
+        {
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(userpasswordSalt))
+            {
+                var ComputeHash = hmac.ComputeHash(Encoding.UTF32.GetBytes(Password));
+                for (int i = 0; i < ComputeHash.Length; i++)
+                {
+                    if (ComputeHash[i] != userpasswordHash[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+
+            }
+        }
         public async Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request)
         {
             var member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email).ToListAsync();
@@ -45,7 +62,8 @@ namespace MVCBlogApp.Persistence.Services
             {
                 return new CreateUserCommandResponse()
                 {
-                    Message = "Bu bilgilere sahip bir kullanıcı bulunmaktadır."
+                    Message = "Bu bilgilere sahip bir kullanıcı bulunmaktadır.",
+                    StatusCode = false
                 };
             }
             else
@@ -57,9 +75,9 @@ namespace MVCBlogApp.Persistence.Services
 
 
                 (byte[] passwordSalt, byte[] passwordHash) = CreatePasswordHash(request.Password);
-                Members newmember = new() 
-                { 
-                    NameSurname= request.Name.Trim().ToUpper() + request.Surname.Trim().ToUpper(),
+                Members newmember = new()
+                {
+                    NameSurname = request.Name.Trim().ToUpper() + request.Surname.Trim().ToUpper(),
                     EMail = request.Email,
                     CreateDate = DateTime.Now,
                     PasswordSalt = passwordSalt,
@@ -76,10 +94,57 @@ namespace MVCBlogApp.Persistence.Services
 
                 await _membersWriteRepository.AddAsync(newmember);
                 await _membersWriteRepository.SaveAsync();
-                
-                return new CreateUserCommandResponse() 
+
+                return new CreateUserCommandResponse()
+                {
+                    Message = "Kullanıcı başarıyla kayıt edilmiştir.",
+                    StatusCode = true
+                };
+            }
+        }
+
+        public async Task<LoginQueryResponse> Login(LoginQueryRequest request)
+        {
+            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email).Include(s => s.MembersAuth).FirstOrDefaultAsync();
+            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email).Include(s => s.Auth).FirstOrDefaultAsync();
+
+            if (member != null)
+            {
+                if (VerifyPasswordHash(request.Password, member.PasswordHash, member.PasswordSalt))
+                {
+                    return new LoginQueryResponse()
+                    {
+                        Email = member.EMail,
+                        Id = member.ID,
+                        Role = member.MembersAuth != null ? member.MembersAuth.MembersAuthName : null
+                    };
+                }
+                return new LoginQueryResponse() 
                 { 
-                    Message= "Kullanıcı başarıyla kayıt edilmiştir." 
+                    Message = "Girilen Şifre veya Email Yanlış" 
+                };
+            }
+            else if (user != null)
+            {
+                if (VerifyPasswordHash(request.Password, member.PasswordHash, member.PasswordSalt))
+                {
+                    return new LoginQueryResponse()
+                    {
+                        Email = user.Email,
+                        Id = user.ID,
+                        Role = user.Auth != null ? user.Auth.AuthName : null
+                    };
+                }
+                return new LoginQueryResponse()
+                {
+                    Message = "Girilen Şifre veya Email Yanlış"
+                };
+            }
+            else
+            {
+                return new LoginQueryResponse()
+                {
+                    Message = "Girilen Şifre veya Email Yanlış"
                 };
             }
         }

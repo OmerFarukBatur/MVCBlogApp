@@ -13,14 +13,14 @@
 
                             <a class="text-center" href="index.html"> <h4>Giriş Yap</h4></a>
 
-                            <form class="mt-5 mb-5 login-input">
+                            <form class="mt-5 mb-5 login-input" method="post">
                                 <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Email" required>
+                                    <input type="email" class="form-control" name="email" placeholder="Email" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Password Kayıt olma sayfasına passwordconfirm uygulanacak" required>
+                                    <input type="password" class="form-control" name="password" placeholder="Şifre" required>
                                 </div>
-                                <button class="btn login-form__btn submit w-100">Giriş Yap</button>
+                                <button class="btn login-form__btn submit w-100" type="submit">Giriş Yap</button>
                             </form>
                             <p class="mt-5 login-form__footer">Hesabınız yoksa şimdi <a asp-controller="Home" asp-action="Index" class="text-primary">Kayıt Ol </a> </p>
                             </p>

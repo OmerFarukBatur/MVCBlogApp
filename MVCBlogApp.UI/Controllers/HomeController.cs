@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
 using MVCBlogApp.UI.Models;
+using NuGet.Protocol;
 using System.Diagnostics;
 
 namespace MVCBlogApp.UI.Controllers
@@ -31,7 +32,14 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> Index(CreateUserCommandRequest request)
         {
             CreateUserCommandResponse response = await _mediator.Send(request);
-            return View(response);
+            if (response.StatusCode)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                return View(response);
+            }            
         }
 
         [HttpGet]
@@ -43,7 +51,40 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> Login(LoginQueryRequest request)
         {
             LoginQueryResponse response = await _mediator.Send(request);
-            return Ok();
+            if (response.Id > 0)
+            {
+                HttpContext.Session.SetString("users", response.ToJson());
+                //switch (response.Role)
+                //{
+                //    case "Danışan":
+                //        RedirectToAction("Index", "Admin");
+                //        break;
+                //    case "Admin":
+                //        break;
+                //    case "Moderator":
+                //        break;
+                //    case "Diyetisyen":
+                //        break;
+                //    case "Asistan":
+                //        break;
+                //    default:
+                //        RedirectToAction("Index","Admin");
+                //        break;
+                //}
+                if (response.Role == "Danışan")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+               
+            }
+            else
+            {
+                return RedirectToAction("Login","Home");
+            }            
         }
 
         public IActionResult Privacy()

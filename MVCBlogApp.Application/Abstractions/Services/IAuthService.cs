@@ -1,15 +1,13 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MVCBlogApp.Application.Features.Queries.Home.Login;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
     public interface IAuthService
     {
-        Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request);
         (byte[] passwordSalt, byte[] passwordHash) CreatePasswordHash(string password);
+        bool VerifyPasswordHash(string Password, byte[] userpasswordHash, byte[] userpasswordSalt);
+        Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request);
+        Task<LoginQueryResponse> Login(LoginQueryRequest request);
     }
 }

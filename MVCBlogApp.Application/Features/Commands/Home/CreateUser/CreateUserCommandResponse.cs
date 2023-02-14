@@ -3,5 +3,6 @@
     public class CreateUserCommandResponse
     {
         public string Message { get; set; }
+        public bool StatusCode { get; set; }
     }
 }
