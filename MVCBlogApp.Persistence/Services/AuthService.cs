@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
 using MVCBlogApp.Application.Repositories.Members;
+using MVCBlogApp.Application.Repositories.MembersAuth;
 using MVCBlogApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace MVCBlogApp.Persistence.Services
     {
         private readonly IMembersReadRepository _membersReadRepository;
         private readonly IMembersWriteRepository _membersWriteRepository;
+        private readonly IMembersAuthReadRepository _membersAuthReadRepository;
 
-        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository)
+        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersWriteRepository = membersWriteRepository;
+            _membersAuthReadRepository = membersAuthReadRepository;
         }
 
         public (byte[] passwordSalt, byte[] passwordHash) CreatePasswordHash(string password)
@@ -47,6 +50,12 @@ namespace MVCBlogApp.Persistence.Services
             }
             else
             {
+                var authId = await _membersAuthReadRepository.GetWhere(x => x.IsActive == true).Select(a => new
+                {
+                    a.ID
+                }).FirstOrDefaultAsync();
+
+
                 (byte[] passwordSalt, byte[] passwordHash) = CreatePasswordHash(request.Password);
                 Members newmember = new() 
                 { 
@@ -56,8 +65,15 @@ namespace MVCBlogApp.Persistence.Services
                     PasswordSalt = passwordSalt,
                     PasswordHash = passwordHash,
                     IsActive = true,
-                    MembersAuthID = 1
+                    Phone = request.PhoneNumber
                 };
+
+
+                if (authId != null)
+                {
+                    newmember.MembersAuthID = authId.ID;
+                }
+
                 await _membersWriteRepository.AddAsync(newmember);
                 await _membersWriteRepository.SaveAsync();
                 

@@ -12,18 +12,79 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCBlogApp.Persistence.Migrations
 {
     [DbContext(typeof(MVCBlogDbContext))]
-    [Migration("20230208113512_mig_1")]
-    partial class mig1
+    [Migration("20230214103005_mig_1")]
+    partial class mig_1
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "6.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities._DaysMeal", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("DaysID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DietListID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MealID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TimeInterval")
+                        .HasColumnType("time");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DaysID");
+
+                    b.HasIndex("DietListID");
+
+                    b.HasIndex("MealID");
+
+                    b.ToTable("_DaysMeal");
+                });
+
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities._Examination", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("ExaminationID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LabID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ExaminationID");
+
+                    b.HasIndex("LabID");
+
+                    b.ToTable("_Examination");
+                });
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.AllergyProducingFoods", b =>
                 {
@@ -31,7 +92,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Allergen")
                         .IsRequired()
@@ -61,7 +122,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppointmentID")
                         .HasColumnType("int");
@@ -110,7 +171,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -219,7 +280,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -265,7 +326,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("AuthName")
                         .IsRequired()
@@ -282,7 +343,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("BannerName")
                         .IsRequired()
@@ -321,7 +382,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -425,7 +486,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CategoryDescription")
                         .IsRequired()
@@ -454,7 +515,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("TypeName")
                         .IsRequired()
@@ -471,7 +532,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -536,7 +597,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -558,46 +619,13 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("BookCategory");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.CalcBMI", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameSurname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Result")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Size")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("CalcBMI");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.CalcBmh", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -628,13 +656,46 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("CalcBmh");
                 });
 
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.CalcBMI", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameSurname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Result")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("CalcBMI");
+                });
+
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.CalcOptimum", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -680,7 +741,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -714,7 +775,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -790,7 +851,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CaseName")
                         .IsRequired()
@@ -810,7 +871,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime>("CreateDatetime")
                         .HasColumnType("datetime2");
@@ -846,7 +907,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("ConsultancyFormTypeID")
                         .HasColumnType("int");
@@ -890,7 +951,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("ConsultancyFormTypeName")
                         .IsRequired()
@@ -907,7 +968,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int?>("ContactCategoryID")
                         .IsRequired()
@@ -957,7 +1018,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("ContactCategoryName")
                         .IsRequired()
@@ -977,7 +1038,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
@@ -1029,7 +1090,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Specialties")
                         .IsRequired()
@@ -1046,7 +1107,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("DayName")
                         .IsRequired()
@@ -1063,7 +1124,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppointmentDetailID")
                         .HasColumnType("int");
@@ -1097,7 +1158,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("DiseasesName")
                         .IsRequired()
@@ -1117,7 +1178,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("DiseasesID")
                         .HasColumnType("int");
@@ -1140,7 +1201,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("DiseasesID")
                         .HasColumnType("int");
@@ -1163,7 +1224,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("DiseasesID")
                         .HasColumnType("int");
@@ -1186,7 +1247,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("DiseasesID")
                         .HasColumnType("int");
@@ -1209,7 +1270,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -1251,7 +1312,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("EventCategoryName")
                         .IsRequired()
@@ -1272,7 +1333,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("ExaminationName")
                         .IsRequired()
@@ -1289,7 +1350,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("BreastFeeding")
                         .IsRequired()
@@ -1333,49 +1394,13 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("FemaleMentalState");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBMI", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FormID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImgUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LangID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FormID");
-
-                    b.ToTable("FixBMI");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBmh", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1405,13 +1430,49 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("FixBmh");
                 });
 
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBMI", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FormID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LangID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FormID");
+
+                    b.ToTable("FixBMI");
+                });
+
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixCalorieSch", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1447,7 +1508,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1483,7 +1544,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1519,7 +1580,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1555,7 +1616,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1591,7 +1652,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -1627,7 +1688,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool?>("All")
                         .HasColumnType("bit");
@@ -1660,7 +1721,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Breakfast")
                         .IsRequired()
@@ -1702,7 +1763,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("MembersInformationID")
                         .HasColumnType("int");
@@ -1744,7 +1805,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -1772,7 +1833,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -1792,7 +1853,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("HearAboutUSName")
                         .IsRequired()
@@ -1812,7 +1873,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -1847,7 +1908,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("BlogID")
                         .HasColumnType("int");
@@ -1879,7 +1940,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("CarouselID")
                         .HasColumnType("int");
@@ -1908,7 +1969,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -1951,7 +2012,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AppointmentDetailID")
                         .HasColumnType("int");
@@ -1991,7 +2052,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2014,7 +2075,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -2039,7 +2100,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("MealName")
                         .IsRequired()
@@ -2056,10 +2117,9 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreateDate")
@@ -2076,10 +2136,9 @@ namespace MVCBlogApp.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Lacation")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MembersAuthID")
+                    b.Property<int?>("MembersAuthID")
                         .HasColumnType("int");
 
                     b.Property<string>("NameSurname")
@@ -2111,7 +2170,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2131,7 +2190,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime>("BirtDate")
                         .HasColumnType("datetime2");
@@ -2162,7 +2221,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("Birthdate")
                         .HasColumnType("datetime2");
@@ -2295,7 +2354,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -2366,7 +2425,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2394,7 +2453,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int?>("LangID")
                         .HasColumnType("int");
@@ -2419,7 +2478,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Bio")
                         .IsRequired()
@@ -2462,7 +2521,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2535,7 +2594,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("PressTypeName")
                         .IsRequired()
@@ -2552,7 +2611,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2580,13 +2639,30 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("References");
                 });
 
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.ResultBMh", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Resulttext")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ResultBMh");
+                });
+
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.ResultBMI", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("IntervalDescription")
                         .IsRequired()
@@ -2603,30 +2679,13 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("ResultBMI");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.ResultBMh", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Resulttext")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ResultBMh");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.ResultOptimum", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Result1text")
                         .IsRequired()
@@ -2655,7 +2714,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("ResultMaxText")
                         .IsRequired()
@@ -2670,40 +2729,13 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("ResultPulse");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.SLeftNavigation", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("LangID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("SLeftNavigation");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.SeminarVisuals", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2742,13 +2774,40 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("SeminarVisuals");
                 });
 
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.SLeftNavigation", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<int>("LangID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("SLeftNavigation");
+                });
+
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.Status", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("StatusName")
                         .IsRequired()
@@ -2765,7 +2824,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("About")
                         .IsRequired()
@@ -2870,7 +2929,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("AuthID")
                         .HasColumnType("int");
@@ -2919,7 +2978,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("datetime2");
@@ -2970,7 +3029,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int?>("StatusID")
                         .HasColumnType("int");
@@ -2986,13 +3045,71 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("VideoCategory");
                 });
 
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.Workshop", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreateUserID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FinishDateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("LangID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("StatusID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WSEducationID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WSTypeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LangID");
+
+                    b.HasIndex("WSEducationID");
+
+                    b.HasIndex("WSTypeID");
+
+                    b.ToTable("Workshop");
+                });
+
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.WorkShopApplicationForm", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -3055,64 +3172,6 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.ToTable("WorkShopApplicationForm");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.Workshop", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreateUserID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FinishDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("LangID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("StatusID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WSEducationID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WSTypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("LangID");
-
-                    b.HasIndex("WSEducationID");
-
-                    b.HasIndex("WSTypeID");
-
-                    b.ToTable("Workshop");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.WorkshopCategory", b =>
                 {
                     b.Property<int>("ID")
@@ -3136,7 +3195,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("LangID")
                         .HasColumnType("int");
@@ -3164,7 +3223,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<string>("WSTypeName")
                         .IsRequired()
@@ -3181,7 +3240,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("BlogCategoryID")
                         .HasColumnType("int");
@@ -3204,7 +3263,7 @@ namespace MVCBlogApp.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
                     b.Property<int>("BookCategoryID")
                         .HasColumnType("int");
@@ -3223,64 +3282,48 @@ namespace MVCBlogApp.Persistence.Migrations
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities._DaysMeal", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("MVCBlogApp.Domain.Entities.Days", "Days")
+                        .WithMany("_DaysMeal")
+                        .HasForeignKey("DaysID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.HasOne("MVCBlogApp.Domain.Entities.DietList", "DietList")
+                        .WithMany("_DaysMeal")
+                        .HasForeignKey("DietListID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Property<int>("DaysID")
-                        .HasColumnType("int");
+                    b.HasOne("MVCBlogApp.Domain.Entities.Meal", "Meal")
+                        .WithMany("_DaysMeal")
+                        .HasForeignKey("MealID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Navigation("Days");
 
-                    b.Property<int>("DietListID")
-                        .HasColumnType("int");
+                    b.Navigation("DietList");
 
-                    b.Property<int>("MealID")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("TimeInterval")
-                        .HasColumnType("time");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("DaysID");
-
-                    b.HasIndex("DietListID");
-
-                    b.HasIndex("MealID");
-
-                    b.ToTable("_DaysMeal");
+                    b.Navigation("Meal");
                 });
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities._Examination", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("MVCBlogApp.Domain.Entities.Examination", "Examination")
+                        .WithMany("_Examination")
+                        .HasForeignKey("ExaminationID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.HasOne("MVCBlogApp.Domain.Entities.Lab", "Lab")
+                        .WithMany("_Examination")
+                        .HasForeignKey("LabID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Property<int>("ExaminationID")
-                        .HasColumnType("int");
+                    b.Navigation("Examination");
 
-                    b.Property<int>("LabID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ExaminationID");
-
-                    b.HasIndex("LabID");
-
-                    b.ToTable("_Examination");
+                    b.Navigation("Lab");
                 });
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.AllergyProducingFoods", b =>
@@ -3620,10 +3663,10 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.Navigation("MembersInformation");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBMI", b =>
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBmh", b =>
                 {
                     b.HasOne("MVCBlogApp.Domain.Entities.Form", "Form")
-                        .WithMany("FixBMIs")
+                        .WithMany("FixBmhs")
                         .HasForeignKey("FormID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3631,10 +3674,10 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.Navigation("Form");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBmh", b =>
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.FixBMI", b =>
                 {
                     b.HasOne("MVCBlogApp.Domain.Entities.Form", "Form")
-                        .WithMany("FixBmhs")
+                        .WithMany("FixBMIs")
                         .HasForeignKey("FormID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -3795,8 +3838,7 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.HasOne("MVCBlogApp.Domain.Entities.MembersAuth", "MembersAuth")
                         .WithMany("Members")
                         .HasForeignKey("MembersAuthID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("MembersAuth");
                 });
@@ -3978,25 +4020,6 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities.WorkShopApplicationForm", b =>
-                {
-                    b.HasOne("MVCBlogApp.Domain.Entities.HearAboutUS", "HearAboutUS")
-                        .WithMany("WorkShopApplicationForm")
-                        .HasForeignKey("HearAboutusID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MVCBlogApp.Domain.Entities.Workshop", "Workshop")
-                        .WithMany("WorkShopApplicationForm")
-                        .HasForeignKey("WorkShopID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("HearAboutUS");
-
-                    b.Navigation("Workshop");
-                });
-
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.Workshop", b =>
                 {
                     b.HasOne("MVCBlogApp.Domain.Entities.Languages", "Languages")
@@ -4022,6 +4045,25 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.Navigation("WorkshopEducation");
 
                     b.Navigation("WorkshopType");
+                });
+
+            modelBuilder.Entity("MVCBlogApp.Domain.Entities.WorkShopApplicationForm", b =>
+                {
+                    b.HasOne("MVCBlogApp.Domain.Entities.HearAboutUS", "HearAboutUS")
+                        .WithMany("WorkShopApplicationForm")
+                        .HasForeignKey("HearAboutusID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MVCBlogApp.Domain.Entities.Workshop", "Workshop")
+                        .WithMany("WorkShopApplicationForm")
+                        .HasForeignKey("WorkShopID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HearAboutUS");
+
+                    b.Navigation("Workshop");
                 });
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.WorkshopCategory", b =>
@@ -4082,52 +4124,6 @@ namespace MVCBlogApp.Persistence.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("BookCategory");
-                });
-
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities._DaysMeal", b =>
-                {
-                    b.HasOne("MVCBlogApp.Domain.Entities.Days", "Days")
-                        .WithMany("_DaysMeal")
-                        .HasForeignKey("DaysID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MVCBlogApp.Domain.Entities.DietList", "DietList")
-                        .WithMany("_DaysMeal")
-                        .HasForeignKey("DietListID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MVCBlogApp.Domain.Entities.Meal", "Meal")
-                        .WithMany("_DaysMeal")
-                        .HasForeignKey("MealID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Days");
-
-                    b.Navigation("DietList");
-
-                    b.Navigation("Meal");
-                });
-
-            modelBuilder.Entity("MVCBlogApp.Domain.Entities._Examination", b =>
-                {
-                    b.HasOne("MVCBlogApp.Domain.Entities.Examination", "Examination")
-                        .WithMany("_Examination")
-                        .HasForeignKey("ExaminationID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MVCBlogApp.Domain.Entities.Lab", "Lab")
-                        .WithMany("_Examination")
-                        .HasForeignKey("LabID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Examination");
-
-                    b.Navigation("Lab");
                 });
 
             modelBuilder.Entity("MVCBlogApp.Domain.Entities.AppointmentDetail", b =>

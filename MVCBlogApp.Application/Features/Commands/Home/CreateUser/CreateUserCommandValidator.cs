@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MVCBlogApp.Application.Features.Commands.Home.CreateUser
 {
@@ -29,12 +30,27 @@ namespace MVCBlogApp.Application.Features.Commands.Home.CreateUser
                 .EmailAddress()
                 .WithMessage("Lütfen geçerli bir email adresi giriniz.");
 
+            RuleFor(x => x.PhoneNumber)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen Telefon Numarası'nı boş geçmeyiniz.")
+                .MaximumLength(25)
+                .MinimumLength(10)
+                .WithMessage("Lütfen Telefon Numarasını minimum 10 karakter maksimum 25 karakter olacak şekilde giriniz.");
+
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen Şifre'yi boş geçmeyiniz.")
                 .MinimumLength(6)
                 .WithMessage("Lütfen şifrenizi enaz 6 karakter olacak şekilde giriniz.");
+
+            RuleFor(x => x.PasswordConfirm)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen Şifre'yi boş geçmeyiniz.")
+                .Equal(s => s.Password)
+                .WithMessage("Şifreler Uyuşmuyor.");
         }
     }
 }

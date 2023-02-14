@@ -17,18 +17,24 @@
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="Ad" name="name" maxlength="50" min="2" required>
                                 </div>
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <input type="text" class="form-control" placeholder="Soyad" name="surname" maxlength="50" min="2" required>
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control" placeholder="Email" name="email" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control" placeholder="Şifre" name="password" min="6" required>
+                                    <input type="text" class="form-control" placeholder="Telefon Numarası" name="phoneNumber" maxlength="25" min="10" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Şifre" name="password" id="password" min="6" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Şifre Tekrar" name="passwordConfirm" id="passwordConfirm" min="6" onkeypress="checkPasssword()" required>
                                 </div>
                                 <button class="btn login-form__btn submit w-100" type="submit">Kayıt Ol</button>
                             </form>
-                            <p class="mt-5 login-form__footer">Hesabın varsa şimdi <a asp-controller="Home" asp-action="Login" class="text-primary">Giriş Yap </a></p>                            
+                            <p class="mt-5 login-form__footer">Hesabın varsa şimdi <a asp-controller="Home" asp-action="Login" class="text-primary">Giriş Yap </a></p>
                         </div>
                     </div>
                 </div>
@@ -38,8 +44,17 @@
 </div>
 
 <script type="text/javascript">
-    if(@Model =! null){
+    if (@Model = ! null) {
         alert(@Model);
     }
-    
+
+    function checkPasssword() {
+        var password = document.getElementById('password').value;
+        var confirm = document.getElementById('passwordConfirm').value;
+
+        if (confirm != password) {
+            var field = document.getElementById("passwordConfirm")
+            field.innerHTML = "Şifreler aynı değil!";
+        }
+    }
 </script>

@@ -178,7 +178,8 @@ namespace MVCBlogApp.Persistence.Contexts
             builder.Entity<Members>()
                .HasOne(s => s.MembersAuth)
                .WithMany(u => u.Members)
-               .HasForeignKey(s => s.MembersAuthID);
+               .HasForeignKey(s => s.MembersAuthID)
+               .IsRequired(false);
 
             #endregion
 

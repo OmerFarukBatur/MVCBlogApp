@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MVCBlogApp.Persistence.Migrations
 {
-    /// <inheritdoc />
-    public partial class mig1 : Migration
+    public partial class mig_1 : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -902,9 +900,9 @@ namespace MVCBlogApp.Persistence.Migrations
                     PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lacation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MembersAuthID = table.Column<int>(type: "int", nullable: false),
+                    Lacation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MembersAuthID = table.Column<int>(type: "int", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreateUserID = table.Column<int>(type: "int", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -1805,15 +1803,15 @@ namespace MVCBlogApp.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_X_BookCategory", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_X_BookCategory_BookCategory_BookCategoryID",
-                        column: x => x.BookCategoryID,
-                        principalTable: "BookCategory",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_X_BookCategory_Book_BookID",
                         column: x => x.BookID,
                         principalTable: "Book",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_X_BookCategory_BookCategory_BookCategoryID",
+                        column: x => x.BookCategoryID,
+                        principalTable: "BookCategory",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1965,15 +1963,15 @@ namespace MVCBlogApp.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_X_BlogCategory", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_X_BlogCategory_BlogCategory_BlogCategoryID",
-                        column: x => x.BlogCategoryID,
-                        principalTable: "BlogCategory",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_X_BlogCategory_Blog_BlogID",
                         column: x => x.BlogID,
                         principalTable: "Blog",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_X_BlogCategory_BlogCategory_BlogCategoryID",
+                        column: x => x.BlogCategoryID,
+                        principalTable: "BlogCategory",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -2585,7 +2583,6 @@ namespace MVCBlogApp.Persistence.Migrations
                 column: "BookID");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -2808,16 +2805,16 @@ namespace MVCBlogApp.Persistence.Migrations
                 name: "Workshop");
 
             migrationBuilder.DropTable(
-                name: "BlogCategory");
-
-            migrationBuilder.DropTable(
                 name: "Blog");
 
             migrationBuilder.DropTable(
-                name: "BookCategory");
+                name: "BlogCategory");
 
             migrationBuilder.DropTable(
                 name: "Book");
+
+            migrationBuilder.DropTable(
+                name: "BookCategory");
 
             migrationBuilder.DropTable(
                 name: "AppointmentDetail");

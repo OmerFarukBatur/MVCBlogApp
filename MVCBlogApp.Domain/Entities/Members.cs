@@ -8,11 +8,11 @@ namespace MVCBlogApp.Domain.Entities
         public string EMail { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public string? Phone { get; set; }
+        public string Phone { get; set; }
         public string? Lacation { get; set; }
         public string? Address { get; set; }
 
-        public int MembersAuthID { get; set; }
+        public int? MembersAuthID { get; set; }
 
         public DateTime? CreateDate { get; set; }
 
