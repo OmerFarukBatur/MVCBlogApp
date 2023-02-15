@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{3A344B13-A774-4A0E-9088-15F9E4A0668E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlogApp.Domain", "MVCBlogApp.Domain\MVCBlogApp.Domain.csproj", "{7F2E52F8-ED13-494E-A464-8BD678C4F281}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlogApp.Domain", "MVCBlogApp.Domain\MVCBlogApp.Domain.csproj", "{7F2E52F8-ED13-494E-A464-8BD678C4F281}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlogApp.Application", "MVCBlogApp.Application\MVCBlogApp.Application.csproj", "{F0F7134F-A631-42DC-A91C-1D4BC39B7C2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlogApp.Application", "MVCBlogApp.Application\MVCBlogApp.Application.csproj", "{F0F7134F-A631-42DC-A91C-1D4BC39B7C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlogApp.Infrastructure", "MVCBlogApp.Infrastructure\MVCBlogApp.Infrastructure.csproj", "{4F6FA2AA-08F6-4938-990C-5F2543427DE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlogApp.Infrastructure", "MVCBlogApp.Infrastructure\MVCBlogApp.Infrastructure.csproj", "{4F6FA2AA-08F6-4938-990C-5F2543427DE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlogApp.Persistence", "MVCBlogApp.Persistence\MVCBlogApp.Persistence.csproj", "{7CBA2F60-B6E3-4CCF-9402-C3BDB8895F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlogApp.Persistence", "MVCBlogApp.Persistence\MVCBlogApp.Persistence.csproj", "{7CBA2F60-B6E3-4CCF-9402-C3BDB8895F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlogApp.UI", "MVCBlogApp.UI\MVCBlogApp.UI.csproj", "{E4BDB413-FC7F-4F9A-AF95-EC7D5D2E74DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlogApp.UI", "MVCBlogApp.UI\MVCBlogApp.UI.csproj", "{E4BDB413-FC7F-4F9A-AF95-EC7D5D2E74DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

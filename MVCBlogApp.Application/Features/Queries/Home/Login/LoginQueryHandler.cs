@@ -1,10 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation.Results;
+using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlogApp.Application.Features.Queries.Home.Login
 {
@@ -19,7 +15,21 @@ namespace MVCBlogApp.Application.Features.Queries.Home.Login
 
         public async Task<LoginQueryResponse> Handle(LoginQueryRequest request, CancellationToken cancellationToken)
         {
-           return await _authService.Login(request);
+            LoginQueryValidator validations = new();
+            ValidationResult result = validations.Validate(request);
+
+            if (result.IsValid)
+            {
+                return await _authService.Login(request);
+            }
+            else
+            {
+                return new LoginQueryResponse() 
+                { 
+                    Message = "Girilen şifre veya email hatalı"
+                };
+            }
+           
         }
     }
 }

@@ -2,7 +2,8 @@
 {
     public class LoginQueryResponse
     {
-        public string? Role { get; set; }
+        public string? AuthRole { get; set; }
+        public bool Role { get; set; } = false;
         public string? Email { get; set; }
         public int? Id { get; set; }
         public string? Message { get; set; }

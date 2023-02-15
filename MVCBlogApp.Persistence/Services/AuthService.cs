@@ -116,7 +116,8 @@ namespace MVCBlogApp.Persistence.Services
                     {
                         Email = member.EMail,
                         Id = member.ID,
-                        Role = member.MembersAuth != null ? member.MembersAuth.MembersAuthName : null
+                        AuthRole = member.MembersAuth != null ? member.MembersAuth.MembersAuthName : null,
+                        Role = false
                     };
                 }
                 return new LoginQueryResponse() 
@@ -132,7 +133,8 @@ namespace MVCBlogApp.Persistence.Services
                     {
                         Email = user.Email,
                         Id = user.ID,
-                        Role = user.Auth != null ? user.Auth.AuthName : null
+                        AuthRole = user.Auth != null ? user.Auth.AuthName : null,
+                        Role = true
                     };
                 }
                 return new LoginQueryResponse()

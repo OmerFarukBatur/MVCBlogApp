@@ -1,4 +1,5 @@
 using MVCBlogApp.Application;
+using MVCBlogApp.Infrastructure;
 using MVCBlogApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 
 var app = builder.Build();

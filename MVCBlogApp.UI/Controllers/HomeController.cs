@@ -71,13 +71,13 @@ namespace MVCBlogApp.UI.Controllers
                 //        RedirectToAction("Index","Admin");
                 //        break;
                 //}
-                if (response.Role == "Danışan")
+                if (response.Role)
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Admin");
                 }
                
             }

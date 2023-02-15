@@ -13,14 +13,14 @@
     <meta name="viewport" content="width=device-width" />
     <title>_LayoutAdmin</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon.png">
     <!-- Pignose Calender -->
     <link href="~/plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
     <!-- Chartist -->
     <link rel="stylesheet" href="~/plugins/chartist/css/chartist.min.css">
     <link rel="stylesheet" href="~/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
     <!-- Custom Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -252,7 +252,10 @@
         <!--**********************************
             Sidebar start
         ***********************************-->
-        @await Html.PartialAsync("Partials/_AdminSidebarPartial")
+        @await Component.InvokeAsync("Sidebar");
+
+        @*@await Html.PartialAsync("Partials/_AdminSidebarPartial")*@
+
         <!--**********************************
             Sidebar end
         ***********************************-->
@@ -287,11 +290,11 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="plugins/common/common.min.js"></script>
-    <script src="js/custom.min.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/gleek.js"></script>
-    <script src="js/styleSwitcher.js"></script>
+    <script src="~/plugins/common/common.min.js"></script>
+    <script src="~/js/custom.min.js"></script>
+    <script src="~/js/settings.js"></script>
+    <script src="~/js/gleek.js"></script>
+    <script src="~/js/styleSwitcher.js"></script>
 
     <!-- Chartjs -->
     <script src="~/plugins/chart.js/Chart.bundle.min.js"></script>
