@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Yönetici Kayıt";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+
+    @*  <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="post" asp-controller="YoneticiIslemleri" asp-action="AdminCreate">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="userName">
+                                        Username <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" maxlength="150" min="5" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="email">
+                                        Email <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="password">
+                                        Şifre <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Şifre" min="6" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="passwordConfirm">
+                                        Şifre Tekrar <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Şifre Tekrar" min="6" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="authId">
+                                        Rol <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="authId" name="authId" required>
+                                            <option>Seçiniz!</option>
+                                            @foreach (var item in Model.Auths)
+                                            {
+                                                <option value="@item.ID">@item.AuthName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

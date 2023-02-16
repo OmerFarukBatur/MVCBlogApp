@@ -15,16 +15,17 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IAuthService _authService;
         private readonly IAuthReadRepository _authReadRepository;
 
-        public YoneticiIslemleri(IUserReadRepository userReadRepository, IUserWriteRepository userWriteRepository, IAuthService authService)
+        public YoneticiIslemleri(IUserReadRepository userReadRepository, IUserWriteRepository userWriteRepository, IAuthService authService, IAuthReadRepository authReadRepository)
         {
             _userReadRepository = userReadRepository;
             _userWriteRepository = userWriteRepository;
             _authService = authService;
+            _authReadRepository = authReadRepository;
         }
 
         public async Task<AdminRoleListQueryResponse> AdminListRole()
         {
-            List<Auth> auths = await _authReadRepository.GetAll().ToListAsync();
+            List<Auth> auths = await _authReadRepository.GetAll(false).ToListAsync();
             return new()
             {
                 Auths = auths
