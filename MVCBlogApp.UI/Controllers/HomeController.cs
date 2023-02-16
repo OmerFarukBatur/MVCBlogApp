@@ -1,10 +1,14 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
+using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.UI.Models;
 using NuGet.Protocol;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -54,6 +58,26 @@ namespace MVCBlogApp.UI.Controllers
             if (response.Id > 0)
             {
                 HttpContext.Session.SetString("users", response.ToJson());
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, response.AuthRole),
+                        new Claim(ClaimTypes.Role,response.Role.ToString()),
+                        new Claim(ClaimTypes.Sid,response.Id.ToString()),
+                        new Claim(ClaimTypes.Email,response.Email)
+                    };
+                var claimsidentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties()
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.UtcNow.AddHours(1)
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsidentity), authProperties);
+
+
+
                 //switch (response.Role)
                 //{
                 //    case "Danışan":
@@ -71,15 +95,14 @@ namespace MVCBlogApp.UI.Controllers
                 //        RedirectToAction("Index","Admin");
                 //        break;
                 //}
-                if (response.Role)
+                if (response.AuthRole == "Danışan")
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Admin");
                 }
                 else
                 {
                     return RedirectToAction("Index", "Admin");
-                }
-               
+                }               
             }
             else
             {

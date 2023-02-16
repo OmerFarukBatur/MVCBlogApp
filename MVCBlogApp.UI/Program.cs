@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MVCBlogApp.Application;
 using MVCBlogApp.Infrastructure;
 using MVCBlogApp.Persistence;
@@ -9,6 +10,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
+
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
+{
+    x.Cookie.Name = "LoginUser";
+    x.LoginPath = "/Home/Login/";
+    x.AccessDeniedPath = "/Home/Login/";
+});
 
 
 var app = builder.Build();
@@ -28,6 +38,7 @@ app.UseSession();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

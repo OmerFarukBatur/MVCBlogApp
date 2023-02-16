@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Persistence.Contexts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MVCBlogApp.UI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly MVCBlogDbContext _context;

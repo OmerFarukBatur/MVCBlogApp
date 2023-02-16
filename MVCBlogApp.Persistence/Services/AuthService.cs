@@ -105,8 +105,8 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<LoginQueryResponse> Login(LoginQueryRequest request)
         {
-            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email).Include(s => s.MembersAuth).FirstOrDefaultAsync();
-            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email).Include(s => s.Auth).FirstOrDefaultAsync();
+            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email && a.IsActive == true).Include(s => s.MembersAuth).FirstOrDefaultAsync();
+            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email && u.IsActive == true).Include(s => s.Auth).FirstOrDefaultAsync();
 
             if (member != null)
             {
