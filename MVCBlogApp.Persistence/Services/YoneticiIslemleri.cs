@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
@@ -88,6 +90,45 @@ namespace MVCBlogApp.Persistence.Services
                     Status = true
                 };
             }
+        }
+
+        public async Task<GetByIdAdminQueryResponse> GetByIdAdminAsync(int id)
+        {
+            User user = await _userReadRepository.GetByIdAsync(id);
+            if (user != null)
+            {
+                List<Auth> auths = await _authReadRepository.GetAll(false).ToListAsync();
+                return new GetByIdAdminQueryResponse() 
+                {
+                    Auths= auths,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                    Id= user.ID,
+                    IsActive = user.IsActive
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu Id'ye ait bir admin bulunmamktadır."
+                };
+            }
+        }
+
+        public async Task<AdminUpdateCommandResponse> UpdateAdminAsync(int id)
+        {
+            User user = await _userReadRepository.GetByIdAsync(id);
+            if (user != null)
+            {
+                
+                return new AdminUpdateCommandResponse() { };
+            }
+            else
+            {
+
+            }
+            throw new NotImplementedException();
         }
     }
 }

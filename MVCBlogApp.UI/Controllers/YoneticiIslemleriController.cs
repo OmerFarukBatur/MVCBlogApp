@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -41,11 +43,19 @@ namespace MVCBlogApp.UI.Controllers
                 return RedirectToAction("AdminCreate", "YoneticiIslemleri");
             }
         }
-        public IActionResult AdminUpdate()
+        [HttpGet]
+        public async Task<IActionResult> AdminUpdate(GetByIdAdminQueryRequest request)
         {
-            return View();
+            GetByIdAdminQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
-        public IActionResult AdminDelete()
+        [HttpPost]
+        public async Task<IActionResult> AdminUpdate(AdminUpdateCommandRequest request)
+        {
+            AdminUpdateCommandResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+        public IActionResult AdminDelete(int id)
         {
             return View();
         }
