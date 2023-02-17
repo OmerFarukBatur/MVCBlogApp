@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.ViewModels;
-using Newtonsoft.Json.Linq;
 
 namespace MVCBlogApp.UI.Models.ViewComponents
 {
@@ -16,8 +15,7 @@ namespace MVCBlogApp.UI.Models.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            JObject valuePairs = JObject.Parse(HttpContext.Session.GetString("users")); 
-            SessionUser user = _operationService.GetUser(valuePairs);
+            SessionUser user = _operationService.GetUser();
             return View(user);
         }
     }

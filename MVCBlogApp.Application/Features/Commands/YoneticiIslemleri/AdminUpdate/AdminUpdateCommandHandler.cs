@@ -1,17 +1,35 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation.Results;
+using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate
 {
     public class AdminUpdateCommandHandler : IRequestHandler<AdminUpdateCommandRequest, AdminUpdateCommandResponse>
     {
-        public Task<AdminUpdateCommandResponse> Handle(AdminUpdateCommandRequest request, CancellationToken cancellationToken)
+        private readonly IYoneticiIslemleri _yoneticiIslemleri;
+
+        public AdminUpdateCommandHandler(IYoneticiIslemleri yoneticiIslemleri)
         {
-            throw new NotImplementedException();
+            _yoneticiIslemleri = yoneticiIslemleri;
+        }
+
+        public async Task<AdminUpdateCommandResponse> Handle(AdminUpdateCommandRequest request, CancellationToken cancellationToken)
+        {
+            AdminUpdateCommandValidator validations = new();
+            ValidationResult result = validations.Validate(request);
+
+            if (result.IsValid)
+            {
+                 return await _yoneticiIslemleri.UpdateAdminAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Lütfen bilgileri eksiksiz giriniz.",
+                    Status = false
+                };
+            }
         }
     }
 }

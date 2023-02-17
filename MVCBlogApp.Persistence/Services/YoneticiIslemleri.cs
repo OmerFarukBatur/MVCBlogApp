@@ -116,19 +116,48 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        public async Task<AdminUpdateCommandResponse> UpdateAdminAsync(int id)
+        public async Task<AdminUpdateCommandResponse> UpdateAdminAsync(AdminUpdateCommandRequest request)
         {
-            User user = await _userReadRepository.GetByIdAsync(id);
+            User user = await _userReadRepository.GetByIdAsync(request.Id);
             if (user != null)
             {
+                byte[] passwordSalt , passwordHash ;
+
+                if (request.Password != null)
+                {
+                    (passwordSalt,passwordHash) = _authService.CreatePasswordHash(request.Password);
+                }
+                else
+                {
+                    passwordHash = user.PasswordHash;
+                    passwordSalt = user.PasswordSalt;
+                }
+
+                user.AuthID = request.AuthID;
+                user.UserName = request.UserName;
+                user.Email = request.Email;
+                user.ModifiedDate = DateTime.Now;
+                user.ModifiedUserID = request.ModifiedUserID;
+                user.PasswordHash= passwordHash;
+                user.PasswordSalt= passwordSalt; 
                 
-                return new AdminUpdateCommandResponse() { };
+                _userWriteRepository.Update(user);
+                await _userWriteRepository.SaveAsync();
+
+                return new() 
+                {
+                    Message = "Kullanıcı başarılı bir şekilde güncellendi.",
+                    Status = true
+                };
             }
             else
             {
-
+                return new()
+                {
+                    Message = "Kayıt sırasında beklenmedik bir hata oluştu.",
+                    Status = false
+                };
             }
-            throw new NotImplementedException();
         }
     }
 }

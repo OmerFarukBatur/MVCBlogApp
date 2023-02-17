@@ -1,15 +1,22 @@
-﻿using MVCBlogApp.Application.Abstractions.Services;
+﻿using Microsoft.AspNetCore.Http;
+using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.ViewModels;
-using MVCBlogApp.Domain.Entities;
 using Newtonsoft.Json.Linq;
 
 namespace MVCBlogApp.Infrastructure.Services
 {
     public class OperationService : IOperationService
     {
-        public SessionUser GetUser(JObject user)
+        private readonly IHttpContextAccessor _accessor;
+
+        public OperationService(IHttpContextAccessor accessor)
         {
-            
+            _accessor = accessor;
+        }
+
+        public SessionUser GetUser()
+        {
+            JObject user = JObject.Parse(_accessor.HttpContext.Session.GetString("users"));
             string Role = user.GetValue("Role").ToString();
             string AuthRole = user.GetValue("AuthRole").ToString();
             string Email = user.GetValue("Email").ToString();

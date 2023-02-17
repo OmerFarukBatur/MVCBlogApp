@@ -5,6 +5,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
 {
     public interface IOperationService
     {
-        SessionUser GetUser(JObject user);
+        SessionUser GetUser();
     }
 }

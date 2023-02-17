@@ -127,7 +127,7 @@ namespace MVCBlogApp.Persistence.Services
             }
             else if (user != null)
             {
-                if (VerifyPasswordHash(request.Password, member.PasswordHash, member.PasswordSalt))
+                if (VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
                 {
                     return new LoginQueryResponse()
                     {
