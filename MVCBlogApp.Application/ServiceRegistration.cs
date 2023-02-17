@@ -12,7 +12,7 @@ namespace MVCBlogApp.Application
             collection.AddDistributedMemoryCache();
             collection.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromHours(1);
+                //options.IdleTimeout = TimeSpan.FromHours(1);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });

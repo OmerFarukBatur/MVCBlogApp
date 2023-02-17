@@ -2,8 +2,10 @@
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.User;
+using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
@@ -23,7 +25,7 @@ namespace MVCBlogApp.Persistence.Services
             _authReadRepository = authReadRepository;
         }
 
-        public async Task<AdminRoleListQueryResponse> AdminListRole()
+        public async Task<AdminRoleListQueryResponse> AdminListRoleAsync()
         {
             List<Auth> auths = await _authReadRepository.GetAll(false).ToListAsync();
             return new()
@@ -32,7 +34,27 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-        public async Task<AdminCreateCommandResponse> CreateAdmin(AdminCreateCommandRequest request)
+        public async Task<AllAdminQueryResponse> AllAdminAsync()
+        {
+            List<AllAdmins> admins = await _userReadRepository.GetAll().Include(a => a.Auth).Select(x => new AllAdmins {
+                Id = x.ID,
+                UserName = x.UserName,
+                AuthName = x.Auth.AuthName,
+                CreateDate = x.CreateDate,
+                CreateUserID = x.CreateUserID,
+                ModifiedDate = x.ModifiedDate,
+                ModifiedUserID = x.ModifiedUserID,
+                IsActive = x.IsActive,
+                Email = x.Email
+            }).ToListAsync();
+
+            return new() 
+            { 
+                AllAdmins = admins 
+            };
+        }
+
+        public async Task<AdminCreateCommandResponse> CreateAdminAsync(AdminCreateCommandRequest request)
         {
             List<User> users = await _userReadRepository.GetWhere(u => u.Email == request.Email || u.UserName== request.UserName).ToListAsync();
 

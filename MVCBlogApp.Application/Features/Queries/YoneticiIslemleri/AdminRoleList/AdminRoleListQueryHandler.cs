@@ -19,7 +19,7 @@ namespace MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleLis
 
         public async Task<AdminRoleListQueryResponse> Handle(AdminRoleListQueryRequest request, CancellationToken cancellationToken)
         {
-            return await _yoneticiIslemleri.AdminListRole();
+            return await _yoneticiIslemleri.AdminListRoleAsync();
         }
     }
 }

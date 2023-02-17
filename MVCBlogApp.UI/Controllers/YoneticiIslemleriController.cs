@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -15,10 +16,11 @@ namespace MVCBlogApp.UI.Controllers
         {
             _mediator = mediator;
         }
-
-        public IActionResult AdminList()
+        [HttpGet]
+        public async Task<IActionResult> AdminList(AllAdminQueryRequest allAdminQueryRequest)
         {
-            return View();
+            AllAdminQueryResponse response = await _mediator.Send(allAdminQueryRequest);
+            return View(response.AllAdmins);
         }
         [HttpGet]
         public async Task<IActionResult> AdminCreate(AdminRoleListQueryRequest request)

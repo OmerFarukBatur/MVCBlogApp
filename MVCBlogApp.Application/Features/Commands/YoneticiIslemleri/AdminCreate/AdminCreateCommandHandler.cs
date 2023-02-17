@@ -20,7 +20,7 @@ namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate
 
             if (result.IsValid)
             {
-                return await _yoneticiIslemleri.CreateAdmin(request);
+                return await _yoneticiIslemleri.CreateAdminAsync(request);
             }
             else
             {
