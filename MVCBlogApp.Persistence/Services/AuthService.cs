@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
+using MVCBlogApp.Application.Features.Commands.Home.PasswordReset;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
@@ -17,13 +18,17 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersWriteRepository _membersWriteRepository;
         private readonly IMembersAuthReadRepository _membersAuthReadRepository;
         private readonly IUserReadRepository _userReadRepository;
+        private readonly IUserWriteRepository _userWriteRepository;
+        private readonly IMailService _mailService;
 
-        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository, IUserReadRepository userReadRepository)
+        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository, IUserReadRepository userReadRepository, IMailService mailService, IUserWriteRepository userWriteRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersWriteRepository = membersWriteRepository;
             _membersAuthReadRepository = membersAuthReadRepository;
             _userReadRepository = userReadRepository;
+            _mailService = mailService;
+            _userWriteRepository = userWriteRepository;
         }
 
         public (byte[] passwordSalt, byte[] passwordHash) CreatePasswordHash(string password)
@@ -95,6 +100,8 @@ namespace MVCBlogApp.Persistence.Services
                 await _membersWriteRepository.AddAsync(newmember);
                 await _membersWriteRepository.SaveAsync();
 
+                await _mailService.SendMailAsync(newmember.EMail, newmember.NameSurname, request.Password);
+
                 return new CreateUserCommandResponse()
                 {
                     Message = "Kullanıcı başarıyla kayıt edilmiştir.",
@@ -150,5 +157,55 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        public async Task<PasswordResetCommandResponse> ByIdUserPasswordReset(PasswordResetCommandRequest request)
+        {
+            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email && a.IsActive == true).Include(s => s.MembersAuth).FirstOrDefaultAsync();
+            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email && u.IsActive == true).Include(s => s.Auth).FirstOrDefaultAsync();
+
+            Random random = new Random();
+            long password = random.NextInt64(100000,10000000000);
+
+            if (member != null)
+            {
+                (byte[] passwordSalt, byte[] passwordHash) = CreatePasswordHash(password.ToString());
+
+                member.PasswordSalt = passwordSalt;
+                member.PasswordHash = passwordHash;
+
+                _membersWriteRepository.Update(member);
+                await _membersWriteRepository.SaveAsync();
+                await _mailService.SendMailAsync(request.Email,member.NameSurname,password.ToString());
+
+                return new()
+                {
+                    Status = true
+                };
+            }
+            else if (user != null)
+            {
+                (byte[] passwordSalt, byte[] passwordHash) = CreatePasswordHash(password.ToString());
+
+                user.PasswordSalt = passwordSalt;
+                user.PasswordHash = passwordHash;
+
+                _userWriteRepository.Update(user);
+                await _userWriteRepository.SaveAsync();
+                await _mailService.SendMailAsync(request.Email, user.UserName, password.ToString());
+
+                return new()
+                {
+                    Status = true
+                };
+            }
+            else
+            {
+                return new() 
+                {
+                    Status = true
+                };
+            }
+        }
+        
     }
 }

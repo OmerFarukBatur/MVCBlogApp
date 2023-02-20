@@ -12,6 +12,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<AdminRoleListQueryResponse> AdminListRoleAsync();
         Task<AllAdminQueryResponse> AllAdminAsync();
         Task<AdminUpdateCommandResponse> UpdateAdminAsync(AdminUpdateCommandRequest request);
-        Task<GetByIdAdminQueryResponse> GetByIdAdminAsync(int id);
+        Task<GetByIdAdminQueryResponse> GetByIdAdminAsync(int id);        
     }
 }

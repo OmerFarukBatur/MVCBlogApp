@@ -10,8 +10,9 @@ namespace MVCBlogApp.Infrastructure
     {
         public static void AddInfrastructureServices(this IServiceCollection collection)
         {
-            collection.AddScoped<IOperationService, OperationService>();
             collection.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            collection.AddScoped<IOperationService, OperationService>();
+            collection.AddScoped<IMailService, MailService>();
         }
     }
 }

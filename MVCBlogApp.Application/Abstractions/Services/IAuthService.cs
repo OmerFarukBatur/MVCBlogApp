@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
+using MVCBlogApp.Application.Features.Commands.Home.PasswordReset;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
 
 namespace MVCBlogApp.Application.Abstractions.Services
@@ -9,5 +10,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
         bool VerifyPasswordHash(string Password, byte[] userpasswordHash, byte[] userpasswordSalt);
         Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request);
         Task<LoginQueryResponse> Login(LoginQueryRequest request);
+        Task<PasswordResetCommandResponse> ByIdUserPasswordReset(PasswordResetCommandRequest request);
     }
 }

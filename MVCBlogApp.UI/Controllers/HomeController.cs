@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
+using MVCBlogApp.Application.Features.Commands.Home.PasswordReset;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
-using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.UI.Models;
 using NuGet.Protocol;
 using System.Diagnostics;
@@ -108,6 +108,26 @@ namespace MVCBlogApp.UI.Controllers
             {
                 return RedirectToAction("Login","Home");
             }            
+        }
+
+        [HttpGet]
+        public IActionResult PasswordReset()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PasswordReset(PasswordResetCommandRequest request)
+        {
+            PasswordResetCommandResponse response = await _mediator.Send(request);
+            if (response.Status)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                return RedirectToAction("PasswordReset", "Home");
+            }
         }
 
         public IActionResult Privacy()

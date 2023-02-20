@@ -18,13 +18,15 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IUserWriteRepository _userWriteRepository;
         private readonly IAuthService _authService;
         private readonly IAuthReadRepository _authReadRepository;
+        private readonly IMailService _mailService;
 
-        public YoneticiIslemleri(IUserReadRepository userReadRepository, IUserWriteRepository userWriteRepository, IAuthService authService, IAuthReadRepository authReadRepository)
+        public YoneticiIslemleri(IUserReadRepository userReadRepository, IUserWriteRepository userWriteRepository, IAuthService authService, IAuthReadRepository authReadRepository, IMailService mailService)
         {
             _userReadRepository = userReadRepository;
             _userWriteRepository = userWriteRepository;
             _authService = authService;
             _authReadRepository = authReadRepository;
+            _mailService = mailService;
         }
 
         public async Task<AdminRoleListQueryResponse> AdminListRoleAsync()
@@ -83,6 +85,8 @@ namespace MVCBlogApp.Persistence.Services
 
                 await _userWriteRepository.AddAsync(user);
                 await _userWriteRepository.SaveAsync();
+
+                await _mailService.SendMailAsync(user.Email,user.UserName,request.Password);
 
                 return new AdminCreateCommandResponse() 
                 { 

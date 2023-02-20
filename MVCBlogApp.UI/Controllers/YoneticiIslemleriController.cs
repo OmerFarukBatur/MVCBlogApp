@@ -9,11 +9,10 @@ using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
 using MVCBlogApp.Application.ViewModels;
-using Newtonsoft.Json.Linq;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class YoneticiIslemleriController : Controller
     {
         private readonly IMediator _mediator;
@@ -79,10 +78,5 @@ namespace MVCBlogApp.UI.Controllers
             AdminByIdRemoveCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("AdminList", "YoneticiIslemleri");
         }
-        public IActionResult AdminRoleList()
-        {
-            return View();
-        }
-
     }
 }
