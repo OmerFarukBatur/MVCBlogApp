@@ -63,9 +63,10 @@ namespace MVCBlogApp.UI.Controllers
                 var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, response.AuthRole),
-                        new Claim(ClaimTypes.Role,response.Role.ToString()),
+                        new Claim(ClaimTypes.Role,response.AuthRole),
                         new Claim(ClaimTypes.Sid,response.Id.ToString()),
-                        new Claim(ClaimTypes.Email,response.Email)
+                        new Claim(ClaimTypes.Email,response.Email),
+                        new Claim(ClaimTypes.Surname,response.Role.ToString())
                     };
                 var claimsidentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties()

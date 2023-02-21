@@ -198,6 +198,15 @@
                         <li><a asp-controller="YoneticiIslemleri" asp-action="AdminCreate">Yönetici Kayıt</a></li>                        
                     </ul>
                 </li>
+                <li class="mega-menu mega-menu-sm">
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="icon-user menu-icon"></i><span class="nav-text">Durum İşlemleri</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a asp-controller="Status" asp-action="Index">Tüm Durumlar</a></li>
+                        <li><a asp-controller="Status" asp-action="CreateStatus">Durum Kayıt</a></li>
+                    </ul>
+                </li>
                 <li class="nav-label">Apps</li>
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">

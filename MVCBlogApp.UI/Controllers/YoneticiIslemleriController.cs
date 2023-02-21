@@ -12,7 +12,7 @@ using MVCBlogApp.Application.ViewModels;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class YoneticiIslemleriController : Controller
     {
         private readonly IMediator _mediator;
