@@ -463,7 +463,7 @@ namespace MVCBlogApp.Persistence
             #region Services
             services.AddScoped<IAuthService,AuthService>();
             services.AddScoped<IYoneticiIslemleri,YoneticiIslemleri>();
-
+            services.AddScoped<IGeneralOptionsService,GeneralOptionsService>();
             #endregion
 
             // Identity mekanizması için gerekli tablo eklenmesi
