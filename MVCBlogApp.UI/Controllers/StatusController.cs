@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Status.CreateStatus;
+using MVCBlogApp.Application.Features.Commands.Status.DeleteStatus;
+using MVCBlogApp.Application.Features.Commands.Status.UpdateStatus;
 using MVCBlogApp.Application.Features.Queries.Status.GetAllStatus;
+using MVCBlogApp.Application.Features.Queries.Status.GetByIdStatus;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -43,20 +46,39 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateStatus()
+        public async Task<IActionResult> UpdateStatus(GetByIdStatusQueryRequest request)
         {
-            return View();
+            GetByIdStatusQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response.Status);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Status");
+            }            
         }
 
         [HttpPost]
-        public IActionResult UpdateStatus(int b)
+        public async Task<IActionResult> UpdateStatus(UpdateStatusCommandRequest request)
         {
-            return View();
+            UpdateStatusCommandResponse response = await _mediator.Send(request);
+
+            if (response.Status)
+            {
+                return RedirectToAction("Index", "Status");
+            }
+            else
+            {
+                return RedirectToAction("UpdateStatus", "Status");
+            }            
         }
 
-        public IActionResult DeleteStatus()
+        public async Task<IActionResult> DeleteStatus(DeleteStatusCommandRequest request)
         {
-            return View();
+            DeleteStatusCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("Index", "Status");
         }
     }
 }
