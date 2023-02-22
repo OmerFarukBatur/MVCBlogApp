@@ -11,5 +11,6 @@ namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate
         public string PasswordConfirm { get; set; }
         public int AuthID { get; set; }
         public int? ModifiedUserID { get; set; }
+        public bool IsActive { get; set; }
     }
 }

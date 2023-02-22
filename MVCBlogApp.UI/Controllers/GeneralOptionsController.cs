@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.DeleteLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.UpdateLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetByIdLanguage;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -41,17 +44,36 @@ namespace MVCBlogApp.UI.Controllers
                 return RedirectToAction("CreateLanguage", "GeneralOptions");
             }
         }
-        public async Task<IActionResult> UpdateLanguage()
+        [HttpGet]
+        public async Task<IActionResult> UpdateLanguage(GetByIdLanguageQueryRequest request)
         {
-            return View();
+            GetByIdLanguageQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.Language);
+            }
+            else
+            {
+                return RedirectToAction("Index", "GeneralOptions");
+            }
         }
-        public async Task<IActionResult> UpdateLanguage(int b)
+        [HttpPost]
+        public async Task<IActionResult> UpdateLanguage(UpdateLanguageCommandRequest request)
         {
-            return View();
+            UpdateLanguageCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("Index", "GeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("UpdateLanguage", "GeneralOptions");
+            }
         }
-        public async Task<IActionResult> DeleteLanguage()
+        public async Task<IActionResult> DeleteLanguage(DeleteLanguageCommandRequest request)
         {
-            return View();
+            DeleteLanguageCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("Index", "GeneralOptions");
         }
     }
 }

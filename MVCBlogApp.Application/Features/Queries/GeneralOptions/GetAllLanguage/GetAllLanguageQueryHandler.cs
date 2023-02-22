@@ -14,7 +14,7 @@ namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage
 
         public async Task<GetAllLanguageQueryResponse> Handle(GetAllLanguageQueryRequest request, CancellationToken cancellationToken)
         {
-            return new() { AllLanguages = await _generalOptionsService.GetAllLanguage(request) };
+            return new() { AllLanguages = await _generalOptionsService.GetAllLanguageAsync(request) };
         }
     }
 }

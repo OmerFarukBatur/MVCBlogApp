@@ -137,13 +137,14 @@ namespace MVCBlogApp.Persistence.Services
                     passwordSalt = user.PasswordSalt;
                 }
 
-                user.AuthID = request.AuthID;
+                user.AuthID = request.AuthID > 0 ? request.AuthID : user.AuthID;
                 user.UserName = request.UserName;
                 user.Email = request.Email;
                 user.ModifiedDate = DateTime.Now;
                 user.ModifiedUserID = request.ModifiedUserID;
                 user.PasswordHash= passwordHash;
                 user.PasswordSalt= passwordSalt; 
+                user.IsActive = request.IsActive;
                 
                 _userWriteRepository.Update(user);
                 await _userWriteRepository.SaveAsync();

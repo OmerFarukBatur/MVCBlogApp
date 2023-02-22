@@ -29,7 +29,7 @@ namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate
                 .Equal(s => s.Password)
                 .WithMessage("Şifreler Uyuşmuyor.");
 
-            RuleFor(x => x.AuthID) 
+            RuleFor(x => x.IsActive)
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen bir Rol şeçiniz.");
