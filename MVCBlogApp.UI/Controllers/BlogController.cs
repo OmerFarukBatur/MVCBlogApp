@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
+using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 
@@ -57,21 +60,31 @@ namespace MVCBlogApp.UI.Controllers
         #endregion
 
         #region BlogCategory
-        public async Task<IActionResult> BlogCategoryList()
+        public async Task<IActionResult> BlogCategoryList(GetAllBlogCategoryQueryRequest request)
         {
-            return View();
+            GetAllBlogCategoryQueryResponse response = await _mediator.Send(request);
+            return View(response.AllCategory);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BlogCategoryCreate()
+        public async Task<IActionResult> BlogCategoryCreate(GetBlogCategoryItemQueryRequest request)
         {
-            return View();
+            GetBlogCategoryItemQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> BlogCategoryCreate(int a)
+        public async Task<IActionResult> BlogCategoryCreate(BlogCategoryCreateCommandRequest request)
         {
-            return View();
+            BlogCategoryCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("BlogCategoryList", "Blog");
+            }
+            else
+            {
+                return RedirectToAction("BlogCategoryCreate", "Blog");
+            }
         }
 
         [HttpGet]
