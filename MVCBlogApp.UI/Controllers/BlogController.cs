@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
+using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 
@@ -88,21 +91,39 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BlogCategoryUpdate()
+        public async Task<IActionResult> BlogCategoryUpdate(GetByIdBlogCategoryQueryRequest request)
         {
-            return View();
+            GetByIdBlogCategoryQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(new{ response.BlogCategory,response.AllStatuses,response.AllLanguages});
+            }
+            else
+            {
+                return RedirectToAction("BlogCategoryList", "Blog");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> BlogCategoryUpdate(int a)
+        public async Task<IActionResult> BlogCategoryUpdate(BlogCategoryUpdateQueryRequest request)
         {
-            return View();
+            BlogCategoryUpdateQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("BlogCategoryList", "Blog");
+            }
+            else
+            {
+                return RedirectToAction("BlogCategoryUpdate", "Blog");
+            }
         }
 
 
-        public async Task<IActionResult> BlogCategoryDelete(int a)
+        public async Task<IActionResult> BlogCategoryDelete(BlogCategoryDeleteCommandRequest request)
         {
-            return View();
+            BlogCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("BlogCategoryList", "Blog");
         }
         #endregion
 

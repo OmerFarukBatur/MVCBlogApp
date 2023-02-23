@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
+using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 using MVCBlogApp.Application.Repositories.BlogCategory;
@@ -51,7 +54,7 @@ namespace MVCBlogApp.Persistence.Services
             }
             else
             {
-                BlogType newblogType = new(){ TypeName = request.TypeName };
+                BlogType newblogType = new() { TypeName = request.TypeName };
 
                 await _blogTypeWriteRepository.AddAsync(newblogType);
                 await _blogTypeWriteRepository.SaveAsync();
@@ -95,7 +98,7 @@ namespace MVCBlogApp.Persistence.Services
             if (blogType != null)
             {
                 blogType.TypeName = request.TypeName;
-                
+
                 _blogTypeWriteRepository.Update(blogType);
                 await _blogTypeWriteRepository.SaveAsync();
 
@@ -115,7 +118,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetAllBlogTypeQueryResponse> GetAllBlogTypeAsync()
         {
-            List<VM_BlogType> vM_BlogTypes =  await _blogTypeReadRepository.GetAll().Select(x => new VM_BlogType()
+            List<VM_BlogType> vM_BlogTypes = await _blogTypeReadRepository.GetAll().Select(x => new VM_BlogType()
             {
                 Id = x.ID,
                 TypeName = x.TypeName
@@ -154,12 +157,12 @@ namespace MVCBlogApp.Persistence.Services
 
         #region BlogCategory
 
-        public async Task<GetBlogCategoryItemQueryResponse> GetBlogCategoryItemAsync() 
+        public async Task<GetBlogCategoryItemQueryResponse> GetBlogCategoryItemAsync()
         {
             List<AllStatus> allStatus = await _statusReadRepository.GetAll().Select(x => new AllStatus()
             {
                 Id = x.ID,
-                StatusName = x.StatusName                
+                StatusName = x.StatusName
             }).ToListAsync();
 
             List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language()
@@ -215,23 +218,23 @@ namespace MVCBlogApp.Persistence.Services
                 .Include(x => x.Status)
                 .Join(_languagesReadRepository.GetAll(false), c => c.LangID, x => x.ID, (c, x) => new { c, x })
                 .Select(z => new VM_AllBlogCategory
-            {
-                Id = z.c.ID,
-                CatgoryName = z.c.CategoryName,
-                CategoryDescription = z.c.CategoryDescription,
-                Status = new()
                 {
-                    ID = z.c.Status.ID,
-                    StatusName = z.c.Status.StatusName
-                },
-                Languages = new()
-                {
-                    ID = z.x.ID,
-                    Language = z.x.Language,
-                    IsActive = z.x.IsActive
-                }
+                    Id = z.c.ID,
+                    CatgoryName = z.c.CategoryName,
+                    CategoryDescription = z.c.CategoryDescription,
+                    Status = new()
+                    {
+                        ID = z.c.Status.ID,
+                        StatusName = z.c.Status.StatusName
+                    },
+                    Languages = new()
+                    {
+                        ID = z.x.ID,
+                        Language = z.x.Language,
+                        IsActive = z.x.IsActive
+                    }
 
-            }).ToListAsync();
+                }).ToListAsync();
 
             return new()
             {
@@ -239,6 +242,106 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdBlogCategoryQueryResponse> GetByIdBlogCategoryAsync(GetByIdBlogCategoryQueryRequest request)
+        {
+            BlogCategory blogCategory = await _categoryReadRepository.GetByIdAsync(request.Id);
+            if (blogCategory != null)
+            {
+                List<AllStatus> AllStatus = await _statusReadRepository.GetAll().Select(z => new AllStatus
+                {
+                    Id = z.ID,
+                    StatusName = z.StatusName
+                }).ToListAsync();
+
+
+                List<VM_Language> vM_Language = await _languagesReadRepository.GetAll().Select(s => new VM_Language
+                {
+                    Id = s.ID,
+                    Language = s.Language,
+                    IsActive = s.IsActive
+                }).ToListAsync();
+
+                return new()
+                {
+                    BlogCategory = new()
+                    {
+                        ID = blogCategory.ID,
+                        CategoryDescription = blogCategory.CategoryDescription,
+                        CategoryName = blogCategory.CategoryName,
+                        LangID = blogCategory.LangID,
+                        StatusID = blogCategory.StatusID,
+                    },
+                    AllStatuses = AllStatus,
+                    AllLanguages = vM_Language,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    AllLanguages = null,
+                    AllStatuses = null,
+                    BlogCategory = null
+                };
+            }
+        }
+
+        public async Task<BlogCategoryUpdateQueryResponse> BlogCategoryUpdateAsync(BlogCategoryUpdateQueryRequest request)
+        {
+            BlogCategory blogCategory = await _categoryReadRepository.GetByIdAsync(request.Id);
+
+            if (blogCategory != null)
+            {
+                blogCategory.CategoryName = request.CategoryName;
+                blogCategory.CategoryDescription = request.CategoryDescription;
+                blogCategory.StatusID = request.StatusId;
+                blogCategory.LangID = request.LangId;
+
+                _categoryWriteRepository.Update(blogCategory);
+                await _categoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "İşlem başarıyla gerçekleştirildi.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "İşlem sıarasında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<BlogCategoryDeleteCommandResponse> BlogCategoryDeleteAsync(BlogCategoryDeleteCommandRequest request)
+        {
+            BlogCategory blogCategory = await _categoryReadRepository.GetByIdAsync(request.Id);
+
+            if (blogCategory != null)
+            {
+                _categoryWriteRepository.Remove(blogCategory);
+                await _categoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "İşlem başarıyla gerçekleştirildi.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "İşlem sıarsında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
         #endregion
 
     }
