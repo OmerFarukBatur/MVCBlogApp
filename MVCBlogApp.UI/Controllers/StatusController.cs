@@ -37,11 +37,11 @@ namespace MVCBlogApp.UI.Controllers
             CreateStatusCommandResponse response = await _mediator.Send(request);
             if (response.Status)
             {
-                return RedirectToAction("CreateStatus","Status");
+                return RedirectToAction("Index","Status");
             }
             else
             {
-                return RedirectToAction("Index", "Status");
+                return RedirectToAction("CreateStatus", "Status");
             }
         }
 

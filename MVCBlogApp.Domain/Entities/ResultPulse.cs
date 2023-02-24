@@ -4,7 +4,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class ResultPulse : BaseEntity
     {
-        public string ResultMaxText { get; set; }
-        public string ResultMinText { get; set; }
+        public string? ResultMaxText { get; set; }
+        public string? ResultMinText { get; set; }
     }
 }

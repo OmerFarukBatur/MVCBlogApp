@@ -65,7 +65,7 @@
                                     </label>
                                     <div class="col-lg-6">
                                         <select class="form-control" id="authId" name="authId" required>
-                                            <option>Seçiniz!</option>
+                                            <option value="@Model.AuthId">Seçiniz!</option>
                                             @foreach (var item in Model.Auths)
                                             {
                                                 <option value="@item.ID">@item.AuthName</option>

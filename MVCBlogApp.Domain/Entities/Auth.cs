@@ -1,5 +1,4 @@
 ﻿using MVCBlogApp.Domain.Entities.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace MVCBlogApp.Domain.Entities
 {

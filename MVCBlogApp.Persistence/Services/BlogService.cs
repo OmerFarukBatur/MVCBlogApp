@@ -169,7 +169,7 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Language = x.Language,
                 Id = x.ID,
-                IsActive = x.IsActive
+                IsActive = (bool)x.IsActive
             }).ToListAsync();
 
             return new()
@@ -258,7 +258,7 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Id = s.ID,
                     Language = s.Language,
-                    IsActive = s.IsActive
+                    IsActive = (bool)s.IsActive
                 }).ToListAsync();
 
                 return new()
@@ -268,8 +268,8 @@ namespace MVCBlogApp.Persistence.Services
                         ID = blogCategory.ID,
                         CategoryDescription = blogCategory.CategoryDescription,
                         CategoryName = blogCategory.CategoryName,
-                        LangID = blogCategory.LangID,
-                        StatusID = blogCategory.StatusID,
+                        LangID = (int)blogCategory.LangID,
+                        StatusID = (int)blogCategory.StatusID,
                     },
                     AllStatuses = AllStatus,
                     AllLanguages = vM_Language,

@@ -1,24 +1,23 @@
 ﻿using MVCBlogApp.Domain.Entities.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace MVCBlogApp.Domain.Entities
 {
     public class User : BaseEntity
     {
-        [Required]
-        public string UserName { get; set; }
+        
+        public string? UserName { get; set; }
 
-        [Required]
-        public string Email { get; set; }
+        
+        public string? Email { get; set; }
 
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public byte[]? PasswordHash { get; set; }
+        public byte[]? PasswordSalt { get; set; }
 
-        public int AuthID { get; set; }
+        public int? AuthID { get; set; }
 
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? CreateUserID { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public int? ModifiedUserID { get; set; }
 

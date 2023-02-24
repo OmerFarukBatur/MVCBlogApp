@@ -4,9 +4,9 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class Languages : BaseEntity
     {
-        public string Language { get; set; }
+        public string? Language { get; set; }
         public DateTime? CreateDate { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual IList<Navigation> Navigation { get; set; }
         public virtual IList<TaylanK> TaylanK { get; set; }

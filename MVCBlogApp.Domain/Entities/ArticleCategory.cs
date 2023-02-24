@@ -4,10 +4,10 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class ArticleCategory : BaseEntity
     {
-        public string MetaTitle { get; set; }
-        public string MetaKey { get; set; }
-        public string MetaDescription { get; set; }
-        public string CategoryName { get; set; }
+        public string? MetaTitle { get; set; }
+        public string? MetaKey { get; set; }
+        public string? MetaDescription { get; set; }
+        public string? CategoryName { get; set; }
         public int? ParentID { get; set; }
         public DateTime? CreateDate { get; set; }
         public int? CreateUserID { get; set; }

@@ -4,11 +4,11 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class Members : BaseEntity
     {
-        public string NameSurname { get; set; }
-        public string EMail { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
-        public string Phone { get; set; }
+        public string? NameSurname { get; set; }
+        public string? EMail { get; set; }
+        public byte[]? PasswordHash { get; set; }
+        public byte[]? PasswordSalt { get; set; }
+        public string? Phone { get; set; }
         public string? Lacation { get; set; }
         public string? Address { get; set; }
 
@@ -17,7 +17,7 @@ namespace MVCBlogApp.Domain.Entities
         public DateTime? CreateDate { get; set; }
 
         public int? CreateUserID { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
 
         //İlişkiler
         public virtual MembersAuth MembersAuth { get; set; }

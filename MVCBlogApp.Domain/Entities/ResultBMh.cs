@@ -4,6 +4,6 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class ResultBMh : BaseEntity
     {
-        public string Resulttext { get; set; }
+        public string? Resulttext { get; set; }
     }
 }

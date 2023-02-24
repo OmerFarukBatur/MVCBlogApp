@@ -4,7 +4,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class BookCategory : BaseEntity
     {
-        public string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
         public int? CreateUserID { get; set; }
         public DateTime? CreateDate { get; set; }
         public int? StatusID { get; set; }

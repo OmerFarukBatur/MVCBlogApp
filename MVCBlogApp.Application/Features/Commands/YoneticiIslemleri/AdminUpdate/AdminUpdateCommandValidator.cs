@@ -30,7 +30,6 @@ namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate
                 .WithMessage("Şifreler Uyuşmuyor.");
 
             RuleFor(x => x.IsActive)
-                .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen bir Rol şeçiniz.");
         }

@@ -85,7 +85,7 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Id = a.ID,
                 Language = a.Language,
-                IsActive= a.IsActive,
+                IsActive= (bool)a.IsActive,
                 CreatedDate = a.CreateDate
             }).ToListAsync();
 
@@ -103,7 +103,7 @@ namespace MVCBlogApp.Persistence.Services
                     {
                         Id = language.ID,
                         Language = language.Language,
-                        IsActive = language.IsActive
+                        IsActive = (bool)language.IsActive
                     },
                     State = true      
                     

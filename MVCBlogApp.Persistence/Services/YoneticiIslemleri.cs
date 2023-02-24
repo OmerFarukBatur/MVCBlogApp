@@ -44,11 +44,11 @@ namespace MVCBlogApp.Persistence.Services
                 Id = x.ID,
                 UserName = x.UserName,
                 AuthName = x.Auth.AuthName,
-                CreateDate = x.CreateDate,
+                CreateDate = (DateTime)x.CreateDate,
                 CreateUserID = x.CreateUserID,
                 ModifiedDate = x.ModifiedDate,
                 ModifiedUserID = x.ModifiedUserID,
-                IsActive = x.IsActive,
+                IsActive = (bool)x.IsActive,
                 Email = x.Email
             }).ToListAsync();
 
@@ -108,7 +108,8 @@ namespace MVCBlogApp.Persistence.Services
                     Email = user.Email,
                     UserName = user.UserName,
                     Id= user.ID,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    AuthId= user.AuthID
                 };
             }
             else

@@ -4,8 +4,8 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class DiseasesCardiovascular : BaseEntity
     {
-        public int MembersInformationID { get; set; }
-        public int DiseasesID { get; set; }
+        public int? MembersInformationID { get; set; }
+        public int? DiseasesID { get; set; }
         public virtual MembersInformation MembersInformation { get; set; }
         public virtual Diseases Diseases { get; set; }
     }
