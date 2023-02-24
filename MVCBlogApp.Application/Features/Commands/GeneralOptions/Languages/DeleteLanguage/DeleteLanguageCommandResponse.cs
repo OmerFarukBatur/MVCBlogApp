@@ -1,4 +1,4 @@
-﻿namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.DeleteLanguage
+﻿namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage
 {
     public class DeleteLanguageCommandResponse
     {

@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.DeleteLanguage;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.UpdateLanguage;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -19,6 +21,7 @@ namespace MVCBlogApp.UI.Controllers
             _mediator = mediator;
         }
 
+        #region Languages
         public async Task<IActionResult> Index(GetAllLanguageQueryRequest request)
         {
             GetAllLanguageQueryResponse response = await _mediator.Send(request);
@@ -75,5 +78,57 @@ namespace MVCBlogApp.UI.Controllers
             DeleteLanguageCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("Index", "GeneralOptions");
         }
+        #endregion
+
+        #region Navigation
+
+        public async Task<IActionResult> NavigationList()
+        {
+           
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> NavigationCreate(GetNavigationCreateItemsCommandRequest request)
+        {
+            GetNavigationCreateItemsCommandResponse response= await _mediator.Send(request);
+            return View(new {response.Navigations,response.Languages});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NavigationCreate(NavigationCreateCommandRequest request)
+        {
+            NavigationCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("NavigationList", "GeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("NavigationCreate", "GeneralOptions");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> NavigationUpdate()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NavigationUpdate(int a)
+        {
+
+            return View();
+        }
+
+
+        public async Task<IActionResult> NavigationDelete()
+        {
+
+            return View();
+        }
+        #endregion
     }
 }

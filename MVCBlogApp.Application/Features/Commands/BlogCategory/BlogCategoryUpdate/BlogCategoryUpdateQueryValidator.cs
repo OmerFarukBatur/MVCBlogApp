@@ -32,12 +32,10 @@ namespace MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpda
                 .WithMessage("Lütfen kategori açıklamasını enaz 2 ençok 500 karakter olacak şekilde giriniz.");
 
             RuleFor(x => x.StatusId)
-                .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen bir Durum şeçiniz.");
 
             RuleFor(x => x.LangId)
-                .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen bir Dil şeçiniz.");
         }

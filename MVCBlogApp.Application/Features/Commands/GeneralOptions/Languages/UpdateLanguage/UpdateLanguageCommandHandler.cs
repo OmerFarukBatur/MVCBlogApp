@@ -2,7 +2,7 @@
 using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 
-namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.UpdateLanguage
+namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage
 {
     public class UpdateLanguageCommandHandler : IRequestHandler<UpdateLanguageCommandRequest, UpdateLanguageCommandResponse>
     {

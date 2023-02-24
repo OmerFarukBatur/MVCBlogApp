@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.UpdateLanguage
+namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage
 {
     public class UpdateLanguageCommandValidator : AbstractValidator<UpdateLanguageCommandRequest>
     {
-        public UpdateLanguageCommandValidator() 
+        public UpdateLanguageCommandValidator()
         {
             RuleFor(x => x.Language)
                 .MaximumLength(150)

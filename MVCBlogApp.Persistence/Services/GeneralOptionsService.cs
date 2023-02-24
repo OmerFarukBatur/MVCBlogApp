@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.DeleteLanguage;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.UpdateLanguage;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -15,12 +18,18 @@ namespace MVCBlogApp.Persistence.Services
     {
         private readonly ILanguagesReadRepository _languagesReadRepository;
         private readonly ILanguagesWriteRepository _languagesWriteRepository;
+        private readonly INavigationReadRepository _navigationReadRepository;
+        private readonly INavigationWriteRepository _navigationWriteRepository;
 
-        public GeneralOptionsService(ILanguagesReadRepository languagesReadRepository, ILanguagesWriteRepository languagesWriteRepository)
+        public GeneralOptionsService(ILanguagesReadRepository languagesReadRepository, ILanguagesWriteRepository languagesWriteRepository, INavigationReadRepository navigationReadRepository, INavigationWriteRepository navigationWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _languagesWriteRepository = languagesWriteRepository;
+            _navigationReadRepository = navigationReadRepository;
+            _navigationWriteRepository = navigationWriteRepository;
         }
+
+        #region Language
 
         public async Task<CreateLanguageCommandResponse> CreateLanguageAsync(CreateLanguageCommandRequest request)
         {
@@ -116,6 +125,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        
         public async Task<UpdateLanguageCommandResponse> UpdateLanguageAsync(UpdateLanguageCommandRequest request)
         {
             Languages languages = await _languagesReadRepository.GetByIdAsync(request.Id);
@@ -142,5 +152,80 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region Navigation
+
+        public async Task<NavigationCreateCommandResponse> NavigationCreateAsync(NavigationCreateCommandRequest request)
+        {
+            var navigationList = await _navigationReadRepository.GetWhere(x=> x.NavigationName.Trim().ToLower() == request.NavigationName.Trim().ToLower() || x.NavigationName.Trim().ToUpper() == request.NavigationName.Trim().ToUpper()).ToListAsync();
+
+            if (navigationList.Count > 0) 
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Navigation navigation = new()
+                {
+                    ParentID = request.ParentID,
+                    OrderNo = request.OrderNo,
+                    IsHeader = request.IsHeader,
+                    IsSubHeader = request.IsSubHeader,
+                    MetaTitle = request.MetaTitle,
+                    MetaKey = request.MetaKey,
+                    UrlRoot = request.UrlRoot,
+                    NavigationName = request.NavigationName,
+                    Controller = request.Controller,
+                    Action = request.Action,
+                    FontAwesomeIcon = request.FontAwesomeIcon,
+                    IsActive = request.IsActive,
+                    LangID = request.LangID,
+                    IsAdmin = request.IsAdmin,
+                    CreateDate = DateTime.Now,
+                    Type = 0
+                };
+
+                await _navigationWriteRepository.AddAsync(navigation);
+                await _navigationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "İşlem başarıyla gerçekleştirildi.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetNavigationCreateItemsCommandResponse> GetNavigationCreateItemsAsync()
+        {
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll().Select(x => new VM_Navigation
+            {
+                Id= x.ID,
+                MetaTitle= x.MetaTitle,
+                NavigationName= x.NavigationName
+            }).ToListAsync();
+
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language
+            {
+                Id = x.ID,
+                Language = x.Language,
+                IsActive = (bool)x.IsActive
+            }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Navigations = vM_Navigations
+            };
+        }
+
+
+        #endregion
     }
 }

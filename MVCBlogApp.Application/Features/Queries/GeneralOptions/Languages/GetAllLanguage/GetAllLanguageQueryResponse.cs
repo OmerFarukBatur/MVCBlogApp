@@ -1,6 +1,6 @@
 ﻿using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage
+namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage
 {
     public class GetAllLanguageQueryResponse
     {

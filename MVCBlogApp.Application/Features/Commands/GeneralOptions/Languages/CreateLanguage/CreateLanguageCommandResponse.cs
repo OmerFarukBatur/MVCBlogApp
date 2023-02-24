@@ -1,4 +1,4 @@
-﻿namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage
+﻿namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage
 {
     public class CreateLanguageCommandResponse
     {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 
-namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.DeleteLanguage
+namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage
 {
     public class DeleteLanguageCommandHandler : IRequestHandler<DeleteLanguageCommandRequest, DeleteLanguageCommandResponse>
     {

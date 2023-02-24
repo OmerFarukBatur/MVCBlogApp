@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage
+namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage
 {
     public class CreateLanguageCommandValidator : AbstractValidator<VM_Language>
     {
-        public CreateLanguageCommandValidator() 
+        public CreateLanguageCommandValidator()
         {
             RuleFor(x => x.Language)
                 .NotEmpty()

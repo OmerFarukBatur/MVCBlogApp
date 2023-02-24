@@ -3,7 +3,7 @@ using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage
+namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage
 {
     public class CreateLanguageCommandHandler : IRequestHandler<CreateLanguageCommandRequest, CreateLanguageCommandResponse>
     {
@@ -18,7 +18,7 @@ namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.CreateLanguage
         {
             CreateLanguageCommandValidator validations = new();
             ValidationResult result = validations.Validate(new VM_Language() { Language = request.Language });
-            
+
             if (result.IsValid)
             {
                 return await _generalOptionsService.CreateLanguageAsync(request);

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 
-namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.GetAllLanguage
+namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage
 {
     public class GetAllLanguageQueryHandler : IRequestHandler<GetAllLanguageQueryRequest, GetAllLanguageQueryResponse>
     {
