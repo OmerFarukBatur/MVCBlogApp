@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.ViewModels;
 
@@ -23,6 +24,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         
         Task<NavigationCreateCommandResponse> NavigationCreateAsync(NavigationCreateCommandRequest request);
         Task<GetNavigationCreateItemsCommandResponse> GetNavigationCreateItemsAsync();
+        Task<GetAllNavigationQueryResponse> GetAllNavigationAsync();
 
         #endregion
     }

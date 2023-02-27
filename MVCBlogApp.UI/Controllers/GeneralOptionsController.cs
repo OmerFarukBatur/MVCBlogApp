@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -82,10 +83,10 @@ namespace MVCBlogApp.UI.Controllers
 
         #region Navigation
 
-        public async Task<IActionResult> NavigationList()
+        public async Task<IActionResult> NavigationList(GetAllNavigationQueryRequest request)
         {
-           
-            return View();
+            GetAllNavigationQueryResponse response = await _mediator.Send(request);
+            return View(response.AllNavigations);
         }
 
         [HttpGet]

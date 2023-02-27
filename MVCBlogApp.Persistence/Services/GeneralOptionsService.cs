@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
@@ -222,6 +223,36 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Languages = vM_Languages,
                 Navigations = vM_Navigations
+            };
+        }
+
+        public async Task<GetAllNavigationQueryResponse> GetAllNavigationAsync()
+        {
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll(false).Include(s => s.Languages).Select(x => new VM_Navigation
+            {
+                Id = x.ID,
+                MetaTitle = x.MetaTitle,
+                Action = x.Action,
+                Controller = x.Controller,
+                CreateDate = x.CreateDate,
+                FontAwesomeIcon = x.FontAwesomeIcon,
+                IsActive = x.IsActive,
+                IsAdmin = x.IsAdmin,
+                IsHeader = x.IsHeader,
+                IsSubHeader = x.IsSubHeader,
+                Language = x.Languages.Language,
+                MetaKey = x.MetaKey,
+                NavigationName = x.NavigationName,
+                OrderNo = x.OrderNo,
+                ParentId = x.ParentID,
+                Type = x.Type,
+                UrlRoot = x.UrlRoot,
+                LangId = x.LangID
+            }).ToListAsync();
+
+            return new()
+            {
+                AllNavigations = vM_Navigations
             };
         }
 

@@ -20,5 +20,7 @@
         public int? Type { get; set; }
         public bool? IsAdmin { get; set; }
         public DateTime? CreateDate { get; set; }
+
+        public string? Language { get; set; }
     }
 }
