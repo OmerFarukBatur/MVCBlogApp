@@ -4,12 +4,13 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class FixBmh : BaseEntity
     {
-        public int? FormID { get; set; }
+        public int? FormId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? ImgUrl { get; set; }
-        public int? StatusID { get; set; }
-        public int? LangID { get; set; }
-        public virtual Form Form { get; set; }
+        public int? StatusId { get; set; }
+        public int? LangId { get; set; }
+
+        public virtual Form? Form { get; set; }
     }
 }

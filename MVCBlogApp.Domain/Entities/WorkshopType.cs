@@ -4,13 +4,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class WorkshopType : BaseEntity
     {
-        public string? WSTypeName { get; set; }
-
-        public virtual IList<Workshop> WorkShop { get; set; }
-
-        //****Örnekler******//
-            //Online
-            //Yüzyüze
-
+        public string? WstypeName { get; set; }
+        public int? LangId { get; set; }
     }
 }

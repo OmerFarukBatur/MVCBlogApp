@@ -33,7 +33,7 @@ namespace MVCBlogApp.Persistence.Repositories
             {
                 query = query.AsNoTracking();
             }
-            return await query.FirstOrDefaultAsync(data => data.ID == id);
+            return await query.FirstOrDefaultAsync(data => data.Id == id);
         }
 
         public async Task<T> GetSingleAsync(Expression<Func<T, bool>> method, bool tracking = true)

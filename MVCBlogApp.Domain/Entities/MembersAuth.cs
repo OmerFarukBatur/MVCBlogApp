@@ -6,7 +6,5 @@ namespace MVCBlogApp.Domain.Entities
     {
         public string? MembersAuthName { get; set; }
         public bool? IsActive { get; set; }
-
-        public virtual IList<Members> Members { get; set; }
     }
 }

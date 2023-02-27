@@ -9,9 +9,8 @@ namespace MVCBlogApp.Domain.Entities
         public string? ImageUrl { get; set; }
         public string? Bio { get; set; }
         public DateTime? CreateDate { get; set; }
-        public int? CreateUserID { get; set; }
-        public int? StatusID { get; set; }
-        public int? LangID { get; set; }
-        public virtual Status Status { get; set; }
+        public int? CreateUserId { get; set; }
+        public int? StatusId { get; set; }
+        public int? LangId { get; set; }
     }
 }

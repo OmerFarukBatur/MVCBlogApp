@@ -4,7 +4,19 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class MembersInformation : BaseEntity
     {
-        public int? MembersID { get; set; }
+        public MembersInformation()
+        {
+            AllergyProducingFoods = new HashSet<AllergyProducingFoods>();
+            DiseasesCardiovasculars = new HashSet<DiseasesCardiovascular>();
+            DiseasesDiabetes = new HashSet<DiseasesDiabetes>();
+            DiseasesDigestiveDisorders = new HashSet<DiseasesDigestiveDisorders>();
+            DiseasesFamilyMembers = new HashSet<DiseasesFamilyMembers>();
+            FemaleMentalStates = new HashSet<FemaleMentalState>();
+            FoodHabits = new HashSet<FoodHabits>();
+            FoodTimes = new HashSet<FoodTime>();
+        }
+
+        public int? MembersId { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public DateTime? Birthdate { get; set; }
@@ -13,7 +25,7 @@ namespace MVCBlogApp.Domain.Entities
         public string? Email { get; set; }
         public string? ImageUrl { get; set; }
         public string? HistoryOfWeigh { get; set; }
-        public bool? CPreviousDisease { get; set; }
+        public bool? CpreviousDisease { get; set; }
         public string? OneDaySummary { get; set; }
         public string? TheQuantityConsumedWater { get; set; }
         public string? TheQuantityConsumedTea { get; set; }
@@ -38,14 +50,13 @@ namespace MVCBlogApp.Domain.Entities
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
-        public virtual IList<FoodHabitMood> FoodHabitsMoods { get; set; }
-        public virtual IList<AllergyProducingFoods> AllergyProducingFoods { get; set; }
-        public virtual IList<FoodTime> FoodTimes { get; set; }
-        public virtual IList<FemaleMentalState> FemaleMentalStates { get; set; }
-        public virtual IList<FoodHabits> FoodHabits { get; set; }
-        public virtual IList<DiseasesCardiovascular> DiseasesCardiovasculars { get; set; }
-        public virtual IList<DiseasesDiabetes> DiseasesDiabetes { get; set; }
-        public virtual IList<DiseasesDigestiveDisorders> DiseasesDigestiveDisorders { get; set; }
-        public virtual IList<DiseasesFamilyMembers> DiseasesFamilyMembers { get; set; }
+        public virtual ICollection<AllergyProducingFoods> AllergyProducingFoods { get; set; }
+        public virtual ICollection<DiseasesCardiovascular> DiseasesCardiovasculars { get; set; }
+        public virtual ICollection<DiseasesDiabetes> DiseasesDiabetes { get; set; }
+        public virtual ICollection<DiseasesDigestiveDisorders> DiseasesDigestiveDisorders { get; set; }
+        public virtual ICollection<DiseasesFamilyMembers> DiseasesFamilyMembers { get; set; }
+        public virtual ICollection<FemaleMentalState> FemaleMentalStates { get; set; }
+        public virtual ICollection<FoodHabits> FoodHabits { get; set; }
+        public virtual ICollection<FoodTime> FoodTimes { get; set; }
     }
 }

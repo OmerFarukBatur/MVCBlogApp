@@ -4,7 +4,7 @@ using E = MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Repositories.ResultBMh
 {
-    public class ResultBMhWriteRepository : WriteRepository<E.ResultBMh>, IResultBMhWriteRepository
+    public class ResultBMhWriteRepository : WriteRepository<E.ResultBmh>, IResultBMhWriteRepository
     {
         public ResultBMhWriteRepository(MVCBlogDbContext context) : base(context)
         {

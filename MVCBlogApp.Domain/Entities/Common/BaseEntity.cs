@@ -1,10 +1,12 @@
-﻿namespace MVCBlogApp.Domain.Entities.Common
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MVCBlogApp.Domain.Entities.Common
 {
     public class BaseEntity
     {
-        public int ID { get; set; }
-        //public DateTime CreatedDate { get; set; }
-        //virtual public DateTime UpdatedDate { get; set; }
-        //public bool IsActive { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public int Id { get; set; }
     }
 }

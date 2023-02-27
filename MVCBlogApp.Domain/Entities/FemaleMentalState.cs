@@ -4,7 +4,7 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class FemaleMentalState : BaseEntity
     {
-        public int? MembersInformationID { get; set; }
+        public int? MembersInformationId { get; set; }
         public string? Menstruation { get; set; }
         public string? Menopause { get; set; }
         public string? Gravidity { get; set; }
@@ -13,6 +13,7 @@ namespace MVCBlogApp.Domain.Entities
         public string? IsMenstruatioRegular { get; set; }
         public string? IsHormontherapy { get; set; }
         public string? IsGiveBirthTo { get; set; }
-        public virtual MembersInformation MembersInformation { get; set; }
+
+        public virtual MembersInformation? MembersInformation { get; set; }
     }
 }

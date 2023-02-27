@@ -5,25 +5,15 @@ namespace MVCBlogApp.Domain.Entities
     public class Members : BaseEntity
     {
         public string? NameSurname { get; set; }
-        public string? EMail { get; set; }
+        public string? Email { get; set; }
         public byte[]? PasswordHash { get; set; }
         public byte[]? PasswordSalt { get; set; }
         public string? Phone { get; set; }
         public string? Lacation { get; set; }
         public string? Address { get; set; }
-
-        public int? MembersAuthID { get; set; }
-
+        public int? MembersAuthId { get; set; }
         public DateTime? CreateDate { get; set; }
-
-        public int? CreateUserID { get; set; }
+        public int? CreateUserId { get; set; }
         public bool? IsActive { get; set; }
-
-        //İlişkiler
-        public virtual MembersAuth MembersAuth { get; set; }
-        public virtual MembersDetail MembersDetail { get; set; }
-        public virtual IList<D_Appointment> D_Appointment { get; set; }
-        public virtual IList<AppointmentDetail> AppointmentDetail { get; set; }
-        public virtual IList<Lab> Lab { get; set; }
     }
 }

@@ -5,9 +5,8 @@ namespace MVCBlogApp.Domain.Entities
     public class NewsBulletin : BaseEntity
     {
         public string? Email { get; set; }
-        public int? CreateUserID { get; set; }
         public DateTime? CreateDate { get; set; }
-        public int? StatusID { get; set; }
-        public virtual Status Status { get; set; }
+        public int? CreateUserId { get; set; }
+        public int? StatusId { get; set; }
     }
 }

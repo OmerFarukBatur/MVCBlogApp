@@ -40,16 +40,18 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<AllAdminQueryResponse> AllAdminAsync()
         {
-            List<AllAdmins> admins = await _userReadRepository.GetAll().Include(a => a.Auth).Select(x => new AllAdmins {
-                Id = x.ID,
-                UserName = x.UserName,
-                AuthName = x.Auth.AuthName,
-                CreateDate = (DateTime)x.CreateDate,
-                CreateUserID = x.CreateUserID,
-                ModifiedDate = x.ModifiedDate,
-                ModifiedUserID = x.ModifiedUserID,
-                IsActive = (bool)x.IsActive,
-                Email = x.Email
+            List<AllAdmins> admins = await _userReadRepository.GetAll()
+                .Join(_authReadRepository.GetAll(),us=> us.AuthId, au=> au.Id, (us,au)=> new {us,au})
+                .Select(x => new AllAdmins {
+                Id = x.us.Id,
+                UserName = x.us.Username,
+                AuthName = x.au.AuthName,
+                CreateDate = (DateTime)x.us.CreateDate,
+                CreateUserID = x.us.CreateUserId,
+                ModifiedDate = x.us.ModifiedDate,
+                ModifiedUserID = x.us.ModifiedUserId,
+                IsActive = (bool)x.us.IsActive,
+                Email = x.us.Email
             }).ToListAsync();
 
             return new() 
@@ -60,7 +62,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<AdminCreateCommandResponse> CreateAdminAsync(AdminCreateCommandRequest request)
         {
-            List<User> users = await _userReadRepository.GetWhere(u => u.Email == request.Email || u.UserName== request.UserName).ToListAsync();
+            List<User> users = await _userReadRepository.GetWhere(u => u.Email == request.Email || u.Username== request.UserName).ToListAsync();
 
             if (users.Count > 0)
             {
@@ -75,9 +77,9 @@ namespace MVCBlogApp.Persistence.Services
                 (byte[] passwordSalt,byte[] passwordHash) = _authService.CreatePasswordHash(request.Password);
                 User user = new();
                 user.Email = request.Email;
-                user.UserName = request.UserName;
-                user.AuthID = request.AuthID;
-                user.CreateUserID = request.CreateUserID != null ? request.CreateUserID : null;
+                user.Username = request.UserName;
+                user.AuthId = request.AuthID;
+                user.CreateUserId = request.CreateUserID != null ? request.CreateUserID : null;
                 user.CreateDate = DateTime.Now;
                 user.IsActive = true;
                 user.PasswordSalt = passwordSalt;
@@ -86,7 +88,7 @@ namespace MVCBlogApp.Persistence.Services
                 await _userWriteRepository.AddAsync(user);
                 await _userWriteRepository.SaveAsync();
 
-                await _mailService.SendMailAsync(user.Email,user.UserName,request.Password);
+                //await _mailService.SendMailAsync(user.Email,user.Username,request.Password);
 
                 return new AdminCreateCommandResponse() 
                 { 
@@ -106,10 +108,10 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Auths= auths,
                     Email = user.Email,
-                    UserName = user.UserName,
-                    Id= user.ID,
+                    UserName = user.Username,
+                    Id= user.Id,
                     IsActive = user.IsActive,
-                    AuthId= user.AuthID
+                    AuthId= user.AuthId
                 };
             }
             else
@@ -138,11 +140,11 @@ namespace MVCBlogApp.Persistence.Services
                     passwordSalt = user.PasswordSalt;
                 }
 
-                user.AuthID = request.AuthID > 0 ? request.AuthID : user.AuthID;
-                user.UserName = request.UserName;
+                user.AuthId = request.AuthID > 0 ? request.AuthID : user.AuthId;
+                user.Username = request.UserName;
                 user.Email = request.Email;
                 user.ModifiedDate = DateTime.Now;
-                user.ModifiedUserID = request.ModifiedUserID;
+                user.ModifiedUserId = request.ModifiedUserID;
                 user.PasswordHash= passwordHash;
                 user.PasswordSalt= passwordSalt; 
                 user.IsActive = request.IsActive;

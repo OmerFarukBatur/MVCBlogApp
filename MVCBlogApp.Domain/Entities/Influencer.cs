@@ -10,7 +10,7 @@ namespace MVCBlogApp.Domain.Entities
         public string? CompanyName { get; set; }
         public string? CompanySector { get; set; }
         public string? Message { get; set; }
-        public int? StatusID { get; set; }
         public DateTime? CreateDatetime { get; set; }
+        public int? StatusId { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace MVCBlogApp.Application.Features.Queries.Status.GetAllStatus
         {
             List<AllStatus> status = await _statusReadRepository.GetAll().Select(a => new AllStatus
             {
-                Id = a.ID,
+                Id = a.Id,
                 StatusName = a.StatusName
             }).ToListAsync();
             return new()

@@ -2,12 +2,12 @@
 
 namespace MVCBlogApp.Domain.Entities
 {
-    public  class ImageBlog : BaseEntity
+    public class ImageBlog : BaseEntity
     {
-        public int? BlogID { get; set; }
+        public int? BlogId { get; set; }
         public bool? IsCover { get; set; }
         public string? ImgName { get; set; }
         public string? ImgUrl { get; set; }
-        public int? StatusID { get; set; }
+        public int? StatusId { get; set; }
     }
 }

@@ -9,8 +9,8 @@ namespace MVCBlogApp.Domain.Entities
         public bool? IsVisible { get; set; }
         public bool? IsAprove { get; set; }
         public bool? IsRead { get; set; }
-        public int? StatusID { get; set; }
         public DateTime? CreateDatetime { get; set; }
-
+        public int? StatusId { get; set; }
+        public int? LangId { get; set; }
     }
 }

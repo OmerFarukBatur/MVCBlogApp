@@ -4,9 +4,11 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Home.CreateUser;
 using MVCBlogApp.Application.Features.Commands.Home.PasswordReset;
 using MVCBlogApp.Application.Features.Queries.Home.Login;
+using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
 using MVCBlogApp.Application.Repositories.User;
+using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using System.Text;
 
@@ -19,9 +21,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersAuthReadRepository _membersAuthReadRepository;
         private readonly IUserReadRepository _userReadRepository;
         private readonly IUserWriteRepository _userWriteRepository;
+        private readonly IAuthReadRepository _authReadRepository;
         private readonly IMailService _mailService;
 
-        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository, IUserReadRepository userReadRepository, IMailService mailService, IUserWriteRepository userWriteRepository)
+        public AuthService(IMembersReadRepository membersReadRepository, IMembersWriteRepository membersWriteRepository, IMembersAuthReadRepository membersAuthReadRepository, IUserReadRepository userReadRepository, IMailService mailService, IUserWriteRepository userWriteRepository, IAuthReadRepository authReadRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersWriteRepository = membersWriteRepository;
@@ -29,6 +32,7 @@ namespace MVCBlogApp.Persistence.Services
             _userReadRepository = userReadRepository;
             _mailService = mailService;
             _userWriteRepository = userWriteRepository;
+            _authReadRepository = authReadRepository;
         }
 
         public (byte[] passwordSalt, byte[] passwordHash) CreatePasswordHash(string password)
@@ -61,7 +65,7 @@ namespace MVCBlogApp.Persistence.Services
         }
         public async Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request)
         {
-            var member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email).ToListAsync();
+            var member = await _membersReadRepository.GetWhere(a => a.Email == request.Email).ToListAsync();
 
             if (member.Count > 0)
             {
@@ -75,7 +79,7 @@ namespace MVCBlogApp.Persistence.Services
             {
                 var authId = await _membersAuthReadRepository.GetWhere(x => x.IsActive == true).Select(a => new
                 {
-                    a.ID
+                    a.Id
                 }).FirstOrDefaultAsync();
 
 
@@ -83,7 +87,7 @@ namespace MVCBlogApp.Persistence.Services
                 Members newmember = new()
                 {
                     NameSurname = request.Name.Trim().ToUpper() + request.Surname.Trim().ToUpper(),
-                    EMail = request.Email,
+                    Email = request.Email,
                     CreateDate = DateTime.Now,
                     PasswordSalt = passwordSalt,
                     PasswordHash = passwordHash,
@@ -94,7 +98,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 if (authId != null)
                 {
-                    newmember.MembersAuthID = authId.ID;
+                    newmember.MembersAuthId = authId.Id;
                 }
 
                 await _membersWriteRepository.AddAsync(newmember);
@@ -112,18 +116,62 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<LoginQueryResponse> Login(LoginQueryRequest request)
         {
-            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email && a.IsActive == true).Include(s => s.MembersAuth).FirstOrDefaultAsync();
-            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email && u.IsActive == true).Include(s => s.Auth).FirstOrDefaultAsync();
+            VM_Member? member = await _membersReadRepository
+                .GetWhere(a => a.Email == request.Email && a.IsActive == true)
+                .Join(_membersAuthReadRepository.GetAll(),mem=> mem.MembersAuthId,au=> au.Id,(mem,au)=> new {mem,au})
+                .Select(x=> new VM_Member
+                {
+                    Id = x.mem.Id,
+                    Email = x.mem.Email,
+                    IsActive = x.mem.IsActive,
+                    Address = x.mem.Address,
+                    CreateDate = x.mem.CreateDate,
+                    CreateUserId = x.mem.CreateUserId,
+                    Lacation= x.mem.Lacation,
+                    MemberAuthName = x.au.MembersAuthName,
+                    MembersAuthId = x.mem.MembersAuthId,
+                    NameSurname = x.mem.NameSurname,
+                    PasswordHash = x.mem.PasswordHash,
+                    PasswordSalt= x.mem.PasswordSalt,
+                    Phone = x.mem.Phone
+                })
+                .FirstOrDefaultAsync();
+
+
+
+
+            VM_Admin? user = await _userReadRepository
+                .GetWhere(u => u.Email == request.Email && u.IsActive == true)
+                .Join(_authReadRepository.GetAll(),ad=> ad.AuthId,au=> au.Id,(ad,au)=> new {ad,au})
+                .Select(x=> new VM_Admin
+                {
+                    AuthId = x.ad.AuthId,
+                    Id= x.ad.Id,
+                    CreateDate = x.ad.CreateDate,
+                    CreateUserId = x.ad.CreateUserId,
+                    Email = x.ad.Email,
+                    IsActive = x.ad.IsActive,
+                    ModifiedDate = x.ad.ModifiedDate,
+                    ModifiedUserId = x.ad.ModifiedUserId,
+                    PasswordHash= x.ad.PasswordHash,
+                    PasswordSalt= x.ad.PasswordSalt,
+                    Title= x.ad.Title,
+                    Username= x.ad.Username,
+                    AuthName = x.au.AuthName
+                })
+                .FirstOrDefaultAsync();
+            
 
             if (member != null)
-            {
+            {             
+
                 if (VerifyPasswordHash(request.Password, member.PasswordHash, member.PasswordSalt))
                 {
                     return new LoginQueryResponse()
                     {
-                        Email = member.EMail,
-                        Id = member.ID,
-                        AuthRole = member.MembersAuth != null ? member.MembersAuth.MembersAuthName : null,
+                        Email = member.Email,
+                        Id = member.Id,
+                        AuthRole = member.MemberAuthName != null ? member.MemberAuthName : null,
                         Role = false
                     };
                 }
@@ -139,8 +187,8 @@ namespace MVCBlogApp.Persistence.Services
                     return new LoginQueryResponse()
                     {
                         Email = user.Email,
-                        Id = user.ID,
-                        AuthRole = user.Auth != null ? user.Auth.AuthName : null,
+                        Id = user.Id,
+                        AuthRole = user.AuthName != null ? user.AuthName : null,
                         Role = true
                     };
                 }
@@ -160,14 +208,15 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<PasswordResetCommandResponse> ByIdUserPasswordReset(PasswordResetCommandRequest request)
         {
-            Members member = await _membersReadRepository.GetWhere(a => a.EMail == request.Email && a.IsActive == true).Include(s => s.MembersAuth).FirstOrDefaultAsync();
-            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email && u.IsActive == true).Include(s => s.Auth).FirstOrDefaultAsync();
+            Members member = await _membersReadRepository.GetWhere(a => a.Email == request.Email && a.IsActive == true).FirstOrDefaultAsync();
+            User user = await _userReadRepository.GetWhere(u => u.Email == request.Email && u.IsActive == true).FirstOrDefaultAsync();
 
             Random random = new Random();
             long password = random.NextInt64(100000,10000000000);
 
             if (member != null)
             {
+
                 (byte[] passwordSalt, byte[] passwordHash) = CreatePasswordHash(password.ToString());
 
                 member.PasswordSalt = passwordSalt;

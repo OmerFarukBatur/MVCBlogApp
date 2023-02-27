@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Domain.Entities.Common;
+using System.Diagnostics.Metrics;
 using System.Reflection.Emit;
 
 namespace MVCBlogApp.Persistence.Contexts
@@ -13,558 +14,1602 @@ namespace MVCBlogApp.Persistence.Contexts
         }
 
         #region DbSet
-        public DbSet<User> User { get; set; }
-        public DbSet<Auth> Auth { get; set; }
-        public DbSet<Status> Status { get; set; }
-        public DbSet<Languages> Languages { get; set; }
-        public DbSet<Navigation> Navigation { get; set; }
-        public DbSet<Members> Members { get; set; }
-        public DbSet<MembersDetail> MembersDetail { get; set; }
-        public DbSet<MembersAuth> MembersAuth { get; set; }
-        public DbSet<TaylanK> TaylanK { get; set; }
-        public DbSet<Blog> Blog { get; set; }
-        public DbSet<BlogCategory> BlogCategory { get; set; }
-        public DbSet<X_BlogCategory> X_BlogCategory { get; set; }
-        public DbSet<ImageBlog> ImageBlog { get; set; }
-        public DbSet<BlogType> BlogType { get; set; }
-
-        public DbSet<Article> Article { get; set; }
-        public DbSet<ArticleCategory> ArticleCategory { get; set; }
-        public DbSet<Book> Book { get; set; }
-        public DbSet<BookCategory> BookCategory { get; set; }
-        public DbSet<Carousel> Carousel { get; set; }
-        public DbSet<Contact> Contact { get; set; }
-        public DbSet<ContactCategory> ContactCategory { get; set; }
-        public DbSet<Image> Image { get; set; }
-        public DbSet<NewsBulletin> NewsBulletin { get; set; }
-        public DbSet<NewsPaper> NewsPaper { get; set; }
-        public DbSet<OurTeam> OurTeam { get; set; }
-        public DbSet<Press> Press { get; set; }
-        public DbSet<PressType> PressType { get; set; }
-        public DbSet<References> References { get; set; }
-        public DbSet<Video> Video { get; set; }
-        public DbSet<VideoCategory> VideoCategory { get; set; }
-        public DbSet<X_BookCategory> X_BookCategory { get; set; }
-        public DbSet<ImageCarousel> ImageCarousel { get; set; }
-        public DbSet<Workshop> Workshop { get; set; }
-        public DbSet<WorkshopCategory> WorkshopCategory { get; set; }
-        public DbSet<WorkshopEducation> WorkshopEducation { get; set; }
-        public DbSet<WorkshopType> WorkshopType { get; set; }
-
-        public DbSet<CalcBmh> CalcBmh { get; set; }
-        public DbSet<CalcBMI> CalcBMI { get; set; }
-        public DbSet<CalcOptimum> CalcOptimum { get; set; }
-        public DbSet<CalcPulse> CalcPulse { get; set; }
-        public DbSet<FixBmh> FixBmh { get; set; }
-        public DbSet<FixBMI> FixBMI { get; set; }
-        public DbSet<FixCalorieSch> FixCalorieSch { get; set; }
-        public DbSet<FixFeedPyramid> FixFeedPyramid { get; set; }
-        public DbSet<FixHeartDiseases> FixHeartDiseases { get; set; }
-        public DbSet<FixMealSize> FixMealSize { get; set; }
-        public DbSet<FixOptimum> FixOptimum { get; set; }
-        public DbSet<FixPulse> FixPulse { get; set; }
-        public DbSet<Form> Form { get; set; }
-        public DbSet<ResultBMh> ResultBMh { get; set; }
-        public DbSet<ResultBMI> ResultBMI { get; set; }
-        public DbSet<ResultOptimum> ResultOptimum { get; set; }
-        public DbSet<ResultPulse> ResultPulse { get; set; }
-        public DbSet<MasterRoot> MasterRoot { get; set; }
-
-        public DbSet<WorkShopApplicationForm> WorkShopApplicationForm { get; set; }
-        public DbSet<HearAboutUS> HearAboutUS { get; set; }
-
-        public DbSet<Genders> Genders { get; set; }
-        public DbSet<Case> Case { get; set; }
-
-
-        public DbSet<Confession> Confession { get; set; }
-        public DbSet<Influencer> Influencer { get; set; }
-        public DbSet<ConsultancyForm> ConsultancyForm { get; set; }
-        public DbSet<ConsultancyFormType> ConsultancyFormType { get; set; }
-
-        public DbSet<SeminarVisuals> SeminarVisuals { get; set; }
-
-        public DbSet<Event> Event { get; set; }
-
-        public DbSet<EventCategory> EventCategory { get; set; }
-        public DbSet<Banner> Banner { get; set; }
-
-        public DbSet<D_Appointment> D_Appointment { get; set; }
-        public DbSet<D_Specialties> D_Specialties { get; set; }
-
-        public DbSet<MembersInformation> MembersInformation { get; set; }
-        public DbSet<FoodHabitMood> FoodHabitMood { get; set; }
-        public DbSet<AllergyProducingFoods> AllergyProducingFoods { get; set; }
-        public DbSet<FoodTime> FoodTime { get; set; }
-        public DbSet<FemaleMentalState> FemaleMentalState { get; set; }
-        public DbSet<FoodHabits> FoodHabits { get; set; }
-        public DbSet<Diseases> Diseases { get; set; }
-        public DbSet<DiseasesCardiovascular> DiseasesCardiovascular { get; set; }
-        public DbSet<DiseasesDiabetes> DiseasesDiabetes { get; set; }
-        public DbSet<DiseasesDigestiveDisorders> DiseasesDigestiveDisorders { get; set; }
-        public DbSet<DiseasesFamilyMembers> DiseasesFamilyMembers { get; set; }
-
-        public DbSet<AppointmentDetail> AppointmentDetail { get; set; }
-        public DbSet<DietList> DietList { get; set; }
-        public DbSet<Days> Days { get; set; }
-        public DbSet<Meal> Meal { get; set; }
-        public DbSet<_DaysMeal> _DaysMeal { get; set; }
-        public DbSet<Examination> Examination { get; set; }
-        public DbSet<_Examination> _Examination { get; set; }
-        public DbSet<Lab> Lab { get; set; }
-        public DbSet<SLeftNavigation> SLeftNavigation { get; set; }
+        public virtual DbSet<AllergyProducingFoods> AllergyProducingFoods { get; set; } = null!;
+        public virtual DbSet<AppointmentDetail> AppointmentDetail { get; set; } = null!;
+        public virtual DbSet<Article> Article { get; set; } = null!;
+        public virtual DbSet<ArticleCategory> ArticleCategory { get; set; } = null!;
+        public virtual DbSet<Auth> Auth { get; set; } = null!;
+        public virtual DbSet<Banner> Banner { get; set; } = null!;
+        public virtual DbSet<Blog> Blog { get; set; } = null!;
+        public virtual DbSet<BlogCategory> BlogCategory { get; set; } = null!;
+        public virtual DbSet<BlogType> BlogType { get; set; } = null!;
+        public virtual DbSet<Book> Book { get; set; } = null!;
+        public virtual DbSet<BookCategory> BookCategory { get; set; } = null!;
+        public virtual DbSet<CalcBmh> CalcBmh { get; set; } = null!;
+        public virtual DbSet<CalcBMI> CalcBMI { get; set; } = null!;
+        public virtual DbSet<CalcOptimum> CalcOptimum { get; set; } = null!;
+        public virtual DbSet<CalcPulse> CalcPulse { get; set; } = null!;
+        public virtual DbSet<Carousel> Carousel { get; set; } = null!;
+        public virtual DbSet<Case> Case { get; set; } = null!;
+        public virtual DbSet<Confession> Confession { get; set; } = null!;
+        public virtual DbSet<ConsultancyForm> ConsultancyForm { get; set; } = null!;
+        public virtual DbSet<ConsultancyFormType> ConsultancyFormType { get; set; } = null!;
+        public virtual DbSet<Contact> Contact { get; set; } = null!;
+        public virtual DbSet<ContactCategory> ContactCategory { get; set; } = null!;
+        public virtual DbSet<D_Appointment> D_Appointment { get; set; } = null!;
+        public virtual DbSet<D_Specialties> D_Specialties { get; set; } = null!;
+        public virtual DbSet<Days> Days { get; set; } = null!;
+        public virtual DbSet<_DaysMeal> _DaysMeal { get; set; } = null!;
+        public virtual DbSet<DietList> DietList { get; set; } = null!;
+        public virtual DbSet<Diseases> Diseases { get; set; } = null!;
+        public virtual DbSet<DiseasesCardiovascular> DiseasesCardiovascular { get; set; } = null!;
+        public virtual DbSet<DiseasesDiabetes> DiseasesDiabetes { get; set; } = null!;
+        public virtual DbSet<DiseasesDigestiveDisorders> DiseasesDigestiveDisorders { get; set; } = null!;
+        public virtual DbSet<DiseasesFamilyMembers> DiseasesFamilyMembers { get; set; } = null!;
+        public virtual DbSet<Event> Event { get; set; } = null!;
+        public virtual DbSet<EventCategory> EventCategory { get; set; } = null!;
+        public virtual DbSet<Examination> Examination { get; set; } = null!;
+        public virtual DbSet<_Examination> _Examination { get; set; } = null!;
+        public virtual DbSet<FemaleMentalState> FemaleMentalState { get; set; } = null!;
+        public virtual DbSet<FixBmh> FixBmh { get; set; } = null!;
+        public virtual DbSet<FixBMI> FixBMI { get; set; } = null!;
+        public virtual DbSet<FixCalorieSch> FixCalorieSch { get; set; } = null!;
+        public virtual DbSet<FixFeedPyramid> FixFeedPyramid { get; set; } = null!;
+        public virtual DbSet<FixHeartDiseases> FixHeartDiseases { get; set; } = null!;
+        public virtual DbSet<FixMealSize> FixMealSize { get; set; } = null!;
+        public virtual DbSet<FixOptimum> FixOptimum { get; set; } = null!;
+        public virtual DbSet<FixPulse> FixPulse { get; set; } = null!;
+        public virtual DbSet<FoodHabits> FoodHabit { get; set; } = null!;
+        public virtual DbSet<FoodHabitMood> FoodHabitMood { get; set; } = null!;
+        public virtual DbSet<FoodTime> FoodTime { get; set; } = null!;
+        public virtual DbSet<Form> Form { get; set; } = null!;
+        public virtual DbSet<Genders> Genders { get; set; } = null!;
+        public virtual DbSet<HearAboutUS> HearAboutUS { get; set; } = null!;
+        public virtual DbSet<Image> Image { get; set; } = null!;
+        public virtual DbSet<ImageBlog> ImageBlog { get; set; } = null!;
+        public virtual DbSet<ImageCarousel> ImageCarousel { get; set; } = null!;
+        public virtual DbSet<Influencer> Influencer { get; set; } = null!;
+        public virtual DbSet<Lab> Lab { get; set; } = null!;
+        public virtual DbSet<Languages> Languages { get; set; } = null!;
+        public virtual DbSet<MasterRoot> MasterRoot { get; set; } = null!;
+        public virtual DbSet<Meal> Meal { get; set; } = null!;
+        public virtual DbSet<Members> Members { get; set; } = null!;
+        public virtual DbSet<MembersAuth> MembersAuth { get; set; } = null!;
+        public virtual DbSet<MembersInformation> MembersInformation { get; set; } = null!;
+        public virtual DbSet<MetaKeyword> MetaKeyword { get; set; } = null!;
+        public virtual DbSet<Navigation> Navigation { get; set; } = null!;
+        public virtual DbSet<NewsBulletin> NewsBulletin { get; set; } = null!;
+        public virtual DbSet<NewsPaper> NewsPaper { get; set; } = null!;
+        public virtual DbSet<OurTeam> OurTeam { get; set; } = null!;
+        public virtual DbSet<Press> Press { get; set; } = null!;
+        public virtual DbSet<PressType> PressType { get; set; } = null!;
+        public virtual DbSet<References> References { get; set; } = null!;
+        public virtual DbSet<ResultBmh> ResultBmhs { get; set; } = null!;
+        public virtual DbSet<ResultBMI> ResultBMI { get; set; } = null!;
+        public virtual DbSet<ResultOptimum> ResultOptimum { get; set; } = null!;
+        public virtual DbSet<ResultPulse> ResultPulse { get; set; } = null!;
+        public virtual DbSet<SeminarVisuals> SeminarVisuals { get; set; } = null!;
+        public virtual DbSet<SLeftNavigation> SLeftNavigation { get; set; } = null!;
+        public virtual DbSet<Status> Status { get; set; } = null!;
+        public virtual DbSet<TaylanK> TaylanK { get; set; } = null!;
+        public virtual DbSet<User> User { get; set; } = null!;
+        public virtual DbSet<Video> Video { get; set; } = null!;
+        public virtual DbSet<VideoCategory> VideoCategory { get; set; } = null!;
+        public virtual DbSet<WorkShopApplicationForm> WorkShopApplicationForm { get; set; } = null!;
+        public virtual DbSet<Workshop> Workshop { get; set; } = null!;
+        public virtual DbSet<WorkshopCategory> WorkshopCategory { get; set; } = null!;
+        public virtual DbSet<WorkshopEducation> WorkshopEducation { get; set; } = null!;
+        public virtual DbSet<WorkshopType> WorkshopType { get; set; } = null!;
+        public virtual DbSet<X_BlogCategory> X_BlogCategory { get; set; } = null!;
+        public virtual DbSet<X_BookCategory> X_BookCategory { get; set; } = null!;
         #endregion
 
-
-        //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        //{
-        //    //ChangeTracker: Entityler üzerinden yapılan değişiklikleri ya da yeni eklenen verinin yakalanmasını sağlayan propertdir. Update operasyonlarında Track edilen verileri yakalayıp elde etmemizi sağlar.
-        //    var datas = ChangeTracker
-        //        .Entries<BaseEntity>();
-        //    foreach (var data in datas)
-        //    {
-        //        _ = data.State switch
-        //        {
-        //            EntityState.Added => data.Entity.CreatedDate = DateTime.UtcNow,
-        //            EntityState.Modified => data.Entity.UpdatedDate = DateTime.UtcNow,
-        //            _ => DateTime.UtcNow
-        //        };
-        //    }
-        //    return await base.SaveChangesAsync(cancellationToken);
-        //}
-
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            //foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            //{
+            //    relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            //}
+
+            modelBuilder.Entity<AllergyProducingFoods>(entity =>
             {
-                relationship.DeleteBehavior = DeleteBehavior.Restrict;
-            }
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #region Navigation
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
 
-            builder.Entity<Navigation>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.Navigation)
-                .HasForeignKey(s => s.LangID);
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.AllergyProducingFoods)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_AllergyProducingFoods_MembersInformation");
+            });
 
-            #endregion
+            modelBuilder.Entity<AppointmentDetail>(entity =>
+            {
+                entity.ToTable("AppointmentDetail");
 
-            #region Users
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<User>()
-                .HasOne(s => s.Auth)
-                .WithMany(u => u.User)
-                .HasForeignKey(s => s.AuthID);
+                entity.Property(e => e.AppointmentId).HasColumnName("AppointmentID");
 
-            builder.Entity<User>()
-               .HasOne(s => s.TaylanK)
-               .WithOne(u => u.User)
-               .HasForeignKey<TaylanK>(ad => ad.UserID);
+                entity.Property(e => e.MembersId).HasColumnName("MembersID");
 
-            builder.Entity<User>()
-              .HasMany(s => s.Blog)
-              .WithOne(u => u.User)
-              .HasForeignKey(s => s.CreateUserID);
+                entity.Property(e => e.OilRate).HasColumnType("decimal(18, 2)");
 
-            #endregion
+                entity.Property(e => e.Size).HasColumnType("decimal(18, 2)");
 
-            #region Members
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
-            builder.Entity<Members>()
-               .HasOne(s => s.MembersDetail)
-               .WithOne(u => u.Members)
-               .HasForeignKey<MembersDetail>(ad => ad.MembersID);
+                entity.Property(e => e.Weight).HasColumnType("decimal(18, 2)");
+            });
 
-            builder.Entity<Members>()
-               .HasOne(s => s.MembersAuth)
-               .WithMany(u => u.Members)
-               .HasForeignKey(s => s.MembersAuthID)
-               .IsRequired(false);
+            modelBuilder.Entity<Article>(entity =>
+            {
+                entity.ToTable("Article");
 
-            #endregion
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #region langues
+                entity.Property(e => e.ArticleCategoryId).HasColumnName("ArticleCategoryID");
 
-            builder.Entity<Languages>()
-                .HasMany(s => s.TaylanK)
-                .WithOne(u => u.Languages)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.ArticleDate).HasColumnType("datetime");
 
-            builder.Entity<Languages>()
-               .HasMany(s => s.Banner)
-               .WithOne(u => u.Languages)
-               .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.AuthorUserId).HasColumnName("AuthorUserID");
 
-            builder.Entity<Languages>()
-               .HasMany(s => s.Carousel)
-               .WithOne(u => u.Languages)
-               .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-            builder.Entity<Languages>()
-               .HasMany(s => s.Video)
-               .WithOne(u => u.Languages)
-               .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
 
-            #endregion
+                entity.Property(e => e.FontAwesomeIcon).HasMaxLength(100);
 
-            #region Blog
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            builder.Entity<X_BlogCategory>()
-                .HasOne(s => s.Blog)
-                .WithMany(u => u.X_BlogCategory)
-                .HasForeignKey(s => s.BlogID);
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
 
-            builder.Entity<X_BlogCategory>()
-              .HasOne(s => s.BlogCategory)
-              .WithMany(u => u.X_BlogCategory)
-              .HasForeignKey(s => s.BlogCategoryID);
+                entity.Property(e => e.MetaTitle).HasMaxLength(250);
 
-            builder.Entity<Blog>()
-                .HasOne(s => s.BlogType)
-                .WithMany(s => s.Blogs)
-                .HasForeignKey(s => s.BlogTypeID);
+                entity.Property(e => e.NavigationId).HasColumnName("NavigationID");
 
-            builder.Entity<Blog>()
-                .HasOne(s => s.Languages)
-                .WithMany(s => s.Blogs)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
+                entity.Property(e => e.SubTitle).HasMaxLength(250);
 
-            #endregion
+                entity.Property(e => e.Title).HasMaxLength(250);
 
-            #region Article
+                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
-            builder.Entity<Article>()
-                .HasOne(s => s.ArticleCategory)
-                .WithMany(u => u.Article)
-                .HasForeignKey(s => s.ArticleCategoryID);
+                entity.Property(e => e.UpdateUserId).HasColumnName("UpdateUserID");
 
-            builder.Entity<Article>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.Article)
-                .HasForeignKey(s => s.LangID);
+                entity.HasOne(d => d.ArticleCategory)
+                    .WithMany(p => p.Articles)
+                    .HasForeignKey(d => d.ArticleCategoryId)
+                    .HasConstraintName("FK_Article_ArticleCategory");
+            });
 
+            modelBuilder.Entity<ArticleCategory>(entity =>
+            {
+                entity.ToTable("ArticleCategory");
 
-            #endregion
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #region Book
+                entity.Property(e => e.CategoryName).HasMaxLength(250);
 
-            builder.Entity<X_BookCategory>()
-                .HasOne(s => s.Book)
-                .WithMany(u => u.X_BookCategories)
-                .HasForeignKey(s => s.BookID);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-            builder.Entity<X_BookCategory>()
-                .HasOne(s => s.BookCategory)
-                .WithMany(u => u.X_BookCategories)
-                .HasForeignKey(s => s.BookCategoryID);
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
 
-            builder.Entity<Book>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.Books)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            #endregion
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
 
-            #region Press
+                entity.Property(e => e.MetaTitle).HasMaxLength(250);
 
-            builder.Entity<Press>()
-                .HasOne(s => s.NewsPaper)
-                .WithMany(u => u.Press)
-                .HasForeignKey(s => s.NewsPaperID);
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
 
-            builder.Entity<Press>()
-               .HasOne(s => s.PressType)
-               .WithMany(u => u.Press)
-               .HasForeignKey(s => s.PressTypeID);
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
 
-            builder.Entity<Press>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.Presses)
-                .HasForeignKey(s => s.LangID);
+            modelBuilder.Entity<Auth>(entity =>
+            {
+                entity.ToTable("Auth");
 
-            #endregion
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
 
-            #region Video
+                entity.Property(e => e.AuthName).HasMaxLength(250);
+            });
 
-            builder.Entity<Video>()
-                .HasOne(s => s.VideoCategory)
-                .WithMany(u => u.Videos)
-                .HasForeignKey(s => s.VideoCategoryID);
+            modelBuilder.Entity<Banner>(entity =>
+            {
+                entity.ToTable("Banner");
 
-            #endregion
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #region WorkShop
+                entity.Property(e => e.BannerName).HasMaxLength(150);
 
-            builder.Entity<Workshop>()
-                .HasOne(s => s.WorkshopEducation)
-                .WithMany(u => u.Workshop)
-                .HasForeignKey(s => s.WSEducationID);
+                entity.Property(e => e.DateString).HasMaxLength(150);
 
-            builder.Entity<Workshop>()
-               .HasOne(s => s.WorkshopType)
-               .WithMany(u => u.WorkShop)
-               .HasForeignKey(s => s.WSTypeID);
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            builder.Entity<Workshop>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.Workshops)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
 
-            builder.Entity<WorkshopEducation>()
-                .HasMany(s => s.WorkshopCategory)
-                .WithOne(u => u.WorkshopEducation)
-            .HasForeignKey(s => s.ID);
+            modelBuilder.Entity<Blog>(entity =>
+            {
+                entity.ToTable("Blog");
 
-            builder.Entity<WorkshopEducation>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.WorkshopEducations)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<WorkShopApplicationForm>()
-                .HasOne(s => s.HearAboutUS)
-                .WithMany(u => u.WorkShopApplicationForm)
-                .HasForeignKey(s => s.HearAboutusID);
+                entity.Property(e => e.Action).HasMaxLength(100);
 
-            builder.Entity<WorkShopApplicationForm>()
-              .HasOne(s => s.Workshop)
-              .WithMany(u => u.WorkShopApplicationForm)
-              .HasForeignKey(s => s.WorkShopID);
+                entity.Property(e => e.BlogCategoryId).HasColumnName("BlogCategoryID");
 
-            #endregion
+                entity.Property(e => e.BlogTypeId).HasColumnName("BlogTypeID");
 
-            #region Contact
+                entity.Property(e => e.Controller).HasMaxLength(100);
 
-            builder.Entity<Contact>()
-                .HasOne(s => s.ContactCategory)
-                .WithMany(u => u.Contacts)
-                .HasForeignKey(s => s.ContactCategoryID);
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
 
-            #endregion
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            #region Carousel
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
 
-            builder.Entity<ImageCarousel>()
-                .HasOne(s => s.Carousel)
-                .WithMany(u => u.ImageCarousels)
-                .HasForeignKey(s => s.CarouselID);
+                entity.Property(e => e.MetaTitle).HasMaxLength(150);
 
-            #endregion
+                entity.Property(e => e.NavigationId).HasColumnName("NavigationID");
 
-            #region Form
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixBmhs)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.Property(e => e.SubTitle).HasMaxLength(750);
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixBMIs)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.Property(e => e.Title).HasMaxLength(250);
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixCalorieSches)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.Property(e => e.UpdateUserId).HasColumnName("UpdateUserID");
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixFeedPyramids)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.HasOne(d => d.BlogCategory)
+                    .WithMany(p => p.Blogs)
+                    .HasForeignKey(d => d.BlogCategoryId)
+                    .HasConstraintName("FK_Blog_BlogCategory");
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixHeartDiseases)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.HasOne(d => d.BlogType)
+                    .WithMany(p => p.Blogs)
+                    .HasForeignKey(d => d.BlogTypeId)
+                    .HasConstraintName("FK_Blog_BlogType");
+            });
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixMealSizes)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+            modelBuilder.Entity<BlogCategory>(entity =>
+            {
+                entity.ToTable("BlogCategory");
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixOptimums)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<Form>()
-                .HasMany(s => s.FixPulses)
-                .WithOne(s => s.Form)
-                .HasForeignKey(s => s.FormID);
+                entity.Property(e => e.CategoryName).HasMaxLength(50);
 
-            #endregion
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            #region Consultancy
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
 
-            builder.Entity<ConsultancyForm>()
-                .HasOne(s => s.ConsultancyFormType)
-                .WithMany(s => s.ConsultancyForm)
-                .HasForeignKey(s => s.ConsultancyFormTypeID);
+            modelBuilder.Entity<BlogType>(entity =>
+            {
+                entity.ToTable("BlogType");
 
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
 
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            #endregion
+                entity.Property(e => e.TypeName).HasMaxLength(150);
+            });
 
-            #region Calandar
+            modelBuilder.Entity<Book>(entity =>
+            {
+                entity.ToTable("Book");
 
-            builder.Entity<Event>()
-                         .HasOne(s => s.EventCategory)
-                         .WithMany(s => s.Event)
-                         .HasForeignKey(s => s.EventCategoryID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #endregion
+                entity.Property(e => e.Action).HasMaxLength(100);
 
-            #region MemberInfo
+                entity.Property(e => e.BookName).HasMaxLength(250);
 
+                entity.Property(e => e.Controller).HasMaxLength(100);
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.FoodHabitsMoods)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.AllergyProducingFoods)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.FoodTimes)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.FemaleMentalStates)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.NavigationId).HasColumnName("NavigationID");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.FoodHabits)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.DiseasesCardiovasculars)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.UrlRoot).HasMaxLength(250);
+            });
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.DiseasesDiabetes)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+            modelBuilder.Entity<BookCategory>(entity =>
+            {
+                entity.ToTable("BookCategory");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.DiseasesDigestiveDisorders)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<MembersInformation>()
-                .HasMany(s => s.DiseasesFamilyMembers)
-                .WithOne(s => s.MembersInformation)
-                .HasForeignKey(s => s.MembersInformationID);
+                entity.Property(e => e.CategoryName).HasMaxLength(250);
 
-            #endregion
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-            #region Diseases
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
 
-            builder.Entity<Diseases>()
-                .HasMany(s => s.DiseasesCardiovasculars)
-                .WithOne(s => s.Diseases)
-                .HasForeignKey(s => s.DiseasesID);
+                entity.Property(e => e.LangId).HasColumnName("LangID");
 
-            builder.Entity<Diseases>()
-                .HasMany(s => s.DiseasesDiabetes)
-                .WithOne(s => s.Diseases)
-                .HasForeignKey(s => s.DiseasesID);
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
 
-            builder.Entity<Diseases>()
-                .HasMany(s => s.DiseasesDigestiveDisorders)
-                .WithOne(s => s.Diseases)
-                .HasForeignKey(s => s.DiseasesID);
+            modelBuilder.Entity<CalcBmh>(entity =>
+            {
+                entity.ToTable("CalcBmh");
 
-            builder.Entity<Diseases>()
-                .HasMany(s => s.DiseasesFamilyMembers)
-                .WithOne(s => s.Diseases)
-                .HasForeignKey(s => s.DiseasesID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            #endregion
+                entity.Property(e => e.Email).HasMaxLength(250);
 
-            #region AppointmentDetails
+                entity.Property(e => e.Gender).HasMaxLength(250);
 
-            builder.Entity<AppointmentDetail>()
-               .HasOne(s => s.D_Appointment)
-               .WithMany(s => s.AppointmentDetail)
-               .HasForeignKey(s => s.AppointmentID);
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
 
-            builder.Entity<AppointmentDetail>()
-              .HasOne(s => s.Members)
-              .WithMany(s => s.AppointmentDetail)
-              .HasForeignKey(s => s.MembersID);
+                entity.Property(e => e.Result).HasColumnType("decimal(18, 2)");
+            });
 
-            builder.Entity<DietList>()
-              .HasOne(s => s.AppointmentDetail)
-              .WithMany(s => s.DietList)
-              .HasForeignKey(s => s.AppointmentDetailID);
+            modelBuilder.Entity<CalcBMI>(entity =>
+            {
+                entity.ToTable("CalcBMI");
 
-            builder.Entity<DietList>()
-              .HasOne(s => s.Users)
-              .WithMany(s => s.DietLists)
-              .HasForeignKey(s => s.UserID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<_DaysMeal>()
-             .HasOne(s => s.Days)
-             .WithMany(s => s._DaysMeal)
-             .HasForeignKey(s => s.DaysID);
+                entity.Property(e => e.Email).HasMaxLength(250);
 
-            builder.Entity<_DaysMeal>()
-            .HasOne(s => s.Meal)
-            .WithMany(s => s._DaysMeal)
-            .HasForeignKey(s => s.MealID);
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
 
-            builder.Entity<_Examination>()
-           .HasOne(s => s.Examination)
-           .WithMany(s => s._Examination)
-           .HasForeignKey(s => s.ExaminationID);
+                entity.Property(e => e.Result).HasColumnType("decimal(18, 2)");
+            });
 
-            builder.Entity<_Examination>()
-            .HasOne(s => s.Lab)
-            .WithMany(s => s._Examination)
-            .HasForeignKey(s => s.LabID);
+            modelBuilder.Entity<CalcOptimum>(entity =>
+            {
+                entity.ToTable("CalcOptimum");
 
-            builder.Entity<Lab>()
-             .HasOne(s => s.Members)
-             .WithMany(s => s.Lab)
-             .HasForeignKey(s => s.MembersID);
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Entity<Lab>()
-             .HasOne(s => s.User)
-             .WithMany(s => s.Lab)
-             .HasForeignKey(s => s.UsersID);
+                entity.Property(e => e.Email).HasMaxLength(250);
 
-            builder.Entity<DietList>()
-           .HasMany(s => s._DaysMeal)
-           .WithOne(s => s.DietList)
-           .HasForeignKey(s => s.DietListID);
+                entity.Property(e => e.Gender).HasMaxLength(250);
 
-            builder.Entity<AppointmentDetail>()
-            .HasOne(s => s.User)
-            .WithMany(s => s.AppointmentDetail)
-            .HasForeignKey(s => s.UserID);
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
 
+                entity.Property(e => e.Result1).HasColumnType("decimal(18, 2)");
 
-            #endregion
+                entity.Property(e => e.Result2).HasColumnType("decimal(18, 2)");
 
-            #region SeminarVisual
+                entity.Property(e => e.Result3).HasColumnType("decimal(18, 2)");
 
-            builder.Entity<SeminarVisuals>()
-                .HasOne(s => s.Languages)
-                .WithMany(u => u.SeminarVisuals)
-                .HasForeignKey(s => s.LangID);
+                entity.Property(e => e.Result4).HasColumnType("decimal(18, 2)");
+            });
 
-            #endregion
+            modelBuilder.Entity<CalcPulse>(entity =>
+            {
+                entity.ToTable("CalcPulse");
 
+                entity.Property(e => e.Id).HasColumnName("ID");
 
-            base.OnModelCreating(builder);
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.Gender).HasMaxLength(250);
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.ResultMax).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.ResultMin).HasColumnType("decimal(18, 2)");
+            });
+
+            modelBuilder.Entity<Carousel>(entity =>
+            {
+                entity.ToTable("Carousel");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.ImgName).HasMaxLength(250);
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
+
+                entity.Property(e => e.MetaTitle).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<Case>(entity =>
+            {
+                entity.ToTable("Case");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.CaseName)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+            });
+
+            modelBuilder.Entity<Confession>(entity =>
+            {
+                entity.ToTable("Confession");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDatetime).HasColumnType("datetime");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.MemberName).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<ConsultancyForm>(entity =>
+            {
+                entity.ToTable("ConsultancyForm");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ConsultancyFormTypeId).HasColumnName("ConsultancyFormTypeID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(14)
+                    .IsFixedLength();
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Subject).HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<ConsultancyFormType>(entity =>
+            {
+                entity.ToTable("ConsultancyFormType");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ConsultancyFormTypeName).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<Contact>(entity =>
+            {
+                entity.ToTable("Contact");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ContactCategoryId).HasColumnName("ContactCategoryID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.Phone).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Subject).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ContactCategory>(entity =>
+            {
+                entity.ToTable("ContactCategory");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.ContactCategoryName).HasMaxLength(150);
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+            });
+
+            modelBuilder.Entity<D_Appointment>(entity =>
+            {
+                entity.ToTable("D_Appointment");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AppointmentDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.MembersId).HasColumnName("MembersID");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Subject).HasMaxLength(250);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+            });
+
+            modelBuilder.Entity<D_Specialties>(entity =>
+            {
+                entity.ToTable("D_Specialties");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<Days>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.DayName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<_DaysMeal>(entity =>
+            {
+                entity.ToTable("_DaysMeal");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DaysId).HasColumnName("DaysID");
+
+                entity.Property(e => e.DietListId).HasColumnName("DietListID");
+
+                entity.Property(e => e.MealId).HasColumnName("MealID");
+            });
+
+            modelBuilder.Entity<DietList>(entity =>
+            {
+                entity.ToTable("DietList");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AppointmentDetailId).HasColumnName("AppointmentDetailID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+            });
+
+            modelBuilder.Entity<Diseases>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DiseasesName).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<DiseasesCardiovascular>(entity =>
+            {
+                entity.ToTable("DiseasesCardiovascular");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DiseasesId).HasColumnName("DiseasesID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.Diseases)
+                    .WithMany(p => p.DiseasesCardiovasculars)
+                    .HasForeignKey(d => d.DiseasesId)
+                    .HasConstraintName("FK_DiseasesCardiovascular_Diseases");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.DiseasesCardiovasculars)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_DiseasesCardiovascular_MembersInformation");
+            });
+
+            modelBuilder.Entity<DiseasesDiabetes>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DiseasesId).HasColumnName("DiseasesID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.Diseases)
+                    .WithMany(p => p.DiseasesDiabetes)
+                    .HasForeignKey(d => d.DiseasesId)
+                    .HasConstraintName("FK_DiseasesDiabetes_Diseases");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.DiseasesDiabetes)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_DiseasesDiabetes_MembersInformation");
+            });
+
+            modelBuilder.Entity<DiseasesDigestiveDisorders>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DiseasesId).HasColumnName("DiseasesID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.Diseases)
+                    .WithMany(p => p.DiseasesDigestiveDisorders)
+                    .HasForeignKey(d => d.DiseasesId)
+                    .HasConstraintName("FK_DiseasesDigestiveDisorders_Diseases");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.DiseasesDigestiveDisorders)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_DiseasesDigestiveDisorders_MembersInformation");
+            });
+
+            modelBuilder.Entity<DiseasesFamilyMembers>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DiseasesId).HasColumnName("DiseasesID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.Diseases)
+                    .WithMany(p => p.DiseasesFamilyMembers)
+                    .HasForeignKey(d => d.DiseasesId)
+                    .HasConstraintName("FK_DiseasesFamilyMembers_Diseases");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.DiseasesFamilyMembers)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_DiseasesFamilyMembers_MembersInformation");
+            });
+
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ToTable("Event");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.EventCategoryId).HasColumnName("EventCategoryID");
+
+                entity.Property(e => e.FinishDatetime).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDatetime).HasColumnType("datetime");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<EventCategory>(entity =>
+            {
+                entity.ToTable("EventCategory");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.EventCategoryName).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<_Examination>(entity =>
+            {
+                entity.ToTable("_Examination");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ExaminationId).HasColumnName("ExaminationID");
+
+                entity.Property(e => e.LabId).HasColumnName("LabID");
+
+                entity.Property(e => e.Value).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Examination>(entity =>
+            {
+                entity.ToTable("Examination");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ExaminatioName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<FemaleMentalState>(entity =>
+            {
+                entity.ToTable("FemaleMentalState");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.FemaleMentalStates)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_FemaleMentalState_MembersInformation");
+            });
+
+            modelBuilder.Entity<FixBmh>(entity =>
+            {
+                entity.ToTable("FixBmh");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixBmhs)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixBmh_Form");
+            });
+
+            modelBuilder.Entity<FixBMI>(entity =>
+            {
+                entity.ToTable("FixBMI");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixBmis)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixBMI_Form");
+            });
+
+            modelBuilder.Entity<FixCalorieSch>(entity =>
+            {
+                entity.ToTable("FixCalorieSch");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixCalorieSches)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixCalorieSch_Form");
+            });
+
+            modelBuilder.Entity<FixFeedPyramid>(entity =>
+            {
+                entity.ToTable("FixFeedPyramid");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixFeedPyramids)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixFeedPyramid_Form");
+            });
+
+            modelBuilder.Entity<FixHeartDiseases>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixHeartDiseases)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixHeartDiseases_Form");
+            });
+
+            modelBuilder.Entity<FixMealSize>(entity =>
+            {
+                entity.ToTable("FixMealSize");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixMealSizes)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixMealSize_Form");
+            });
+
+            modelBuilder.Entity<FixOptimum>(entity =>
+            {
+                entity.ToTable("FixOptimum");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixOptimums)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixOptimum_Form");
+            });
+
+            modelBuilder.Entity<FixPulse>(entity =>
+            {
+                entity.ToTable("FixPulse");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.FormId).HasColumnName("FormID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.HasOne(d => d.Form)
+                    .WithMany(p => p.FixPulses)
+                    .HasForeignKey(d => d.FormId)
+                    .HasConstraintName("FK_FixPulse_Form");
+            });
+
+            modelBuilder.Entity<FoodHabits>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.FoodHabits)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_FoodHabits_MembersInformation");
+            });
+
+            modelBuilder.Entity<FoodHabitMood>(entity =>
+            {
+                entity.ToTable("FoodHabitMood");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+            });
+
+            modelBuilder.Entity<FoodTime>(entity =>
+            {
+                entity.ToTable("FoodTime");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.MembersInformationId).HasColumnName("MembersInformationID");
+
+                entity.HasOne(d => d.MembersInformation)
+                    .WithMany(p => p.FoodTimes)
+                    .HasForeignKey(d => d.MembersInformationId)
+                    .HasConstraintName("FK_FoodTime_MembersInformation");
+            });
+
+            modelBuilder.Entity<Form>(entity =>
+            {
+                entity.ToTable("Form");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Action).HasMaxLength(250);
+
+                entity.Property(e => e.Controller).HasMaxLength(250);
+
+                entity.Property(e => e.FormName).HasMaxLength(250);
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+            });
+
+            modelBuilder.Entity<Genders>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Gender)
+                    .HasMaxLength(10)
+                    .HasColumnName("Gender")
+                    .IsFixedLength();
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+            });
+
+            modelBuilder.Entity<HearAboutUS>(entity =>
+            {
+                entity.ToTable("HearAboutUS");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.HearAboutUsname)
+                    .HasMaxLength(150)
+                    .HasColumnName("HearAboutUSName");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+            });
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.ToTable("Image");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<ImageBlog>(entity =>
+            {
+                entity.ToTable("ImageBlog");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.ImgName).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<ImageCarousel>(entity =>
+            {
+                entity.ToTable("ImageCarousel");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CarouselId).HasColumnName("CarouselID");
+
+                entity.Property(e => e.ImgName).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<Influencer>(entity =>
+            {
+                entity.ToTable("Influencer");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CompanyName).HasMaxLength(250);
+
+                entity.Property(e => e.CompanySector).HasMaxLength(250);
+
+                entity.Property(e => e.CreateDatetime).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.Phone).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<Lab>(entity =>
+            {
+                entity.ToTable("Lab");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AppointmentDetailId).HasColumnName("AppointmentDetailID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LabDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.MembersId).HasColumnName("MembersID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.Property(e => e.UsersId).HasColumnName("UsersID");
+            });
+
+            modelBuilder.Entity<Languages>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Language)
+                    .HasMaxLength(100)
+                    .HasColumnName("Language");
+            });
+
+            modelBuilder.Entity<MasterRoot>(entity =>
+            {
+                entity.ToTable("MasterRoot");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Action).HasMaxLength(50);
+
+                entity.Property(e => e.Controller).HasMaxLength(50);
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+            });
+
+            modelBuilder.Entity<Meal>(entity =>
+            {
+                entity.ToTable("Meal");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<Members>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(250)
+                    .HasColumnName("EMail");
+
+                entity.Property(e => e.Lacation).HasMaxLength(50);
+
+                entity.Property(e => e.MembersAuthId).HasColumnName("MembersAuthID");
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(15)
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<MembersAuth>(entity =>
+            {
+                entity.ToTable("MembersAuth");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.MembersAuthName).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<MembersInformation>(entity =>
+            {
+                entity.ToTable("MembersInformation");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Birthdate).HasColumnType("datetime");
+
+                entity.Property(e => e.CpreviousDisease).HasColumnName("CPreviousDisease");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.GetDrugged).HasMaxLength(250);
+
+                entity.Property(e => e.ImageUrl).HasMaxLength(250);
+
+                entity.Property(e => e.Job).HasMaxLength(250);
+
+                entity.Property(e => e.MembersId).HasColumnName("MembersID");
+
+                entity.Property(e => e.Name).HasMaxLength(250);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(250);
+
+                entity.Property(e => e.Surname).HasMaxLength(250);
+
+                entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<MetaKeyword>(entity =>
+            {
+                entity.ToTable("MetaKeyword");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.Page).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(80);
+            });
+
+            modelBuilder.Entity<Navigation>(entity =>
+            {
+                entity.ToTable("Navigation");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.Action).HasMaxLength(250);
+
+                entity.Property(e => e.Controller).HasMaxLength(250);
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.FontAwesomeIcon).HasMaxLength(250);
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
+
+                entity.Property(e => e.MetaTitle).HasMaxLength(250);
+
+                entity.Property(e => e.NavigationName).HasMaxLength(250);
+
+                entity.Property(e => e.OrderNo).HasMaxLength(250);
+
+                entity.Property(e => e.ParentId).HasColumnName("ParentID");
+
+                entity.Property(e => e.UrlRoot).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<NewsBulletin>(entity =>
+            {
+                entity.ToTable("NewsBulletin");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<NewsPaper>(entity =>
+            {
+                entity.ToTable("NewsPaper");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.NewsPaperName).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+            });
+
+            modelBuilder.Entity<OurTeam>(entity =>
+            {
+                entity.ToTable("OurTeam");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<Press>(entity =>
+            {
+                entity.ToTable("Press");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.MetaKey).HasMaxLength(250);
+
+                entity.Property(e => e.MetaTitle).HasMaxLength(250);
+
+                entity.Property(e => e.NewsPaperId).HasColumnName("NewsPaperID");
+
+                entity.Property(e => e.PressTypeId).HasColumnName("PressTypeID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<PressType>(entity =>
+            {
+                entity.ToTable("PressType");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.PressTypeName)
+                    .HasMaxLength(50)
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<References>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.ImgUrl).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.Property(e => e.UrlLink).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<ResultBmh>(entity =>
+            {
+                entity.ToTable("ResultBmh");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<ResultBMI>(entity =>
+            {
+                entity.ToTable("ResultBMI");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IntervalMax).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.IntervalMin).HasColumnType("decimal(18, 2)");
+            });
+
+            modelBuilder.Entity<ResultOptimum>(entity =>
+            {
+                entity.ToTable("ResultOptimum");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<ResultPulse>(entity =>
+            {
+                entity.ToTable("ResultPulse");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
+
+            modelBuilder.Entity<SeminarVisuals>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.Location).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<SLeftNavigation>(entity =>
+            {
+                entity.ToTable("SLeftNavigation");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.Title).HasMaxLength(1250);
+
+                entity.Property(e => e.Url).HasMaxLength(1250);
+            });
+
+            modelBuilder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.StatusName).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TaylanK>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("TaylanK");
+
+                entity.Property(e => e.CompanyName).HasMaxLength(250);
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Email1).HasMaxLength(250);
+
+                entity.Property(e => e.Email2).HasMaxLength(250);
+
+                entity.Property(e => e.Facebook).HasMaxLength(250);
+
+                entity.Property(e => e.Fax)
+                    .HasMaxLength(24)
+                    .IsFixedLength();
+
+                entity.Property(e => e.GoogleMap).HasMaxLength(250);
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Instagram).HasMaxLength(250);
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.Phone1)
+                    .HasMaxLength(24)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Phone2)
+                    .HasMaxLength(24)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Pinterest).HasMaxLength(250);
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Twitter).HasMaxLength(250);
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("User");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AuthId).HasColumnName("AuthID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.Email).HasMaxLength(150);
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedUserId).HasColumnName("ModifiedUserID");
+
+                entity.Property(e => e.Title).HasMaxLength(50);
+
+                entity.Property(e => e.Username).HasMaxLength(150);
+            });
+
+            modelBuilder.Entity<Video>(entity =>
+            {
+                entity.ToTable("Video");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.Property(e => e.VideoCategoryId).HasColumnName("VideoCategoryID");
+
+                entity.HasOne(d => d.VideoCategory)
+                    .WithMany(p => p.Videos)
+                    .HasForeignKey(d => d.VideoCategoryId)
+                    .HasConstraintName("FK_Video_VideoCategory");
+            });
+
+            modelBuilder.Entity<VideoCategory>(entity =>
+            {
+                entity.ToTable("VideoCategory");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.VideoCategoryName).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<WorkShopApplicationForm>(entity =>
+            {
+                entity.ToTable("WorkShopApplicationForm");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BirthDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Email).HasMaxLength(250);
+
+                entity.Property(e => e.HearAboutusId).HasColumnName("HearAboutusID");
+
+                entity.Property(e => e.Job).HasMaxLength(250);
+
+                entity.Property(e => e.NameSurname).HasMaxLength(250);
+
+                entity.Property(e => e.Phone)
+                    .HasMaxLength(14)
+                    .IsFixedLength();
+
+                entity.Property(e => e.WorkShopId).HasColumnName("WorkShopID");
+            });
+
+            modelBuilder.Entity<Workshop>(entity =>
+            {
+                entity.ToTable("Workshop");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.CreateUserId).HasColumnName("CreateUserID");
+
+                entity.Property(e => e.FinishDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.NavigationId).HasColumnName("NavigationID");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.StartDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.Title).HasMaxLength(250);
+
+                entity.Property(e => e.WseducationId).HasColumnName("WSEducationID");
+
+                entity.Property(e => e.WstypeId).HasColumnName("WSTypeID");
+            });
+
+            modelBuilder.Entity<WorkshopCategory>(entity =>
+            {
+                entity.ToTable("WorkshopCategory");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.WscategoryName)
+                    .HasMaxLength(150)
+                    .HasColumnName("WSCategoryName");
+            });
+
+            modelBuilder.Entity<WorkshopEducation>(entity =>
+            {
+                entity.ToTable("WorkshopEducation");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+                entity.Property(e => e.WsEducationName).HasMaxLength(250);
+
+                entity.Property(e => e.WscategoryId).HasColumnName("WSCategoryID");
+            });
+
+            modelBuilder.Entity<WorkshopType>(entity =>
+            {
+                entity.ToTable("WorkshopType");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.LangId).HasColumnName("LangID");
+
+                entity.Property(e => e.WstypeName)
+                    .HasMaxLength(150)
+                    .HasColumnName("WSTypeName");
+            });
+
+            modelBuilder.Entity<X_BlogCategory>(entity =>
+            {
+                entity.ToTable("X_BlogCategory");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BlogCategoryId).HasColumnName("BlogCategoryID");
+
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+            });
+
+            modelBuilder.Entity<X_BookCategory>(entity =>
+            {
+                entity.ToTable("X_BookCategory");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BookCategoryId).HasColumnName("BookCategoryID");
+
+                entity.Property(e => e.BookId).HasColumnName("BookID");
+
+                entity.HasOne(d => d.BookCategory)
+                    .WithMany(p => p.X_BookCategory)
+                    .HasForeignKey(d => d.BookCategoryId)
+                    .HasConstraintName("FK_X_BookCategory_BookCategory");
+
+                entity.HasOne(d => d.Book)
+                    .WithMany(p => p.X_BookCategory)
+                    .HasForeignKey(d => d.BookId)
+                    .HasConstraintName("FK_X_BookCategory_Book");
+            });
+
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -62,8 +62,8 @@ using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
-using MVCBlogApp.Application.Repositories.MembersDetail;
 using MVCBlogApp.Application.Repositories.MembersInformation;
+using MVCBlogApp.Application.Repositories.MetaKeyword;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsBulletin;
 using MVCBlogApp.Application.Repositories.NewsPaper;
@@ -378,8 +378,8 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IMembersAuthReadRepository, MembersAuthReadRepository>();
             services.AddScoped<IMembersAuthWriteRepository, MembersAuthWriteRepository>();
 
-            services.AddScoped<IMembersDetailReadRepository, MembersDetailReadRepository>();
-            services.AddScoped<IMembersDetailWriteRepository, MembersDetailWriteRepository>();
+            services.AddScoped<IMetaKeywordReadRepository, MetaKeywordReadRepository>();
+            services.AddScoped<IMetaKeywordWriteRepository, MetaKeywordWriteRepository>();
 
             services.AddScoped<IMembersInformationReadRepository, MembersInformationReadRepository>();
             services.AddScoped<IMembersInformationWriteRepository, MembersInformationWriteRepository>();

@@ -19,19 +19,12 @@ namespace MVCBlogApp.Domain.Entities
         public string? Twitter { get; set; }
         public string? Pinterest { get; set; }
         public string? Logo { get; set; }
-
-        public int? StatusID { get; set; }
-
+        public int? StatusId { get; set; }
         public string? Metakey { get; set; }
         public string? Metatitle { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public int? UserId { get; set; }
         public string? Metadescription { get; set; }
-        public string? CreateDate { get; set; }
-        public int? UserID { get; set; }
-
-        public int? LangID { get; set; }
-
-        public virtual User User { get; set; }
-        public virtual Languages Languages { get; set; }
-        public virtual Status Status { get; set; }
+        public int? LangId { get; set; }
     }
 }

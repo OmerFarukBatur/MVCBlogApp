@@ -35,7 +35,7 @@ namespace MVCBlogApp.Persistence.Repositories
 
         public async Task<bool> Remove(int id)
         {
-            T model = await Table.FirstOrDefaultAsync(data => data.ID == id);
+            T model = await Table.FirstOrDefaultAsync(data => data.Id == id);
             return Remove(model);
         }
 

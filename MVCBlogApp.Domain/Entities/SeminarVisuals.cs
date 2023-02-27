@@ -6,16 +6,11 @@ namespace MVCBlogApp.Domain.Entities
     {
         public string? Title { get; set; }
         public string? ImgUrl { get; set; }
-
         public DateTime? Date { get; set; }
         public string? Location { get; set; }
         public string? Description { get; set; }
         public DateTime? CreateDate { get; set; }
-
-        public int? LangID { get; set; }
-        public int? StatusID { get; set; }
-
-        public virtual Languages Languages { get; set; }
-        public virtual Status Status { get; set; }
+        public int? LangId { get; set; }
+        public int? StatusId { get; set; }
     }
 }

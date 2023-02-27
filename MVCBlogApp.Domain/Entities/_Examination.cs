@@ -4,12 +4,8 @@ namespace MVCBlogApp.Domain.Entities
 {
     public class _Examination : BaseEntity
     {
-        public int ExaminationID { get; set; }
-        public int LabID { get; set; }
-
-        public string Value { get; set; }
-
-        public virtual Examination Examination { get; set; }
-        public virtual Lab Lab { get; set; }
+        public int? ExaminationId { get; set; }
+        public int? LabId { get; set; }
+        public string? Value { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MVCBlogApp.Domain.Entities
 {
-    public class ResultBMh : BaseEntity
+    public class ResultBmh : BaseEntity
     {
         public string? Resulttext { get; set; }
     }

@@ -93,7 +93,7 @@ namespace MVCBlogApp.Persistence.Services
         {
             List<AllLanguage> allLanguages = await _languagesReadRepository.GetAll().Select(a => new AllLanguage 
             {
-                Id = a.ID,
+                Id = a.Id,
                 Language = a.Language,
                 IsActive= (bool)a.IsActive,
                 CreatedDate = a.CreateDate
@@ -111,7 +111,7 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Language = new VM_Language
                     {
-                        Id = language.ID,
+                        Id = language.Id,
                         Language = language.Language,
                         IsActive = (bool)language.IsActive
                     },
@@ -174,7 +174,7 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Navigation navigation = new()
                 {
-                    ParentID = request.ParentID,
+                    ParentId = request.ParentID,
                     OrderNo = request.OrderNo,
                     IsHeader = request.IsHeader,
                     IsSubHeader = request.IsSubHeader,
@@ -186,7 +186,7 @@ namespace MVCBlogApp.Persistence.Services
                     Action = request.Action,
                     FontAwesomeIcon = request.FontAwesomeIcon,
                     IsActive = request.IsActive,
-                    LangID = request.LangID,
+                    LangId = request.LangID,
                     IsAdmin = request.IsAdmin,
                     CreateDate = DateTime.Now,
                     Type = 0
@@ -207,14 +207,14 @@ namespace MVCBlogApp.Persistence.Services
         {
             List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll().Select(x => new VM_Navigation
             {
-                Id= x.ID,
+                Id= x.Id,
                 MetaTitle= x.MetaTitle,
                 NavigationName= x.NavigationName
             }).ToListAsync();
 
             List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language
             {
-                Id = x.ID,
+                Id = x.Id,
                 Language = x.Language,
                 IsActive = (bool)x.IsActive
             }).ToListAsync();
@@ -228,26 +228,28 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetAllNavigationQueryResponse> GetAllNavigationAsync()
         {
-            List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll(false).Include(s => s.Languages).Select(x => new VM_Navigation
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll(false)
+                .Join(_languagesReadRepository.GetAll(),na=> na.LangId,la=> la.Id,(na,la)=> new {na,la})
+                .Select(x => new VM_Navigation
             {
-                Id = x.ID,
-                MetaTitle = x.MetaTitle,
-                Action = x.Action,
-                Controller = x.Controller,
-                CreateDate = x.CreateDate,
-                FontAwesomeIcon = x.FontAwesomeIcon,
-                IsActive = x.IsActive,
-                IsAdmin = x.IsAdmin,
-                IsHeader = x.IsHeader,
-                IsSubHeader = x.IsSubHeader,
-                Language = x.Languages.Language,
-                MetaKey = x.MetaKey,
-                NavigationName = x.NavigationName,
-                OrderNo = x.OrderNo,
-                ParentId = x.ParentID,
-                Type = x.Type,
-                UrlRoot = x.UrlRoot,
-                LangId = x.LangID
+                Id = x.na.Id,
+                MetaTitle = x.na.MetaTitle,
+                Action = x.na.Action,
+                Controller = x.na.Controller,
+                CreateDate = x.na.CreateDate,
+                FontAwesomeIcon = x.na.FontAwesomeIcon,
+                IsActive = x.na.IsActive,
+                IsAdmin = x.na.IsAdmin,
+                IsHeader = x.na.IsHeader,
+                IsSubHeader = x.na.IsSubHeader,
+                Language = x.la.Language,
+                MetaKey = x.na.MetaKey,
+                NavigationName = x.na.NavigationName,
+                OrderNo = x.na.OrderNo,
+                ParentId = x.na.ParentId,
+                Type = x.na.Type,
+                UrlRoot = x.na.UrlRoot,
+                LangId = x.na.LangId
             }).ToListAsync();
 
             return new()

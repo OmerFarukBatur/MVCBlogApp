@@ -4,7 +4,7 @@ using E = MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Repositories.Examination
 {
-    public class ExaminationReadRepository : ReadRepository<E.Examination>, IExaminationReadRepository
+    public class ExaminationReadRepository : ReadRepository<E._Examination>, IExaminationReadRepository
     {
         public ExaminationReadRepository(MVCBlogDbContext context) : base(context)
         {

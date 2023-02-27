@@ -2,7 +2,7 @@
 
 namespace MVCBlogApp.Application.Repositories.ResultBMh
 {
-    public interface IResultBMhReadRepository : IReadRepository<E.ResultBMh>
+    public interface IResultBMhReadRepository : IReadRepository<E.ResultBmh>
     {
     }
 }

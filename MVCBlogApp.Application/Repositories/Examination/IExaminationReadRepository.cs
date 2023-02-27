@@ -2,7 +2,7 @@
 
 namespace MVCBlogApp.Application.Repositories.Examination
 {
-    public interface IExaminationReadRepository : IReadRepository<E.Examination>
+    public interface IExaminationReadRepository : IReadRepository<E._Examination>
     {
     }
 }

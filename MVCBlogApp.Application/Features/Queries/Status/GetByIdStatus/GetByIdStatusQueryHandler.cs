@@ -23,7 +23,7 @@ namespace MVCBlogApp.Application.Features.Queries.Status.GetByIdStatus
                 {
                     Status = new()
                     {
-                        Id = status.ID,
+                        Id = status.Id,
                         StatusName = status.StatusName
                     },
                     State = true
