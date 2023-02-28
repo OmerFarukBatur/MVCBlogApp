@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
@@ -27,6 +29,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetNavigationCreateItemsCommandResponse> GetNavigationCreateItemsAsync();
         Task<GetAllNavigationQueryResponse> GetAllNavigationAsync();
         Task<GetByIdNavigationQueryResponse> GetByIdNavigationAsync(GetByIdNavigationQueryRequest request);
+        Task<NavigationUpdateCommandResponse> NavigationUpdateAsync(NavigationUpdateCommandRequest request);
+        Task<NavigationDeleteCommandResponse> NavigationDeleteAsync(NavigationDeleteCommandRequest request);
 
         #endregion
     }

@@ -4,6 +4,8 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
@@ -320,6 +322,71 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
 
+        }
+
+        public async Task<NavigationUpdateCommandResponse> NavigationUpdateAsync(NavigationUpdateCommandRequest request)
+        {
+            Navigation navigation = await _navigationReadRepository.GetByIdAsync(request.Id);
+
+            if (navigation != null)
+            {
+                navigation.Action = request.Action;
+                navigation.NavigationName = request.NavigationName;
+                navigation.OrderNo = request.OrderNo;
+                navigation.ParentId = request.ParentId;
+                navigation.IsHeader = request.IsHeader;
+                navigation.IsSubHeader = request.IsSubHeader;
+                navigation.Controller = request.Controller;
+                navigation.FontAwesomeIcon = request.FontAwesomeIcon;
+                navigation.IsActive = request.IsActive;
+                navigation.IsAdmin = request.IsAdmin;
+                navigation.LangId = request.LangId;
+                navigation.MetaKey = request.MetaKey;
+                navigation.MetaTitle = request.MetaTitle;
+                navigation.UrlRoot = request.UrlRoot;
+
+                _navigationWriteRepository.Update(navigation);
+                await _navigationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme başarıyla yapıldı.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "İşlem sırasında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<NavigationDeleteCommandResponse> NavigationDeleteAsync(NavigationDeleteCommandRequest request)
+        {
+            Navigation navigation = await _navigationReadRepository.GetByIdAsync(request.Id);
+            if (navigation != null)
+            {
+                navigation.IsActive = false;
+                _navigationWriteRepository.Update(navigation);
+                await _navigationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "İşlem başarıyla yapıldı.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "İşlem sırasında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
         }
 
 

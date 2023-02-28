@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
@@ -126,17 +128,24 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> NavigationUpdate(int a)
+        public async Task<IActionResult> NavigationUpdate(NavigationUpdateCommandRequest request)
         {
-
-            return View();
+            NavigationUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("NavigationList", "GeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("NavigationUpdate", "GeneralOptions");
+            }
         }
 
 
-        public async Task<IActionResult> NavigationDelete()
+        public async Task<IActionResult> NavigationDelete(NavigationDeleteCommandRequest request)
         {
-
-            return View();
+            NavigationDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("NavigationList", "GeneralOptions");
         }
         #endregion
     }
