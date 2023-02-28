@@ -6,5 +6,6 @@ namespace MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate
     {
         public int Id { get; set; }
         public string TypeName { get; set; }
+        public int LangId { get; set; }
     }
 }

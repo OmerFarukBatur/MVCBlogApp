@@ -11,6 +11,7 @@ using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
+using MVCBlogApp.Application.Features.Queries.BlogType.GetBlogTypeCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 
 namespace MVCBlogApp.UI.Controllers
@@ -135,9 +136,10 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BlogTypeCreate()
+        public async Task<IActionResult> BlogTypeCreate(GetBlogTypeCreateItemsQueryRequest request)
         {
-            return View();
+            GetBlogTypeCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]

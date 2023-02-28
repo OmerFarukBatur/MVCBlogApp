@@ -20,6 +20,7 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Blog Tipi</th>
+                                        <th>Dil</th>
                                         <th>Güncelle</th>
                                         <th>Sil</th>
                                     </tr>
@@ -30,6 +31,7 @@
                                         <tr>
                                             <td>@item.Id</td>
                                             <td>@item.TypeName</td>
+                                            <td>@item.Language</td>
                                             <td><a class="btn btn-outline-success" asp-action="BlogTypeUpdate" asp-controller="Blog" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
                                             <td><a class="btn btn-outline-danger" asp-action="BlogTypeDelete" asp-controller="Blog" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
                                         </tr>

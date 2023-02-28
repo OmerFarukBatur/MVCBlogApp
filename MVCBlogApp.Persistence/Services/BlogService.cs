@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
+using MVCBlogApp.Application.Features.Queries.BlogType.GetBlogTypeCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
@@ -54,7 +55,7 @@ namespace MVCBlogApp.Persistence.Services
             }
             else
             {
-                BlogType newblogType = new() { TypeName = request.TypeName };
+                BlogType newblogType = new() { TypeName = request.TypeName, LangId = request.LangId };
 
                 await _blogTypeWriteRepository.AddAsync(newblogType);
                 await _blogTypeWriteRepository.SaveAsync();
@@ -98,6 +99,7 @@ namespace MVCBlogApp.Persistence.Services
             if (blogType != null)
             {
                 blogType.TypeName = request.TypeName;
+                blogType.LangId = request.LangId;
 
                 _blogTypeWriteRepository.Update(blogType);
                 await _blogTypeWriteRepository.SaveAsync();
@@ -118,11 +120,16 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetAllBlogTypeQueryResponse> GetAllBlogTypeAsync()
         {
-            List<VM_BlogType> vM_BlogTypes = await _blogTypeReadRepository.GetAll().Select(x => new VM_BlogType()
-            {
-                Id = x.Id,
-                TypeName = x.TypeName
-            }).ToListAsync();
+            List<VM_BlogType> vM_BlogTypes = await _blogTypeReadRepository
+                .GetAll()
+                .Join(_languagesReadRepository.GetAll(), bl => bl.LangId, la => la.Id, (bl, la) => new { bl, la })
+                .Select(x => new VM_BlogType()
+                {
+                    Id = x.bl.Id,
+                    TypeName = x.bl.TypeName,
+                    LangId = x.bl.LangId,
+                    Language = x.la.Language
+                }).ToListAsync();
 
             return new()
             {
@@ -136,9 +143,22 @@ namespace MVCBlogApp.Persistence.Services
 
             if (blogType != null)
             {
+                List<VM_Language> vM_Language = await _languagesReadRepository.GetAll().Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    IsActive = (bool)x.IsActive,
+                    Language = x.Language
+                }).ToListAsync();
+
                 return new()
                 {
-                    BlogType = new() { Id = blogType.Id, TypeName = blogType.TypeName },
+                    BlogType = new()
+                    {
+                        Id = blogType.Id,
+                        TypeName = blogType.TypeName,
+                        LangId = blogType.LangId,
+                        Languages = vM_Language
+                    },
                     State = true
                 };
             }
@@ -151,6 +171,22 @@ namespace MVCBlogApp.Persistence.Services
                     Message = "Bu bilgiye sahip bir veri bulunmamaktadır."
                 };
             }
+        }
+
+
+        public async Task<GetBlogTypeCreateItemsQueryResponse> GetBlogTypeCreateItemsAsync()
+        {
+            List<VM_Language> vM_Language = await _languagesReadRepository.GetAll().Select(x => new VM_Language
+            {
+                Id = x.Id,
+                IsActive = (bool)x.IsActive,
+                Language = x.Language
+            }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Language
+            };
         }
 
         #endregion
@@ -215,7 +251,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllBlogCategoryQueryResponse> GetAllBlogCategoryAsync()
         {
             List<VM_AllBlogCategory> blogCategories = await _categoryReadRepository.GetAll()
-                .Join(_statusReadRepository.GetAll(false),ca=> ca.StatusId,st=> st.Id, (ca, st) => new{ ca,st})
+                .Join(_statusReadRepository.GetAll(false), ca => ca.StatusId, st => st.Id, (ca, st) => new { ca, st })
                 .Join(_languagesReadRepository.GetAll(false), cate => cate.ca.LangId, x => x.Id, (cate, x) => new { cate, x })
                 .Select(z => new VM_AllBlogCategory
                 {
@@ -342,6 +378,7 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
         #endregion
 
     }
