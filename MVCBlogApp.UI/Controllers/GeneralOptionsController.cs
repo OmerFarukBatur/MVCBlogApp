@@ -8,6 +8,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -111,10 +112,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> NavigationUpdate()
+        public async Task<IActionResult> NavigationUpdate(GetByIdNavigationQueryRequest request)
         {
-
-            return View();
+            GetByIdNavigationQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("NavigationList", "GeneralOptions");
+            }            
         }
 
         [HttpPost]

@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
@@ -91,11 +92,11 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<List<AllLanguage>> GetAllLanguageAsync(GetAllLanguageQueryRequest request)
         {
-            List<AllLanguage> allLanguages = await _languagesReadRepository.GetAll().Select(a => new AllLanguage 
+            List<AllLanguage> allLanguages = await _languagesReadRepository.GetAll().Select(a => new AllLanguage
             {
                 Id = a.Id,
                 Language = a.Language,
-                IsActive= (bool)a.IsActive,
+                IsActive = (bool)a.IsActive,
                 CreatedDate = a.CreateDate
             }).ToListAsync();
 
@@ -104,9 +105,9 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdLanguageQueryResponse> GetByIdLanguageAsync(GetByIdLanguageQueryRequest request)
         {
-            if (request.Id >0)
+            if (request.Id > 0)
             {
-                 Languages language = await _languagesReadRepository.GetByIdAsync(request.Id);
+                Languages language = await _languagesReadRepository.GetByIdAsync(request.Id);
                 return new()
                 {
                     Language = new VM_Language
@@ -115,8 +116,8 @@ namespace MVCBlogApp.Persistence.Services
                         Language = language.Language,
                         IsActive = (bool)language.IsActive
                     },
-                    State = true      
-                    
+                    State = true
+
                 };
             }
 
@@ -126,7 +127,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-        
+
         public async Task<UpdateLanguageCommandResponse> UpdateLanguageAsync(UpdateLanguageCommandRequest request)
         {
             Languages languages = await _languagesReadRepository.GetByIdAsync(request.Id);
@@ -160,9 +161,9 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<NavigationCreateCommandResponse> NavigationCreateAsync(NavigationCreateCommandRequest request)
         {
-            var navigationList = await _navigationReadRepository.GetWhere(x=> x.NavigationName.Trim().ToLower() == request.NavigationName.Trim().ToLower() || x.NavigationName.Trim().ToUpper() == request.NavigationName.Trim().ToUpper()).ToListAsync();
+            var navigationList = await _navigationReadRepository.GetWhere(x => x.NavigationName.Trim().ToLower() == request.NavigationName.Trim().ToLower() || x.NavigationName.Trim().ToUpper() == request.NavigationName.Trim().ToUpper()).ToListAsync();
 
-            if (navigationList.Count > 0) 
+            if (navigationList.Count > 0)
             {
                 return new()
                 {
@@ -207,9 +208,9 @@ namespace MVCBlogApp.Persistence.Services
         {
             List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll().Select(x => new VM_Navigation
             {
-                Id= x.Id,
-                MetaTitle= x.MetaTitle,
-                NavigationName= x.NavigationName
+                Id = x.Id,
+                MetaTitle = x.MetaTitle,
+                NavigationName = x.NavigationName
             }).ToListAsync();
 
             List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language
@@ -229,33 +230,96 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllNavigationQueryResponse> GetAllNavigationAsync()
         {
             List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll(false)
-                .Join(_languagesReadRepository.GetAll(),na=> na.LangId,la=> la.Id,(na,la)=> new {na,la})
+                .Join(_languagesReadRepository.GetAll(), na => na.LangId, la => la.Id, (na, la) => new { na, la })
                 .Select(x => new VM_Navigation
-            {
-                Id = x.na.Id,
-                MetaTitle = x.na.MetaTitle,
-                Action = x.na.Action,
-                Controller = x.na.Controller,
-                CreateDate = x.na.CreateDate,
-                FontAwesomeIcon = x.na.FontAwesomeIcon,
-                IsActive = x.na.IsActive,
-                IsAdmin = x.na.IsAdmin,
-                IsHeader = x.na.IsHeader,
-                IsSubHeader = x.na.IsSubHeader,
-                Language = x.la.Language,
-                MetaKey = x.na.MetaKey,
-                NavigationName = x.na.NavigationName,
-                OrderNo = x.na.OrderNo,
-                ParentId = x.na.ParentId,
-                Type = x.na.Type,
-                UrlRoot = x.na.UrlRoot,
-                LangId = x.na.LangId
-            }).ToListAsync();
+                {
+                    Id = x.na.Id,
+                    MetaTitle = x.na.MetaTitle,
+                    Action = x.na.Action,
+                    Controller = x.na.Controller,
+                    CreateDate = x.na.CreateDate,
+                    FontAwesomeIcon = x.na.FontAwesomeIcon,
+                    IsActive = x.na.IsActive,
+                    IsAdmin = x.na.IsAdmin,
+                    IsHeader = x.na.IsHeader,
+                    IsSubHeader = x.na.IsSubHeader,
+                    Language = x.la.Language,
+                    MetaKey = x.na.MetaKey,
+                    NavigationName = x.na.NavigationName,
+                    OrderNo = x.na.OrderNo,
+                    ParentId = x.na.ParentId,
+                    Type = x.na.Type,
+                    UrlRoot = x.na.UrlRoot,
+                    LangId = x.na.LangId
+                }).ToListAsync();
 
             return new()
             {
                 AllNavigations = vM_Navigations
             };
+        }
+
+        public async Task<GetByIdNavigationQueryResponse> GetByIdNavigationAsync(GetByIdNavigationQueryRequest request)
+        {
+            VM_Navigation navigation = await _navigationReadRepository
+                .GetWhere(x => x.Id == request.Id)
+                .Select(s => new VM_Navigation
+                {
+                    Id = s.Id,
+                    Action = s.Action,
+                    Controller = s.Controller,
+                    CreateDate = s.CreateDate,
+                    FontAwesomeIcon = s.FontAwesomeIcon,
+                    IsActive = s.IsActive,
+                    IsAdmin = s.IsAdmin,
+                    IsHeader = s.IsHeader,
+                    IsSubHeader = s.IsSubHeader,
+                    LangId = s.LangId,
+                    MetaKey = s.MetaKey,
+                    MetaTitle = s.MetaTitle,
+                    NavigationName = s.NavigationName,
+                    OrderNo = s.OrderNo,
+                    ParentId = s.ParentId,
+                    Type = s.Type,
+                    UrlRoot = s.UrlRoot
+                }).FirstAsync();
+
+            if (request.Id > 0)
+            {
+                List<VM_Language> vM_Language = await _languagesReadRepository
+                    .GetAll()
+                    .Select(x => new VM_Language
+                    {
+                        Id = x.Id,
+                        IsActive = (bool)x.IsActive,
+                        Language = x.Language
+                    }).ToListAsync();
+
+                List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                    .GetAll()
+                    .Select(a => new VM_Navigation
+                    {
+                        Id = a.Id,
+                        NavigationName = a.NavigationName
+                    }).ToListAsync();
+
+
+                return new()
+                {
+                    Languages = vM_Language,
+                    Navigation = navigation,
+                    Navigations = vM_Navigations,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false
+                };
+            }
+
         }
 
 
