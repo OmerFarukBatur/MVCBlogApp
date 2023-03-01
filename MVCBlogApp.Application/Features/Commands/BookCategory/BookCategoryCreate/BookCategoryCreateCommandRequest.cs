@@ -4,6 +4,7 @@ namespace MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCrea
 {
     public class BookCategoryCreateCommandRequest : IRequest<BookCategoryCreateCommandResponse>
     {
+        public int Id { get; set; }
         public string CategoryName { get; set; }
         public int StatusId { get; set; }
         public int LangId { get; set; }

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
-using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Application.Features.Queries.BookCategory.GetByIdBookCategory;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -91,20 +93,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BookCategoryUpdate()
+        public async Task<IActionResult> BookCategoryUpdate(GetByIdBookCategoryQueryRequest request)
         {
-            return View();
+            GetByIdBookCategoryQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("BookCategoryList", "Book");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookCategoryUpdate(int a)
+        public async Task<IActionResult> BookCategoryUpdate(BookCategoryUpdateCommandRequest request)
         {
-            return View();
+            BookCategoryUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("BookCategoryList", "Book");
+            }
+            else
+            {
+                return RedirectToAction("BookCategoryUpdate", "Book");
+            }
         }
 
-        public async Task<IActionResult> BookCategoryDelete(int a)
+        public async Task<IActionResult> BookCategoryDelete(BookCategoryDeleteCommandRequest request)
         {
-            return View();
+            BookCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("BookCategoryList", "Book");
         }
 
         #endregion

@@ -1,9 +1,8 @@
 ﻿
 @{
-    ViewData["Title"] = "Kitap Kategori Ekleme";
+    ViewData["Title"] = "BookCategoryUpdate";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-
 
 <!--**********************************
            Content body start
@@ -26,13 +25,13 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-validation">
-                            <form class="form-valide" method="post" asp-controller="Book" asp-action="BookCategoryCreate">
+                            <form class="form-valide" method="post" asp-controller="Book" asp-action="BookCategoryUpdate">
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for="categoryName">
                                         Kategori Adı <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Spor" maxlength="250" min="2" required>
+                                        <input type="text" class="form-control" id="categoryName" name="categoryName" value="@Model.BookCategory.CategoryName" maxlength="250" min="2" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -41,7 +40,7 @@
                                     </label>
                                     <div class="col-lg-6">
                                         <select class="form-control" id="statusId" name="statusId" required>
-                                            <option>Seçiniz!</option>
+                                            <option value="@Model.BookCategory.StatusId">Seçiniz!</option>
                                             @foreach (var item in Model.Statuses)
                                             {
                                                 <option value="@item.Id">@item.StatusName</option>
@@ -55,7 +54,7 @@
                                     </label>
                                     <div class="col-lg-6">
                                         <select class="form-control" id="langId" name="langId" required>
-                                            <option>Seçiniz!</option>
+                                            <option value="@Model.BookCategory.LangId">Seçiniz!</option>
                                             @foreach (var item in Model.Languages)
                                             {
                                                 <option value="@item.Id">@item.Language</option>
@@ -80,3 +79,4 @@
 <!--**********************************
     Content body end
 ***********************************-->
+
