@@ -14,7 +14,18 @@ namespace MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetBy
 
         public async Task<GetByIdLanguageQueryResponse> Handle(GetByIdLanguageQueryRequest request, CancellationToken cancellationToken)
         {
-            return await _generalOptionsService.GetByIdLanguageAsync(request);
+            if (request.Id > 0)
+            {
+                return await _generalOptionsService.GetByIdLanguageAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Language = null
+                };
+            }
         }
     }
 }

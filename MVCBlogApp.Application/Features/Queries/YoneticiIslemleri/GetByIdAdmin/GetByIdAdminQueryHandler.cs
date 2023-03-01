@@ -14,7 +14,7 @@ namespace MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin
 
         public async Task<GetByIdAdminQueryResponse> Handle(GetByIdAdminQueryRequest request, CancellationToken cancellationToken)
         {
-            if(request != null)
+            if(request.Id > 0)
             {
                 return await _yoneticiIslemleri.GetByIdAdminAsync(request.Id);                
             }
@@ -22,7 +22,8 @@ namespace MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin
             {
                 return new GetByIdAdminQueryResponse() 
                 {
-                    Message = "Böyle bir kayıt bulunmamaktadır."
+                    Message = "Lütfen geçerli bilgiler giriniz.",
+                    State = false
                 };
             }
         }

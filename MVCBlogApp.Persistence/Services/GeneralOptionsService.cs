@@ -107,9 +107,10 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdLanguageQueryResponse> GetByIdLanguageAsync(GetByIdLanguageQueryRequest request)
         {
-            if (request.Id > 0)
-            {
-                Languages language = await _languagesReadRepository.GetByIdAsync(request.Id);
+            Languages language = await _languagesReadRepository.GetByIdAsync(request.Id);
+
+            if (language != null)
+            {                
                 return new()
                 {
                     Language = new VM_Language
@@ -263,7 +264,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdNavigationQueryResponse> GetByIdNavigationAsync(GetByIdNavigationQueryRequest request)
         {
-            VM_Navigation navigation = await _navigationReadRepository
+            VM_Navigation? navigation = await _navigationReadRepository
                 .GetWhere(x => x.Id == request.Id)
                 .Select(s => new VM_Navigation
                 {
@@ -284,9 +285,9 @@ namespace MVCBlogApp.Persistence.Services
                     ParentId = s.ParentId,
                     Type = s.Type,
                     UrlRoot = s.UrlRoot
-                }).FirstAsync();
+                }).FirstOrDefaultAsync();
 
-            if (request.Id > 0)
+            if (navigation != null)
             {
                 List<VM_Language> vM_Language = await _languagesReadRepository
                     .GetAll()

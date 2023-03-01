@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
@@ -27,6 +28,32 @@ namespace MVCBlogApp.Persistence.Services
             _authService = authService;
             _authReadRepository = authReadRepository;
             _mailService = mailService;
+        }
+
+        public async Task<AdminByIdRemoveCommandResponse> AdminDeleteAsync(AdminByIdRemoveCommandRequest request)
+        {
+            User user = await _userReadRepository.GetByIdAsync(request.Id);
+
+            if (user != null)
+            {
+                user.IsActive = false;
+                _userWriteRepository.Update(user);
+                await _userWriteRepository.SaveAsync();
+                return new()
+                {
+                    Message = "Kayıt başarıyla silinmiştir.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere ait kullanıcı bulunmamaktadır.",
+                    State = false
+                };
+            }
+            
         }
 
         public async Task<AdminRoleListQueryResponse> AdminListRoleAsync()
@@ -111,14 +138,16 @@ namespace MVCBlogApp.Persistence.Services
                     UserName = user.Username,
                     Id= user.Id,
                     IsActive = user.IsActive,
-                    AuthId= user.AuthId
+                    AuthId= user.AuthId,
+                    State = true
                 };
             }
             else
             {
                 return new()
                 {
-                    Message = "Bu Id'ye ait bir admin bulunmamktadır."
+                    Message = "Bu Id'ye ait bir admin bulunmamktadır.",
+                    State = false
                 };
             }
         }

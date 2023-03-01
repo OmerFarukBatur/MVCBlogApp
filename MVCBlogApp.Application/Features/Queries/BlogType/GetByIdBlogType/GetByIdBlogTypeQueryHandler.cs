@@ -12,9 +12,21 @@ namespace MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType
             _blogService = blogService;
         }
 
-        public Task<GetByIdBlogTypeQueryResponse> Handle(GetByIdBlogTypeQueryRequest request, CancellationToken cancellationToken)
+        public async Task<GetByIdBlogTypeQueryResponse> Handle(GetByIdBlogTypeQueryRequest request, CancellationToken cancellationToken)
         {
-            return _blogService.GetByIdBlogTypeAsync(request);
+            if (request.Id > 0)
+            {
+                return await _blogService.GetByIdBlogTypeAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    BlogType = null,
+                    Message = "Lütfen geçerli bilgiler giriniz."
+                };
+            }
         }
     }
 }

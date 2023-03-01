@@ -1,38 +1,29 @@
 ﻿using MediatR;
-using MVCBlogApp.Application.Repositories.User;
-using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove
 {
     public class AdminByIdRemoveCommandHandler : IRequestHandler<AdminByIdRemoveCommandRequest, AdminByIdRemoveCommandResponse>
     {
-        private readonly IUserWriteRepository _userWriteRepository;
-        private readonly IUserReadRepository _userReadRepository;
+        private readonly IYoneticiIslemleri _yoneticiIslemleri;
 
-        public AdminByIdRemoveCommandHandler(IUserWriteRepository userWriteRepository, IUserReadRepository userReadRepository)
+        public AdminByIdRemoveCommandHandler(IYoneticiIslemleri yoneticiIslemleri)
         {
-            _userWriteRepository = userWriteRepository;
-            _userReadRepository = userReadRepository;
+            _yoneticiIslemleri = yoneticiIslemleri;
         }
 
         public async Task<AdminByIdRemoveCommandResponse> Handle(AdminByIdRemoveCommandRequest request, CancellationToken cancellationToken)
         {
             if (request.Id > 0)
             {
-                User user  = await _userReadRepository.GetByIdAsync(request.Id);
-                user.IsActive = false;
-                _userWriteRepository.Update(user);
-                await _userWriteRepository.SaveAsync();
-                return new() 
-                { 
-                    Message = "Kayıt başarıyla silinmiştir." 
-                };
+                return await _yoneticiIslemleri.AdminDeleteAsync(request);
             }
             else
             {
                 return new()
                 {
-                    Message = "İşlem sırasında beklenmedik bir hata oluştu."
+                    Message = "İşlem sırasında beklenmedik bir hata oluştu.",
+                    State = false
                 };
             }
         }

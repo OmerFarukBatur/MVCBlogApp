@@ -2,6 +2,7 @@
 {
     public class AdminByIdRemoveCommandResponse
     {
-        public string Message { get; set; }
+        public string? Message { get; set; }
+        public bool State { get; set; }
     }
 }

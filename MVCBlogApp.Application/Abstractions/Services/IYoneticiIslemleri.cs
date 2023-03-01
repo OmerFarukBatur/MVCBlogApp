@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
+﻿using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
@@ -12,6 +13,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<AdminRoleListQueryResponse> AdminListRoleAsync();
         Task<AllAdminQueryResponse> AllAdminAsync();
         Task<AdminUpdateCommandResponse> UpdateAdminAsync(AdminUpdateCommandRequest request);
-        Task<GetByIdAdminQueryResponse> GetByIdAdminAsync(int id);        
+        Task<GetByIdAdminQueryResponse> GetByIdAdminAsync(int id);
+        Task<AdminByIdRemoveCommandResponse> AdminDeleteAsync(AdminByIdRemoveCommandRequest request);
     }
 }

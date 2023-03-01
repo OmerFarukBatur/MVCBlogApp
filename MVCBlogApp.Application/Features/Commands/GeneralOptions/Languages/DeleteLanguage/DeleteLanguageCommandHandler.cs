@@ -14,7 +14,18 @@ namespace MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.Dele
 
         public async Task<DeleteLanguageCommandResponse> Handle(DeleteLanguageCommandRequest request, CancellationToken cancellationToken)
         {
-            return await _generalOptionsService.DeleteLanguageAsync(request);
+            if (request.Id > 0)
+            {
+                return await _generalOptionsService.DeleteLanguageAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Lütfen geçerli değerler giriniz.",
+                    State = false
+                };
+            }            
         }
     }
 }

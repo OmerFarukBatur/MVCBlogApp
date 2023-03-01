@@ -54,7 +54,15 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> AdminUpdate(GetByIdAdminQueryRequest request)
         {
             GetByIdAdminQueryResponse response = await _mediator.Send(request);
-            return View(response);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("AdminList", "YoneticiIslemleri");
+            }
+            
         }
         [HttpPost]
         public async Task<IActionResult> AdminUpdate(AdminUpdateCommandRequest request)

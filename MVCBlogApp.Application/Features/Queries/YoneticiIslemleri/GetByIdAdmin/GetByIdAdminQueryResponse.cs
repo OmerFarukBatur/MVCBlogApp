@@ -11,5 +11,6 @@ namespace MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin
         public int? AuthId { get; set; }
         public List<Auth>? Auths { get; set; }
         public string? Message { get; set; }
+        public bool State { get; set; }
     }
 }

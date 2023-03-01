@@ -14,7 +14,18 @@ namespace MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete
 
         public async Task<BlogTypeDeleteCommandResponse> Handle(BlogTypeDeleteCommandRequest request, CancellationToken cancellationToken)
         {
-            return await _blogService.BlogTypeDeleteAsync(request);
+            if (request.Id > 0)
+            {
+                return await _blogService.BlogTypeDeleteAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Lütfen geçerli değerler giriniz."
+                };
+            }
         }
     }
 }
