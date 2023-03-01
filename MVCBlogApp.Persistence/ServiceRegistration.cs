@@ -465,10 +465,9 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IYoneticiIslemleri,YoneticiIslemleri>();
             services.AddScoped<IGeneralOptionsService,GeneralOptionsService>();
             services.AddScoped<IBlogService,BlogService>();
-            #endregion
-
-            // Identity mekanizması için gerekli tablo eklenmesi
-            //services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<MVCBlogDbContext>();
+            services.AddScoped<IBookService,BookService>();
+            #endregion      
+            
         }
     }
 }
