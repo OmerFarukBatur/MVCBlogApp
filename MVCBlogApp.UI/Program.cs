@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MVCBlogApp.Application;
 using MVCBlogApp.Infrastructure;
+using MVCBlogApp.Infrastructure.Services.Storage.Local;
 using MVCBlogApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
+
+
+builder.Services.AddStorage<LocalStorage>();
 
 
 

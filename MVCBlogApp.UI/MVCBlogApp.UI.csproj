@@ -27,4 +27,8 @@
     <ProjectReference Include="..\MVCBlogApp.Persistence\MVCBlogApp.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Upload\" />
+  </ItemGroup>
+
 </Project>
