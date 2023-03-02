@@ -1,13 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetByIdBookCategory;
+using MVCBlogApp.Application.Operations;
+using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.BookCategory;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -20,19 +27,127 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBookCategoryWriteRepository _bookCategoryWriteRepository;
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly INavigationReadRepository _navigationReadRepository;
+        private readonly IBookReadRepository _bookReadRepository;
+        private readonly IBookWriteRepository _bookWriteRepository;
+        private readonly IStorageService _storageService;
 
         public BookService(
             IBookCategoryReadRepository bookCategoryReadRepository,
             IBookCategoryWriteRepository bookCategoryWriteRepository,
             IStatusReadRepository statusReadRepository,
             ILanguagesReadRepository languagesReadRepository
-            )
+,
+            INavigationReadRepository navigationReadRepository,
+            IBookReadRepository bookReadRepository,
+            IBookWriteRepository bookWriteRepository,
+            IStorageService storageService)
         {
             _bookCategoryReadRepository = bookCategoryReadRepository;
             _bookCategoryWriteRepository = bookCategoryWriteRepository;
             _statusReadRepository = statusReadRepository;
             _languagesReadRepository = languagesReadRepository;
+            _navigationReadRepository = navigationReadRepository;
+            _bookReadRepository = bookReadRepository;
+            _bookWriteRepository = bookWriteRepository;
+            _storageService = storageService;
         }
+
+
+        #region Book
+
+        public async Task<GetBookCreateItemsQueryResponse> GetBookCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    IsActive = (bool)x.IsActive,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatus = await _statusReadRepository
+                .GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                .GetAll()
+                .Select(x => new VM_Navigation
+                {
+                    Id = x.Id,
+                    NavigationName = x.NavigationName
+                }).ToListAsync();
+
+            List<VM_BookCategory> vM_BookCategory = await _bookCategoryReadRepository
+                .GetAll()
+                .Select(x => new VM_BookCategory
+                {
+                    Id = x.Id,
+                    CategoryName = x.CategoryName
+                }).ToListAsync();
+
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Navigations = vM_Navigations,
+                Statuses = allStatus,
+                BookCategories = vM_BookCategory
+            };
+
+        }
+
+        public async Task<BookCreateCommandResponse> BookCreateAsync(BookCreateCommandRequest request)
+        {
+            var check = await _bookReadRepository
+                .GetWhere(x => x.BookName.Trim().ToLower() == request.BookName.Trim().ToLower() || x.BookName.Trim().ToUpper() == request.BookName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("book-files",  request.FormFile);
+                Book book = new()
+                {
+                    Action = "Edit",
+                    Controller = "Book",
+                    BookName = request.BookName,
+                    Content = request.Content,
+                    CreateDate = DateTime.Now,
+                    CreateUserId = request.CreatedUserId > 0 ? request.CreatedUserId : null,
+                    LangId = request.LangId,
+                    NavigationId = request.NavigationId,
+                    StatusId = request.StatusId,
+                    Orders = 1,
+                    ImageUrl = result[0].fileName,
+                    UrlRoot = NameOperation.GeneretaRootUrl(request.BookName)
+                };
+
+
+
+                return new()
+                {
+                    Message = "Bilgiler başarılı bir şekilde kayıt edilmiştir.",
+                    State = true
+                };
+            }
+        }
+
+
+        #endregion
+
 
         #region BookCategory
 
@@ -226,7 +341,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
+       
         #endregion
     }
 }

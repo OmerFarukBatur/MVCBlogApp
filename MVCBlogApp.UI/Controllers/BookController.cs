@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetByIdBookCategory;
@@ -31,14 +33,16 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BookCreate()
+        public async Task<IActionResult> BookCreate(GetBookCreateItemsQueryRequest request)
         {
-            return View();
+            GetBookCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookCreate(int a)
+        public async Task<IActionResult> BookCreate(BookCreateCommandRequest request)
         {
+            BookCreateCommandResponse response = await _mediator.Send(request);
             return View();
         }
 

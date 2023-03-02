@@ -48,6 +48,5 @@
                 .Replace("Ş", "s")
                 .Replace("ş", "s")
                 .Replace("|", "");
-
     }
 }
