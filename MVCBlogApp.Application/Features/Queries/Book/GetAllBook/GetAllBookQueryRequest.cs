@@ -2,7 +2,7 @@
 
 namespace MVCBlogApp.Application.Features.Queries.Book.GetAllBook
 {
-    public class GetAllBookCommandRequest : IRequest<GetAllBookCommandResponse>
+    public class GetAllBookQueryRequest : IRequest<GetAllBookQueryResponse>
     {
     }
 }

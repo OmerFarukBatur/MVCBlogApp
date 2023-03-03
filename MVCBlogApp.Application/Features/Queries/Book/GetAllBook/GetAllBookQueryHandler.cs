@@ -3,16 +3,16 @@ using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Queries.Book.GetAllBook
 {
-    public class GetAllBookCommandHandler : IRequestHandler<GetAllBookCommandRequest, GetAllBookCommandResponse>
+    public class GetAllBookQueryHandler : IRequestHandler<GetAllBookQueryRequest, GetAllBookQueryResponse>
     {
         private readonly IBookService _bookService;
 
-        public GetAllBookCommandHandler(IBookService bookService)
+        public GetAllBookQueryHandler(IBookService bookService)
         {
             _bookService = bookService;
         }
 
-        public async Task<GetAllBookCommandResponse> Handle(GetAllBookCommandRequest request, CancellationToken cancellationToken)
+        public async Task<GetAllBookQueryResponse> Handle(GetAllBookQueryRequest request, CancellationToken cancellationToken)
         {
             return await _bookService.GetAllBookAsync();
         }

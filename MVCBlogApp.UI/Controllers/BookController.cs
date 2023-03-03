@@ -8,6 +8,7 @@ using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Book.GetAllBook;
 using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
+using MVCBlogApp.Application.Features.Queries.Book.GetByIdBook;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetByIdBookCategory;
@@ -28,9 +29,9 @@ namespace MVCBlogApp.UI.Controllers
 
         #region Book
 
-        public async Task<IActionResult> BookList(GetAllBookCommandRequest request)
+        public async Task<IActionResult> BookList(GetAllBookQueryRequest request)
         {
-            GetAllBookCommandResponse response = await _mediator.Send(request);
+            GetAllBookQueryResponse response = await _mediator.Send(request);
             return View(response.Books);
         }
 
@@ -58,9 +59,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BookUpdate()
+        public async Task<IActionResult> BookUpdate(GetByIdBookQueryRequest request)
         {
-            return View();
+            GetByIdBookQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("BookList", "Book");
+            }           
         }
 
         [HttpPost]

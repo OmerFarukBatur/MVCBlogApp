@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Book.GetAllBook;
 using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
+using MVCBlogApp.Application.Features.Queries.Book.GetByIdBook;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetByIdBookCategory;
@@ -35,6 +36,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStorageService _storageService;
         private readonly IMasterRootWriteRepository _masterRootWriteRepository;
         private readonly IX_BookCategoryWriteRepository _x_BookCategoryWriteRepository;
+        private readonly IX_BookCategoryReadRepository _x_BookCategoryReadRepository;
 
         public BookService(
             IBookCategoryReadRepository bookCategoryReadRepository,
@@ -47,7 +49,8 @@ namespace MVCBlogApp.Persistence.Services
             IBookWriteRepository bookWriteRepository,
             IStorageService storageService,
             IMasterRootWriteRepository masterRootWriteRepository,
-            IX_BookCategoryWriteRepository x_BookCategoryWriteRepository)
+            IX_BookCategoryWriteRepository x_BookCategoryWriteRepository,
+            IX_BookCategoryReadRepository x_BookCategoryReadRepository)
         {
             _bookCategoryReadRepository = bookCategoryReadRepository;
             _bookCategoryWriteRepository = bookCategoryWriteRepository;
@@ -59,6 +62,7 @@ namespace MVCBlogApp.Persistence.Services
             _storageService = storageService;
             _masterRootWriteRepository = masterRootWriteRepository;
             _x_BookCategoryWriteRepository = x_BookCategoryWriteRepository;
+            _x_BookCategoryReadRepository = x_BookCategoryReadRepository;
         }
 
 
@@ -182,7 +186,7 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
-        public async Task<GetAllBookCommandResponse> GetAllBookAsync()
+        public async Task<GetAllBookQueryResponse> GetAllBookAsync()
         {
             List<VM_Book> vM_Books = await _bookReadRepository
                  .GetAll()
@@ -204,6 +208,89 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
+        public async Task<GetByIdBookQueryResponse> GetByIdBookAsync(GetByIdBookQueryRequest request)
+        {
+            VM_Book? vM_Book = await _bookReadRepository
+                .GetWhere(x=> x.Id == request.Id)
+                .Select(x=> new VM_Book
+                {
+                    Id = x.Id,
+                    BookName = x.BookName,
+                    Content = x.Content,
+                    ImageUrl = x.ImageUrl,
+                    LangId = x.LangId,
+                    NavigationId = x.NavigationId,
+                    PublicationYear = x.PublicationYear,
+                    StatusId = x.StatusId,
+                    UrlRoot = x.UrlRoot                    
+                }).FirstOrDefaultAsync();
+
+            if (vM_Book != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    IsActive = (bool)x.IsActive,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatus = await _statusReadRepository
+                    .GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                    .GetAll()
+                    .Select(x => new VM_Navigation
+                    {
+                        Id = x.Id,
+                        NavigationName = x.NavigationName
+                    }).ToListAsync();
+
+                List<VM_BookCategory> vM_BookCategory = await _bookCategoryReadRepository
+                    .GetAll()
+                    .Select(x => new VM_BookCategory
+                    {
+                        Id = x.Id,
+                        CategoryName = x.CategoryName
+                    }).ToListAsync();
+
+                List<int> categoryIdList = await _x_BookCategoryReadRepository
+                    .GetWhere(x=> x.BookId == request.Id)
+                    .Select(x=> (int)x.BookCategoryId )
+                    .ToListAsync();
+
+                return new()
+                {
+                    BookCategories = vM_BookCategory,
+                    BookCategoryId = categoryIdList,
+                    Books = vM_Book,
+                    Languages = vM_Languages,
+                    Navigations = vM_Navigations,
+                    Statuses = allStatus,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Books = null,
+                    Languages = null,
+                    Navigations = null,
+                    Statuses = null,
+                    BookCategories = null,
+                    BookCategoryId = null,
+                    Message = "Bu bilgiye sahip kayıt bulunmamaktadır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 
