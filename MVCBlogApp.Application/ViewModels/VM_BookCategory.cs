@@ -11,5 +11,6 @@
         public string? StatusName { get; set; }
         public string? Language { get; set; }
 
+        public bool? SelectedState { get; set; }
     }
 }

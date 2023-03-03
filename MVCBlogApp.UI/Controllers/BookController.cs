@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
+using MVCBlogApp.Application.Features.Commands.Book.BookDelete;
+using MVCBlogApp.Application.Features.Commands.Book.BookUpdate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
@@ -73,14 +75,23 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookUpdate(int a)
+        public async Task<IActionResult> BookUpdate(BookUpdateCommandRequest request)
         {
-            return View();
+            BookUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("BookList", "Book");
+            }
+            else
+            {
+                return RedirectToAction("BookUpdate", "Book");
+            }
         }
 
-        public async Task<IActionResult> BookDelete(int a)
+        public async Task<IActionResult> BookDelete(BookDeleteCommandRequest request)
         {
-            return View();
+            BookDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("BookList", "Book");
         }
 
         #endregion

@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
+using MVCBlogApp.Application.Features.Commands.Book.BookDelete;
+using MVCBlogApp.Application.Features.Commands.Book.BookUpdate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
@@ -35,6 +37,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBookWriteRepository _bookWriteRepository;
         private readonly IStorageService _storageService;
         private readonly IMasterRootWriteRepository _masterRootWriteRepository;
+        private readonly IMasterRootReadRepository _masterRootReadRepository;
         private readonly IX_BookCategoryWriteRepository _x_BookCategoryWriteRepository;
         private readonly IX_BookCategoryReadRepository _x_BookCategoryReadRepository;
 
@@ -50,7 +53,8 @@ namespace MVCBlogApp.Persistence.Services
             IStorageService storageService,
             IMasterRootWriteRepository masterRootWriteRepository,
             IX_BookCategoryWriteRepository x_BookCategoryWriteRepository,
-            IX_BookCategoryReadRepository x_BookCategoryReadRepository)
+            IX_BookCategoryReadRepository x_BookCategoryReadRepository,
+            IMasterRootReadRepository masterRootReadRepository)
         {
             _bookCategoryReadRepository = bookCategoryReadRepository;
             _bookCategoryWriteRepository = bookCategoryWriteRepository;
@@ -63,6 +67,7 @@ namespace MVCBlogApp.Persistence.Services
             _masterRootWriteRepository = masterRootWriteRepository;
             _x_BookCategoryWriteRepository = x_BookCategoryWriteRepository;
             _x_BookCategoryReadRepository = x_BookCategoryReadRepository;
+            _masterRootReadRepository = masterRootReadRepository;
         }
 
 
@@ -143,7 +148,7 @@ namespace MVCBlogApp.Persistence.Services
                     NavigationId = request.NavigationId,
                     StatusId = request.StatusId,
                     Orders = 1,
-                    ImageUrl = result[0].fileName,
+                    ImageUrl = @"~\Upload\"+result[0].pathOrContainerName,
                     UrlRoot = NameOperation.GeneretaRootUrl(request.BookName),
                     PublicationYear = request.PublicationYear
                 };
@@ -222,7 +227,7 @@ namespace MVCBlogApp.Persistence.Services
                     NavigationId = x.NavigationId,
                     PublicationYear = x.PublicationYear,
                     StatusId = x.StatusId,
-                    UrlRoot = x.UrlRoot                    
+                    UrlRoot = x.UrlRoot                     
                 }).FirstOrDefaultAsync();
 
             if (vM_Book != null)
@@ -265,6 +270,18 @@ namespace MVCBlogApp.Persistence.Services
                     .Select(x=> (int)x.BookCategoryId )
                     .ToListAsync();
 
+                foreach (var item in vM_BookCategory)
+                {
+                    if (categoryIdList.Contains((int)item.Id))
+                    {
+                        item.SelectedState = true;
+                    }
+                    else
+                    {
+                        item.SelectedState = false;
+                    }
+                }
+
                 return new()
                 {
                     BookCategories = vM_BookCategory,
@@ -291,6 +308,132 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        public async Task<BookUpdateCommandResponse> BookUpdateAsync(BookUpdateCommandRequest request)
+        {
+            Book book = await _bookReadRepository.GetByIdAsync(request.Id);
+
+            if (book != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x=> x.UrlRoot == book.UrlRoot).FirstOrDefaultAsync();
+                if (masterRoot != null)
+                {
+                    masterRoot.UrlRoot = NameOperation.GeneretaRootUrl(request.BookName);
+                    _masterRootWriteRepository.Update(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    masterRoot = new()
+                    {
+                        Controller = "Book",
+                        Action = "Edit",
+                        UrlRoot = NameOperation.GeneretaRootUrl(request.BookName),
+                        CreateDate = DateTime.Now
+                    };
+
+                    await _masterRootWriteRepository.AddAsync(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                List<X_BookCategory> x_BookCategory = new();
+                x_BookCategory = await _x_BookCategoryReadRepository.GetWhere(x => x.BookId == request.Id).ToListAsync();
+
+                if (x_BookCategory.Count > 0)
+                {
+                    _x_BookCategoryWriteRepository.RemoveRange(x_BookCategory);
+                    await _x_BookCategoryWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    foreach (var item in request.BookCategoryId)
+                    {
+                        x_BookCategory.Add(new()
+                        {
+                            BookCategoryId = item,
+                            BookId = book.Id
+                        });
+                    }
+
+                    await _x_BookCategoryWriteRepository.AddRangeAsync(x_BookCategory);
+                    await _x_BookCategoryWriteRepository.SaveAsync();
+                }            
+
+
+                book.BookName = request.BookName;
+                book.Content = request.Content;
+                book.LangId = request.LangId;
+                book.NavigationId = request.NavigationId;
+                book.StatusId = request.StatusId;
+                book.UrlRoot = NameOperation.GeneretaRootUrl(request.BookName);
+                book.PublicationYear = request.PublicationYear;
+
+                if (request.FormFile != null)
+                {   
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("book-files", request.FormFile);
+                    book.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;                    
+                }
+
+                _bookWriteRepository.Update(book);
+                await _bookWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip bir veri bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<BookDeleteCommandResponse> BookDeleteAsync(BookDeleteCommandRequest request)
+        {
+            Book book = await _bookReadRepository.GetByIdAsync(request.Id);
+
+            if (book != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x=> x.UrlRoot == book.UrlRoot).FirstOrDefaultAsync();
+                if (masterRoot != null)
+                {
+                    _masterRootWriteRepository.Remove(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                List<X_BookCategory> category = await _x_BookCategoryReadRepository.GetWhere(x => x.BookId == request.Id).ToListAsync();
+
+                if (category != null)
+                {
+                    _x_BookCategoryWriteRepository.RemoveRange(category);
+                    await _x_BookCategoryWriteRepository.SaveAsync();
+                }
+
+                _bookWriteRepository.Remove(book);
+                await _bookWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "İşlem başarıyla gerçekleştirildi.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Bu bilgilere ait kayıt bulunamadı."
+                };
+            }
+        }
+
+
 
         #endregion
 
@@ -487,6 +630,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        
         #endregion
     }
 }

@@ -40,10 +40,16 @@
                                     </label>
                                     <div class="col-lg-6">
                                         <select class="form-control" id="bookCategoryId" name="bookCategoryId" multiple required>
-                                            <option value="@Model.BookCategoryId">Seçiniz!</option>
+                                            <option>Seçiniz!</option>
                                             @foreach (var item in Model.BookCategories)
                                             {
-                                                <option value="@item.Id">@item.CategoryName</option>
+                                                @if (item.SelectedState)
+                                                {
+                                                    <option value="@item.Id" selected>@item.CategoryName</option>
+                                                }else
+                                                {
+                                                    <option value="@item.Id">@item.CategoryName</option>
+                                                }                                                
                                             }
                                         </select>
                                     </div>
@@ -62,7 +68,7 @@
                                     </label>
                                     <div class="col-lg-6 ">
                                         <div class="fallback dropzone">
-                                            <input class="l-border-1" type="file" name="FormFile" id="FormFile" accept=".png,.jpg,.jpeg" value="@Model.Books.ImageUrl" runat="server" required>
+                                            <input class="l-border-1" type="file" name="FormFile" id="FormFile" accept=".png,.jpg,.jpeg" runat="server">
                                         </div>
                                     </div>
                                 </div>
@@ -74,9 +80,6 @@
                                         <textarea class="summernote" id="content" name="content" required> 
                                             @Model.Books.Content
                                         </textarea>
-                                        @*<div class="summernote">
-                                        <textarea id="content" name="content" placeholder="Deneme" required />
-                                        </div>*@
                                     </div>
                                 </div>
                                 <div class="form-group row">
