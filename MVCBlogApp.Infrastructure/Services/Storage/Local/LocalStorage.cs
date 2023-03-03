@@ -35,7 +35,7 @@ namespace MVCBlogApp.Infrastructure.Services.Storage.Local
             List<(string fileName, string path)> datas = new();
             foreach (IFormFile file in files)
             {
-                string fileNewName = await FileRenameAsync(path, file.Name, HashFile);
+                string fileNewName = await FileRenameAsync(path, file.FileName, HashFile);
 
                 await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
                 datas.Add((fileNewName, $"{path}\\{fileNewName}"));

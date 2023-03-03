@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Book.GetAllBook;
 using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
@@ -27,9 +28,10 @@ namespace MVCBlogApp.UI.Controllers
 
         #region Book
 
-        public async Task<IActionResult> BookList()
+        public async Task<IActionResult> BookList(GetAllBookCommandRequest request)
         {
-            return View();
+            GetAllBookCommandResponse response = await _mediator.Send(request);
+            return View(response.Books);
         }
 
         [HttpGet]
@@ -42,8 +44,17 @@ namespace MVCBlogApp.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> BookCreate(BookCreateCommandRequest request)
         {
+            request.CreatedUserId = _operationService.GetUser().Id;
             BookCreateCommandResponse response = await _mediator.Send(request);
-            return View();
+
+            if (response.State)
+            {
+                return RedirectToAction("BookList", "Book");
+            }
+            else
+            {
+                return RedirectToAction("BookCreate", "Book");
+            }
         }
 
         [HttpGet]

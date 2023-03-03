@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Upload\" />
+    <Folder Include="wwwroot\Upload\book-files\" />
   </ItemGroup>
 
 </Project>

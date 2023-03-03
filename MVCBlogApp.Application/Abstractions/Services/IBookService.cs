@@ -2,6 +2,7 @@
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Book.GetAllBook;
 using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
@@ -15,6 +16,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetBookCreateItemsQueryResponse> GetBookCreateItemsAsync();
         Task<BookCreateCommandResponse> BookCreateAsync(BookCreateCommandRequest request);
+        Task<GetAllBookCommandResponse> GetAllBookAsync();
 
         #endregion
 

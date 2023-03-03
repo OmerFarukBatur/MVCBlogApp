@@ -1,10 +1,6 @@
-﻿using MediatR;
+﻿using FluentValidation.Results;
+using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlogApp.Application.Features.Commands.Book.BookCreate
 {
@@ -19,7 +15,21 @@ namespace MVCBlogApp.Application.Features.Commands.Book.BookCreate
 
         public async Task<BookCreateCommandResponse> Handle(BookCreateCommandRequest request, CancellationToken cancellationToken)
         {
-            return await _bookService.BookCreateAsync(request);
+            BookCreateCommandValidator validationRules = new();
+            ValidationResult result = validationRules.Validate(request);
+
+            if (result.IsValid)
+            {
+                return await _bookService.BookCreateAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Lütfen alanları geçerli bilgilerle doldurunuz.",
+                    State = false
+                };
+            }            
         }
     }
 }

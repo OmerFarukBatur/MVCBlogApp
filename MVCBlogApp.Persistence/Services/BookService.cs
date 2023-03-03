@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Book.BookCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BookCategory.BookCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Book.GetAllBook;
 using MVCBlogApp.Application.Features.Queries.Book.GetBookCreateItems;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetAllBookCategory;
 using MVCBlogApp.Application.Features.Queries.BookCategory.GetBookCatgoryCreateItem;
@@ -14,8 +14,10 @@ using MVCBlogApp.Application.Operations;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.BookCategory;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.X_BookCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -31,6 +33,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBookReadRepository _bookReadRepository;
         private readonly IBookWriteRepository _bookWriteRepository;
         private readonly IStorageService _storageService;
+        private readonly IMasterRootWriteRepository _masterRootWriteRepository;
+        private readonly IX_BookCategoryWriteRepository _x_BookCategoryWriteRepository;
 
         public BookService(
             IBookCategoryReadRepository bookCategoryReadRepository,
@@ -41,7 +45,9 @@ namespace MVCBlogApp.Persistence.Services
             INavigationReadRepository navigationReadRepository,
             IBookReadRepository bookReadRepository,
             IBookWriteRepository bookWriteRepository,
-            IStorageService storageService)
+            IStorageService storageService,
+            IMasterRootWriteRepository masterRootWriteRepository,
+            IX_BookCategoryWriteRepository x_BookCategoryWriteRepository)
         {
             _bookCategoryReadRepository = bookCategoryReadRepository;
             _bookCategoryWriteRepository = bookCategoryWriteRepository;
@@ -51,6 +57,8 @@ namespace MVCBlogApp.Persistence.Services
             _bookReadRepository = bookReadRepository;
             _bookWriteRepository = bookWriteRepository;
             _storageService = storageService;
+            _masterRootWriteRepository = masterRootWriteRepository;
+            _x_BookCategoryWriteRepository = x_BookCategoryWriteRepository;
         }
 
 
@@ -117,8 +125,8 @@ namespace MVCBlogApp.Persistence.Services
             }
             else
             {
-                
-                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("book-files",  request.FormFile);
+
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("book-files", request.FormFile);
                 Book book = new()
                 {
                     Action = "Edit",
@@ -132,9 +140,37 @@ namespace MVCBlogApp.Persistence.Services
                     StatusId = request.StatusId,
                     Orders = 1,
                     ImageUrl = result[0].fileName,
-                    UrlRoot = NameOperation.GeneretaRootUrl(request.BookName)
+                    UrlRoot = NameOperation.GeneretaRootUrl(request.BookName),
+                    PublicationYear = request.PublicationYear
                 };
 
+                await _bookWriteRepository.AddAsync(book);
+                await _bookWriteRepository.SaveAsync();
+
+                MasterRoot masterRoot = new()
+                {
+                    Controller = "Book",
+                    Action = "Edit",
+                    UrlRoot = NameOperation.GeneretaRootUrl(request.BookName),
+                    CreateDate = DateTime.Now
+                };
+
+                await _masterRootWriteRepository.AddAsync(masterRoot);
+                await _masterRootWriteRepository.SaveAsync();
+
+                List<X_BookCategory> bookCategory = new();
+
+                foreach (var item in request.BookCategoryId)
+                {
+                    bookCategory.Add(new()
+                    {
+                        BookCategoryId = item,
+                        BookId = book.Id
+                    });
+                }
+
+                await _x_BookCategoryWriteRepository.AddRangeAsync(bookCategory);
+                await _x_BookCategoryWriteRepository.SaveAsync();
 
 
                 return new()
@@ -144,6 +180,29 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+
+        public async Task<GetAllBookCommandResponse> GetAllBookAsync()
+        {
+            List<VM_Book> vM_Books = await _bookReadRepository
+                 .GetAll()
+                 .Join(_languagesReadRepository.GetAll(), bk => bk.LangId, lg => lg.Id, (bk, lg) => new { bk, lg })
+                 .Join(_statusReadRepository.GetAll(), book => book.bk.StatusId, st => st.Id, (book, st) => new { book, st })
+                 .Select(x => new VM_Book
+                 {
+                     Id = x.book.bk.Id,
+                     BookName = x.book.bk.BookName,
+                     Language = x.book.lg.Language,
+                     StatusName = x.st.StatusName,
+                     PublicationYear = x.book.bk.PublicationYear
+                 }).ToListAsync();
+
+            return new()
+            {
+                Books = vM_Books
+            };
+        }
+
 
 
         #endregion
@@ -216,12 +275,12 @@ namespace MVCBlogApp.Persistence.Services
         {
             List<VM_BookCategory> vM_BookCategories = await _bookCategoryReadRepository
                 .GetAll()
-                .Join(_languagesReadRepository.GetAll(),bc=> bc.LangId,la=> la.Id, (bc, la) => new {bc,la})
-                .Join(_statusReadRepository.GetAll(),bg=> bg.bc.StatusId,st=>st.Id,(bg,st)=> new {bg,st})
-                .Select(x=> new VM_BookCategory
+                .Join(_languagesReadRepository.GetAll(), bc => bc.LangId, la => la.Id, (bc, la) => new { bc, la })
+                .Join(_statusReadRepository.GetAll(), bg => bg.bc.StatusId, st => st.Id, (bg, st) => new { bg, st })
+                .Select(x => new VM_BookCategory
                 {
-                    CategoryName=x.bg.bc.CategoryName,
-                    CreateDate=x.bg.bc.CreateDate,
+                    CategoryName = x.bg.bc.CategoryName,
+                    CreateDate = x.bg.bc.CreateDate,
                     Id = x.bg.bc.Id,
                     CreateUserId = x.bg.bc.CreateUserId,
                     StatusId = x.bg.bc.StatusId,
@@ -239,15 +298,15 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetByIdBookCategoryQueryResponse> GetByIdBookCategoryAsync(GetByIdBookCategoryQueryRequest request)
         {
             VM_BookCategory? vM_BookCategory = await _bookCategoryReadRepository
-                .GetWhere(x=> x.Id == request.Id)
-                .Select(s=> new VM_BookCategory
+                .GetWhere(x => x.Id == request.Id)
+                .Select(s => new VM_BookCategory
                 {
                     Id = s.Id,
                     CategoryName = s.CategoryName,
                     CreateDate = s.CreateDate,
-                    CreateUserId= s.CreateUserId,
-                    LangId= s.LangId,
-                    StatusId= s.StatusId
+                    CreateUserId = s.CreateUserId,
+                    LangId = s.LangId,
+                    StatusId = s.StatusId
                 }).FirstOrDefaultAsync();
 
             if (vM_BookCategory != null)
@@ -341,7 +400,6 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-       
         #endregion
     }
 }
