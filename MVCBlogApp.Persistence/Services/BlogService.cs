@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogCreate;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Blog.GetAllBlog;
 using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
@@ -13,11 +17,14 @@ using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetAllBlogType;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetBlogTypeCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
+using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -32,8 +39,15 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBlogCategoryReadRepository _categoryReadRepository;
         private readonly IBlogCategoryWriteRepository _categoryWriteRepository;
         private readonly INavigationReadRepository _navigationReadRepository;
+        private readonly IBlogReadRepository _blogReadRepository;
+        private readonly IBlogWriteRepository _blogWriteRepository;
+        private readonly IStorageService _storageService;
+        private readonly IMasterRootReadRepository _masterRootReadRepository;
+        private readonly IMasterRootWriteRepository _masterRootWriteRepository;
+        private readonly IX_BlogCategoryReadRepository _xbCategoryReadRepository;
+        private readonly IX_BlogCategoryWriteRepository _xbCategoryWriteRepository;
 
-        public BlogService(IBlogTypeReadRepository blogTypeReadRepository, IBlogTypeWriteRepository blogTypeWriteRepository, IStatusReadRepository statusReadRepository, ILanguagesReadRepository languagesReadRepository, IBlogCategoryReadRepository categoryReadRepository, IBlogCategoryWriteRepository categoryWriteRepository, INavigationReadRepository navigationReadRepository)
+        public BlogService(IBlogTypeReadRepository blogTypeReadRepository, IBlogTypeWriteRepository blogTypeWriteRepository, IStatusReadRepository statusReadRepository, ILanguagesReadRepository languagesReadRepository, IBlogCategoryReadRepository categoryReadRepository, IBlogCategoryWriteRepository categoryWriteRepository, INavigationReadRepository navigationReadRepository, IBlogReadRepository blogReadRepository, IBlogWriteRepository blogWriteRepository, IStorageService storageService, IMasterRootReadRepository masterRootReadRepository, IMasterRootWriteRepository masterRootWriteRepository, IX_BlogCategoryReadRepository xbCategoryReadRepository, IX_BlogCategoryWriteRepository xbCategoryWriteRepository)
         {
             _blogTypeReadRepository = blogTypeReadRepository;
             _blogTypeWriteRepository = blogTypeWriteRepository;
@@ -42,6 +56,13 @@ namespace MVCBlogApp.Persistence.Services
             _categoryReadRepository = categoryReadRepository;
             _categoryWriteRepository = categoryWriteRepository;
             _navigationReadRepository = navigationReadRepository;
+            _blogReadRepository = blogReadRepository;
+            _blogWriteRepository = blogWriteRepository;
+            _storageService = storageService;
+            _masterRootReadRepository = masterRootReadRepository;
+            _masterRootWriteRepository = masterRootWriteRepository;
+            _xbCategoryReadRepository = xbCategoryReadRepository;
+            _xbCategoryWriteRepository = xbCategoryWriteRepository;
         }
 
         #region BlogType
@@ -440,6 +461,147 @@ namespace MVCBlogApp.Persistence.Services
                 Statuses = allStatus
             };
 
+        }
+
+        public async Task<BlogCreateCommandResponse> BlogCreateAsync(BlogCreateCommandRequest request)
+        {
+            var blogCheck = await _blogReadRepository.GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (blogCheck.Count > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip bir kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("blog-files", request.FormFile);
+                Blog blog = new()
+                {
+                    BlogTypeId = request.BlogTypeId,
+                    Title = request.Title,
+                    Contents = request.Contents,
+                    CoverImgUrl = @"~\Upload\" + result[0].pathOrContainerName,
+                    CreateDate = DateTime.Now,
+                    CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : 0,
+                    IsComponent = request.IsComponent,
+                    IsMainPage = request.IsMainPage,
+                    IsMenu = request.IsMenu,
+                    IsNewsComponent = request.IsNewsComponent,
+                    LangId = request.LangId,
+                    MetaDescription = request.MetaDescription,
+                    MetaKey = request.MetaKey,
+                    MetaTitle = request.MetaTitle,
+                    NavigationId = request.NavigationId,
+                    Orders = request.Orders > 0 ? request.Orders : 0,
+                    StatusId = request.StatusId,
+                    SubTitle = request.SubTitle,
+                    UrlRoot = request.UrlRoot
+                };
+
+                await _blogWriteRepository.AddAsync(blog);
+                await _blogWriteRepository.SaveAsync();
+
+                MasterRoot masterRoot = new MasterRoot()
+                {
+                    Controller = "Blog",
+                    Action = "Detail",
+                    UrlRoot = request.UrlRoot
+                };
+
+                await _masterRootWriteRepository.AddAsync(masterRoot);
+                await _masterRootWriteRepository.SaveAsync();
+
+
+                List<X_BlogCategory> xBlogCategory = new();
+
+                foreach (var item in request.BlogCategoryId)
+                {
+                    xBlogCategory.Add(new X_BlogCategory()
+                    {
+                        BlogCategoryId = item,
+                        BlogId = blog.Id
+                    });
+                }
+
+                await _xbCategoryWriteRepository.AddRangeAsync(xBlogCategory);
+                await _xbCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Blog başarılı bir şekilde kayıt edildi.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllBlogQueryResponse> GetAllBlogAsync()
+        {
+            List<VM_Blog> vM_Blogs = await _blogReadRepository
+                .GetAll()
+                .Join(_languagesReadRepository.GetAll(), b => b.LangId, lg => lg.Id, (b, lg) => new { b, lg })
+                .Join(_statusReadRepository.GetAll(), bl => bl.b.StatusId, st => st.Id, (bl, st) => new { bl, st })
+                .Join(_blogTypeReadRepository.GetAll(), blo => blo.bl.b.BlogTypeId, bt => bt.Id, (blo, bt) => new { blo, bt })
+                .Join(_navigationReadRepository.GetAll(), blog => blog.blo.bl.b.NavigationId, ng => ng.Id, (blog, ng) => new { blog, ng })
+                .Select(x => new VM_Blog
+                {
+                    Id = x.blog.blo.bl.b.Id,
+                    Title = x.blog.blo.bl.b.Title,
+                    UrlRoot = x.blog.blo.bl.b.UrlRoot,
+                    BlogTypeName = x.blog.bt.TypeName,
+                    Language = x.blog.blo.bl.lg.Language,
+                    StatusName = x.blog.blo.st.StatusName,
+                    CreateDate = x.blog.blo.bl.b.CreateDate,
+                    UpdateDate = x.blog.blo.bl.b.UpdateDate
+                }).ToListAsync();
+
+            return new()
+            {
+                Blogs = vM_Blogs
+            };
+        }
+
+        public async Task<BlogDeleteCommandResponse> BlogDeleteAsync(BlogDeleteCommandRequest request)
+        {
+            Blog blog = await _blogReadRepository.GetByIdAsync(request.Id);
+
+            if (blog != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x=> x.UrlRoot == blog.UrlRoot).FirstOrDefaultAsync();
+
+                if (masterRoot != null)
+                {
+                    _masterRootWriteRepository.Remove(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                List<X_BlogCategory> x_BlogCategories = await _xbCategoryReadRepository.GetWhere(x => x.BlogId == blog.Id).ToListAsync();
+
+                if (x_BlogCategories != null)
+                {
+                    _xbCategoryWriteRepository.RemoveRange(x_BlogCategories);
+                    await _xbCategoryWriteRepository.SaveAsync();
+                }
+
+                _blogWriteRepository.Remove(blog);
+                await _blogWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapıldı.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

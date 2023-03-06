@@ -1,12 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogCreate;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Blog.GetAllBlog;
 using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
@@ -21,16 +25,19 @@ namespace MVCBlogApp.UI.Controllers
     public class BlogController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
 
-        public BlogController(IMediator mediator)
+        public BlogController(IMediator mediator, IOperationService operationService)
         {
             _mediator = mediator;
+            _operationService = operationService;
         }
 
         #region Blog
-        public async Task<IActionResult> BlogList()
+        public async Task<IActionResult> BlogList(GetAllBlogQueryRequest request)
         {
-            return View();
+            GetAllBlogQueryResponse response = await _mediator.Send(request);
+            return View(response.Blogs);
         }
 
         [HttpGet]
@@ -41,9 +48,19 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BlogCreate(int a)
+        public async Task<IActionResult> BlogCreate(BlogCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            BlogCreateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("BlogList", "Blog");
+            }
+            else
+            {
+                return RedirectToAction("BlogCreate", "Blog");
+            }
         }
 
         [HttpGet]
@@ -59,9 +76,10 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         
-        public async Task<IActionResult> BlogDelete(int a)
+        public async Task<IActionResult> BlogDelete(BlogDeleteCommandRequest request)
         {
-            return View();
+            BlogDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("BlogList", "Blog");
         }
         #endregion
 
