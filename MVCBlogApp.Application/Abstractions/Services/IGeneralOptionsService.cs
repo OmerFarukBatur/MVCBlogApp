@@ -33,5 +33,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<NavigationDeleteCommandResponse> NavigationDeleteAsync(NavigationDeleteCommandRequest request);
 
         #endregion
+
+        #region URL Create
+
+        string URLCreate(string title);
+
+        #endregion
     }
 }

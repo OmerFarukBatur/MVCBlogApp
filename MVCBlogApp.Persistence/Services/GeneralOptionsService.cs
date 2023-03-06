@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
@@ -11,6 +12,7 @@ using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLa
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
+using MVCBlogApp.Application.Operations;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.ViewModels;
@@ -390,6 +392,15 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+
+        #endregion
+
+        #region URL Create
+
+        public string URLCreate(string title)
+        {
+            return NameOperation.GeneretaRootUrl(title);
+        }
 
         #endregion
     }

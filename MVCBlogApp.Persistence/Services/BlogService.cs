@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeCreate;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
@@ -15,6 +16,7 @@ using MVCBlogApp.Application.Features.Queries.BlogType.GetByIdBlogType;
 using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -29,8 +31,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ILanguagesReadRepository _languagesReadRepository;
         private readonly IBlogCategoryReadRepository _categoryReadRepository;
         private readonly IBlogCategoryWriteRepository _categoryWriteRepository;
+        private readonly INavigationReadRepository _navigationReadRepository;
 
-        public BlogService(IBlogTypeReadRepository blogTypeReadRepository, IBlogTypeWriteRepository blogTypeWriteRepository, IStatusReadRepository statusReadRepository, ILanguagesReadRepository languagesReadRepository, IBlogCategoryReadRepository categoryReadRepository, IBlogCategoryWriteRepository categoryWriteRepository)
+        public BlogService(IBlogTypeReadRepository blogTypeReadRepository, IBlogTypeWriteRepository blogTypeWriteRepository, IStatusReadRepository statusReadRepository, ILanguagesReadRepository languagesReadRepository, IBlogCategoryReadRepository categoryReadRepository, IBlogCategoryWriteRepository categoryWriteRepository, INavigationReadRepository navigationReadRepository)
         {
             _blogTypeReadRepository = blogTypeReadRepository;
             _blogTypeWriteRepository = blogTypeWriteRepository;
@@ -38,6 +41,7 @@ namespace MVCBlogApp.Persistence.Services
             _languagesReadRepository = languagesReadRepository;
             _categoryReadRepository = categoryReadRepository;
             _categoryWriteRepository = categoryWriteRepository;
+            _navigationReadRepository = navigationReadRepository;
         }
 
         #region BlogType
@@ -379,7 +383,66 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+
         #endregion
 
+        #region Blog
+
+        public async Task<GetBlogCreateItemsQueryResponse> GetBlogCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    IsActive = (bool)x.IsActive,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatus = await _statusReadRepository
+                .GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                .GetAll()
+                .Select(x => new VM_Navigation
+                {
+                    Id = x.Id,
+                    NavigationName = x.NavigationName
+                }).ToListAsync();
+
+            List<VM_BlogCategory> vM_BlogCategories = await _categoryReadRepository
+                .GetAll()
+                .Select(x => new VM_BlogCategory
+                {
+                    ID = x.Id,
+                    CategoryName = x.CategoryName
+                }).ToListAsync();
+
+            List<VM_BlogType> vM_BlogTypes = await _blogTypeReadRepository
+                .GetAll()
+                .Select(x => new VM_BlogType
+                {
+                    Id = x.Id,
+                    TypeName = x.TypeName
+                }).ToListAsync();
+
+            return new()
+            {
+                BlogCategories = vM_BlogCategories,
+                BlogTypes = vM_BlogTypes,
+                Navigations = vM_Navigations,
+                Languages = vM_Languages,
+                Statuses = allStatus
+            };
+
+        }
+
+
+        #endregion
     }
 }

@@ -12,6 +12,7 @@ using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLa
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.URLCreate;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -147,6 +148,17 @@ namespace MVCBlogApp.UI.Controllers
             NavigationDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("NavigationList", "GeneralOptions");
         }
+        #endregion
+
+        #region URLCreate
+
+        [HttpPost]
+        public async Task<IActionResult> URLCreate(URLCreateQueryRequest request)
+        {
+            URLCreateQueryResponse response = await _mediator.Send(request);
+            return Ok(response);
+        }
+
         #endregion
     }
 }
