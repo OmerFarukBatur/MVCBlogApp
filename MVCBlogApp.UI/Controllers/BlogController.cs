@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Blog.BlogCreate;
 using MVCBlogApp.Application.Features.Commands.Blog.BlogDelete;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
@@ -12,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Blog.GetAllBlog;
 using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
+using MVCBlogApp.Application.Features.Queries.Blog.GetByIdBlog;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
@@ -64,15 +66,33 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BlogUpdate()
+        public async Task<IActionResult> BlogUpdate(GetByIdBlogQueryRequest request)
         {
-            return View();
+            GetByIdBlogQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("BlogList", "Blog");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> BlogUpdate(int a)
+        public async Task<IActionResult> BlogUpdate(BlogUpdateCommandRequest request)
         {
-            return View();
+            request.UpdateUserId = _operationService.GetUser().Id;
+            BlogUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("BlogList", "Blog");
+            }
+            else
+            {
+                return RedirectToAction("BlogUpdate", "Blog");
+            }
         }
 
         

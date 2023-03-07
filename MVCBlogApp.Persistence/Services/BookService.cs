@@ -343,6 +343,20 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     _x_BookCategoryWriteRepository.RemoveRange(x_BookCategory);
                     await _x_BookCategoryWriteRepository.SaveAsync();
+
+
+                    List<X_BookCategory> x_BookCategory2 = new();
+                    foreach (var item in request.BookCategoryId)
+                    {
+                        x_BookCategory2.Add(new()
+                        {
+                            BookCategoryId = item,
+                            BookId = book.Id
+                        });
+                    }
+
+                    await _x_BookCategoryWriteRepository.AddRangeAsync(x_BookCategory2);
+                    await _x_BookCategoryWriteRepository.SaveAsync();
                 }
                 else
                 {

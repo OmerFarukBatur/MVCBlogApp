@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualBasic;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Blog.BlogCreate;
 using MVCBlogApp.Application.Features.Commands.Blog.BlogDelete;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
@@ -11,6 +14,7 @@ using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Blog.GetAllBlog;
 using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
+using MVCBlogApp.Application.Features.Queries.Blog.GetByIdBlog;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
@@ -602,6 +606,231 @@ namespace MVCBlogApp.Persistence.Services
                     State = false
                 };
             }
+        }
+
+        public async Task<GetByIdBlogQueryResponse> GetByIdBlogAsync(GetByIdBlogQueryRequest request)
+        {
+            VM_Blog? vM_Blog = await _blogReadRepository
+                .GetWhere(x => x.Id == request.Id)
+                .Select(d => new VM_Blog
+                {
+                    Id = d.Id,
+                    BlogTypeId = d.BlogTypeId,
+                    Contents = d.Contents,
+                    CoverImgUrl = d.CoverImgUrl,
+                    IsComponent = d.IsComponent,
+                    IsMainPage = d.IsMainPage,
+                    IsMenu = d.IsMenu,
+                    IsNewsComponent = d.IsNewsComponent,
+                    LangId = d.LangId,
+                    MetaDescription = d.MetaDescription,
+                    MetaKey = d.MetaKey,
+                    MetaTitle = d.MetaTitle,
+                    Orders = d.Orders,
+                    StatusId = d.StatusId,
+                    UrlRoot = d.UrlRoot,
+                    Title = d.Title,
+                    SubTitle = d.SubTitle,
+                    NavigationId = d.NavigationId
+                }).FirstOrDefaultAsync();
+
+            if (vM_Blog != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    IsActive = (bool)x.IsActive,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatus = await _statusReadRepository
+                    .GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                    .GetAll()
+                    .Select(x => new VM_Navigation
+                    {
+                        Id = x.Id,
+                        NavigationName = x.NavigationName
+                    }).ToListAsync();
+
+                List<VM_BlogCategory> vM_BlogCategories = await _categoryReadRepository
+                    .GetAll()
+                    .Select(x => new VM_BlogCategory
+                    {
+                        ID = x.Id,
+                        CategoryName = x.CategoryName
+                    }).ToListAsync();
+
+                List<VM_BlogType> vM_BlogTypes = await _blogTypeReadRepository
+                    .GetAll()
+                    .Select(x => new VM_BlogType
+                    {
+                        Id = x.Id,
+                        TypeName = x.TypeName
+                    }).ToListAsync();
+
+                List<int> categoryIdList = await _xbCategoryReadRepository.GetWhere(x=> x.BlogId == vM_Blog.Id)
+                    .Select(d=> (int)d.BlogCategoryId)
+                    .ToListAsync();
+
+                foreach (var item in vM_BlogCategories)
+                {
+                    if (categoryIdList.Contains((int)item.ID))
+                    {
+                        item.SelectedState = true;
+                    }
+                    else
+                    {
+                        item.SelectedState = false;
+                    }
+                }
+
+                return new()
+                {
+                    Blog = vM_Blog,
+                    BlogCategories = vM_BlogCategories,
+                    BlogTypes = vM_BlogTypes,
+                    Languages = vM_Languages,
+                    Navigations = vM_Navigations,
+                    Statuses = allStatus,
+                    State = true
+                };
+
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere ait kayıt bulunamamıştır.",
+                    State = false,
+                    Blog = null,
+                    BlogCategories = null,
+                    BlogTypes = null,
+                    Languages = null,
+                    Navigations = null,
+                    Statuses = null
+                };
+            }
+        }
+
+        public async Task<BlogUpdateCommandResponse> BlogUpdateAsync(BlogUpdateCommandRequest request)
+        {
+            Blog blog = await _blogReadRepository.GetByIdAsync(request.Id);
+
+            if (blog != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x=> x.UrlRoot == blog.UrlRoot).FirstOrDefaultAsync();
+
+                if (masterRoot != null)
+                {
+                    masterRoot.UrlRoot = request.UrlRoot;
+                    _masterRootWriteRepository.Update(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    masterRoot = new()
+                    {
+                        Controller = "Blog",
+                        Action = "Detail",
+                        UrlRoot = request.UrlRoot
+                    };
+
+                    await _masterRootWriteRepository.AddAsync(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                List<X_BlogCategory> categories = await _xbCategoryReadRepository.GetWhere(x=> x.BlogId == blog.Id).ToListAsync();
+
+                if (categories.Count() > 0)
+                {
+                    _xbCategoryWriteRepository.RemoveRange(categories);
+                    await _xbCategoryWriteRepository.SaveAsync();
+
+                    List<X_BlogCategory> categories2 = new();
+
+                    foreach (var item in request.BlogCategoryId)
+                    {
+                        categories2.Add(new()
+                        {
+                            BlogCategoryId = item,
+                            BlogId = blog.Id
+
+                        });
+                    }
+
+                    await _xbCategoryWriteRepository.AddRangeAsync(categories2);
+                    await _xbCategoryWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    foreach (var item in request.BlogCategoryId)
+                    {
+                        categories.Add(new()
+                        {
+                            BlogCategoryId = item,
+                            BlogId = blog.Id
+
+                        });
+                    }
+
+                    await _xbCategoryWriteRepository.AddRangeAsync(categories);
+                    await _xbCategoryWriteRepository.SaveAsync();
+                }
+
+               
+                blog.BlogTypeId = request.BlogTypeId;
+                blog.Title = request.Title;
+                blog.Contents = request.Contents;                
+                blog.UpdateDate = DateTime.Now;
+                blog.UpdateUserId = request.UpdateUserId > 0 ? request.UpdateUserId : null;
+                blog.IsComponent = request.IsComponent;
+                blog.IsMainPage = request.IsMainPage;
+                blog.IsMenu = request.IsMenu;
+                blog.IsNewsComponent = request.IsNewsComponent;
+                blog.LangId = request.LangId;
+                blog.MetaDescription = request.MetaDescription;
+                blog.MetaKey = request.MetaKey;
+                blog.MetaTitle = request.MetaTitle;
+                blog.NavigationId = request.NavigationId;
+                blog.Orders = request.Orders > 0 ? request.Orders : 0;
+                blog.StatusId = request.StatusId;
+                blog.SubTitle = request.SubTitle;
+                blog.UrlRoot = request.UrlRoot;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("blog-files", request.FormFile);
+                    blog.CoverImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+
+                _blogWriteRepository.Update(blog);
+                await _blogWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Bu bilgilere ait kayıt bulunamadı."
+                };
+            }
+
         }
 
 

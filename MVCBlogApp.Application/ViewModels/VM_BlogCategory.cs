@@ -7,5 +7,7 @@
         public string CategoryDescription { get; set; }
         public int StatusID { get; set; }
         public int LangID { get; set; }
+
+        public bool? SelectedState { get; set; }
     }
 }

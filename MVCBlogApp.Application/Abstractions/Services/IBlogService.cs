@@ -1,5 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Blog.BlogCreate;
 using MVCBlogApp.Application.Features.Commands.Blog.BlogDelete;
+using MVCBlogApp.Application.Features.Commands.Blog.BlogUpdate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.BlogCategory.BlogCategoryUpdate;
@@ -8,6 +9,7 @@ using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeDelete;
 using MVCBlogApp.Application.Features.Commands.BlogType.BlogTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Blog.GetAllBlog;
 using MVCBlogApp.Application.Features.Queries.Blog.GetBlogCreateItems;
+using MVCBlogApp.Application.Features.Queries.Blog.GetByIdBlog;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetAllBlogCategory;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetBlogCategoryItem;
 using MVCBlogApp.Application.Features.Queries.BlogCategory.GetByIdBlogCategory;
@@ -44,6 +46,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<BlogCreateCommandResponse> BlogCreateAsync(BlogCreateCommandRequest request);
         Task<GetAllBlogQueryResponse> GetAllBlogAsync();
         Task<BlogDeleteCommandResponse> BlogDeleteAsync(BlogDeleteCommandRequest request);
+        Task<GetByIdBlogQueryResponse> GetByIdBlogAsync(GetByIdBlogQueryRequest request);
+        Task<BlogUpdateCommandResponse> BlogUpdateAsync(BlogUpdateCommandRequest request);
 
         #endregion
     }
