@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -170,6 +172,76 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Bilgiler başarıyla kayıt edilmiştir.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<UserUpdateCommandResponse> UserUpdateAsync(UserUpdateCommandRequest request)
+        {
+            Members members = await _membersReadRepository.GetByIdAsync(request.Id);
+
+            if (members != null)
+            {
+                if (request.Password != "" && request.Password != null)
+                {
+                    (byte[] passwordSalt, byte[] passwordHash) = _authService.CreatePasswordHash(request.Password);
+                    members.PasswordSalt = passwordSalt;
+                    members.PasswordHash = passwordHash;
+                }
+
+                members.Address = request.Address;
+                members.Email = request.Email;
+                members.IsActive = request.IsActive;
+                members.NameSurname = request.NameSurname;
+                members.Phone = request.Phone;
+                members.Lacation = request.Lacation;
+                members.MembersAuthId = request.MembersAuthId;
+
+
+                if (request.IsActive)
+                {
+                    // await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
+                }
+
+                _membersWriteRepository.Update(members);
+                await _membersWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }else 
+            {
+                return new()
+                {
+                    Message = "Bu bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<UserDeleteCommandResponse> UserDeleteAsync(int id)
+        {
+            Members members = await _membersReadRepository.GetByIdAsync(id);
+
+            if (members != null)
+            {
+                members.IsActive = false;
+                _membersWriteRepository.Update(members);
+                await _membersWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Bu bilgilere ait kayıt bulunamamıştır."
                 };
             }
         }

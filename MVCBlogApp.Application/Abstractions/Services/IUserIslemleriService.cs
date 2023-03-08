@@ -1,4 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -13,6 +15,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetAllUserQueryResponse> GetAllUserAsync();
         Task<GetByIdUserQueryResponse> GetByIdUserAsync(int id);
         Task<UserCreateCommandResponse> UserCreateAsync(UserCreateCommandRequest request);
+        Task<UserUpdateCommandResponse> UserUpdateAsync(UserUpdateCommandRequest request);
+        Task<UserDeleteCommandResponse> UserDeleteAsync(int id);
 
         #endregion
 

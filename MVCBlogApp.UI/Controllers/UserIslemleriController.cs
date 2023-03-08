@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -70,15 +72,24 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserUpdate(int a)
+        public async Task<IActionResult> UserUpdate(UserUpdateCommandRequest request)
         {
-            return View();
+            UserUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State) 
+            {
+                return RedirectToAction("UserList", "UserIslemleri");
+            }
+            else
+            {
+                return RedirectToAction("UserUpdate", "UserIslemleri");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserDelete()
+        public async Task<IActionResult> UserDelete(UserDeleteCommandRequest request)
         {
-            return View();
+            UserDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("UserList", "UserIslemleri");
         }
 
         #endregion
