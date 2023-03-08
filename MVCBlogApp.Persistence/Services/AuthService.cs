@@ -65,7 +65,7 @@ namespace MVCBlogApp.Persistence.Services
         }
         public async Task<CreateUserCommandResponse> CreateUserAsync(CreateUserCommandRequest request)
         {
-            var member = await _membersReadRepository.GetWhere(a => a.Email == request.Email).ToListAsync();
+            var member = await _membersReadRepository.GetWhere(x => x.Email.Trim().ToLower() == request.Email.Trim().ToLower() || x.Email.Trim().ToUpper() == request.Email.Trim().ToUpper()).ToListAsync();
 
             if (member.Count > 0)
             {
@@ -91,7 +91,7 @@ namespace MVCBlogApp.Persistence.Services
                     CreateDate = DateTime.Now,
                     PasswordSalt = passwordSalt,
                     PasswordHash = passwordHash,
-                    IsActive = true,
+                    IsActive = false,
                     Phone = request.PhoneNumber
                 };
 

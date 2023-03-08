@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewData["Title"] = "UserUpdate";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+
+    @*  <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="post" asp-controller="UserIslemleri" asp-action="UserUpdate">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="nameSurname">
+                                        Ad Soyad <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="@Model.Member.NameSurname" maxlength="200" min="2" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="email">
+                                        Email <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="@Model.Member.Email" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="phone">
+                                        Telefon <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="phone" name="phone" value="@Model.Member.Phone" maxlength="25" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="password">
+                                        Şifre <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Şifre" min="6" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="passwordConfirm">
+                                        Şifre Tekrar <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Şifre Tekrar" min="6" >
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="lacation">
+                                        Şehir <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="lacation" name="lacation" value="@Model.Member.Lacation" maxlength="100" min="2" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="address">
+                                        Adres <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="address" name="address" value="@Model.Member.Address" maxlength="300" min="2" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="authId">
+                                        Yetki Seçin <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="authId" name="authId" required>
+                                            <option value="@Model.Member.MembersAuthId">Seçiniz!</option>
+                                            @foreach (var item in Model.UserAuths)
+                                            {
+                                                <option value="@item.Id">@item.MembersAuthName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="isActive">
+                                        Durum
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="isActive" name="isActive">
+                                            <option value="@Model.Member.IsActive">Seçiniz!</option>
+                                            <option value="True">Aktif</option>
+                                            <option value="False">Pasif</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

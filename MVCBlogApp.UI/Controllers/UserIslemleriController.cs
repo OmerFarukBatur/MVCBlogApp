@@ -1,45 +1,82 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
     [Authorize(Roles ="Admin")]
     public class UserIslemleriController : Controller
     {
+        private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
+
+        public UserIslemleriController(IMediator mediator, IOperationService operationService)
+        {
+            _mediator = mediator;
+            _operationService = operationService;
+        }
+
+
         #region Member
 
         [HttpGet]
-        public IActionResult UserList()
+        public async Task<IActionResult> UserList(GetAllUserQueryRequest request)
         {
-            return View();
+            GetAllUserQueryResponse response = await _mediator.Send(request);
+            return View(response.Members);
         }
 
         [HttpGet]
-        public IActionResult UserCreate()
+        public async Task<IActionResult> UserCreate(GetUserCreateItemsQueryRequest request)
         {
-            return View();
+            GetUserCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public IActionResult UserCreate(int a)
+        public async Task<IActionResult> UserCreate(UserCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            UserCreateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("UserList", "UserIslemleri");
+            }
+            else
+            {
+                return RedirectToAction("UserCreate", "UserIslemleri");
+            }
         }
 
         [HttpGet]
-        public IActionResult UserUpdate()
+        public async Task<IActionResult> UserUpdate(GetByIdUserQueryRequest request)
         {
-            return View();
+            GetByIdUserQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("UserList", "UserIslemleri");
+            }            
         }
 
         [HttpPost]
-        public IActionResult UserUpdate(int a)
+        public async Task<IActionResult> UserUpdate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserDelete()
+        public async Task<IActionResult> UserDelete()
         {
             return View();
         }
@@ -49,37 +86,37 @@ namespace MVCBlogApp.UI.Controllers
         #region MemberInformation
 
         [HttpGet]
-        public IActionResult UserInformationList()
+        public async Task<IActionResult> UserInformationList()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserInformationCreate()
+        public async Task<IActionResult> UserInformationCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserInformationCreate(int a)
+        public async Task<IActionResult> UserInformationCreate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserInformationUpdate()
+        public async Task<IActionResult> UserInformationUpdate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserInformationUpdate(int a)
+        public async Task<IActionResult> UserInformationUpdate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserInformationDelete()
+        public async Task<IActionResult> UserInformationDelete()
         {
             return View();
         }
@@ -89,31 +126,31 @@ namespace MVCBlogApp.UI.Controllers
         #region MemberNutritionist
 
         [HttpGet]
-        public IActionResult UserNutritionistList()
+        public async Task<IActionResult> UserNutritionistList()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserNutritionistCreate()
+        public async Task<IActionResult> UserNutritionistCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserNutritionistCreate(int a)
+        public async Task<IActionResult> UserNutritionistCreate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserNutritionistUpdate()
+        public async Task<IActionResult> UserNutritionistUpdate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserNutritionistUpdate(int a)
+        public async Task<IActionResult> UserNutritionistUpdate(int a)
         {
             return View();
         }
@@ -129,37 +166,37 @@ namespace MVCBlogApp.UI.Controllers
         #region MemberAppointment
 
         [HttpGet]
-        public IActionResult UserAppointmentList()
+        public async Task<IActionResult> UserAppointmentList()
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserAppointmentCreate()
+        public async Task<IActionResult> UserAppointmentCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserAppointmentCreate(int a)
+        public async Task<IActionResult> UserAppointmentCreate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserAppointmentUpdate()
+        public async Task<IActionResult> UserAppointmentUpdate()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult UserAppointmentUpdate(int a)
+        public async Task<IActionResult> UserAppointmentUpdate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public IActionResult UserAppointmentDelete()
+        public async Task<IActionResult> UserAppointmentDelete()
         {
             return View();
         }
