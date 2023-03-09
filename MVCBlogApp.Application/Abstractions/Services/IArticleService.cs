@@ -1,6 +1,9 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
+using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -14,6 +17,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetArticleCategoryCreateItemsQueryResponse> GetArticleCategoryCreateItemsAsync();
         Task<GetAllArticleCategoryQueryResponse> GetAllArticleCategoryAsync();
         Task<ArticleCategoryCreateCommandResponse> ArticleCategoryCreateAsync(ArticleCategoryCreateCommandRequest request);
+        Task<GetByIdArticleCategoryQueryResponse> GetByIdArticleCategoryAsync(int id);
+        Task<ArticleCategoryUpdateCommandResponse> ArticleCategoryUpdateAsync(ArticleCategoryUpdateCommandRequest request);
+        Task<ArticleCategoryDeleteCommandResponse> ArticleCategoryDeleteAsync(int id);
 
         #endregion
     }
