@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetAllArticle;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetArticleCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
@@ -26,21 +29,32 @@ namespace MVCBlogApp.UI.Controllers
         #region Article
 
         [HttpGet]
-        public async Task<IActionResult> ArticleList()
+        public async Task<IActionResult> ArticleList(GetAllArticleQueryRequest request)
         {
-            return View();
+            GetAllArticleQueryResponse response = await _mediator.Send(request);
+            return View(response.Articles);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ArticleCreate()
+        public async Task<IActionResult> ArticleCreate(GetArticleCreateItemsQueryRequest request)
         {
-            return View();
+            GetArticleCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ArticleCreate(int a)
+        public async Task<IActionResult> ArticleCreate(ArticleCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            ArticleCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ArticleList", "Article");
+            }
+            else
+            {
+                return RedirectToAction("ArticleCreate", "Article");
+            }
         }
 
         [HttpGet]

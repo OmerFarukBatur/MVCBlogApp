@@ -1,13 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetAllArticle;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetArticleCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
+using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.ArticleCategory;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.MasterRoot;
+using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -20,22 +27,168 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly IArticleCategoryReadRepository _articleCategoryReadRepository;
         private readonly IArticleCategoryWriteRepository _articleCategoryWriteRepository;
+        private readonly INavigationReadRepository _navigationReadRepository;
+        private readonly IArticleReadRepository _articleReadRepository;
+        private readonly IArticleWriteRepository _articleWriteRepository;
+        private readonly IMasterRootReadRepository _masterRootReadRepository;
+        private readonly IMasterRootWriteRepository _masterRootWriteRepository;
+        private readonly IStorageService _storageService;
 
         public ArticleService(
-            ILanguagesReadRepository languagesReadRepository, 
-            IStatusReadRepository statusReadRepository, 
-            IArticleCategoryReadRepository articleCategoryReadRepository, 
-            IArticleCategoryWriteRepository articleCategoryWriteRepository
-            )
+            ILanguagesReadRepository languagesReadRepository,
+            IStatusReadRepository statusReadRepository,
+            IArticleCategoryReadRepository articleCategoryReadRepository,
+            IArticleCategoryWriteRepository articleCategoryWriteRepository,
+            INavigationReadRepository navigationReadRepository,
+            IArticleReadRepository articleReadRepository,
+            IArticleWriteRepository articleWriteRepository,
+            IMasterRootReadRepository masterRootReadRepository,
+            IMasterRootWriteRepository masterRootWriteRepository,
+            IStorageService storageService)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
             _articleCategoryReadRepository = articleCategoryReadRepository;
             _articleCategoryWriteRepository = articleCategoryWriteRepository;
+            _navigationReadRepository = navigationReadRepository;
+            _articleReadRepository = articleReadRepository;
+            _articleWriteRepository = articleWriteRepository;
+            _masterRootReadRepository = masterRootReadRepository;
+            _masterRootWriteRepository = masterRootWriteRepository;
+            _storageService = storageService;
         }
 
-        
+
         #region Article
+
+        public async Task<GetArticleCreateItemsQueryResponse> GetArticleCreateItemsAsync()
+        {
+            List<VM_ArticleCategory> vM_ArticleCategories = await _articleCategoryReadRepository.GetAll()
+                .Select(x => new VM_ArticleCategory
+                {
+                    Id = x.Id,
+                    CategoryName = x.CategoryName
+                }).ToListAsync();
+
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll()
+                .Select(x => new VM_Navigation
+                {
+                    Id = x.Id,
+                    NavigationName = x.NavigationName
+                }).ToListAsync();
+
+            return new()
+            {
+                ArticleCategories = vM_ArticleCategories,
+                Languages = vM_Languages,
+                Navigations = vM_Navigations,
+                Statuses = allStatuses
+            };
+
+        }
+
+        public async Task<GetAllArticleQueryResponse> GetAllArticleAsync()
+        {
+            List<VM_Article> vM_Articles = await _articleReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), ar => ar.LangId, lg => lg.Id, (ar, lg) => new { ar, lg })
+                .Join(_statusReadRepository.GetAll(), art => art.ar.StatusId, st => st.Id, (art, st) => new { art, st })
+                .Join(_articleCategoryReadRepository.GetAll(), article => article.art.ar.ArticleCategoryId, cn => cn.Id, (article, cn) => new { article, cn })
+                .Select(x => new VM_Article
+                {
+                    Id = x.article.art.ar.Id,
+                    Title = x.article.art.ar.Title,
+                    SubTitle = x.article.art.ar.SubTitle,
+                    CategoryName = x.cn.CategoryName,
+                    Language = x.article.art.lg.Language,
+                    StatusName = x.article.st.StatusName,
+                    CreateDate = x.article.art.ar.CreateDate,
+                    UpdateDate = x.article.art.ar.UpdateDate
+                }).ToListAsync();
+
+            return new()
+            {
+                Articles = vM_Articles
+            };
+        }
+
+        public async Task<ArticleCreateCommandResponse> ArticleCreateAsync(ArticleCreateCommandRequest request)
+        {
+            var check = await _articleReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("article-files", request.FormFile);
+
+                Article article = new()
+                {
+                    Controller = "Article",
+                    Action = "Index",
+                    CreateDate = DateTime.Now,
+                    ArticleCategoryId = request.ArticleCategoryId,
+                    Description = request.Description,
+                    IsComponent = request.IsComponent,
+                    IsMainPage = request.IsMainPage,
+                    IsMenu = request.IsMenu,
+                    IsNewsComponent = request.IsNewsComponent,
+                    LangId = request.LangId,
+                    MetaDescription = request.MetaDescription,
+                    MetaKey = request.MetaKey,
+                    MetaTitle = request.MetaTitle,
+                    NavigationId = request.NavigationId,
+                    Orders = request.Orders > 0 ? request.Orders : 0,
+                    StatusId = request.StatusId,
+                    SubTitle = request.SubTitle,
+                    Title = request.Title,
+                    UrlRoot = request.UrlRoot,
+                    CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null,
+                    CoverImgUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _articleWriteRepository.AddAsync(article);
+                await _articleWriteRepository.SaveAsync();
+
+                MasterRoot masterRoot = new()
+                {
+                    Controller = "Article",
+                    Action = "Index",
+                    UrlRoot = request.UrlRoot
+                };
+
+                await _masterRootWriteRepository.AddAsync(masterRoot);
+                await _masterRootWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+
         #endregion
 
         #region ArticleCategory
@@ -257,7 +410,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
+        
         #endregion
 
     }
