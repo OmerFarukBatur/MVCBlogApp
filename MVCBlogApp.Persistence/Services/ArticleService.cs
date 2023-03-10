@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetAllArticle;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetArticleCreateItems;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetByIdArticle;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
@@ -188,6 +191,154 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdArticleQueryResponse> GetByIdArticleAsync(int id)
+        {
+            VM_Article? vM_Article = await _articleReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Article
+                {
+                    Id = x.Id,
+                    ArticleCategoryId = x.ArticleCategoryId,
+                    Description = x.Description,
+                    IsComponent = x.IsComponent,
+                    IsMainPage = x.IsMainPage,
+                    IsMenu = x.IsMenu,
+                    IsNewsComponent = x.IsNewsComponent,
+                    LangId = x.LangId,
+                    MetaDescription = x.MetaDescription,
+                    MetaKey = x.MetaKey,
+                    MetaTitle = x.MetaTitle,
+                    NavigationId = x.NavigationId,
+                    Orders = x.Orders,
+                    StatusId = x.StatusId,
+                    SubTitle = x.SubTitle,
+                    Title = x.Title,
+                    UrlRoot = x.UrlRoot
+                }).FirstOrDefaultAsync();
+
+            if (vM_Article != null)
+            {
+                List<VM_ArticleCategory> vM_ArticleCategories = await _articleCategoryReadRepository.GetAll()
+                .Select(x => new VM_ArticleCategory
+                {
+                    Id = x.Id,
+                    CategoryName = x.CategoryName
+                }).ToListAsync();
+
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                    .Select(x => new VM_Language
+                    {
+                        Id = x.Id,
+                        Language = x.Language
+                    }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Navigation> vM_Navigations = await _navigationReadRepository.GetAll()
+                    .Select(x => new VM_Navigation
+                    {
+                        Id = x.Id,
+                        NavigationName = x.NavigationName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Article = vM_Article,
+                    ArticleCategories = vM_ArticleCategories,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    Navigations = vM_Navigations,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Article = null,
+                    ArticleCategories = null,
+                    Languages = null,
+                    Navigations = null,
+                    Statuses = null,
+                    Message = "Bu bilgilere ait kayıt bulunmamaktadır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ArticleUpdateCommandResponse> ArticleUpdateAsync(ArticleUpdateCommandRequest request)
+        {
+            Article article = await _articleReadRepository.GetByIdAsync(request.Id);
+
+            if (article != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x => x.UrlRoot == article.UrlRoot).FirstOrDefaultAsync();
+                if (masterRoot != null)
+                {
+                    masterRoot.UrlRoot = request.UrlRoot;
+                    _masterRootWriteRepository.Update(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    masterRoot = new()
+                    {
+                        Controller = "Article",
+                        Action = "Index",
+                        UrlRoot = request.UrlRoot
+                    };
+
+                    await _masterRootWriteRepository.AddAsync(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("article-files", request.FormFile);
+                    article.CoverImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                article.Title = request.Title;
+                article.Description = request.Description;
+                article.MetaDescription = request.MetaDescription;
+                article.ArticleCategoryId = request.ArticleCategoryId;
+                article.IsComponent = request.IsComponent;
+                article.IsNewsComponent = request.IsNewsComponent;
+                article.IsMenu = request.IsMenu;
+                article.LangId = request.LangId;
+                article.UrlRoot = request.UrlRoot;
+                article.NavigationId = request.NavigationId;
+                article.Orders = request.Orders > 0 ? request.Orders : null;
+                article.MetaTitle = request.MetaTitle;
+                article.MetaKey = request.MetaKey;
+                article.IsMainPage = request.IsMainPage;
+                article.SubTitle = request.SubTitle;
+                article.StatusId = request.StatusId;
+                article.UpdateUserId = request.UpdateUserId > 0 ? request.UpdateUserId : null;
+                article.UpdateDate = DateTime.Now;
+
+                _articleWriteRepository.Update(article);
+                await _articleWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip bir kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 
@@ -210,7 +361,7 @@ namespace MVCBlogApp.Persistence.Services
                 }).ToListAsync();
 
             List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
-                .Select(x=> new AllStatus 
+                .Select(x => new AllStatus
                 {
                     Id = x.Id,
                     StatusName = x.StatusName
@@ -389,9 +540,9 @@ namespace MVCBlogApp.Persistence.Services
 
             if (articleCategory != null)
             {
-                int state = await _statusReadRepository.GetWhere(x=> x.StatusName == "Pasif").Select(x=> x.Id).FirstAsync();
+                int state = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
                 articleCategory.StatusId = state;
-                
+
                 _articleCategoryWriteRepository.Update(articleCategory);
                 await _articleCategoryWriteRepository.SaveAsync();
 
@@ -410,7 +561,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        
+
         #endregion
 
     }

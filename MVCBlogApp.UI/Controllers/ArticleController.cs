@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetAllArticle;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetArticleCreateItems;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetByIdArticle;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
@@ -58,15 +60,32 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ArticleUpdate()
+        public async Task<IActionResult> ArticleUpdate(GetByIdArticleQueryRequest request)
         {
-            return View();
+            GetByIdArticleQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ArticleList", "Article");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ArticleUpdate(int a)
+        public async Task<IActionResult> ArticleUpdate(ArticleUpdateCommandRequest request)
         {
-            return View();
+            request.UpdateUserId = _operationService.GetUser().Id;
+            ArticleUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ArticleList", "Article");
+            }
+            else
+            {
+                return RedirectToAction("ArticleUpdate", "Article");
+            }
         }
 
         

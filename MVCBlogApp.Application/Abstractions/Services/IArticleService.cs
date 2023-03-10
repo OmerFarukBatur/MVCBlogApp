@@ -1,9 +1,11 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetAllArticle;
 using MVCBlogApp.Application.Features.Queries.Article.Article.GetArticleCreateItems;
+using MVCBlogApp.Application.Features.Queries.Article.Article.GetByIdArticle;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetAllArticleCategory;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetArticleCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Article.ArticleCategory.GetByIdArticleCategory;
@@ -17,6 +19,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetArticleCreateItemsQueryResponse> GetArticleCreateItemsAsync();
         Task<GetAllArticleQueryResponse> GetAllArticleAsync();
         Task<ArticleCreateCommandResponse> ArticleCreateAsync(ArticleCreateCommandRequest request);
+        Task<GetByIdArticleQueryResponse> GetByIdArticleAsync(int id);
+        Task<ArticleUpdateCommandResponse> ArticleUpdateAsync(ArticleUpdateCommandRequest request);
 
         #endregion
 
