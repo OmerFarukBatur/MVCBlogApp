@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleDelete;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
@@ -340,6 +341,32 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<ArticleDeleteCommandResponse> ArticleDeleteAsync(int id)
+        {
+            Article article = await _articleReadRepository.GetByIdAsync(id);
+            if (article != null)
+            {
+                int state = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                article.StatusId = state;
+
+                _articleWriteRepository.Update(article);
+                await _articleWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip bir kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
         #endregion
 
         #region ArticleCategory
@@ -561,7 +588,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
+        
         #endregion
 
     }

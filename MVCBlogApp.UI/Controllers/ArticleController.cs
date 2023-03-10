@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleDelete;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
@@ -89,9 +90,10 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         
-        public async Task<IActionResult> ArticleDelete()
+        public async Task<IActionResult> ArticleDelete(ArticleDeleteCommandRequest request)
         {
-            return View();
+            ArticleDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ArticleList", "Article");
         }
 
         #endregion

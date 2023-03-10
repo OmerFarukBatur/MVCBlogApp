@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleCreate;
+using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleDelete;
 using MVCBlogApp.Application.Features.Commands.Article.Article.ArticleUpdate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Article.ArticleCategory.ArticleCategoryDelete;
@@ -21,6 +22,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<ArticleCreateCommandResponse> ArticleCreateAsync(ArticleCreateCommandRequest request);
         Task<GetByIdArticleQueryResponse> GetByIdArticleAsync(int id);
         Task<ArticleUpdateCommandResponse> ArticleUpdateAsync(ArticleUpdateCommandRequest request);
+        Task<ArticleDeleteCommandResponse> ArticleDeleteAsync(int id);
 
         #endregion
 
