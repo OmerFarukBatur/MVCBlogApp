@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -88,21 +90,30 @@ namespace MVCBlogApp.UI.Controllers
         #region ResultBMIs
 
         [HttpGet]
-        public async Task<IActionResult> ResultBMIsList()
+        public async Task<IActionResult> ResultBMIsList(GetAllResultBMIQueryRequest request)
         {
-            return View();
+            GetAllResultBMIQueryResponse response = await _mediator.Send(request);
+            return View(response.ResultBMIs);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultBMIsCreate()
+        public IActionResult ResultBMIsCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultBMIsCreate(int a)
+        public async Task<IActionResult> ResultBMIsCreate(ResultBMIsCreateCommandRequest request)
         {
-            return View();
+            ResultBMIsCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ResultBMIsList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultBMIsCreate", "Result");
+            }
         }
 
         [HttpGet]

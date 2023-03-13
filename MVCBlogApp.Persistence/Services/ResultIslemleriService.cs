@@ -4,11 +4,15 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Repositories.ResultBMh;
+using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using System.Globalization;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -16,14 +20,20 @@ namespace MVCBlogApp.Persistence.Services
     {
         private readonly IResultBMhReadRepository _bmhReadRepository;
         private readonly IResultBMhWriteRepository _bmhWriteRepository;
+        private readonly IResultBMIReadRepository _bmiReadRepository;
+        private readonly IResultBMIWriteRepository _bmiWriteRepository;
 
         public ResultIslemleriService(
             IResultBMhReadRepository bmhReadRepository,
             IResultBMhWriteRepository bmhWriteRepository
-            )
+,
+            IResultBMIReadRepository bmiReadRepository,
+            IResultBMIWriteRepository bmiWriteRepository)
         {
             _bmhReadRepository = bmhReadRepository;
             _bmhWriteRepository = bmhWriteRepository;
+            _bmiReadRepository = bmiReadRepository;
+            _bmiWriteRepository = bmiWriteRepository;
         }
 
 
@@ -147,10 +157,62 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+
         #endregion
 
         #region ResultBMIs
 
+        public async Task<ResultBMIsCreateCommandResponse> ResultBMIsCreateAsync(ResultBMIsCreateCommandRequest request)
+        {
+            var check = await _bmiReadRepository
+                .GetWhere(x => x.IntervalDescription.Trim().ToLower() == request.IntervalDescription.Trim().ToLower() || x.IntervalDescription.Trim().ToUpper() == request.IntervalDescription.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {                
+                var clone = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                clone.NumberFormat.NumberDecimalSeparator = ".";
+
+                ResultBMI resultBMI = new()
+                {
+                    IntervalDescription = request.IntervalDescription,
+                    IntervalMax = Decimal.Parse(request.IntervalMax, clone),
+                    IntervalMin = Decimal.Parse(request.IntervalMin, clone)
+                };
+
+                await _bmiWriteRepository.AddAsync(resultBMI);
+                await _bmiWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarılı birşekilde yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllResultBMIQueryResponse> GetAllResultBMIAsync()
+        {
+            List<VM_ResultBMI> vM_ResultBMIs = await _bmiReadRepository.GetAll()
+                .Select(x=> new VM_ResultBMI
+                {
+                    Id = x.Id,
+                    IntervalDescription = x.IntervalDescription,
+                    IntervalMax= x.IntervalMax,
+                    IntervalMin= x.IntervalMin
+                }).ToListAsync();
+            return new()
+            {
+                ResultBMIs = vM_ResultBMIs
+            };
+        }
 
 
         #endregion

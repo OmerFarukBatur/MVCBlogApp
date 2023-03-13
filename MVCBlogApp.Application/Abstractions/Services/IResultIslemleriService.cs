@@ -1,8 +1,10 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -21,7 +23,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region ResultBMIs
 
-
+        Task<GetAllResultBMIQueryResponse> GetAllResultBMIAsync();
+        Task<ResultBMIsCreateCommandResponse> ResultBMIsCreateAsync(ResultBMIsCreateCommandRequest request);
 
         #endregion
 
