@@ -2,9 +2,12 @@
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -25,6 +28,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetAllResultBMIQueryResponse> GetAllResultBMIAsync();
         Task<ResultBMIsCreateCommandResponse> ResultBMIsCreateAsync(ResultBMIsCreateCommandRequest request);
+        Task<GetByIdResultBMIQueryResponse> GetByIdResultBMIAsync(int id);
+        Task<ResultBMIsUpdateCommandResponse> ResultBMIsUpdateAsync(ResultBMIsUpdateCommandRequest request);
+        Task<ResultBMIsDeleteCommandResponse> ResultBMIsDeleteAsync(int id);
 
         #endregion
 

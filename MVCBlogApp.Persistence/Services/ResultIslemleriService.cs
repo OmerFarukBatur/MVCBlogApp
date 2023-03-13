@@ -1,13 +1,15 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 using MVCBlogApp.Application.Repositories.ResultBMh;
 using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.ViewModels;
@@ -212,6 +214,92 @@ namespace MVCBlogApp.Persistence.Services
             {
                 ResultBMIs = vM_ResultBMIs
             };
+        }
+
+        public async Task<GetByIdResultBMIQueryResponse> GetByIdResultBMIAsync(int id)
+        {
+            VM_ResultBMI? vM_ResultBMI = await _bmiReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_ResultBMI
+                {
+                    Id = x.Id,
+                    IntervalDescription = x.IntervalDescription,
+                    IntervalMax = x.IntervalMax,
+                    IntervalMin = x.IntervalMin
+                }).FirstOrDefaultAsync();
+
+            if (vM_ResultBMI != null)
+            {
+                return new()
+                {
+                    ResultBMI = vM_ResultBMI,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmamaktadır.",
+                    State = false,
+                    ResultBMI = null
+                };
+            }
+        }
+
+        public async Task<ResultBMIsUpdateCommandResponse> ResultBMIsUpdateAsync(ResultBMIsUpdateCommandRequest request)
+        {
+           ResultBMI resultBMI = await _bmiReadRepository.GetByIdAsync(request.Id);
+
+            if (resultBMI != null)
+            {
+                var clone = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                clone.NumberFormat.NumberDecimalSeparator = ".";
+
+                resultBMI.IntervalMax = Decimal.Parse(request.IntervalMax, clone);
+                resultBMI.IntervalMin = Decimal.Parse(request.IntervalMin, clone);
+                resultBMI.IntervalDescription = request.IntervalDescription;
+
+                _bmiWriteRepository.Update(resultBMI);
+                await _bmiWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır."
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgiye ait kayıt bulunmamaktadır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ResultBMIsDeleteCommandResponse> ResultBMIsDeleteAsync(int id)
+        {
+            ResultBMI resultBMI = await _bmiReadRepository.GetByIdAsync(id);
+            if (resultBMI != null)
+            {
+                _bmiWriteRepository.Remove(resultBMI);
+                await _bmiWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarılı bir şekilde yapıldı.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgiye ait kayıt bulunamadı.",
+                    State = false
+                };
+            }
         }
 
 

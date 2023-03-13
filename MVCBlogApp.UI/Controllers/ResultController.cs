@@ -5,9 +5,12 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsCreat
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -117,20 +120,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultBMIsUpdate()
+        public async Task<IActionResult> ResultBMIsUpdate(GetByIdResultBMIQueryRequest request)
         {
-            return View();
+            GetByIdResultBMIQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.ResultBMI);
+            }
+            else
+            {
+                return RedirectToAction("ResultBMIsList", "Result");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultBMIsUpdate(int a)
+        public async Task<IActionResult> ResultBMIsUpdate(ResultBMIsUpdateCommandRequest request)
         {
-            return View();
+            ResultBMIsUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ResultBMIsList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultBMIsUpdate", "Result");
+            }
         }
 
-        public async Task<IActionResult> ResultBMIsDelete()
+        public async Task<IActionResult> ResultBMIsDelete(ResultBMIsDeleteCommandRequest request)
         {
-            return View();
+            ResultBMIsDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ResultBMIsList", "Result");
         }
 
         #endregion
