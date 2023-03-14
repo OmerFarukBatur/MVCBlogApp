@@ -20,9 +20,4 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Commands\Result\ResultPulses\" />
-    <Folder Include="Features\Queries\Result\ResultPulses\" />
-  </ItemGroup>
-
 </Project>

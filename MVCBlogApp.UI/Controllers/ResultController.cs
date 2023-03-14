@@ -10,12 +10,17 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetAllResultPulse;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetByIdResultPulse;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -230,38 +235,64 @@ namespace MVCBlogApp.UI.Controllers
         #region ResultPulses
 
         [HttpGet]
-        public async Task<IActionResult> ResultPulsesList()
+        public async Task<IActionResult> ResultPulsesList(GetAllResultPulseQueryRequest request)
         {
-            return View();
+            GetAllResultPulseQueryResponse response = await _mediator.Send(request);
+            return View(response.ResultPulses);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultPulsesCreate()
+        public IActionResult ResultPulsesCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultPulsesCreate(int a)
+        public async Task<IActionResult> ResultPulsesCreate(ResultPulsesCreateCommandRequest request)
         {
-            return View();
+            ResultPulsesCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ResultPulsesList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultPulsesCreate", "Result");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultPulsesUpdate()
+        public async Task<IActionResult> ResultPulsesUpdate(GetByIdResultPulseQueryRequest request)
         {
-            return View();
+            GetByIdResultPulseQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.ResultPulse);
+            }
+            else
+            {
+                return RedirectToAction("ResultPulsesList", "Result");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultPulsesUpdate(int a)
+        public async Task<IActionResult> ResultPulsesUpdate(ResultPulsesUpdateCommandRequest request)
         {
-            return View();
+            ResultPulsesUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ResultPulsesList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultPulsesUpdate", "Result");
+            }
         }
 
-        public async Task<IActionResult> ResultPulsesDelete()
+        public async Task<IActionResult> ResultPulsesDelete(ResultPulsesDeleteCommandRequest request)
         {
-            return View();
+            ResultPulsesDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ResultPulsesList", "Result");
         }
 
         #endregion

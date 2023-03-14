@@ -7,12 +7,17 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetAllResultPulse;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetByIdResultPulse;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -51,7 +56,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region ResultPulses
 
-
+        Task<GetAllResultPulseQueryResponse> GetAllResultPulseAsync();
+        Task<ResultPulsesCreateCommandResponse> ResultPulsesCreateAsync(ResultPulsesCreateCommandRequest request);
+        Task<GetByIdResultPulseQueryResponse> GetByIdResultPulseAsync(int id);
+        Task<ResultPulsesUpdateCommandResponse> ResultPulsesUpdateAsync(ResultPulsesUpdateCommandRequest request);
+        Task<ResultPulsesDeleteCommandResponse> ResultPulsesDeleteAsync(int id);
 
         #endregion
 

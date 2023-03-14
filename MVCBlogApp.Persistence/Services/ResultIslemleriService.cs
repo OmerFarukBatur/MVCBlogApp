@@ -9,15 +9,21 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultPulses.ResultPulsesUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
 using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetAllResultPulse;
+using MVCBlogApp.Application.Features.Queries.Result.ResultPulses.GetByIdResultPulse;
 using MVCBlogApp.Application.Repositories.ResultBMh;
 using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.Repositories.ResultOptimum;
+using MVCBlogApp.Application.Repositories.ResultPulse;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using System.Globalization;
@@ -32,6 +38,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IResultBMIWriteRepository _bmiWriteRepository;
         private readonly IResultOptimumReadRepository _bmiOptimumReadRepository;
         private readonly IResultOptimumWriteRepository _bmiOptimumWriteRepository;
+        private readonly IResultPulseReadRepository _bmiPulseReadRepository;
+        private readonly IResultPulseWriteRepository _bmiPulseWriteRepository;
 
         public ResultIslemleriService(
             IResultBMhReadRepository bmhReadRepository,
@@ -40,7 +48,9 @@ namespace MVCBlogApp.Persistence.Services
             IResultBMIReadRepository bmiReadRepository,
             IResultBMIWriteRepository bmiWriteRepository,
             IResultOptimumReadRepository bmiOptimumReadRepository,
-            IResultOptimumWriteRepository bmiOptimumWriteRepository)
+            IResultOptimumWriteRepository bmiOptimumWriteRepository,
+            IResultPulseReadRepository bmiPulseReadRepository,
+            IResultPulseWriteRepository bmiPulseWriteRepository)
         {
             _bmhReadRepository = bmhReadRepository;
             _bmhWriteRepository = bmhWriteRepository;
@@ -48,6 +58,8 @@ namespace MVCBlogApp.Persistence.Services
             _bmiWriteRepository = bmiWriteRepository;
             _bmiOptimumReadRepository = bmiOptimumReadRepository;
             _bmiOptimumWriteRepository = bmiOptimumWriteRepository;
+            _bmiPulseReadRepository = bmiPulseReadRepository;
+            _bmiPulseWriteRepository = bmiPulseWriteRepository;
         }
 
 
@@ -446,7 +458,119 @@ namespace MVCBlogApp.Persistence.Services
 
         #region ResultPulses
 
+        public async Task<ResultPulsesCreateCommandResponse> ResultPulsesCreateAsync(ResultPulsesCreateCommandRequest request)
+        {
+            ResultPulse resultPulse = new()
+            {
+                ResultMaxText = request.ResultMaxText,
+                ResultMinText = request.ResultMinText
+            };
 
+            await _bmiPulseWriteRepository.AddAsync(resultPulse);
+            await _bmiPulseWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kaydetme işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+        public async Task<GetAllResultPulseQueryResponse> GetAllResultPulseAsync()
+        {
+            List<VM_ResultPulse> vM_ResultPulses = await _bmiPulseReadRepository.GetAll()
+                .Select(x=> new VM_ResultPulse
+                {
+                    Id = x.Id,
+                    ResultMaxText=x.ResultMaxText,
+                    ResultMinText=x.ResultMinText
+                }).ToListAsync();
+
+            return new()
+            {
+                ResultPulses = vM_ResultPulses
+            };
+        }
+
+        public async Task<GetByIdResultPulseQueryResponse> GetByIdResultPulseAsync(int id)
+        {
+            VM_ResultPulse? resultPulse = await _bmiPulseReadRepository.GetWhere(r => r.Id == id)
+                .Select(x => new VM_ResultPulse
+                {
+                    Id = x.Id,
+                    ResultMaxText = x.ResultMaxText,
+                    ResultMinText = x.ResultMinText
+                }).FirstOrDefaultAsync();
+
+            if (resultPulse != null)
+            {
+                return new()
+                {
+                    State = true,
+                    ResultPulse = resultPulse
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    ResultPulse = null,
+                    Message = "Bu bilgiye ait kayıt bulunmamaktadır."
+                };
+            }
+        }
+
+        public async Task<ResultPulsesUpdateCommandResponse> ResultPulsesUpdateAsync(ResultPulsesUpdateCommandRequest request)
+        {
+            ResultPulse resultPulse = await _bmiPulseReadRepository.GetByIdAsync(request.Id);
+            if (resultPulse != null)
+            {
+                resultPulse.ResultMaxText = request.ResultMaxText;
+                resultPulse.ResultMinText = request.ResultMinText;
+
+                _bmiPulseWriteRepository.Update(resultPulse);
+                await _bmiPulseWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ResultPulsesDeleteCommandResponse> ResultPulsesDeleteAsync(int id)
+        {
+            ResultPulse resultPulse = await _bmiPulseReadRepository.GetByIdAsync(id);
+            if (resultPulse != null)
+            {
+                _bmiPulseWriteRepository.Remove(resultPulse);
+                await _bmiPulseWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                    Message = "Silme işlemi başarıyla yapılmıştır."
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunanamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 
