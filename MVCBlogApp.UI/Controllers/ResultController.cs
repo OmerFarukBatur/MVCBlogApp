@@ -7,10 +7,15 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -158,38 +163,66 @@ namespace MVCBlogApp.UI.Controllers
         #region ResultOptimums
 
         [HttpGet]
-        public async Task<IActionResult> ResultOptimumsList()
+        public async Task<IActionResult> ResultOptimumsList(GetAllResultOptimumsQueryRequest request)
         {
-            return View();
+            GetAllResultOptimumsQueryResponse response = await _mediator.Send(request);
+            return View(response.ResultOptimums);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultOptimumsCreate()
+        public IActionResult ResultOptimumsCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultOptimumsCreate(int a)
+        public async Task<IActionResult> ResultOptimumsCreate(ResultOptimumsCreateCommandRequest request)
         {
-            return View();
+            ResultOptimumsCreateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("ResultOptimumsList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultOptimumsCreate", "Result");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ResultOptimumsUpdate()
+        public async Task<IActionResult> ResultOptimumsUpdate(GetByIdResultOptimumQueryRequest request)
         {
-            return View();
+            GetByIdResultOptimumQueryResponse response = await _mediator.Send(request);
+            
+            if (response.State)
+            {
+                return View(response.ResultOptimum);
+            }
+            else
+            {
+                return RedirectToAction("ResultOptimumsList", "Result");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResultOptimumsUpdate(int a)
+        public async Task<IActionResult> ResultOptimumsUpdate(ResultOptimumsUpdateCommandRequest request)
         {
-            return View();
+            ResultOptimumsUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ResultOptimumsList", "Result");
+            }
+            else
+            {
+                return RedirectToAction("ResultOptimumsUpdate", "Result");
+            }
         }
 
-        public async Task<IActionResult> ResultOptimumsDelete()
+        public async Task<IActionResult> ResultOptimumsDelete(ResultOptimumsDeleteCommandRequest request)
         {
-            return View();
+            ResultOptimumsDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ResultOptimumsList", "Result");
         }
 
         #endregion

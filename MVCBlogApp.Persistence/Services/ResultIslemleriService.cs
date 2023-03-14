@@ -6,12 +6,18 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
 using MVCBlogApp.Application.Repositories.ResultBMh;
 using MVCBlogApp.Application.Repositories.ResultBMI;
+using MVCBlogApp.Application.Repositories.ResultOptimum;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using System.Globalization;
@@ -24,18 +30,24 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IResultBMhWriteRepository _bmhWriteRepository;
         private readonly IResultBMIReadRepository _bmiReadRepository;
         private readonly IResultBMIWriteRepository _bmiWriteRepository;
+        private readonly IResultOptimumReadRepository _bmiOptimumReadRepository;
+        private readonly IResultOptimumWriteRepository _bmiOptimumWriteRepository;
 
         public ResultIslemleriService(
             IResultBMhReadRepository bmhReadRepository,
             IResultBMhWriteRepository bmhWriteRepository
 ,
             IResultBMIReadRepository bmiReadRepository,
-            IResultBMIWriteRepository bmiWriteRepository)
+            IResultBMIWriteRepository bmiWriteRepository,
+            IResultOptimumReadRepository bmiOptimumReadRepository,
+            IResultOptimumWriteRepository bmiOptimumWriteRepository)
         {
             _bmhReadRepository = bmhReadRepository;
             _bmhWriteRepository = bmhWriteRepository;
             _bmiReadRepository = bmiReadRepository;
             _bmiWriteRepository = bmiWriteRepository;
+            _bmiOptimumReadRepository = bmiOptimumReadRepository;
+            _bmiOptimumWriteRepository = bmiOptimumWriteRepository;
         }
 
 
@@ -307,7 +319,128 @@ namespace MVCBlogApp.Persistence.Services
 
         #region ResultOptimums
 
+        public async Task<ResultOptimumsCreateCommandResponse> ResultOptimumsCreateAsync(ResultOptimumsCreateCommandRequest request)
+        {
+            ResultOptimum resultOptimum = new()
+            {
+                Result1text = request.Result1text,
+                Result2text = request.Result2text,
+                Result3text = request.Result3text,
+                Result4text = request.Result4text
+            };
 
+            await _bmiOptimumWriteRepository.AddAsync(resultOptimum);
+            await _bmiOptimumWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+        public async Task<GetAllResultOptimumsQueryResponse> GetAllResultOptimumsAsync()
+        {
+            List<VM_ResultOptimum> vM_ResultOptimums = await _bmiOptimumReadRepository.GetAll()
+                .Select(x => new VM_ResultOptimum
+                {
+                    Id = x.Id,
+                    Result1text = x.Result1text,
+                    Result2text = x.Result2text,
+                    Result3text = x.Result3text,
+                    Result4text = x.Result4text
+                }).ToListAsync();
+
+            return new()
+            {
+                ResultOptimums = vM_ResultOptimums
+            };
+        }
+
+        public async Task<GetByIdResultOptimumQueryResponse> GetByIdResultOptimumAsync(int id)
+        {
+            VM_ResultOptimum? vM_ResultOptimum = await _bmiOptimumReadRepository.GetWhere(r => r.Id == id)
+                .Select(x => new VM_ResultOptimum
+                {
+                    Id = x.Id,
+                    Result1text = x.Result1text,
+                    Result2text = x.Result2text,
+                    Result3text = x.Result3text,
+                    Result4text = x.Result4text
+                }).FirstOrDefaultAsync();
+
+            if (vM_ResultOptimum != null)
+            {
+                return new()
+                {
+                    ResultOptimum = vM_ResultOptimum,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Bu bilgilere ait kayıt bulunmamaktadır.",
+                    ResultOptimum = null
+                };
+            }
+        }
+
+        public async Task<ResultOptimumsUpdateCommandResponse> ResultOptimumsUpdateAsync(ResultOptimumsUpdateCommandRequest request)
+        {
+            ResultOptimum resultOptimum = await _bmiOptimumReadRepository.GetByIdAsync(request.Id);
+
+            if (resultOptimum != null)
+            {
+                resultOptimum.Result1text = request.Result1text;
+                resultOptimum.Result2text = request.Result2text;
+                resultOptimum.Result3text = request.Result3text;
+                resultOptimum.Result4text = request.Result4text;
+
+                _bmiOptimumWriteRepository.Update(resultOptimum);
+                await _bmiOptimumWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere ait kayıt bulunanamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ResultOptimumsDeleteCommandResponse> ResultOptimumsDeleteAsync(int id)
+        {
+            ResultOptimum resultOptimum = await _bmiOptimumReadRepository.GetByIdAsync(id);
+            if (resultOptimum != null)
+            {
+                _bmiOptimumWriteRepository.Remove(resultOptimum);
+                await _bmiOptimumWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 

@@ -4,10 +4,15 @@ using MVCBlogApp.Application.Features.Commands.Result.ResultBMhs.ResultBMhsUpdat
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsCreate;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsDelete;
 using MVCBlogApp.Application.Features.Commands.Result.ResultBMIs.ResultBMIsUpdate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsCreate;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsDelete;
+using MVCBlogApp.Application.Features.Commands.Result.ResultOptimums.ResultOptimumsUpdate;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetAllResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMhs.GetByIdResultBMhs;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetAllResultBMI;
 using MVCBlogApp.Application.Features.Queries.Result.ResultBMIs.GetByIdResultBMI;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetAllResultOptimums;
+using MVCBlogApp.Application.Features.Queries.Result.ResultOptimums.GetByIdResultOptimum;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -36,7 +41,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region ResultOptimums
 
-
+        Task<GetAllResultOptimumsQueryResponse> GetAllResultOptimumsAsync();
+        Task<ResultOptimumsCreateCommandResponse> ResultOptimumsCreateAsync(ResultOptimumsCreateCommandRequest request);
+        Task<GetByIdResultOptimumQueryResponse> GetByIdResultOptimumAsync(int id);
+        Task<ResultOptimumsUpdateCommandResponse> ResultOptimumsUpdateAsync(ResultOptimumsUpdateCommandRequest request);
+        Task<ResultOptimumsDeleteCommandResponse> ResultOptimumsDeleteAsync(int id);
 
         #endregion
 
