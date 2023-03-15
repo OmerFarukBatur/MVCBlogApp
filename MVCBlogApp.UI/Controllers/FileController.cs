@@ -1,6 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCategory;
+using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
+using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -53,39 +59,66 @@ namespace MVCBlogApp.UI.Controllers
         #endregion
 
         #region VideoCategory
-        public async Task<IActionResult> VideoCategoryList()
+        public async Task<IActionResult> VideoCategoryList(GetAllVideoCategoryQueryRequest request)
         {
-            return View();
+            GetAllVideoCategoryQueryResponse response = await _mediator.Send(request);
+            return View(response.VideoCategories);
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoCategoryCreate()
+        public async Task<IActionResult> VideoCategoryCreate(GetVideoCategoryCreateItemsQueryRequest request)
         {
-            return View();
+            GetVideoCategoryCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> VideoCategoryCreate(int id)
+        public async Task<IActionResult> VideoCategoryCreate(VideoCategoryCreateCommandRequest request)
         {
-            return View();
+            VideoCategoryCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("VideoCategoryList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoCategoryCreate", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoCategoryUpdate()
+        public async Task<IActionResult> VideoCategoryUpdate(GetByIdVideoCategoryQueryRequest request)
         {
-            return View();
+            GetByIdVideoCategoryQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("VideoCategoryList", "File");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> VideoCategoryUpdate(int id)
+        public async Task<IActionResult> VideoCategoryUpdate(VideoCategoryUpdateCommandRequest request)
         {
-            return View();
+            VideoCategoryUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("VideoCategoryList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoCategoryUpdate", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoCategoryDelete(int id)
+        public async Task<IActionResult> VideoCategoryDelete(VideoCategoryDeleteCommandRequest request)
         {
-            return View();
+            VideoCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("VideoCategoryList", "File");
         }
 
         #endregion
