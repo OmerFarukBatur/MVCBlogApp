@@ -469,6 +469,7 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IUserIslemleriService,UserIslemleriService>();
             services.AddScoped<IArticleService,ArticleService>();
             services.AddScoped<IResultIslemleriService,ResultIslemleriService>();
+            services.AddScoped<IFileProcessService,FileProcessService>();
             #endregion      
             
         }
