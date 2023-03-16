@@ -1,9 +1,15 @@
-﻿using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
+﻿using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoDelete;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetAllVideo;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetByIdVideo;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
@@ -16,6 +22,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
     public interface IFileProcessService
     {
         #region Image
+
+        Task<GetUploadImageItemsQueryResponse> GetUploadImageItemsAsync();
+        Task<ImageUploadCommandResponse> ImageUploadAsync(ImageUploadCommandRequest request);
+        Task<GetAllImageQueryResponse> GetAllImageAsync();
+        Task<GetByIdImageQueryResponse> GetByIdImageAsync(int id);
+        Task<ImageUpdateCommandResponse> ImageUpdateAsync(ImageUpdateCommandRequest request);
+        Task<ImageDeleteCommandResponse> ImageDeleteAsync(int id);
 
         #endregion
 

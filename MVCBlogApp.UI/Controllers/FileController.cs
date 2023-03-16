@@ -2,12 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoDelete;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
+using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetAllVideo;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetByIdVideo;
 using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
@@ -30,39 +36,67 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         #region Image
-        public async Task<IActionResult> ImageList()
+        public async Task<IActionResult> ImageList(GetAllImageQueryRequest request)
         {
-            return View();
+            GetAllImageQueryResponse response = await _mediator.Send(request);
+            return View(response.Images);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ImageUpload()
+        public async Task<IActionResult> ImageUpload(GetUploadImageItemsQueryRequest request)
         {
-            return View();
+            GetUploadImageItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ImageUpload(int id)
+        public async Task<IActionResult> ImageUpload(ImageUploadCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            ImageUploadCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ImageList", "File");
+            }
+            else
+            {
+                return RedirectToAction("ImageUpload", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ImageUpdate()
+        public async Task<IActionResult> ImageUpdate(GetByIdImageQueryRequest request)
         {
-            return View();
+            GetByIdImageQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ImageList", "File");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ImageUpdate(int id)
+        public async Task<IActionResult> ImageUpdate(ImageUpdateCommandRequest request)
         {
-            return View();
+            ImageUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ImageList", "File");
+            }
+            else
+            {
+                return RedirectToAction("ImageUpdate", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ImageDelete(int id)
+        public async Task<IActionResult> ImageDelete(ImageDeleteCommandRequest request)
         {
-            return View();
+            ImageDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ImageList", "File");
         }
 
         #endregion
