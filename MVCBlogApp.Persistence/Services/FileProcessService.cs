@@ -1,14 +1,21 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoDelete;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetAllVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetByIdVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.Video;
 using MVCBlogApp.Application.Repositories.VideoCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -21,18 +28,23 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly IVideoCategoryReadRepository _videoCategoryReadRepository;
         private readonly IVideoCategoryWriteRepository _videoCategoryWriteRepository;
+        private readonly IVideoReadRepository _videoReadRepository;
+        private readonly IVideoWriteRepository _videoWriteRepository;
 
         public FileProcessService(
             ILanguagesReadRepository languagesReadRepository,
             IStatusReadRepository statusReadRepository,
             IVideoCategoryReadRepository videoCategoryReadRepository,
-            IVideoCategoryWriteRepository videoCategoryWriteRepository
-            )
+            IVideoCategoryWriteRepository videoCategoryWriteRepository,
+            IVideoReadRepository videoReadRepository,
+            IVideoWriteRepository videoWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
             _videoCategoryReadRepository = videoCategoryReadRepository;
             _videoCategoryWriteRepository = videoCategoryWriteRepository;
+            _videoReadRepository = videoReadRepository;
+            _videoWriteRepository = videoWriteRepository;
         }
 
 
@@ -41,6 +53,220 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region Video
+
+        public async Task<GetVideoCreateItemsQueryResponse> GetVideoCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_VideoCategory> vM_VideoCategories = await _videoCategoryReadRepository.GetAll()
+                .Select(x => new VM_VideoCategory
+                {
+                    Id = x.Id,
+                    VideoCategoryName = x.VideoCategoryName
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatuses,
+                VideoCategories = vM_VideoCategories
+            };
+        }
+
+        public async Task<VideoCreateCommandResponse> VideoCreateAsync(VideoCreateCommandRequest request)
+        {
+            var check = await _videoReadRepository.GetWhere(v => v.Title.Trim().ToLower() == request.Title.Trim().ToLower() || v.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Video video = new()
+                {
+                    CreateDate = DateTime.Now,
+                    CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null,
+                    Description = request.Description,
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    VideoCategoryId = request.VideoCategoryId,
+                    VideoEmbedCode = request.VideoEmbedCode,
+                    VideoUrl = request.VideoUrl
+                };
+
+                await _videoWriteRepository.AddAsync(video);
+                await _videoWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kaydetme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllVideoQueryResponse> GetAllVideoAsync()
+        {
+            List<VM_Video> vM_Videos = await _videoReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), vi => vi.LangId, lg => lg.Id, (vi, lg) => new { vi, lg })
+                .Join(_statusReadRepository.GetAll(), vid => vid.vi.StatusId, st => st.Id, (vid, st) => new { vid, st })
+                .Join(_videoCategoryReadRepository.GetAll(), video => video.vid.vi.VideoCategoryId, vct => vct.Id, (video, vct) => new { video, vct })
+                .Select(x => new VM_Video
+                {
+                    Id = x.video.vid.vi.Id,
+                    CreateDate = x.video.vid.vi.CreateDate,
+                    Language = x.video.vid.lg.Language,
+                    StatusName = x.video.st.StatusName,
+                    VideoCategoryName = x.vct.VideoCategoryName,
+                    Title = x.video.vid.vi.Title
+                }).ToListAsync();
+
+            return new()
+            {
+                Videos = vM_Videos
+            };
+        }
+
+        public async Task<GetByIdVideoQueryResponse> GetByIdVideoAsync(int id)
+        {
+            VM_Video? vM_Video = await _videoReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Video
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title,
+                    VideoCategoryId = x.VideoCategoryId,
+                    VideoEmbedCode = x.VideoEmbedCode,
+                    VideoUrl = x.VideoUrl
+                }).FirstOrDefaultAsync();
+
+            if (vM_Video != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_VideoCategory> vM_VideoCategories = await _videoCategoryReadRepository.GetAll()
+                    .Select(x => new VM_VideoCategory
+                    {
+                        Id = x.Id,
+                        VideoCategoryName = x.VideoCategoryName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    VideoCategories = vM_VideoCategories,
+                    Video = vM_Video,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    Statuses = null,
+                    Video = null,
+                    VideoCategories = null,
+                    Message = "Bu bilgiye ait kayıt bulunmamaktadır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<VideoUpdateCommandResponse> VideoUpdateAsync(VideoUpdateCommandRequest request)
+        {
+            Video video = await _videoReadRepository.GetByIdAsync(request.Id);
+
+            if (video != null)
+            {
+                video.Description = request.Description;
+                video.LangId = request.LangId;
+                video.StatusId = request.StatusId;
+                video.VideoUrl = request.VideoUrl;
+                video.Title = request.Title;
+                video.VideoEmbedCode = request.VideoEmbedCode;
+                video.VideoCategoryId = request.VideoCategoryId;
+
+                _videoWriteRepository.Update(video);
+                await _videoWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Bu bilgiye ait kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<VideoDeleteCommandResponse> VideoDeleteAsync(int id)
+        {
+            Video video = await _videoReadRepository.GetByIdAsync(id);
+
+            if (video != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                video.StatusId = statusId;
+
+                _videoWriteRepository.Update(video);
+                await _videoWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bu bilgiye sahip kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+
 
         #endregion
 
@@ -223,6 +449,7 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
 
         #endregion
 

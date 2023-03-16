@@ -1,9 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoDelete;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetAllVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetByIdVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
@@ -14,10 +21,12 @@ namespace MVCBlogApp.UI.Controllers
     public class FileController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
 
-        public FileController(IMediator mediator)
+        public FileController(IMediator mediator, IOperationService operationService)
         {
             _mediator = mediator;
+            _operationService = operationService;
         }
 
         #region Image
@@ -124,39 +133,67 @@ namespace MVCBlogApp.UI.Controllers
         #endregion
 
         #region Video
-        public async Task<IActionResult> VideoList()
+        public async Task<IActionResult> VideoList(GetAllVideoQueryRequest request)
         {
-            return View();
+            GetAllVideoQueryResponse response = await _mediator.Send(request);
+            return View(response.Videos);
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoUpload()
+        public async Task<IActionResult> VideoCreate(GetVideoCreateItemsQueryRequest request)
         {
-            return View();
+            GetVideoCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> VideoUpload(int id)
+        public async Task<IActionResult> VideoCreate(VideoCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            VideoCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("VideoList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoCreate", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoUpdate()
+        public async Task<IActionResult> VideoUpdate(GetByIdVideoQueryRequest request)
         {
-            return View();
+            GetByIdVideoQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("VideoList", "File");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> VideoUpdate(int id)
+        public async Task<IActionResult> VideoUpdate(VideoUpdateCommandRequest request)
         {
-            return View();
+            VideoUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("VideoList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoUpdate", "File");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> VideoDelete(int id)
+        public async Task<IActionResult> VideoDelete(VideoDeleteCommandRequest request)
         {
-            return View();
+            VideoDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("VideoList", "File");
         }
 
         #endregion

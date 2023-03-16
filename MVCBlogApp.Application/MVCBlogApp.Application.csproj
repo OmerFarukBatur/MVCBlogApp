@@ -22,9 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Commands\File\Image\" />
-    <Folder Include="Features\Commands\File\Video\" />
     <Folder Include="Features\Queries\File\Image\" />
-    <Folder Include="Features\Queries\File\Video\" />
   </ItemGroup>
 
 </Project>

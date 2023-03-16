@@ -1,6 +1,12 @@
-﻿using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
+﻿using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoDelete;
+using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
+using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetAllVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetByIdVideo;
+using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
@@ -14,6 +20,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #endregion
 
         #region Video
+
+        Task<GetVideoCreateItemsQueryResponse> GetVideoCreateItemsAsync();
+        Task<VideoCreateCommandResponse> VideoCreateAsync(VideoCreateCommandRequest request);
+        Task<GetAllVideoQueryResponse> GetAllVideoAsync();
+        Task<GetByIdVideoQueryResponse> GetByIdVideoAsync(int id);
+        Task<VideoUpdateCommandResponse> VideoUpdateAsync(VideoUpdateCommandRequest request);
+        Task<VideoDeleteCommandResponse> VideoDeleteAsync(int id);
 
         #endregion
 
