@@ -1,9 +1,12 @@
 ﻿using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinCreate;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinDelete;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinUpdate;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperCreate;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetAllNewsBulletin;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetByIdNews;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetNewsBulletinCreateItem;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetAllNewsPaper;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetNewsPaperCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -22,7 +25,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region NewsPaper
 
-
+        Task<GetNewsPaperCreateItemsQueryResponse> GetNewsPaperCreateItemsAsync();
+        Task<GetAllNewsPaperQueryResponse> GetAllNewsPaperAsync();
+        Task<NewsPaperCreateCommandResponse> NewsPaperCreateAsync(NewsPaperCreateCommandRequest request);
 
         #endregion
     }

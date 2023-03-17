@@ -5,9 +5,12 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinCreate;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinDelete;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinUpdate;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperCreate;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetAllNewsBulletin;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetByIdNews;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetNewsBulletinCreateItem;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetAllNewsPaper;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetNewsPaperCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -93,21 +96,31 @@ namespace MVCBlogApp.UI.Controllers
         #region NewsPaper
 
         [HttpGet]
-        public async Task<IActionResult> NewsPaperList()
+        public async Task<IActionResult> NewsPaperList(GetAllNewsPaperQueryRequest request)
         {
-            return View();
+            GetAllNewsPaperQueryResponse response = await _mediator.Send(request);
+            return View(response.NewsPapers);
         }
 
         [HttpGet]
-        public async Task<IActionResult> NewsPaperCreate()
+        public async Task<IActionResult> NewsPaperCreate(GetNewsPaperCreateItemsQueryRequest request)
         {
-            return View();
+            GetNewsPaperCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewsPaperCreate(int a)
+        public async Task<IActionResult> NewsPaperCreate(NewsPaperCreateCommandRequest request)
         {
-            return View();
+            NewsPaperCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("NewsPaperList", "News");
+            }
+            else
+            {
+                return RedirectToAction("NewsPaperCreate", "News");
+            }
         }
 
         [HttpGet]

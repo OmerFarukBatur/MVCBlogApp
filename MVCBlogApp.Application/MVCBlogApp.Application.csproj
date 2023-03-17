@@ -20,9 +20,4 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Commands\News\NewsPaper\" />
-    <Folder Include="Features\Queries\News\NewsPaper\" />
-  </ItemGroup>
-
 </Project>

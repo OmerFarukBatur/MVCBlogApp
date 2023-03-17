@@ -3,9 +3,13 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinCreate;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinDelete;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinUpdate;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperCreate;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetAllNewsBulletin;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetByIdNews;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetNewsBulletinCreateItem;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetAllNewsPaper;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetNewsPaperCreateItems;
+using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.NewsBulletin;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Status;
@@ -21,23 +25,25 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INewsPaperReadRepository _newsPaperReadRepository;
         private readonly INewsPaperWriteRepository _newsPaperWriteRepository;
         private readonly IStatusReadRepository _statusReadRepository;
+        private readonly ILanguagesReadRepository _languagesReadRepository;
 
         public NewsService(
-            INewsBulletinReadRepository newsBulletinReadRepository, 
-            INewsBulletinWriteRepository newsBulletinWriteRepository, 
-            INewsPaperReadRepository newsPaperReadRepository, 
-            INewsPaperWriteRepository newsPaperWriteRepository, 
-            IStatusReadRepository statusReadRepository
-            )
+            INewsBulletinReadRepository newsBulletinReadRepository,
+            INewsBulletinWriteRepository newsBulletinWriteRepository,
+            INewsPaperReadRepository newsPaperReadRepository,
+            INewsPaperWriteRepository newsPaperWriteRepository,
+            IStatusReadRepository statusReadRepository,
+            ILanguagesReadRepository languagesReadRepository)
         {
             _newsBulletinReadRepository = newsBulletinReadRepository;
             _newsBulletinWriteRepository = newsBulletinWriteRepository;
             _newsPaperReadRepository = newsPaperReadRepository;
             _newsPaperWriteRepository = newsPaperWriteRepository;
             _statusReadRepository = statusReadRepository;
+            _languagesReadRepository = languagesReadRepository;
         }
 
-        
+
         #region NewsBulletin
 
         public async Task<GetNewsBulletinCreateItemQueryResponse> GetNewsBulletinCreateItemAsync()
@@ -197,10 +203,71 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
-
         #endregion
 
         #region NewsPaper
+
+        public async Task<GetNewsPaperCreateItemsQueryResponse> GetNewsPaperCreateItemsAsync()
+        {
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllNewsPaperQueryResponse> GetAllNewsPaperAsync()
+        {
+            List<VM_NewsPaper> vM_NewsPapers = await _newsPaperReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), nw => nw.LangId, lg => lg.Id, (nw, lg) => new { nw, lg })
+                .Join(_statusReadRepository.GetAll(), nwp => nwp.nw.StatusId, st => st.Id, (nwp, st) => new { nwp, st })
+                .Select(x => new VM_NewsPaper
+                {
+                    Id = x.nwp.nw.Id,
+                    NewsPaperName = x.nwp.nw.NewsPaperName,
+                    Language = x.nwp.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                NewsPapers = vM_NewsPapers
+            };
+        }
+
+        public async Task<NewsPaperCreateCommandResponse> NewsPaperCreateAsync(NewsPaperCreateCommandRequest request)
+        {
+            NewsPaper newsPaper = new()
+            {
+                LangId = request.LangId,
+                NewsPaperName = request.NewsPaperName,
+                StatusId = request.StatusId
+            };
+
+            await _newsPaperWriteRepository.AddAsync(newsPaper);
+            await _newsPaperWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kaydetme işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
 
 
 
