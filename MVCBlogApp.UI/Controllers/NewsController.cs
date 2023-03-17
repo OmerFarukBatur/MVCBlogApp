@@ -6,10 +6,13 @@ using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinCre
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinDelete;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinUpdate;
 using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperCreate;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperDelete;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperUpdate;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetAllNewsBulletin;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetByIdNews;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetNewsBulletinCreateItem;
 using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetAllNewsPaper;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetByIdNewsPaper;
 using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetNewsPaperCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -124,20 +127,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> NewsPaperUpdate()
+        public async Task<IActionResult> NewsPaperUpdate(GetByIdNewsPaperQueryRequest request)
         {
-            return View();
+            GetByIdNewsPaperQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("NewsPaperList", "News");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewsPaperUpdate(int a)
+        public async Task<IActionResult> NewsPaperUpdate(NewsPaperUpdateCommandRequest request)
         {
-            return View();
+            NewsPaperUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("NewsPaperList", "News");
+            }
+            else
+            {
+                return RedirectToAction("NewsPaperUpdate", "News");
+            }
         }
 
-        public async Task<IActionResult> NewsPaperDelete(int a)
+        public async Task<IActionResult> NewsPaperDelete(NewsPaperDeleteCommandRequest request)
         {
-            return View();
+            NewsPaperDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("NewsPaperList", "News");
         }
 
         #endregion

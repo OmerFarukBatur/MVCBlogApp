@@ -1,13 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinCreate;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinDelete;
 using MVCBlogApp.Application.Features.Commands.News.NewsBulletin.NewsBulletinUpdate;
 using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperCreate;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperDelete;
+using MVCBlogApp.Application.Features.Commands.News.NewsPaper.NewsPaperUpdate;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetAllNewsBulletin;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetByIdNews;
 using MVCBlogApp.Application.Features.Queries.News.NewsBulletin.GetNewsBulletinCreateItem;
 using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetAllNewsPaper;
+using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetByIdNewsPaper;
 using MVCBlogApp.Application.Features.Queries.News.NewsPaper.GetNewsPaperCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.NewsBulletin;
@@ -168,7 +172,7 @@ namespace MVCBlogApp.Persistence.Services
             else
             {
                 return new()
-                {                   
+                {
                     State = false,
                     Message = "Bilgiye ait kayıt bulunamamıştır."
                 };
@@ -268,8 +272,109 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdNewsPaperQueryResponse> GetByIdNewsPaperAsync(int id)
+        {
+            VM_NewsPaper? newsPaper = await _newsPaperReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_NewsPaper
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    NewsPaperName = x.NewsPaperName,
+                    StatusId = x.StatusId
+                }).FirstOrDefaultAsync();
 
+            if (newsPaper != null)
+            {
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
 
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                    .Select(x => new VM_Language
+                    {
+                        Id = x.Id,
+                        Language = x.Language
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    NewsPaper = newsPaper,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    NewsPaper = null,
+                    Statuses = null,
+                    Message = "Bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<NewsPaperUpdateCommandResponse> NewsPaperUpdateAsync(NewsPaperUpdateCommandRequest request)
+        {
+            NewsPaper newsPaper = await _newsPaperReadRepository.GetByIdAsync(request.Id);
+
+            if (newsPaper != null)
+            {
+                newsPaper.NewsPaperName = request.NewsPaperName;
+                newsPaper.StatusId = request.StatusId;
+                newsPaper.LangId = request.LangId;
+
+                _newsPaperWriteRepository.Update(newsPaper);
+                await _newsPaperWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<NewsPaperDeleteCommandResponse> NewsPaperDeleteAsync(int id)
+        {
+            NewsPaper newsPaper = await _newsPaperReadRepository.GetByIdAsync(id);
+
+            if (newsPaper != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                newsPaper.StatusId = statusId;
+
+                _newsPaperWriteRepository.Update(newsPaper);
+                await _newsPaperWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgiye ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
     }
