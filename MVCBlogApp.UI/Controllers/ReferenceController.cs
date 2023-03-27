@@ -1,29 +1,54 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class ReferenceController : Controller
     {
+        private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
+
+        public ReferenceController(IMediator mediator, IOperationService operationService)
+        {
+            _mediator = mediator;
+            _operationService = operationService;
+        }
+
         #region Reference
 
         [HttpGet]
-        public async Task<IActionResult> ReferenceList()
+        public async Task<IActionResult> ReferenceList(GetAllReferenceQueryRequest request)
         {
-            return View();
+            GetAllReferenceQueryResponse response = await _mediator.Send(request);
+            return View(response.References);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReferenceCreate()
+        public async Task<IActionResult> ReferenceCreate(GetReferenceCreateItemsQueryRequest request)
         {
-            return View();
+            GetReferenceCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ReferenceCreate(int a)
+        public async Task<IActionResult> ReferenceCreate(ReferenceCreateCommandRequest request)
         {
-            return View();
+            request.CreatedUserId = _operationService.GetUser().Id;
+            ReferenceCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ReferenceList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("ReferenceCreate", "Reference");
+            }
         }
 
         [HttpGet]
