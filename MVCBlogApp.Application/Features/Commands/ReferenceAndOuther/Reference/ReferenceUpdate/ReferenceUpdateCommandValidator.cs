@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate
+namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate
 {
-    public class ReferenceCreateCommandValidator : AbstractValidator<ReferenceCreateCommandRequest>
+    public class ReferenceUpdateCommandValidator : AbstractValidator<ReferenceUpdateCommandRequest>
     {
-        public ReferenceCreateCommandValidator()
+        public ReferenceUpdateCommandValidator()
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
@@ -20,13 +20,8 @@ namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.
                 .WithMessage("Lütfen UrlLink alanını doldurunuz.")
                 .MaximumLength(250)
                 .MinimumLength(2)
-                .WithMessage("Lütfen UrlLink enaz 2 ve ençok 250 karakter olacak şekilde giriniz.");            
+                .WithMessage("Lütfen UrlLink enaz 2 ve ençok 250 karakter olacak şekilde giriniz.");
 
-            RuleFor(x => x.FormFile)
-               .NotEmpty()
-               .NotNull()
-               .WithMessage("Lütfen bir Fotoğraf yükleyiniz.");
-           
             RuleFor(x => x.StatusId)
                .NotNull()
                .WithMessage("Lütfen bir Durum şeçiniz.");

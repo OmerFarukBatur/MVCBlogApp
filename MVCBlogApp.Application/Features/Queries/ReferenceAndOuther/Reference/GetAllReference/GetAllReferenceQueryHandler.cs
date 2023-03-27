@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 
-namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference
+namespace MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference
 {
     public class GetAllReferenceQueryHandler : IRequestHandler<GetAllReferenceQueryRequest, GetAllReferenceQueryResponse>
     {

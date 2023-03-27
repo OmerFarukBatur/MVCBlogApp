@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference
+namespace MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference
 {
     public class GetAllReferenceQueryRequest : IRequest<GetAllReferenceQueryResponse>
     {

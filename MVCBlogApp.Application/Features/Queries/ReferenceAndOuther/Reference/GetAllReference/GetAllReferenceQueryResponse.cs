@@ -1,6 +1,6 @@
 ﻿using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference
+namespace MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference
 {
     public class GetAllReferenceQueryResponse
     {

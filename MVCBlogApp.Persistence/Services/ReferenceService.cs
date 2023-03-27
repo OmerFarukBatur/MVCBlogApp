@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
-using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.References;
@@ -57,6 +60,46 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdReferenceQueryResponse> GetByIdReferenceAsync(int id)
+        {
+            VM_References? vM_References = await _referencesReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_References
+                {
+                    Id = x.Id,
+                    StatusId = x.StatusId,
+                    Title = x.Title,
+                    UrlLink = x.UrlLink
+                }).FirstOrDefaultAsync();
+
+            if (vM_References != null)
+            {
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+                return new()
+                {
+                    References = vM_References,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunamamıştır.",
+                    References = null,
+                    State = false,
+                    Statuses = null
+                };
+            }
+
+        }
+
         public async Task<GetReferenceCreateItemsQueryResponse> GetReferenceCreateItemsAsync()
         {
             List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
@@ -106,6 +149,67 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<ReferenceDeleteCommandResponse> ReferenceDeleteAsync(int id)
+        {
+            References references = await _referencesReadRepository.GetByIdAsync(id);
+            if (references != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                references.StatusId = statusId;
+
+                _referencesWriteRepository.Update(references);
+                await _referencesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Beklenmedik bir hata oluştu."
+                };
+            }
+        }
+
+        public async Task<ReferenceUpdateCommandResponse> ReferenceUpdateAsync(ReferenceUpdateCommandRequest request)
+        {
+            References references = await _referencesReadRepository.GetByIdAsync(request.Id);
+
+            if (references != null)
+            {
+                references.UrlLink = request.UrlLink;
+                references.Title = request.Title;
+                references.StatusId = request.StatusId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("reference-files", request.FormFile);
+                    references.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _referencesWriteRepository.Update(references);
+                await _referencesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Güncelleme işlemi sırasında beklenmedik bir hata ile karşılaşılmıştır.",
+                    State = false
                 };
             }
         }

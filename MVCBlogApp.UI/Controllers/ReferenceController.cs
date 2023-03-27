@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -52,20 +55,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ReferenceUpdate()
+        public async Task<IActionResult> ReferenceUpdate(GetByIdReferenceQueryRequest request)
         {
-            return View();
+            GetByIdReferenceQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ReferenceList", "Reference");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ReferenceUpdate(int a)
+        public async Task<IActionResult> ReferenceUpdate(ReferenceUpdateCommandRequest request)
         {
-            return View();
+            ReferenceUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ReferenceList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("ReferenceUpdate", "Reference");
+            }
         }
 
-        public async Task<IActionResult> ReferenceDelete(int a)
+        public async Task<IActionResult> ReferenceDelete(ReferenceDeleteCommandRequest request)
         {
-            return View();
+            ReferenceDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ReferenceList", "Reference");
         }
 
         #endregion
