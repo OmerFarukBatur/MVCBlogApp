@@ -4,11 +4,16 @@ using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetAllSeminarVisuals;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetByIdSeminarVisual;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetSeminarVisualsCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.References;
+using MVCBlogApp.Application.Repositories.SeminarVisuals;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -19,23 +24,28 @@ namespace MVCBlogApp.Persistence.Services
     {
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly IStorageService _storageService;
         private readonly IReferencesReadRepository _referencesReadRepository;
         private readonly IReferencesWriteRepository _referencesWriteRepository;
-        private readonly IStorageService _storageService;
+        private readonly ISeminarVisualsReadRepository _seminarVisualsReadRepository;
+        private readonly ISeminarVisualsWriteRepository _seminarVisualsWriteRepository;
 
         public ReferenceService(
             IStatusReadRepository statusReadRepository,
             ILanguagesReadRepository languagesReadRepository,
             IReferencesReadRepository referencesReadRepository,
             IReferencesWriteRepository referencesWriteRepository,
-            IStorageService storageService
-            )
+            IStorageService storageService,
+            ISeminarVisualsReadRepository seminarVisualsReadRepository,
+            ISeminarVisualsWriteRepository seminarVisualsWriteRepository)
         {
             _statusReadRepository = statusReadRepository;
             _languagesReadRepository = languagesReadRepository;
             _referencesReadRepository = referencesReadRepository;
             _referencesWriteRepository = referencesWriteRepository;
             _storageService = storageService;
+            _seminarVisualsReadRepository = seminarVisualsReadRepository;
+            _seminarVisualsWriteRepository = seminarVisualsWriteRepository;
         }
 
 
@@ -114,7 +124,7 @@ namespace MVCBlogApp.Persistence.Services
                 Statuses = allStatuses
             };
         }
-
+                
         public async Task<ReferenceCreateCommandResponse> ReferenceCreateAsync(ReferenceCreateCommandRequest request)
         {
             var check = await _referencesReadRepository
@@ -224,6 +234,142 @@ namespace MVCBlogApp.Persistence.Services
 
         #region SeminarVisuals
 
+        public async Task<GetSeminarVisualsCreateItemsQueryResponse> GetSeminarVisualsCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x=> new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<SeminarVisualsCreateCommandResponse> SeminarVisualsCreateAsync(SeminarVisualsCreateCommandRequest request)
+        {
+            var check = await _seminarVisualsReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("seminarVisuals-files", request.FormFile);
+
+                SeminarVisuals seminarVisuals = new()
+                {
+                    CreateDate = DateTime.Now,
+                    Date = request.sCreateDate,
+                    Description = request.Description,
+                    LangId = request.LangId,
+                    Location = request.Location,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _seminarVisualsWriteRepository.AddAsync(seminarVisuals);
+                await _seminarVisualsWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllSeminarVisualsQueryResponse> GetAllSeminarVisualsAsync()
+        {
+            List<VM_SeminarVisuals> vM_SeminarVisuals = await _seminarVisualsReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), se => se.LangId, lg => lg.Id, (se, lg) => new { se, lg })
+                .Join(_statusReadRepository.GetAll(), sem => sem.se.StatusId, st => st.Id, (sem, st) => new { sem, st })
+                .Select(x => new VM_SeminarVisuals
+                {
+                    Id = x.sem.se.Id,
+                    CreateDate = x.sem.se.CreateDate,
+                    Date = x.sem.se.Date,
+                    ImgUrl = x.sem.se.ImgUrl,
+                    Title = x.sem.se.Title,
+                    Location = x.sem.se.Location,
+                    Language = x.sem.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                SeminarVisuals = vM_SeminarVisuals
+            };
+        }
+
+        public async Task<GetByIdSeminarVisualQueryResponse> GetByIdSeminarVisualAsync(int id)
+        {
+            VM_SeminarVisuals? vM_SeminarVisuals = await _seminarVisualsReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_SeminarVisuals
+                {
+                    Id = x.Id,
+                    Date = x.Date,
+                    Description = x.Description,
+                    LangId = x.LangId,
+                    Location = x.Location,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_SeminarVisuals != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Statuses = allStatuses,
+                    Languages = vM_Languages,
+                    SeminarVisuals = vM_SeminarVisuals,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Statuses = null,
+                    Languages = null,
+                    SeminarVisuals = null,
+                    State = false,
+                    Message = "Bilgiye ait kayıt bulunmamaktadır."
+                };
+            }
+        }
 
 
         #endregion

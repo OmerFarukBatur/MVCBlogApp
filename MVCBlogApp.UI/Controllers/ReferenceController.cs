@@ -5,9 +5,13 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetAllSeminarVisuals;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetByIdSeminarVisual;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetSeminarVisualsCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -103,27 +107,45 @@ namespace MVCBlogApp.UI.Controllers
         #region SeminarVisuals
 
         [HttpGet]
-        public async Task<IActionResult> SeminarVisualsList()
+        public async Task<IActionResult> SeminarVisualsList(GetAllSeminarVisualsQueryRequest request)
         {
-            return View();
+            GetAllSeminarVisualsQueryResponse response = await _mediator.Send(request);
+            return View(response.SeminarVisuals);
         }
 
         [HttpGet]
-        public async Task<IActionResult> SeminarVisualsCreate()
+        public async Task<IActionResult> SeminarVisualsCreate(GetSeminarVisualsCreateItemsQueryRequest request)
         {
-            return View();
+            GetSeminarVisualsCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SeminarVisualsCreate(int a)
+        public async Task<IActionResult> SeminarVisualsCreate(SeminarVisualsCreateCommandRequest request)
         {
-            return View();
+            SeminarVisualsCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("SeminarVisualsList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("SeminarVisualsCreate", "Reference");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> SeminarVisualsUpdate()
+        public async Task<IActionResult> SeminarVisualsUpdate(GetByIdSeminarVisualQueryRequest request)
         {
-            return View();
+            GetByIdSeminarVisualQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("SeminarVisualsList", "Reference");
+            }
         }
 
         [HttpPost]
