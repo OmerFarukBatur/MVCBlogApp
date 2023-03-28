@@ -1,4 +1,5 @@
-﻿
+﻿@using System.Globalization;
+
 @{
     ViewData["Title"] = "SeminarVisualsUpdate";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -25,7 +26,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-validation">
-                            <form class="form-valide" method="post" asp-controller="Reference" asp-action="SeminarVisualsCreate" accept-charset="utf-8" enctype="multipart/form-data">
+                            <form class="form-valide" method="post" asp-controller="Reference" asp-action="SeminarVisualsUpdate" accept-charset="utf-8" enctype="multipart/form-data">
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for="title">
                                         Seminer Başlığı <span class="text-danger">*</span>

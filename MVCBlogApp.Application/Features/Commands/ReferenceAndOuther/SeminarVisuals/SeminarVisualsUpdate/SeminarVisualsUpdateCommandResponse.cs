@@ -2,5 +2,7 @@
 {
     public class SeminarVisualsUpdateCommandResponse
     {
+        public string? Message { get; set; }
+        public bool State { get; set; }
     }
 }

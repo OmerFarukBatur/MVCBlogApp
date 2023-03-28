@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.Refe
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -149,14 +151,23 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SeminarVisualsUpdate(int a)
+        public async Task<IActionResult> SeminarVisualsUpdate(SeminarVisualsUpdateCommandRequest request)
         {
-            return View();
+            SeminarVisualsUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("SeminarVisualsList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("SeminarVisualsUpdate", "Reference");
+            }
         }
 
-        public async Task<IActionResult> SeminarVisualsDelete(int a)
+        public async Task<IActionResult> SeminarVisualsDelete(SeminarVisualsDeleteCommandRequest request)
         {
-            return View();
+            SeminarVisualsDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("SeminarVisualsList", "Reference");
         }
 
         #endregion

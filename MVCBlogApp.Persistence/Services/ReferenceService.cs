@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -124,7 +127,7 @@ namespace MVCBlogApp.Persistence.Services
                 Statuses = allStatuses
             };
         }
-                
+
         public async Task<ReferenceCreateCommandResponse> ReferenceCreateAsync(ReferenceCreateCommandRequest request)
         {
             var check = await _referencesReadRepository
@@ -237,7 +240,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetSeminarVisualsCreateItemsQueryResponse> GetSeminarVisualsCreateItemsAsync()
         {
             List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
-                .Select(x=> new VM_Language
+                .Select(x => new VM_Language
                 {
                     Id = x.Id,
                     Language = x.Language
@@ -336,7 +339,7 @@ namespace MVCBlogApp.Persistence.Services
 
             if (vM_SeminarVisuals != null)
             {
-                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                List <VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
                 .Select(x => new VM_Language
                 {
                     Id = x.Id,
@@ -367,6 +370,72 @@ namespace MVCBlogApp.Persistence.Services
                     SeminarVisuals = null,
                     State = false,
                     Message = "Bilgiye ait kayıt bulunmamaktadır."
+                };
+            }
+        }
+
+        public async Task<SeminarVisualsUpdateCommandResponse> SeminarVisualsUpdateAsync(SeminarVisualsUpdateCommandRequest request)
+        {
+            SeminarVisuals seminarVisuals = await _seminarVisualsReadRepository.GetByIdAsync(request.Id);
+
+            if (seminarVisuals != null)
+            {
+                seminarVisuals.Title = request.Title;
+                seminarVisuals.Location = request.Location;
+                seminarVisuals.Description = request.Description;
+                seminarVisuals.Date = request.sCreateDate;
+                seminarVisuals.LangId = request.LangId;
+                seminarVisuals.StatusId = request.StatusId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("seminarVisuals-files", request.FormFile);
+                    seminarVisuals.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _seminarVisualsWriteRepository.Update(seminarVisuals);
+                await _seminarVisualsWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Güncelleme işlemi sırasında beklenmedik bir hata ile karşılaşıldı.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<SeminarVisualsDeleteCommandResponse> SeminarVisualsDeleteAsync(int id)
+        {
+            SeminarVisuals seminarVisuals = await _seminarVisualsReadRepository.GetByIdAsync(id);
+
+            if (seminarVisuals != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                seminarVisuals.StatusId = statusId;
+
+                _seminarVisualsWriteRepository.Update(seminarVisuals);
+                await _seminarVisualsWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Bilgiye ait kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

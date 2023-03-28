@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -36,6 +38,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<SeminarVisualsCreateCommandResponse> SeminarVisualsCreateAsync(SeminarVisualsCreateCommandRequest request);
         Task<GetAllSeminarVisualsQueryResponse> GetAllSeminarVisualsAsync();
         Task<GetByIdSeminarVisualQueryResponse> GetByIdSeminarVisualAsync(int id);
+        Task<SeminarVisualsUpdateCommandResponse> SeminarVisualsUpdateAsync(SeminarVisualsUpdateCommandRequest request);
+        Task<SeminarVisualsDeleteCommandResponse> SeminarVisualsDeleteAsync(int id);
 
         #endregion
 
