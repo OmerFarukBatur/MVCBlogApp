@@ -40,7 +40,7 @@
                                         Seminer Tarihi <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-6">
-                                        <input type="date" class="form-control dobpicker" id="sCreateDate" name="sCreateDate" value="@Model.SeminarVisuals.Date" data-date-end-date="0y" required>
+                                        <input type="date" class="form-control dobpicker" id="sCreateDate" name="sCreateDate" value="@Model.SeminarVisuals.Date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)" data-date-end-date="0y" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
