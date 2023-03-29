@@ -43,13 +43,19 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
-        #region WorkShopApplicationForms
+        #region OurTeam
 
 
 
         #endregion
 
-        #region Workshop
+        #region Press
+
+
+
+        #endregion
+
+        #region PressType
 
 
 

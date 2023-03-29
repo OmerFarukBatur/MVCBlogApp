@@ -172,78 +172,117 @@ namespace MVCBlogApp.UI.Controllers
 
         #endregion
 
-        #region WorkShopApplicationForms
+        #region OurTeam
 
         [HttpGet]
-        public async Task<IActionResult> WSAFList()
+        public async Task<IActionResult> OurTeamList()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> WSAFCreate()
+        public async Task<IActionResult> OurTeamCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> WSAFCreate(int a)
+        public async Task<IActionResult> OurTeamCreate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> WSAFUpdate()
+        public async Task<IActionResult> OurTeamUpdate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> WSAFUpdate(int a)
+        public async Task<IActionResult> OurTeamUpdate(int a)
         {
             return View();
         }
 
-        public async Task<IActionResult> WSAFDelete(int a)
+        public async Task<IActionResult> OurTeamDelete(int a)
         {
             return View();
         }
 
         #endregion
 
-        #region Workshop
+        #region Press
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopList()
+        public async Task<IActionResult> PressList()
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopCreate()
+        public async Task<IActionResult> PressCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopCreate(int a)
+        public async Task<IActionResult> PressCreate(int a)
         {
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopUpdate()
+        public async Task<IActionResult> PressUpdate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopUpdate(int a)
+        public async Task<IActionResult> PressUpdate(int a)
         {
             return View();
         }
 
-        public async Task<IActionResult> WorkshopDelete(int a)
+        public async Task<IActionResult> PressDelete(int a)
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region PressType
+
+        [HttpGet]
+        public async Task<IActionResult> PressTypeList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PressTypeCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PressTypeCreate(int a)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PressTypeUpdate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PressTypeUpdate(int a)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> PressTypeDelete(int a)
         {
             return View();
         }
