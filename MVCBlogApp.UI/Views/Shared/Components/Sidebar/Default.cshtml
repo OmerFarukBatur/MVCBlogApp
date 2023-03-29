@@ -293,6 +293,15 @@
                         <li><a asp-controller="Reference" asp-action="SeminarVisualsCreate">Seminer Kayıt</a></li>
                     </ul>
                 </li>
+                <li class="mega-menu mega-menu-sm">
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="icon-user menu-icon"></i><span class="nav-text">Takım İşlemleri</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a asp-controller="Reference" asp-action="OurTeamList">Tüm Takımlar</a></li>
+                        <li><a asp-controller="Reference" asp-action="OurTeamCreate">Takım Kayıt</a></li>
+                    </ul>
+                </li>
                 <li class="nav-label">Apps</li>
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -380,7 +389,7 @@
                     </ul>
                 </li>
                 <li class="nav-label">Table</li>
-                <li>
+                @*<li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="icon-menu menu-icon"></i><span class="nav-text">Table</span>
                     </a>
@@ -389,7 +398,7 @@
                         <li><a href="~/table-datatable.html" aria-expanded="false">Data Table</a></li>
                     </ul>
                 </li>
-                @*<li class="nav-label">Pages</li>*@
+                <li class="nav-label">Pages</li>*@
                 @*<li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="icon-notebook menu-icon"></i><span class="nav-text">Pages</span>

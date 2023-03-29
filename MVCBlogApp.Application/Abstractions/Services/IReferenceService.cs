@@ -1,9 +1,15 @@
-﻿using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
+﻿using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -45,7 +51,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region OurTeam
 
-
+        Task<GetOurTeamCreateItemsQueryResponse> GetOurTeamCreateItemsAsync();
+        Task<OurTeamCreateCommandResponse> OurTeamCreateAsync(OurTeamCreateCommandRequest request);
+        Task<GetAllOurTeamCommandResponse> GetAllOurTeamAsync();
+        Task<GetByIdOurTeamQueryResponse> GetByIdOurTeamAsync(int id);
+        Task<OurTeamUpdateCommandResponse> OurTeamUpdateAsync(OurTeamUpdateCommandRequest request);
+        Task<OurTeamDeleteCommandResponse> OurTeamDeleteAsync(int id);
 
         #endregion
 

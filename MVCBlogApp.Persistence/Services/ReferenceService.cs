@@ -2,12 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -15,6 +21,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetByIdSeminarVisual;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetSeminarVisualsCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.OurTeam;
 using MVCBlogApp.Application.Repositories.References;
 using MVCBlogApp.Application.Repositories.SeminarVisuals;
 using MVCBlogApp.Application.Repositories.Status;
@@ -32,6 +39,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IReferencesWriteRepository _referencesWriteRepository;
         private readonly ISeminarVisualsReadRepository _seminarVisualsReadRepository;
         private readonly ISeminarVisualsWriteRepository _seminarVisualsWriteRepository;
+        private readonly IOurTeamReadRepository _ourTeamReadRepository;
+        private readonly IOurTeamWriteRepository _ourTeamWriteRepository;
 
         public ReferenceService(
             IStatusReadRepository statusReadRepository,
@@ -40,7 +49,9 @@ namespace MVCBlogApp.Persistence.Services
             IReferencesWriteRepository referencesWriteRepository,
             IStorageService storageService,
             ISeminarVisualsReadRepository seminarVisualsReadRepository,
-            ISeminarVisualsWriteRepository seminarVisualsWriteRepository)
+            ISeminarVisualsWriteRepository seminarVisualsWriteRepository,
+            IOurTeamReadRepository ourTeamReadRepository,
+            IOurTeamWriteRepository ourTeamWriteRepository)
         {
             _statusReadRepository = statusReadRepository;
             _languagesReadRepository = languagesReadRepository;
@@ -49,6 +60,8 @@ namespace MVCBlogApp.Persistence.Services
             _storageService = storageService;
             _seminarVisualsReadRepository = seminarVisualsReadRepository;
             _seminarVisualsWriteRepository = seminarVisualsWriteRepository;
+            _ourTeamReadRepository = ourTeamReadRepository;
+            _ourTeamWriteRepository = ourTeamWriteRepository;
         }
 
 
@@ -339,7 +352,7 @@ namespace MVCBlogApp.Persistence.Services
 
             if (vM_SeminarVisuals != null)
             {
-                List <VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
                 .Select(x => new VM_Language
                 {
                     Id = x.Id,
@@ -444,6 +457,203 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region OurTeam
+
+        public async Task<GetOurTeamCreateItemsQueryResponse> GetOurTeamCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                 .Select(x => new VM_Language
+                 {
+                     Id = x.Id,
+                     Language = x.Language
+                 }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<OurTeamCreateCommandResponse> OurTeamCreateAsync(OurTeamCreateCommandRequest request)
+        {
+            var check = await _ourTeamReadRepository
+                .GetWhere(x => (x.NameSurname.Trim().ToLower() == request.NameSurname.Trim().ToLower() || x.NameSurname.Trim().ToUpper() == request.NameSurname.Trim().ToUpper()) &&
+                (x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper())).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("ourteam-files", request.FormFile);
+
+                OurTeam ourTeam = new()
+                {
+                    Bio = request.Bio,
+                    LangId = request.LangId,
+                    NameSurname = request.NameSurname,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    CreateDate = DateTime.Now,
+                    ImageUrl = @"~\Upload\" + result[0].pathOrContainerName,
+                    CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null
+                };
+
+                await _ourTeamWriteRepository.AddAsync(ourTeam);
+                await _ourTeamWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllOurTeamCommandResponse> GetAllOurTeamAsync()
+        {
+            List<VM_OurTeam> vM_OurTeams = await _ourTeamReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), ou => ou.LangId, lg => lg.Id, (ou, lg) => new { ou, lg })
+                .Join(_statusReadRepository.GetAll(), our => our.ou.StatusId, st => st.Id, (our, st) => new { our, st })
+                .Select(x => new VM_OurTeam
+                {
+                    Id = x.our.ou.Id,
+                    CreateDate = x.our.ou.CreateDate,
+                    NameSurname = x.our.ou.NameSurname,
+                    Title = x.our.ou.Title,
+                    Language = x.our.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                OurTeams = vM_OurTeams
+            };
+        }
+
+        public async Task<GetByIdOurTeamQueryResponse> GetByIdOurTeamAsync(int id)
+        {
+            VM_OurTeam? vM_OurTeam = await _ourTeamReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_OurTeam
+                {
+                    Id = x.Id,
+                    Bio = x.Bio,
+                    LangId = x.LangId,
+                    NameSurname = x.NameSurname,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_OurTeam != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                 .Select(x => new VM_Language
+                 {
+                     Id = x.Id,
+                     Language = x.Language
+                 }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    OurTeam = vM_OurTeam,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    OurTeam = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Bilgiye ait kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<OurTeamUpdateCommandResponse> OurTeamUpdateAsync(OurTeamUpdateCommandRequest request)
+        {
+            OurTeam ourTeam = await _ourTeamReadRepository.GetByIdAsync(request.Id);
+
+            if (ourTeam != null)
+            {
+                ourTeam.NameSurname = request.NameSurname;
+                ourTeam.StatusId = request.StatusId;
+                ourTeam.Title = request.Title;
+                ourTeam.Bio = request.Bio;
+                ourTeam.LangId = request.LangId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("ourteam-files", request.FormFile);
+
+                    ourTeam.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _ourTeamWriteRepository.Update(ourTeam);
+                await _ourTeamWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Güncelleme işlemi sırasında beklenmedik bir hata oluştu. ",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<OurTeamDeleteCommandResponse> OurTeamDeleteAsync(int id)
+        {
+            OurTeam ourTeam = await _ourTeamReadRepository.GetByIdAsync(id);
+
+            if (ourTeam != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                ourTeam.StatusId = statusId;
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
 
 
 

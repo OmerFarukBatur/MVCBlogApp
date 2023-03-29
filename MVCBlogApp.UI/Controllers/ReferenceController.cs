@@ -2,12 +2,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -175,38 +181,67 @@ namespace MVCBlogApp.UI.Controllers
         #region OurTeam
 
         [HttpGet]
-        public async Task<IActionResult> OurTeamList()
+        public async Task<IActionResult> OurTeamList(GetAllOurTeamCommandRequest request)
         {
-            return View();
+            GetAllOurTeamCommandResponse response = await _mediator.Send(request);
+            return View(response.OurTeams);
         }
 
         [HttpGet]
-        public async Task<IActionResult> OurTeamCreate()
+        public async Task<IActionResult> OurTeamCreate(GetOurTeamCreateItemsQueryRequest request)
         {
-            return View();
+            GetOurTeamCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> OurTeamCreate(int a)
+        public async Task<IActionResult> OurTeamCreate(OurTeamCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            OurTeamCreateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("OurTeamList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("OurTeamCreate", "Reference");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> OurTeamUpdate()
+        public async Task<IActionResult> OurTeamUpdate(GetByIdOurTeamQueryRequest request)
         {
-            return View();
+            GetByIdOurTeamQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("OurTeamList", "Reference");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> OurTeamUpdate(int a)
+        public async Task<IActionResult> OurTeamUpdate(OurTeamUpdateCommandRequest request)
         {
-            return View();
+            OurTeamUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("OurTeamList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("OurTeamUpdate", "Reference");
+            }
         }
 
-        public async Task<IActionResult> OurTeamDelete(int a)
+        public async Task<IActionResult> OurTeamDelete(OurTeamDeleteCommandRequest request)
         {
-            return View();
+            OurTeamDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("OurTeamList", "Reference");
         }
 
         #endregion
