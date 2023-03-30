@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTea
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
@@ -16,6 +18,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllO
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetByIdPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -317,20 +320,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PressTypeUpdate()
+        public async Task<IActionResult> PressTypeUpdate(GetByIdPressTypeQueryRequest request)
         {
-            return View();
+            GetByIdPressTypeQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.PressType);
+            }
+            else
+            {
+                return RedirectToAction("PressTypeCreate", "Reference");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> PressTypeUpdate(int a)
+        public async Task<IActionResult> PressTypeUpdate(PressTypeUpdateCommandRequest request)
         {
-            return View();
+            PressTypeUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("PressTypeList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("PressTypeUpdate", "Reference");
+            }
         }
 
-        public async Task<IActionResult> PressTypeDelete(int a)
+        public async Task<IActionResult> PressTypeDelete(PressTypeDeleteCommandRequest request)
         {
-            return View();
+            PressTypeDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("PressTypeList", "Reference");
         }
 
         #endregion

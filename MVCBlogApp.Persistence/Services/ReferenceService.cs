@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTea
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
@@ -16,6 +18,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllO
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetByIdPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -678,7 +681,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllPressTypeQueryResponse> GetAllPressTypeAsync()
         {
             List<VM_PressType> vM_PressTypes = await _pressTypeReadRepository.GetAll()
-                .Select(x=> new VM_PressType
+                .Select(x => new VM_PressType
                 {
                     Id = x.Id,
                     PressTypeName = x.PressTypeName
@@ -717,6 +720,85 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdPressTypeQueryResponse> GetByIdPressTypeAsync(int id)
+        {
+            VM_PressType? vM_PressType = await _pressTypeReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_PressType
+                {
+                    Id = x.Id,
+                    PressTypeName = x.PressTypeName
+                }).FirstOrDefaultAsync();
+
+            if (vM_PressType != null)
+            {
+                return new()
+                {
+                    PressType = vM_PressType,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    PressType = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<PressTypeUpdateCommandResponse> PressTypeUpdateAsync(PressTypeUpdateCommandRequest request)
+        {
+            PressType pressType = await _pressTypeReadRepository.GetByIdAsync(request.Id);
+
+            if (pressType != null)
+            {
+                pressType.PressTypeName = request.PressTypeName;
+
+                _pressTypeWriteRepository.Update(pressType);
+                await _pressTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Güncelleme işlemi sırasında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<PressTypeDeleteCommandResponse> PressTypeDeleteAsync(int id)
+        {
+            PressType pressType = await _pressTypeReadRepository.GetByIdAsync(id);
+
+            if (pressType != null)
+            {
+                _pressTypeWriteRepository.Remove(pressType);
+                await _pressTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Silme işlemi sırasında beklenmedik bir hata oluştu."
                 };
             }
         }
