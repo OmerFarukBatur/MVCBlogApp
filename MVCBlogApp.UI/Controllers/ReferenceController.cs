@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
@@ -14,6 +15,7 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -288,21 +290,30 @@ namespace MVCBlogApp.UI.Controllers
         #region PressType
 
         [HttpGet]
-        public async Task<IActionResult> PressTypeList()
+        public async Task<IActionResult> PressTypeList(GetAllPressTypeQueryRequest request)
         {
-            return View();
+            GetAllPressTypeQueryResponse response = await _mediator.Send(request);
+            return View(response.PressTypes);
         }
 
         [HttpGet]
-        public async Task<IActionResult> PressTypeCreate()
+        public IActionResult PressTypeCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> PressTypeCreate(int a)
+        public async Task<IActionResult> PressTypeCreate(PressTypeCreateCommandRequest request)
         {
-            return View();
+            PressTypeCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("PressTypeList", "Reference");
+            }
+            else
+            {
+                return RedirectToAction("PressTypeCreate", "Reference");
+            }
         }
 
         [HttpGet]

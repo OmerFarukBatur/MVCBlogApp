@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.ReferenceUpdate;
@@ -14,6 +15,7 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetAllReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetByIdReference;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetReferenceCreateItems;
@@ -22,6 +24,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetSeminarVisualsCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.OurTeam;
+using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.References;
 using MVCBlogApp.Application.Repositories.SeminarVisuals;
 using MVCBlogApp.Application.Repositories.Status;
@@ -41,6 +44,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ISeminarVisualsWriteRepository _seminarVisualsWriteRepository;
         private readonly IOurTeamReadRepository _ourTeamReadRepository;
         private readonly IOurTeamWriteRepository _ourTeamWriteRepository;
+        private readonly IPressTypeReadRepository _pressTypeReadRepository;
+        private readonly IPressTypeWriteRepository _pressTypeWriteRepository;
 
         public ReferenceService(
             IStatusReadRepository statusReadRepository,
@@ -51,7 +56,9 @@ namespace MVCBlogApp.Persistence.Services
             ISeminarVisualsReadRepository seminarVisualsReadRepository,
             ISeminarVisualsWriteRepository seminarVisualsWriteRepository,
             IOurTeamReadRepository ourTeamReadRepository,
-            IOurTeamWriteRepository ourTeamWriteRepository)
+            IOurTeamWriteRepository ourTeamWriteRepository,
+            IPressTypeReadRepository pressTypeReadRepository,
+            IPressTypeWriteRepository pressTypeWriteRepository)
         {
             _statusReadRepository = statusReadRepository;
             _languagesReadRepository = languagesReadRepository;
@@ -62,6 +69,8 @@ namespace MVCBlogApp.Persistence.Services
             _seminarVisualsWriteRepository = seminarVisualsWriteRepository;
             _ourTeamReadRepository = ourTeamReadRepository;
             _ourTeamWriteRepository = ourTeamWriteRepository;
+            _pressTypeReadRepository = pressTypeReadRepository;
+            _pressTypeWriteRepository = pressTypeWriteRepository;
         }
 
 
@@ -656,7 +665,6 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
-
         #endregion
 
         #region Press
@@ -666,6 +674,53 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region PressType
+
+        public async Task<GetAllPressTypeQueryResponse> GetAllPressTypeAsync()
+        {
+            List<VM_PressType> vM_PressTypes = await _pressTypeReadRepository.GetAll()
+                .Select(x=> new VM_PressType
+                {
+                    Id = x.Id,
+                    PressTypeName = x.PressTypeName
+                }).ToListAsync();
+
+            return new()
+            {
+                PressTypes = vM_PressTypes
+            };
+        }
+
+        public async Task<PressTypeCreateCommandResponse> PressTypeCreateAsync(PressTypeCreateCommandRequest request)
+        {
+            var check = await _pressTypeReadRepository
+                .GetWhere(x => x.PressTypeName.Trim().ToLower() == request.PressTypeName.Trim().ToLower() || x.PressTypeName.Trim().ToUpper() == request.PressTypeName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgiye sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                PressType pressType = new()
+                {
+                    PressTypeName = request.PressTypeName
+                };
+
+                await _pressTypeWriteRepository.AddAsync(pressType);
+                await _pressTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
 
 
 
