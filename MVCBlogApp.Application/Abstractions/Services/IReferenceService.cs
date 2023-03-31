@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeUpdate;
@@ -15,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllO
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetAllPress;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetByIdPress;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetPressCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetByIdPressType;
@@ -73,6 +76,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetPressCreateItemsQueryResponse> GetPressCreateItemsAsync();
         Task<PressCreateCommandResponse> PressCreateAsync(PressCreateCommandRequest request);
         Task<GetAllPressQueryResponse> GetAllPressAsync();
+        Task<GetByIdPressQueryResponse> GetByIdPressAsync(int id);
+        Task<PressUpdateCommandResponse> PressUpdateAsync(PressUpdateCommandRequest request);
+        Task<PressDeleteCommandResponse> PressDeleteAsync(int id);
 
         #endregion
 

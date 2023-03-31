@@ -1,11 +1,12 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.PressType.PressTypeUpdate;
@@ -19,6 +20,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllO
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetAllPress;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetByIdPress;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Press.GetPressCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetAllPressType;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.PressType.GetByIdPressType;
@@ -814,6 +816,162 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdPressQueryResponse> GetByIdPressAsync(int id)
+        {
+            VM_Press? vM_Press = await _pressReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Press
+                {
+                    Description = x.Description,
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    MetaDescription = x.MetaDescription,
+                    MetaKey = x.MetaKey,
+                    MetaTitle = x.MetaTitle,
+                    NewsPaperId = x.NewsPaperId,
+                    PressTypeId = x.PressTypeId,
+                    StatusId = x.StatusId,
+                    SubTitle = x.SubTitle,
+                    Title = x.Title,
+                    UrlLink = x.UrlLink,
+                    UrlRoot = x.UrlRoot
+                }).FirstOrDefaultAsync();
+
+            if (vM_Press != null)
+            {
+                List<VM_PressType> vM_PressTypes = await _pressTypeReadRepository.GetAll()
+                .Select(x => new VM_PressType
+                {
+                    Id = x.Id,
+                    PressTypeName = x.PressTypeName
+                }).ToListAsync();
+
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                     .Select(x => new VM_Language
+                     {
+                         Id = x.Id,
+                         Language = x.Language
+                     }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_NewsPaper> vM_NewsPapers = await _ewsPaperReadRepository.GetAll()
+                    .Select(x => new VM_NewsPaper
+                    {
+                        Id = x.Id,
+                        NewsPaperName = x.NewsPaperName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    NewsPapers = vM_NewsPapers,
+                    PressTypes = vM_PressTypes,
+                    Statuses = allStatuses,
+                    Press = vM_Press,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    NewsPapers = null,
+                    PressTypes = null,
+                    Statuses = null,
+                    Press = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+
+        }
+
+        public async Task<PressUpdateCommandResponse> PressUpdateAsync(PressUpdateCommandRequest request)
+        {
+            Press press = await _pressReadRepository.GetByIdAsync(request.Id);
+
+            if (press != null)
+            {
+                MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x => x.UrlRoot == press.UrlRoot).FirstOrDefaultAsync();
+
+                if (masterRoot != null && (request.UrlRoot.Trim().ToLower() != masterRoot.UrlRoot.Trim().ToLower() && request.UrlRoot.Trim().ToUpper() != masterRoot.UrlRoot.Trim().ToUpper()))
+                {
+                    masterRoot.UrlRoot = request.UrlRoot;
+
+                    _masterRootWriteRepository.Update(masterRoot);
+                    await _masterRootWriteRepository.SaveAsync();
+                }
+
+                press.Title = request.Title;
+                press.UrlRoot = request.UrlRoot;
+                press.MetaTitle = request.MetaTitle;
+                press.MetaKey = request.MetaKey;
+                press.MetaDescription = request.MetaDescription;
+                press.UrlLink = request.UrlLink;
+                press.NewsPaperId = request.NewsPaperId;
+                press.PressTypeId = request.PressTypeId;
+                press.SubTitle = request.SubTitle;
+                press.Description = request.Description;
+                press.LangId = request.LangId;
+                press.StatusId = request.StatusId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("press-files", request.FormFile);
+                    press.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _pressWriteRepository.Update(press);
+                await _pressWriteRepository.SaveAsync();                
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarılı bir şekilde yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "İşlem sırasında beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<PressDeleteCommandResponse> PressDeleteAsync(int id)
+        {
+            Press press = await _pressReadRepository.GetByIdAsync(id);
+
+            if (press != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                press.StatusId = statusId;
+
+                _pressWriteRepository.Update(press);
+                await _pressWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
 
         #endregion
 

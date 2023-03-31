@@ -4,5 +4,213 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>PressUpdate</h1>
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
 
+    @*  <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="post" asp-controller="Reference" asp-action="PressUpdate" accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="title">
+                                        Haber Başlığı <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="title" name="title" maxlength="250" min="2" value="@Model.Press.Title" required>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <input type="button" class="form-control" onclick="URLCreate()" value="Seo Url Oluştur">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="urlRoot">
+                                        Seo URL <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="urlRoot" name="urlRoot" maxlength="400" min="2" value="@Model.Press.UrlRoot" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="metaTitle">
+                                        Seo Title <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="metaTitle" name="metaTitle" maxlength="250" min="2" value="@Model.Press.MetaTitle" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="metaKey">
+                                        Seo Kelimeleri <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="metaKey" name="metaKey" maxlength="250" min="2" value="@Model.Press.MetaKey" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="metaDescription">
+                                        Seo Açıklaması <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="metaDescription" name="metaDescription" maxlength="400" min="2" value="@Model.Press.MetaDescription" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="urlLink">
+                                        Uzak Bağlantı Linki <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="urlLink" name="urlLink" maxlength="400" min="2" value="@Model.Press.UrlLink" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="newsPaperId">
+                                        Gazete <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control je" id="newsPaperId" name="newsPaperId" required>
+                                            <option value="@Model.Press.NewsPaperId">Seçiniz!</option>
+                                            @foreach (var item in Model.NewsPapers)
+                                            {
+                                                <option value="@item.Id">@item.NewsPaperName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="pressTypeId">
+                                        Tip <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="pressTypeId" name="pressTypeId" required>
+                                            <option value="@Model.Press.PressTypeId">Seçiniz!</option>
+                                            @foreach (var item in Model.PressTypes)
+                                            {
+                                                <option value="@item.Id">@item.PressTypeName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="FormFile">
+                                        Kapak Fotoğrafı <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <div class="fallback dropzone">
+                                            <input class="l-border-1" type="file" name="FormFile" id="FormFile" accept=".png,.jpg,.jpeg" runat="server" >
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="subTitle">
+                                        Haber Özeti <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="subTitle" name="subTitle" required> 
+                                            @Model.Press.SubTitle
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="description">
+                                        Haber İçeriği <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="description" name="description" required> 
+                                            @Model.Press.Description
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="langId">
+                                        Haber Dili <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="langId" name="langId" required>
+                                            <option value="@Model.Press.LangId">Seçiniz!</option>
+                                            @foreach (var item in Model.Languages)
+                                            {
+                                                <option value="@item.Id">@item.Language</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="statusId">
+                                        Haber Durumu <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="statusId" name="statusId" required>
+                                            <option value="@Model.Press.StatusId">Seçiniz!</option>
+                                            @foreach (var item in Model.Statuses)
+                                            {
+                                                <option value="@item.Id">@item.StatusName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
+
+
+<script type="text/javascript">
+
+    async function URLCreate() {
+        const titleCheck = document.getElementById('title').checkValidity();
+
+        if (titleCheck == true) {
+            const title = document.getElementById('title').value;
+            const response = await DataPost(title);
+
+            if (response.state == true) {
+                $("#urlRoot").val(response.url);
+            } else {
+                alert(response.message);
+            }
+        }
+        else {
+            alert("Lütfen Sayfa Adı alanını geçerli cevaplar ile doldurunuz.");
+            document.getElementById('title').reportValidity();
+        }
+    }
+
+    async function DataPost(title) {
+        var datas = '';
+        await $.post("@Url.Action("URLCreate","GeneralOptions")", { title: title }).done(function (response, status, jqxhr) {
+            datas = response;
+        }).fail(function (jqxhr, status, error) {
+            datas = error;
+        });
+        return datas;
+    }
+
+</script>
