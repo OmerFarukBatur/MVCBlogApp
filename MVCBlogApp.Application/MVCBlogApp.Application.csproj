@@ -20,15 +20,4 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Commands\Calc\CalcBmhs\" />
-    <Folder Include="Features\Commands\Calc\CalcBMIs\" />
-    <Folder Include="Features\Commands\Calc\CalcOptimums\" />
-    <Folder Include="Features\Commands\Calc\CalcPulses\" />
-    <Folder Include="Features\Queries\Calc\CalcBmhs\" />
-    <Folder Include="Features\Queries\Calc\CalcBMIs\" />
-    <Folder Include="Features\Queries\Calc\CalcOptimums\" />
-    <Folder Include="Features\Queries\Calc\CalcPulses\" />
-  </ItemGroup>
-
 </Project>

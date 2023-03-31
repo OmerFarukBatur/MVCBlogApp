@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewData["Title"] = "CalcPulsesList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">CalcPulse Listesi</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Cinsiyet</th>
+                                        <th>Yaş</th>
+                                        <th>Email</th>
+                                        <th>Min Değer</th>
+                                        <th>Max Değer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.NameSurname</td>
+                                            <td>@item.Gender</td>
+                                            <td>@item.Age</td>
+                                            <td>@item.Email</td>
+                                            <td>@item.ResultMin</td>
+                                            <td>@item.ResultMax</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

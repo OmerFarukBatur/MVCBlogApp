@@ -1,6 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Queries.Calc.CalcBmhs.GetAllCalcBmhs;
+using MVCBlogApp.Application.Features.Queries.Calc.CalcBMIs.GetAllCalcBMIs;
+using MVCBlogApp.Application.Features.Queries.Calc.CalcOptimums.GetAllCalcOptimums;
+using MVCBlogApp.Application.Features.Queries.Calc.CalcPulses.GetAllCalcPulses;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -17,37 +21,10 @@ namespace MVCBlogApp.UI.Controllers
         #region CalcBmhs
 
         [HttpGet]
-        public async Task<IActionResult> CalcBmhsList()
+        public async Task<IActionResult> CalcBmhsList(GetAllCalcBmhsQueryRequest request)
         {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcBmhsCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcBmhsCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcBmhsUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcBmhsUpdate(int a)
-        {
-            return View();
-        }
-        public async Task<IActionResult> CalcBmhsDelete(int a)
-        {
-            return View();
+            GetAllCalcBmhsQueryResponse response = await _mediator.Send(request);
+            return View(response.CalcBmhs);
         }
 
         #endregion
@@ -55,115 +32,34 @@ namespace MVCBlogApp.UI.Controllers
         #region CalcBMIs
 
         [HttpGet]
-        public async Task<IActionResult> CalcBMIsList()
+        public async Task<IActionResult> CalcBMIsList(GetAllCalcBMIsQueryRequest request)
         {
-            return View();
+            GetAllCalcBMIsQueryResponse response = await _mediator.Send(request);
+            return View(response.CalcBMIs);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcBMIsCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcBMIsCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcBMIsUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcBMIsUpdate(int a)
-        {
-            return View();
-        }
-        public async Task<IActionResult> CalcBMIsDelete(int a)
-        {
-            return View();
-        }
-
+        
         #endregion
 
         #region CalcOptimums
 
         [HttpGet]
-        public async Task<IActionResult> CalcOptimumsList()
+        public async Task<IActionResult> CalcOptimumsList(GetAllCalcOptimumsQueryRequest request)
         {
-            return View();
+            GetAllCalcOptimumsQueryResponse response = await _mediator.Send(request);
+            return View(response.CalcOptimums);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcOptimumsCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcOptimumsCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcOptimumsUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcOptimumsUpdate(int a)
-        {
-            return View();
-        }
-        public async Task<IActionResult> CalcOptimumsDelete(int a)
-        {
-            return View();
-        }
-
+       
         #endregion
 
         #region CalcPulses
 
         [HttpGet]
-        public async Task<IActionResult> CalcPulsesList()
+        public async Task<IActionResult> CalcPulsesList(GetAllCalcPulsesQueryRequest request)
         {
-            return View();
+            GetAllCalcPulsesQueryResponse response = await _mediator.Send(request);
+            return View(response.CalcPulses);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcPulsesCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcPulsesCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CalcPulsesUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CalcPulsesUpdate(int a)
-        {
-            return View();
-        }
-        public async Task<IActionResult> CalcPulsesDelete(int a)
-        {
-            return View();
-        }
-
+        
         #endregion
     }
 }
