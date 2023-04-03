@@ -1,7 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -33,26 +37,51 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixBmhCreate(int a)
+        public async Task<IActionResult> FixBmhCreate(FixBmhCreateCommandRequest request)
         {
-            return View();
+            FixBmhCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixBmhList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixBmhCreate", "Fix");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixBmhUpdate()
+        public async Task<IActionResult> FixBmhUpdate(GetByIdFixBmhQueryRequest request)
         {
-            return View();
+            GetByIdFixBmhQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixBmhList", "Fix");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixBmhUpdate(int a)
+        public async Task<IActionResult> FixBmhUpdate(FixBmhUpdateCommandRequest request)
         {
-            return View();
+            FixBmhUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixBmhList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixBmhUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixBmhDelete(int a)
+        public async Task<IActionResult> FixBmhDelete(FixBmhDeleteCommandRequest request)
         {
-            return View();
+            FixBmhDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixBmhList", "Fix");
         }
 
         #endregion

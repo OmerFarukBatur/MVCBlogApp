@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\Fix\FixBmh\" />
     <Folder Include="Features\Commands\Fix\FixBMI\" />
     <Folder Include="Features\Commands\Fix\FixCalorieSch\" />
     <Folder Include="Features\Commands\Fix\FixFeedPyramid\" />
