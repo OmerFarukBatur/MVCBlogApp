@@ -20,4 +20,23 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Commands\Fix\FixBmh\" />
+    <Folder Include="Features\Commands\Fix\FixBMI\" />
+    <Folder Include="Features\Commands\Fix\FixCalorieSch\" />
+    <Folder Include="Features\Commands\Fix\FixFeedPyramid\" />
+    <Folder Include="Features\Commands\Fix\FixHeartDiseases\" />
+    <Folder Include="Features\Commands\Fix\FixMealSize\" />
+    <Folder Include="Features\Commands\Fix\FixOptimum\" />
+    <Folder Include="Features\Commands\Fix\FixPulse\" />
+    <Folder Include="Features\Queries\Fix\FixBmh\" />
+    <Folder Include="Features\Queries\Fix\FixBMI\" />
+    <Folder Include="Features\Queries\Fix\FixCalorieSch\" />
+    <Folder Include="Features\Queries\Fix\FixFeedPyramid\" />
+    <Folder Include="Features\Queries\Fix\FixHeartDiseases\" />
+    <Folder Include="Features\Queries\Fix\FixMealSize\" />
+    <Folder Include="Features\Queries\Fix\FixOptimum\" />
+    <Folder Include="Features\Queries\Fix\FixPulse\" />
+  </ItemGroup>
+
 </Project>

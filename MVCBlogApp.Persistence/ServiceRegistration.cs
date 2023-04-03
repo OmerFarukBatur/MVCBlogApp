@@ -474,6 +474,7 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IReferenceService,ReferenceService>();
             services.AddScoped<IWorkshopService,WorkshopService>();
             services.AddScoped<ICalcService,CalcService>();
+            services.AddScoped<IFixService,FixService>();
             #endregion      
             
         }
