@@ -1,23 +1,35 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class FixController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public FixController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         #region FixBmh
 
         [HttpGet]
-        public async Task<IActionResult> FixBmhList()
+        public async Task<IActionResult> FixBmhList(GetAllFixBmhsQueryRequest request)
         {
-            return View();
+            GetAllFixBmhsQueryResponse response = await _mediator.Send(request);
+            return View(response.FixBmhs);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixBmhCreate()
+        public async Task<IActionResult> FixBmhCreate(GetFixBmhCreateItemsQueryRequest request)
         {
-            return View();
+            GetFixBmhCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]

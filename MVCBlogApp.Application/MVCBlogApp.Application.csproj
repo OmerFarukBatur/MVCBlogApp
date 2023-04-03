@@ -29,7 +29,6 @@
     <Folder Include="Features\Commands\Fix\FixMealSize\" />
     <Folder Include="Features\Commands\Fix\FixOptimum\" />
     <Folder Include="Features\Commands\Fix\FixPulse\" />
-    <Folder Include="Features\Queries\Fix\FixBmh\" />
     <Folder Include="Features\Queries\Fix\FixBMI\" />
     <Folder Include="Features\Queries\Fix\FixCalorieSch\" />
     <Folder Include="Features\Queries\Fix\FixFeedPyramid\" />

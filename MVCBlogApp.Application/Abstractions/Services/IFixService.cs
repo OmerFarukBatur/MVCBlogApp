@@ -1,8 +1,15 @@
-﻿namespace MVCBlogApp.Application.Abstractions.Services
+﻿using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
+
+namespace MVCBlogApp.Application.Abstractions.Services
 {
     public interface IFixService
     {
         #region FixBmh
+
+        Task<GetFixBmhCreateItemsQueryResponse> GetFixBmhCreateItemsAsync();
+        Task<GetAllFixBmhsQueryResponse> GetAllFixBmhsAsync();
+
         #endregion
 
         #region FixBMI
