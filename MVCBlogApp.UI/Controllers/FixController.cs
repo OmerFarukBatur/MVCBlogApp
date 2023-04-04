@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -19,6 +20,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
+using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -235,21 +238,31 @@ namespace MVCBlogApp.UI.Controllers
         #region FixFeedPyramid
 
         [HttpGet]
-        public async Task<IActionResult> FixFeedPyramidList()
+        public async Task<IActionResult> FixFeedPyramidList(GetAllFixFeedPyramidQueryRequest request)
         {
-            return View();
+            GetAllFixFeedPyramidQueryResponse response = await _mediator.Send(request);
+            return View(response.FixFeedPyramids);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixFeedPyramidCreate()
+        public async Task<IActionResult> FixFeedPyramidCreate(GetFixFeedPyramidCreateItemsQueryRequest request)
         {
-            return View();
+            GetFixFeedPyramidCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixFeedPyramidCreate(int a)
+        public async Task<IActionResult> FixFeedPyramidCreate(FixFeedPyramidCreateCommandRequest request)
         {
-            return View();
+            FixFeedPyramidCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixFeedPyramidList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixFeedPyramidCreate", "Fix");
+            }
         }
 
         [HttpGet]
