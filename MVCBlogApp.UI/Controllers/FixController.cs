@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -135,14 +137,24 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixBMIUpdate(int a)
+        public async Task<IActionResult> FixBMIUpdate(FixBMIUpdateCommandRequest request)
         {
-            return View();
+            FixBMIUpdateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("FixBMIList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixBMIUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixBMIDelete(int a)
+        public async Task<IActionResult> FixBMIDelete(FixBMIDeleteCommandRequest request)
         {
-            return View();
+            FixBMIDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixBMIList", "Fix");
         }
 
         #endregion

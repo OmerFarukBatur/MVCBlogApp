@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -459,6 +461,67 @@ namespace MVCBlogApp.Persistence.Services
                     Statuses = null,
                     State = false,
                     Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixBMIUpdateCommandResponse> FixBMIUpdateAsync(FixBMIUpdateCommandRequest request)
+        {
+            FixBMI fixBMI = await _fixBMIReadRepository.GetByIdAsync(request.Id);
+
+            if (fixBMI != null)
+            {
+                fixBMI.Description = request.Description;
+                fixBMI.Title = request.Title;
+                fixBMI.StatusId = request.StatusId;
+                fixBMI.LangId = request.LangId;
+                fixBMI.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBMI-files", request.FormFile);
+                    fixBMI.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixBMIWriteRepository.Update(fixBMI);
+                await _fixBMIWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixBMIDeleteCommandResponse> FixBMIDeleteAsync(int id)
+        {
+            FixBMI fixBMI = await _fixBMIReadRepository.GetByIdAsync(id);
+
+            if (fixBMI != null)
+            {
+                _fixBMIWriteRepository.Remove(fixBMI);
+                await _fixBMIWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

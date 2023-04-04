@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -30,6 +32,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetAllFixBMIQueryResponse> GetAllFixBMIAsync();
         Task<FixBMICreateCommandResponse> FixBMICreateAsync(FixBMICreateCommandRequest request);
         Task<GetByIdFixBMIQueryResponse> GetByIdFixBMIAsync(int id);
+        Task<FixBMIUpdateCommandResponse> FixBMIUpdateAsync(FixBMIUpdateCommandRequest request);
+        Task<FixBMIDeleteCommandResponse> FixBMIDeleteAsync(int id);
 
         #endregion
 
