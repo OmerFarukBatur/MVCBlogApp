@@ -11,6 +11,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCr
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -21,6 +23,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorie
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
+using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
@@ -839,6 +842,126 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixFeedPyramidQueryResponse> GetByIdFixFeedPyramidAsync(int id)
+        {
+            VM_FixFeedPyramid? vM_FixFeedPyramid = await _fixFeedPyramidReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixFeedPyramid
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixFeedPyramid != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixFeedPyramid = vM_FixFeedPyramid,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixFeedPyramid = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixFeedPyramidUpdateCommandResponse> FixFeedPyramidUpdateAsync(FixFeedPyramidUpdateCommandRequest request)
+        {
+            FixFeedPyramid fixFeedPyramid = await _fixFeedPyramidReadRepository.GetByIdAsync(request.Id);
+
+            if (fixFeedPyramid != null)
+            {
+                fixFeedPyramid.Description = request.Description;
+                fixFeedPyramid.Title = request.Title;
+                fixFeedPyramid.StatusId = request.StatusId;
+                fixFeedPyramid.LangId = request.LangId;
+                fixFeedPyramid.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixFeedPyramid-files", request.FormFile);
+                    fixFeedPyramid.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixFeedPyramidWriteRepository.Update(fixFeedPyramid);
+                await _fixFeedPyramidWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixFeedPyramidDeleteCommandResponse> FixFeedPyramidDeleteAsync(int id)
+        {
+            FixFeedPyramid fixFeedPyramid = await _fixFeedPyramidReadRepository.GetByIdAsync(id);
+
+            if (fixFeedPyramid != null)
+            {
+                _fixFeedPyramidWriteRepository.Remove(fixFeedPyramid);
+                await _fixFeedPyramidWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

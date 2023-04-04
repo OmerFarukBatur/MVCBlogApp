@@ -11,6 +11,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCr
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -21,6 +23,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorie
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
+using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -266,20 +269,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixFeedPyramidUpdate()
+        public async Task<IActionResult> FixFeedPyramidUpdate(GetByIdFixFeedPyramidQueryRequest request)
         {
-            return View();
+            GetByIdFixFeedPyramidQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixFeedPyramidList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixFeedPyramidUpdate(int a)
+        public async Task<IActionResult> FixFeedPyramidUpdate(FixFeedPyramidUpdateCommandRequest request)
         {
-            return View();
+            FixFeedPyramidUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixFeedPyramidList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixFeedPyramidUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixFeedPyramidDelete(int a)
+        public async Task<IActionResult> FixFeedPyramidDelete(FixFeedPyramidDeleteCommandRequest request)
         {
-            return View();
+            FixFeedPyramidDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixFeedPyramidList", "Fix");
         }
 
         #endregion
