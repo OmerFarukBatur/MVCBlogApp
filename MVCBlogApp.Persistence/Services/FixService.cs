@@ -5,9 +5,13 @@ using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
 using MVCBlogApp.Application.Repositories.FixCalorieSch;
@@ -283,7 +287,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<FixBmhDeleteCommandResponse> FixBmhDeleteAsync(int id)
         {
-            FixBmh fixBmh = await _fixBmhReadRepository.GetByIdAsync(request.Id);
+            FixBmh fixBmh = await _fixBmhReadRepository.GetByIdAsync(id);
 
             if (fixBmh != null)
             {
@@ -306,11 +310,161 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
-
-
         #endregion
 
         #region FixBMI
+
+        public async Task<GetFixBMICreateItemsQueryResponse> GetFixBMICreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                .Select(x => new VM_Form
+                {
+                    Id = x.Id,
+                    FormName = x.FormName
+                }).ToListAsync();
+
+            return new()
+            {
+                Forms = vM_Forms,
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllFixBMIQueryResponse> GetAllFixBMIAsync()
+        {
+            List<VM_FixBMI> vM_FixBMIs = await _fixBMIReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), f => f.LangId, lg => lg.Id, (f, lg) => new { f, lg })
+                .Join(_statusReadRepository.GetAll(), fi => fi.f.StatusId, st => st.Id, (fi, st) => new { fi, st })
+                .Join(_formReadRepository.GetAll(), fix => fix.fi.f.FormId, fI => fI.Id, (fix, fI) => new { fix, fI })
+                .Select(x => new VM_FixBMI
+                {
+                    Id = x.fix.fi.f.Id,
+                    Title = x.fix.fi.f.Title,
+                    FormName = x.fI.FormName,
+                    Language = x.fix.fi.lg.Language,
+                    StatusName = x.fix.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                FixBMIs = vM_FixBMIs
+            };
+        }
+
+        public async Task<FixBMICreateCommandResponse> FixBMICreateAsync(FixBMICreateCommandRequest request)
+        {
+            var check = await _fixBMIReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBMI-files", request.FormFile);
+
+                FixBMI fixBMI = new()
+                {
+                    Description = request.Description,
+                    FormId = request.FormId,
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _fixBMIWriteRepository.AddAsync(fixBMI);
+                await _fixBMIWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixBMIQueryResponse> GetByIdFixBMIAsync(int id)
+        {
+            VM_FixBMI? vM_FixBMI = await _fixBMIReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixBMI
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixBMI != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixBMI = vM_FixBMI,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixBMI = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+
+
         #endregion
 
         #region FixCalorieSch

@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
+using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -89,27 +93,45 @@ namespace MVCBlogApp.UI.Controllers
         #region FixBMI
 
         [HttpGet]
-        public async Task<IActionResult> FixBMIList()
+        public async Task<IActionResult> FixBMIList(GetAllFixBMIQueryRequest request)
         {
-            return View();
+            GetAllFixBMIQueryResponse response = await _mediator.Send(request);
+            return View(response.FixBMIs);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixBMICreate()
+        public async Task<IActionResult> FixBMICreate(GetFixBMICreateItemsQueryRequest request)
         {
-            return View();
+            GetFixBMICreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixBMICreate(int a)
+        public async Task<IActionResult> FixBMICreate(FixBMICreateCommandRequest request)
         {
-            return View();
+            FixBMICreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixBMIList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixBMICreate", "Fix");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixBMIUpdate()
+        public async Task<IActionResult> FixBMIUpdate(GetByIdFixBMIQueryRequest request)
         {
-            return View();
+            GetByIdFixBMIQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixBMIList", "Fix");
+            }
         }
 
         [HttpPost]
