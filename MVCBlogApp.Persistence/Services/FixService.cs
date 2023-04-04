@@ -8,12 +8,15 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
 using MVCBlogApp.Application.Repositories.FixCalorieSch;
@@ -527,10 +530,102 @@ namespace MVCBlogApp.Persistence.Services
         }
 
 
-
         #endregion
 
         #region FixCalorieSch
+
+        public async Task<GetFixCalorieSchCreateItemsQueryResponse> GetFixCalorieSchCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                .Select(x => new VM_Form
+                {
+                    Id = x.Id,
+                    FormName = x.FormName
+                }).ToListAsync();
+
+            return new()
+            {
+                Forms = vM_Forms,
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllFixCalorieSchQueryResponse> GetAllFixCalorieSchAsync()
+        {
+            List<VM_FixCalorieSch> vM_FixCalorieSches = await _fixCalorieSchReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), f => f.LangId, lg => lg.Id, (f, lg) => new { f, lg })
+                .Join(_statusReadRepository.GetAll(), fi => fi.f.StatusId, st => st.Id, (fi, st) => new { fi, st })
+                .Join(_formReadRepository.GetAll(), fix => fix.fi.f.FormId, fI => fI.Id, (fix, fI) => new { fix, fI })
+                .Select(x => new VM_FixCalorieSch
+                {
+                    Id = x.fix.fi.f.Id,
+                    Title = x.fix.fi.f.Title,
+                    FormName = x.fI.FormName,
+                    Language = x.fix.fi.lg.Language,
+                    StatusName = x.fix.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                FixCalorieSches = vM_FixCalorieSches
+            };
+        }
+
+        public async Task<FixCalorieSchCreateCommandResponse> FixCalorieSchCreateAsync(FixCalorieSchCreateCommandRequest request)
+        {
+            var check = await _fixCalorieSchReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixCalorieSch-files", request.FormFile);
+
+                FixCalorieSch fixCalorieSch = new()
+                {
+                    Description = request.Description,
+                    FormId = request.FormId,
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _fixCalorieSchWriteRepository.AddAsync(fixCalorieSch);
+                await _fixCalorieSchWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+
+
         #endregion
 
         #region FixFeedPyramid

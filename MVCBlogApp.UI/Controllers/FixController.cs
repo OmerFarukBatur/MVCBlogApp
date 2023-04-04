@@ -7,12 +7,15 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -162,21 +165,31 @@ namespace MVCBlogApp.UI.Controllers
         #region FixCalorieSch
 
         [HttpGet]
-        public async Task<IActionResult> FixCalorieSchList()
+        public async Task<IActionResult> FixCalorieSchList(GetAllFixCalorieSchQueryRequest request)
         {
-            return View();
+            GetAllFixCalorieSchQueryResponse response = await _mediator.Send(request);
+            return View(response.FixCalorieSches);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixCalorieSchCreate()
+        public async Task<IActionResult> FixCalorieSchCreate(GetFixCalorieSchCreateItemsQueryRequest request)
         {
-            return View();
+            GetFixCalorieSchCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixCalorieSchCreate(int a)
+        public async Task<IActionResult> FixCalorieSchCreate(FixCalorieSchCreateCommandRequest request)
         {
-            return View();
+            FixCalorieSchCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixCalorieSchList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixCalorieSchCreate", "Fix");
+            }
         }
 
         [HttpGet]
