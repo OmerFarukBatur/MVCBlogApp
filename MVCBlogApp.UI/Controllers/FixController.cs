@@ -8,6 +8,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -15,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -193,20 +196,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixCalorieSchUpdate()
+        public async Task<IActionResult> FixCalorieSchUpdate(GetByIdFixCalorieSchQueryRequest request)
         {
-            return View();
+            GetByIdFixCalorieSchQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixCalorieSchList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixCalorieSchUpdate(int a)
+        public async Task<IActionResult> FixCalorieSchUpdate(FixCalorieSchUpdateCommandRequest request)
         {
-            return View();
+            FixCalorieSchUpdateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("FixCalorieSchList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixCalorieSchUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixCalorieSchDelete(int a)
+        public async Task<IActionResult> FixCalorieSchDelete(FixCalorieSchDeleteCommandRequest request)
         {
-            return View();
+            FixCalorieSchDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixCalorieSchList", "Fix");
         }
 
         #endregion

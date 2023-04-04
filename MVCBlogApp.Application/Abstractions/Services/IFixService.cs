@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -12,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
@@ -45,6 +48,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetFixCalorieSchCreateItemsQueryResponse> GetFixCalorieSchCreateItemsAsync();
         Task<GetAllFixCalorieSchQueryResponse> GetAllFixCalorieSchAsync();
         Task<FixCalorieSchCreateCommandResponse> FixCalorieSchCreateAsync(FixCalorieSchCreateCommandRequest request);
+        Task<GetByIdFixCalorieSchQueryResponse> GetByIdFixCalorieSchAsync(int id);
+        Task<FixCalorieSchUpdateCommandResponse> FixCalorieSchUpdateAsync(FixCalorieSchUpdateCommandRequest request);
+        Task<FixCalorieSchDeleteCommandResponse> FixCalorieSchDeleteAsync(int id);
 
         #endregion
 

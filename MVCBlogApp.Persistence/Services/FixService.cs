@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBmh.FixBmhCreate;
@@ -9,6 +8,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMICreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixBMI.FixBMIUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -16,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetAllFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetByIdFixBMI;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBMI.GetFixBMICreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetAllFixCalorieSch;
+using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetByIdFixCalorieSch;
 using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSchCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
@@ -620,6 +622,126 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixCalorieSchQueryResponse> GetByIdFixCalorieSchAsync(int id)
+        {
+            VM_FixCalorieSch? vM_FixCalorieSch = await _fixCalorieSchReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixCalorieSch
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixCalorieSch != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixCalorieSch = vM_FixCalorieSch,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixCalorieSch = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixCalorieSchUpdateCommandResponse> FixCalorieSchUpdateAsync(FixCalorieSchUpdateCommandRequest request)
+        {
+            FixCalorieSch fixCalorieSch = await _fixCalorieSchReadRepository.GetByIdAsync(request.Id);
+
+            if (fixCalorieSch != null)
+            {
+                fixCalorieSch.Description = request.Description;
+                fixCalorieSch.Title = request.Title;
+                fixCalorieSch.StatusId = request.StatusId;
+                fixCalorieSch.LangId = request.LangId;
+                fixCalorieSch.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBMI-files", request.FormFile);
+                    fixCalorieSch.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixCalorieSchWriteRepository.Update(fixCalorieSch);
+                await _fixCalorieSchWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixCalorieSchDeleteCommandResponse> FixCalorieSchDeleteAsync(int id)
+        {
+            FixCalorieSch fixCalorieSch = await _fixCalorieSchReadRepository.GetByIdAsync(id);
+
+            if (fixCalorieSch != null)
+            {
+                _fixCalorieSchWriteRepository.Remove(fixCalorieSch);
+                await _fixCalorieSchWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
