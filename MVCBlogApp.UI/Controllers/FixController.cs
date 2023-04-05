@@ -17,6 +17,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDise
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -33,6 +35,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHear
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetByIdFixHeartDiseases;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetAllFixMealSize;
+using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetByIdFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -410,20 +413,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixMealSizeUpdate()
+        public async Task<IActionResult> FixMealSizeUpdate(GetByIdFixMealSizeQueryRequest request)
         {
-            return View();
+            GetByIdFixMealSizeQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixMealSizeList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixMealSizeUpdate(int a)
+        public async Task<IActionResult> FixMealSizeUpdate(FixMealSizeUpdateCommandRequest request)
         {
-            return View();
+            FixMealSizeUpdateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("FixMealSizeList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixMealSizeUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixMealSizeDelete(int a)
+        public async Task<IActionResult> FixMealSizeDelete(FixMealSizeDeleteCommandRequest request)
         {
-            return View();
+            FixMealSizeDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixMealSizeList", "Fix");
         }
 
         #endregion

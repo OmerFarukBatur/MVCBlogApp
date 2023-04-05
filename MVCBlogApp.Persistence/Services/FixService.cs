@@ -17,6 +17,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDise
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -33,6 +35,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHear
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetByIdFixHeartDiseases;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetAllFixMealSize;
+using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetByIdFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
@@ -1281,6 +1284,126 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixMealSizeQueryResponse> GetByIdFixMealSizeAsync(int id)
+        {
+            VM_FixMealSize? vM_FixMealSize = await _fixMealSizeReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixMealSize
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixMealSize != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixMealSize = vM_FixMealSize,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixMealSize = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixMealSizeUpdateCommandResponse> FixMealSizeUpdateAsync(FixMealSizeUpdateCommandRequest request)
+        {
+            FixMealSize fixMealSize = await _fixMealSizeReadRepository.GetByIdAsync(request.Id);
+
+            if (fixMealSize != null)
+            {
+                fixMealSize.Description = request.Description;
+                fixMealSize.Title = request.Title;
+                fixMealSize.StatusId = request.StatusId;
+                fixMealSize.LangId = request.LangId;
+                fixMealSize.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixMealSize-files", request.FormFile);
+                    fixMealSize.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixMealSizeWriteRepository.Update(fixMealSize);
+                await _fixMealSizeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixMealSizeDeleteCommandResponse> FixMealSizeDeleteAsync(int id)
+        {
+            FixMealSize fixMealSize = await _fixMealSizeReadRepository.GetByIdAsync(id);
+
+            if (fixMealSize != null)
+            {
+                _fixMealSizeWriteRepository.Remove(fixMealSize);
+                await _fixMealSizeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
