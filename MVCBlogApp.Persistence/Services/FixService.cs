@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUp
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -25,6 +26,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSch
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHeartDiseases;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
 using MVCBlogApp.Application.Repositories.FixCalorieSch;
@@ -970,6 +973,98 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region FixHeartDiseases
+
+        public async Task<GetFixHeartDiseasesCreateItemsQueryResponse> GetFixHeartDiseasesCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                .Select(x => new VM_Form
+                {
+                    Id = x.Id,
+                    FormName = x.FormName
+                }).ToListAsync();
+
+            return new()
+            {
+                Forms = vM_Forms,
+                Languages = vM_Languages,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllFixHeartDiseasesQueryResponse> GetAllFixHeartDiseasesAsync()
+        {
+            List<VM_FixHeartDiseases> vM_FixHeartDiseases = await _fixHeartDiseasesReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), f => f.LangId, lg => lg.Id, (f, lg) => new { f, lg })
+                .Join(_statusReadRepository.GetAll(), fi => fi.f.StatusId, st => st.Id, (fi, st) => new { fi, st })
+                .Join(_formReadRepository.GetAll(), fix => fix.fi.f.FormId, fI => fI.Id, (fix, fI) => new { fix, fI })
+                .Select(x => new VM_FixHeartDiseases
+                {
+                    Id = x.fix.fi.f.Id,
+                    Title = x.fix.fi.f.Title,
+                    FormName = x.fI.FormName,
+                    Language = x.fix.fi.lg.Language,
+                    StatusName = x.fix.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                FixHeartDiseases = vM_FixHeartDiseases,
+            };
+        }
+
+        public async Task<FixHeartDiseasesCreateCommandResponse> FixHeartDiseasesCreateAsync(FixHeartDiseasesCreateCommandRequest request)
+        {
+            var check = await _fixHeartDiseasesReadRepository
+               .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixHeartDiseases-files", request.FormFile);
+
+                FixHeartDiseases fixHeartDiseases = new()
+                {
+                    Description = request.Description,
+                    FormId = request.FormId,
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _fixHeartDiseasesWriteRepository.AddAsync(fixHeartDiseases);
+                await _fixHeartDiseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+
         #endregion
 
         #region FixMealSize

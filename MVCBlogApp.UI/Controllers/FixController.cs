@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUp
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -25,6 +26,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSch
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHeartDiseases;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -307,21 +310,31 @@ namespace MVCBlogApp.UI.Controllers
         #region FixHeartDiseases
 
         [HttpGet]
-        public async Task<IActionResult> FixHeartDiseasesList()
+        public async Task<IActionResult> FixHeartDiseasesList(GetAllFixHeartDiseasesQueryRequest request)
         {
-            return View();
+            GetAllFixHeartDiseasesQueryResponse response = await _mediator.Send(request);
+            return View(response.FixHeartDiseases);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixHeartDiseasesCreate()
+        public async Task<IActionResult> FixHeartDiseasesCreate(GetFixHeartDiseasesCreateItemsQueryRequest request)
         {
-            return View();
+            GetFixHeartDiseasesCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixHeartDiseasesCreate(int a)
+        public async Task<IActionResult> FixHeartDiseasesCreate(FixHeartDiseasesCreateCommandRequest request)
         {
-            return View();
+            FixHeartDiseasesCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixHeartDiseasesList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixHeartDiseasesCreate", "Fix");
+            }
         }
 
         [HttpGet]

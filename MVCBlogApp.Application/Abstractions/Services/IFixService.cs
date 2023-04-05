@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixCalorieSch.FixCalorieSchUp
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -22,6 +23,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixCalorieSch.GetFixCalorieSch
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHeartDiseases;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -72,6 +75,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #endregion
 
         #region FixHeartDiseases
+
+        Task<GetFixHeartDiseasesCreateItemsQueryResponse> GetFixHeartDiseasesCreateItemsAsync();
+        Task<GetAllFixHeartDiseasesQueryResponse> GetAllFixHeartDiseasesAsync();
+        Task<FixHeartDiseasesCreateCommandResponse> FixHeartDiseasesCreateAsync(FixHeartDiseasesCreateCommandRequest request);
+
         #endregion
 
         #region FixMealSize
