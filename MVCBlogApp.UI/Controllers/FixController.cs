@@ -14,6 +14,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramid
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -27,6 +29,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPy
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHeartDiseases;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetByIdFixHeartDiseases;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -338,20 +341,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixHeartDiseasesUpdate()
+        public async Task<IActionResult> FixHeartDiseasesUpdate(GetByIdFixHeartDiseasesQueryRequest request)
         {
-            return View();
+            GetByIdFixHeartDiseasesQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixFeedPyramidList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixHeartDiseasesUpdate(int a)
+        public async Task<IActionResult> FixHeartDiseasesUpdate(FixHeartDiseasesUpdateCommandRequest request)
         {
-            return View();
+            FixHeartDiseasesUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixFeedPyramidList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixHeartDiseasesUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixHeartDiseasesDelete(int a)
+        public async Task<IActionResult> FixHeartDiseasesDelete(FixHeartDiseasesDeleteCommandRequest request)
         {
-            return View();
+            FixHeartDiseasesDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixFeedPyramidList", "Fix");
         }
 
         #endregion

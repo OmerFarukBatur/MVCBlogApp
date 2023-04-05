@@ -14,6 +14,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramid
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixFeedPyramid.FixFeedPyramidUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDiseasesUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -27,6 +29,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetAllFixFeedPy
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetByIdFixFeedPyramid;
 using MVCBlogApp.Application.Features.Queries.Fix.FixFeedPyramid.GetFixFeedPyramidCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetAllFixHeartDiseases;
+using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetByIdFixHeartDiseases;
 using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDiseasesCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
@@ -1060,6 +1063,126 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixHeartDiseasesQueryResponse> GetByIdFixHeartDiseasesAsync(int id)
+        {
+            VM_FixHeartDiseases? vM_FixHeartDiseases = await _fixHeartDiseasesReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixHeartDiseases
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixHeartDiseases != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixHeartDiseases = vM_FixHeartDiseases,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixHeartDiseases = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixHeartDiseasesUpdateCommandResponse> FixHeartDiseasesUpdateAsync(FixHeartDiseasesUpdateCommandRequest request)
+        {
+            FixHeartDiseases fixHeartDiseases = await _fixHeartDiseasesReadRepository.GetByIdAsync(request.Id);
+
+            if (fixHeartDiseases != null)
+            {
+                fixHeartDiseases.Description = request.Description;
+                fixHeartDiseases.Title = request.Title;
+                fixHeartDiseases.StatusId = request.StatusId;
+                fixHeartDiseases.LangId = request.LangId;
+                fixHeartDiseases.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixHeartDiseases-files", request.FormFile);
+                    fixHeartDiseases.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixHeartDiseasesWriteRepository.Update(fixHeartDiseases);
+                await _fixHeartDiseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixHeartDiseasesDeleteCommandResponse> FixHeartDiseasesDeleteAsync(int id)
+        {
+            FixHeartDiseases fixHeartDiseases = await _fixHeartDiseasesReadRepository.GetByIdAsync(id);
+
+            if (fixHeartDiseases != null)
+            {
+                _fixHeartDiseasesWriteRepository.Remove(fixHeartDiseases);
+                await _fixHeartDiseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
