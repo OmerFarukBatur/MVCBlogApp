@@ -21,10 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\Fix\FixMealSize\" />
     <Folder Include="Features\Commands\Fix\FixOptimum\" />
     <Folder Include="Features\Commands\Fix\FixPulse\" />
-    <Folder Include="Features\Queries\Fix\FixMealSize\" />
     <Folder Include="Features\Queries\Fix\FixOptimum\" />
     <Folder Include="Features\Queries\Fix\FixPulse\" />
   </ItemGroup>
