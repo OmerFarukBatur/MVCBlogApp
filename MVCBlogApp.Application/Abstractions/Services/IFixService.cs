@@ -16,6 +16,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixHeartDiseases.FixHeartDise
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -34,6 +35,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixHeartDiseases.GetFixHeartDi
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetAllFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetByIdFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
+using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -106,6 +109,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #endregion
 
         #region FixOptimum
+
+        Task<GetFixOptimumCreateItemsQueryResponse> GetFixOptimumCreateItemsAsync();
+        Task<GetAllFixOptimumQueryResponse> GetAllFixOptimumAsync();
+        Task<FixOptimumCreateCommandResponse> FixOptimumCreateAsync(FixOptimumCreateCommandRequest request);
+
         #endregion
 
         #region FixPulse

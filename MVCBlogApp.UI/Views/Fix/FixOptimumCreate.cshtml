@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewData["Title"] = "FixOptimumCreate";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+
+    @*  <div class="row page-titles mx-0">
+        <div class="col p-md-0">
+        <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+        <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+        </ol>
+        </div>
+        </div>
+        <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="post" asp-controller="Fix" asp-action="FixOptimumCreate" accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="formId">
+                                        Form Tipi <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control je" id="formId" name="formId" required>
+                                            <option>Seçiniz!</option>
+                                            @foreach (var item in Model.Forms)
+                                            {
+                                                <option value="@item.Id">@item.FormName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="title">
+                                        Başlık <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="title" name="title" maxlength="250" min="2" required>
+                                    </div>
+
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="description">
+                                        Açıklama <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="description" name="description" required> 
+                                            Deneme
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="FormFile">
+                                        Kapak Fotoğrafı <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <div class="fallback dropzone">
+                                            <input class="l-border-1" type="file" name="FormFile" id="FormFile" accept=".png,.jpg,.jpeg" runat="server" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="statusId">
+                                        Durumu <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="statusId" name="statusId" required>
+                                            <option>Seçiniz!</option>
+                                            @foreach (var item in Model.Statuses)
+                                            {
+                                                <option value="@item.Id">@item.StatusName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="langId">
+                                        Dil <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="langId" name="langId" required>
+                                            <option>Seçiniz!</option>
+                                            @foreach (var item in Model.Languages)
+                                            {
+                                                <option value="@item.Id">@item.Language</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
