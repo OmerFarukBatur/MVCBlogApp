@@ -20,6 +20,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeCreate
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -39,6 +41,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetAllFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetByIdFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
+using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetByIdFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
 using MVCBlogApp.Application.Repositories.FixBmh;
 using MVCBlogApp.Application.Repositories.FixBMI;
@@ -1502,6 +1505,126 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFixOptimumQueryResponse> GetByIdFixOptimumAsync(int id)
+        {
+            VM_FixOptimum? vM_FixOptimum = await _fixOptimumReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_FixOptimum
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_FixOptimum != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                    .Select(x => new VM_Form
+                    {
+                        Id = x.Id,
+                        FormName = x.FormName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    FixOptimum = vM_FixOptimum,
+                    Forms = vM_Forms,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    FixOptimum = null,
+                    Forms = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FixOptimumUpdateCommandResponse> FixOptimumUpdateAsync(FixOptimumUpdateCommandRequest request)
+        {
+            FixOptimum fixOptimum = await _fixOptimumReadRepository.GetByIdAsync(request.Id);
+
+            if (fixOptimum != null)
+            {
+                fixOptimum.Description = request.Description;
+                fixOptimum.Title = request.Title;
+                fixOptimum.StatusId = request.StatusId;
+                fixOptimum.LangId = request.LangId;
+                fixOptimum.FormId = request.FormId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixOptimum-files", request.FormFile);
+                    fixOptimum.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _fixOptimumWriteRepository.Update(fixOptimum);
+                await _fixOptimumWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<FixOptimumDeleteCommandResponse> FixOptimumDeleteAsync(int id)
+        {
+            FixOptimum fixOptimum = await _fixOptimumReadRepository.GetByIdAsync(id);
+
+            if (fixOptimum != null)
+            {
+                _fixOptimumWriteRepository.Remove(fixOptimum);
+                await _fixOptimumWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

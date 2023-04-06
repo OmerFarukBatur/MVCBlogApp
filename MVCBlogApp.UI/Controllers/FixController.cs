@@ -20,6 +20,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeCreate
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -39,6 +41,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetAllFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetByIdFixMealSize;
 using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
+using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetByIdFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -483,20 +486,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixOptimumUpdate()
+        public async Task<IActionResult> FixOptimumUpdate(GetByIdFixOptimumQueryRequest request)
         {
-            return View();
+            GetByIdFixOptimumQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixOptimumList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixOptimumUpdate(int a)
+        public async Task<IActionResult> FixOptimumUpdate(FixOptimumUpdateCommandRequest request)
         {
-            return View();
+            FixOptimumUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixOptimumList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixOptimumUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixOptimumDelete(int a)
+        public async Task<IActionResult> FixOptimumDelete(FixOptimumDeleteCommandRequest request)
         {
-            return View();
+            FixOptimumDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixOptimumList", "Fix");
         }
 
         #endregion
