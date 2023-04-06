@@ -20,6 +20,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -42,6 +44,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetByIdFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetAllFixPulse;
+using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetByIdFixPulse;
 using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetFixPulseCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
@@ -130,6 +133,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetFixPulseCreateItemsQueryResponse> GetFixPulseCreateItemsAsync();
         Task<GetAllFixPulseQueryResponse> GetAllFixPulseAsync();
         Task<FixPulseCreateCommandResponse> FixPulseCreateAsync(FixPulseCreateCommandRequest request);
+        Task<GetByIdFixPulseQueryResponse> GetByIdFixPulseAsync(int id);
+        Task<FixPulseUpdateCommandResponse> FixPulseUpdateAsync(FixPulseUpdateCommandRequest request);
+        Task<FixPulseDeleteCommandResponse> FixPulseDeleteAsync(int id); 
 
         #endregion
     }

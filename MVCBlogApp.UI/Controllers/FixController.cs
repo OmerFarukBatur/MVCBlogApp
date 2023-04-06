@@ -23,6 +23,8 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumUpdate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseCreate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseDelete;
+using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseUpdate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -45,6 +47,7 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetByIdFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
 using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetAllFixPulse;
+using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetByIdFixPulse;
 using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetFixPulseCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -555,20 +558,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixPulseUpdate()
+        public async Task<IActionResult> FixPulseUpdate(GetByIdFixPulseQueryRequest request)
         {
-            return View();
+            GetByIdFixPulseQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("FixPulseList", "Fix");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixPulseUpdate(int a)
+        public async Task<IActionResult> FixPulseUpdate(FixPulseUpdateCommandRequest request)
         {
-            return View();
+            FixPulseUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixPulseList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixPulseUpdate", "Fix");
+            }
         }
 
-        public async Task<IActionResult> FixPulseDelete(int a)
+        public async Task<IActionResult> FixPulseDelete(FixPulseDeleteCommandRequest request)
         {
-            return View();
+            FixPulseDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FixPulseList", "Fix");
         }
 
         #endregion
