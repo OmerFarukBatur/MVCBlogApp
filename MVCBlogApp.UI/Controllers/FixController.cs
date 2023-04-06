@@ -22,6 +22,7 @@ using MVCBlogApp.Application.Features.Commands.Fix.FixMealSize.FixMealSizeUpdate
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumCreate;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumDelete;
 using MVCBlogApp.Application.Features.Commands.Fix.FixOptimum.FixOptimumUpdate;
+using MVCBlogApp.Application.Features.Commands.Fix.FixPulse.FixPulseCreate;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetAllFixBmhs;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetByIdFixBmh;
 using MVCBlogApp.Application.Features.Queries.Fix.FixBmh.GetFixBmhCreateItems;
@@ -43,6 +44,8 @@ using MVCBlogApp.Application.Features.Queries.Fix.FixMealSize.GetFixMealSizeCrea
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetAllFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetByIdFixOptimum;
 using MVCBlogApp.Application.Features.Queries.Fix.FixOptimum.GetFixOptimumCreateItems;
+using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetAllFixPulse;
+using MVCBlogApp.Application.Features.Queries.Fix.FixPulse.GetFixPulseCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -524,21 +527,31 @@ namespace MVCBlogApp.UI.Controllers
         #region FixPulse
 
         [HttpGet]
-        public async Task<IActionResult> FixPulseList()
+        public async Task<IActionResult> FixPulseList(GetAllFixPulseQueryRequest request)
         {
-            return View();
+            GetAllFixPulseQueryResponse response = await _mediator.Send(request);
+            return View(response.FixPulses);
         }
 
         [HttpGet]
-        public async Task<IActionResult> FixPulseCreate()
+        public async Task<IActionResult> FixPulseCreate(GetFixPulseCreateItemsQueryRequest request)
         {
-            return View();
+            GetFixPulseCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> FixPulseCreate(int a)
+        public async Task<IActionResult> FixPulseCreate(FixPulseCreateCommandRequest request)
         {
-            return View();
+            FixPulseCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FixPulseList", "Fix");
+            }
+            else
+            {
+                return RedirectToAction("FixPulseCreate", "Fix");
+            }
         }
 
         [HttpGet]

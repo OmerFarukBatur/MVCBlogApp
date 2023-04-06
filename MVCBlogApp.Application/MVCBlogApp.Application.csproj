@@ -20,9 +20,4 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Commands\Fix\FixPulse\" />
-    <Folder Include="Features\Queries\Fix\FixPulse\" />
-  </ItemGroup>
-
 </Project>
