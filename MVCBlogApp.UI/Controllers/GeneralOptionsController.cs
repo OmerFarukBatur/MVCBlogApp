@@ -1,12 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
@@ -148,6 +151,7 @@ namespace MVCBlogApp.UI.Controllers
             NavigationDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("NavigationList", "GeneralOptions");
         }
+
         #endregion
 
         #region URLCreate
@@ -157,6 +161,72 @@ namespace MVCBlogApp.UI.Controllers
         {
             URLCreateQueryResponse response = await _mediator.Send(request);
             return Ok(response);
+        }
+
+        #endregion
+
+        #region Form
+
+        public async Task<IActionResult> FormList(GetAllFormsQueryRequest request)
+        {
+            GetAllFormsQueryResponse response = await _mediator.Send(request);
+            return View(response.Forms);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FormCreate(GetFormCreateItemsQueryRequest request)
+        {
+            GetFormCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FormCreate(FormCreateCommandRequest request)
+        {
+            FormCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("FormList", "GeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("FormCreate", "GeneralOptions");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FormUpdate()
+        {
+            bool state = true;
+            if (state)
+            {
+                return View(/*response*/);
+            }
+            else
+            {
+                return RedirectToAction("NavigationList", "GeneralOptions");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FormUpdate(int a)
+        {
+            bool state = true;
+            if (state)
+            {
+                return RedirectToAction("NavigationList", "GeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("NavigationUpdate", "GeneralOptions");
+            }
+        }
+
+
+        public async Task<IActionResult> FormDelete(int a)
+        {
+            
+            return RedirectToAction("NavigationList", "GeneralOptions");
         }
 
         #endregion

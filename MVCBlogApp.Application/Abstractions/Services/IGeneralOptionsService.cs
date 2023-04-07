@@ -1,9 +1,12 @@
-﻿using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
+﻿using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
@@ -37,6 +40,14 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region URL Create
 
         string URLCreate(string title);
+
+        #endregion
+
+        #region Form
+
+        Task<GetFormCreateItemsQueryResponse> GetFormCreateItemsAsync();
+        Task<GetAllFormsQueryResponse> GetAllFormsAsync();
+        Task<FormCreateCommandResponse> FormCreateAsync(FormCreateCommandRequest request);
 
         #endregion
     }

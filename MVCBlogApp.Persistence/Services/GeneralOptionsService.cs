@@ -1,18 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.Operations;
+using MVCBlogApp.Application.Repositories.Form;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.ViewModels;
@@ -26,13 +30,23 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ILanguagesWriteRepository _languagesWriteRepository;
         private readonly INavigationReadRepository _navigationReadRepository;
         private readonly INavigationWriteRepository _navigationWriteRepository;
+        private readonly IFormReadRepository _formReadRepository;
+        private readonly IFormWriteRepository _formWriteRepository;
 
-        public GeneralOptionsService(ILanguagesReadRepository languagesReadRepository, ILanguagesWriteRepository languagesWriteRepository, INavigationReadRepository navigationReadRepository, INavigationWriteRepository navigationWriteRepository)
+        public GeneralOptionsService(
+            ILanguagesReadRepository languagesReadRepository,
+            ILanguagesWriteRepository languagesWriteRepository,
+            INavigationReadRepository navigationReadRepository,
+            INavigationWriteRepository navigationWriteRepository,
+            IFormReadRepository formReadRepository,
+            IFormWriteRepository formWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _languagesWriteRepository = languagesWriteRepository;
             _navigationReadRepository = navigationReadRepository;
             _navigationWriteRepository = navigationWriteRepository;
+            _formReadRepository = formReadRepository;
+            _formWriteRepository = formWriteRepository;
         }
 
         #region Language
@@ -401,6 +415,80 @@ namespace MVCBlogApp.Persistence.Services
         {
             return NameOperation.GeneretaRootUrl(title);
         }
+
+
+        #endregion
+
+        #region Form
+
+        public async Task<GetFormCreateItemsQueryResponse> GetFormCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllFormsQueryResponse> GetAllFormsAsync()
+        {
+            List<VM_Form> vM_Forms = await _formReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), fr => fr.LangId, lg => lg.Id, (fr, lg) => new { fr, lg })
+                .Select(x => new VM_Form
+                {
+                    Id = x.fr.Id,
+                    Action = x.fr.Action,
+                    Controller = x.fr.Controller,
+                    FormName = x.fr.FormName,
+                    Language = x.lg.Language
+                }).ToListAsync();
+
+            return new()
+            {
+                Forms = vM_Forms
+            };
+        }
+
+        public async Task<FormCreateCommandResponse> FormCreateAsync(FormCreateCommandRequest request)
+        {
+            var check = await _formReadRepository
+                .GetWhere(x => x.FormName.Trim().ToLower() == request.FormName.Trim().ToLower() || x.FormName.Trim().ToUpper() == request.FormName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Form form = new()
+                {
+                    Action = request.Action,
+                    Controller = request.Controller,
+                    FormName = request.FormName,
+                    LangId = request.LangId
+                };
+
+                await _formWriteRepository.AddAsync(form);
+                await _formWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
 
         #endregion
     }
