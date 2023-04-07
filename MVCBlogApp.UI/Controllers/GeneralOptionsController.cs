@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
@@ -9,6 +11,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
@@ -195,38 +198,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FormUpdate()
+        public async Task<IActionResult> FormUpdate(GetByIdFormQueryRequest request)
         {
-            bool state = true;
-            if (state)
+            GetByIdFormQueryResponse response = await _mediator.Send(request);
+            if (response.State)
             {
-                return View(/*response*/);
+                return View(response);
             }
             else
             {
-                return RedirectToAction("NavigationList", "GeneralOptions");
+                return RedirectToAction("FormList", "GeneralOptions");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> FormUpdate(int a)
+        public async Task<IActionResult> FormUpdate(FormUpdateQueryRequest request)
         {
-            bool state = true;
-            if (state)
+            FormUpdateQueryResponse response = await _mediator.Send(request);
+            if (response.State)
             {
-                return RedirectToAction("NavigationList", "GeneralOptions");
+                return RedirectToAction("FormList", "GeneralOptions");
             }
             else
             {
-                return RedirectToAction("NavigationUpdate", "GeneralOptions");
+                return RedirectToAction("FormUpdate", "GeneralOptions");
             }
         }
 
 
-        public async Task<IActionResult> FormDelete(int a)
+        public async Task<IActionResult> FormDelete(FormDeleteCommandRequest request)
         {
-            
-            return RedirectToAction("NavigationList", "GeneralOptions");
+            FormDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("FormList", "GeneralOptions");
         }
 
         #endregion

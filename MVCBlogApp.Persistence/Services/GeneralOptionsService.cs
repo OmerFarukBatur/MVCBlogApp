@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.CreateLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.DeleteLanguage;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLanguage;
@@ -9,6 +12,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetAllLanguage;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Languages.GetByIdLanguage;
@@ -126,7 +130,7 @@ namespace MVCBlogApp.Persistence.Services
             Languages language = await _languagesReadRepository.GetByIdAsync(request.Id);
 
             if (language != null)
-            {                
+            {
                 return new()
                 {
                     Language = new VM_Language
@@ -485,6 +489,101 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdFormQueryResponse> GetByIdFormAsync(int id)
+        {
+            VM_Form? vM_Form = await _formReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Form
+                {
+                    Id = x.Id,
+                    Action = x.Action,
+                    Controller = x.Controller,
+                    FormName = x.FormName,
+                    LangId = x.LangId
+                }).FirstOrDefaultAsync();
+
+            if (vM_Form != null)
+            {
+
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    Form = vM_Form,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    Form = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FormUpdateQueryResponse> FormUpdateAsync(FormUpdateQueryRequest request)
+        {
+            Form form = await _formReadRepository.GetByIdAsync(request.Id);
+
+            if (form != null)
+            {
+                form.FormName = request.FormName;
+                form.Controller = request.Controller;
+                form.LangId = request.LangId;
+                form.Action = request.Action;
+
+                _formWriteRepository.Update(form);
+                await _formWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<FormDeleteCommandResponse> FormDeleteAsync(int id)
+        {
+            Form form = await _formReadRepository.GetByIdAsync(id);
+
+            if (form != null)
+            { 
+                _formWriteRepository.Remove(form);
+                await _formWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
