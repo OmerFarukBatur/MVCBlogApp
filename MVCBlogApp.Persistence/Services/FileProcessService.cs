@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -12,6 +16,7 @@ using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryD
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -707,6 +712,154 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Banners = vM_Banners,
             };
+        }
+
+        public async Task<BannerCreateCommandResponse> BannerCreateAsync(BannerCreateCommandRequest request)
+        {
+            var check = await _bannerReadRepository
+                .GetWhere(x => x.BannerName.Trim().ToLower() == request.BannerName.Trim().ToLower() || x.BannerName.Trim().ToUpper() == request.BannerName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("banner-files", request.FormFile);
+                Banner banner = new()
+                {
+                    BannerName = request.BannerName,
+                    BannerOrder = request.BannerOrder,
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    Type = 1,
+                    BannerUrl = @"~\Upload\" + result[0].pathOrContainerName
+                };
+
+                await _bannerWriteRepository.AddAsync(banner);
+                await _bannerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdBannerQueryResponse> GetByIdBannerAsync(int id)
+        {
+            VM_Banner? vM_Banner = await _bannerReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Banner
+                {
+                    Id = x.Id,
+                    BannerName = x.BannerName,
+                    BannerOrder = x.BannerOrder,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId
+                }).FirstOrDefaultAsync();
+
+            if (vM_Banner != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Banner = vM_Banner,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Banner = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<BannerUpdateQueryResponse> BannerUpdateAsync(BannerUpdateQueryRequest request)
+        {
+            Banner banner = await _bannerReadRepository.GetByIdAsync(request.Id);
+
+            if (banner != null)
+            {
+                banner.BannerOrder = request.BannerOrder;
+                banner.BannerName = request.BannerName;
+                banner.LangId = request.LangId;
+                banner.StatusId = request.StatusId;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("banner-files", request.FormFile);
+                    banner.BannerUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _bannerWriteRepository.Update(banner);
+                await _bannerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<BannerDeleteCommandResponse> BannerDeleteAsync(int id)
+        {
+            Banner banner = await _bannerReadRepository.GetByIdAsync(id);
+
+            if (banner != null)
+            { 
+                _bannerWriteRepository.Remove(banner);
+                await _bannerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

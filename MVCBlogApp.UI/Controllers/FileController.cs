@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -13,6 +16,7 @@ using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryD
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -249,53 +253,52 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> BannerCreate(int a)
+        public async Task<IActionResult> BannerCreate(BannerCreateCommandRequest request)
         {
-
-            bool state = true;
-            if (state)
+            BannerCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
             {
-                return RedirectToAction("VideoList", "File");
+                return RedirectToAction("BannerList", "File");
             }
             else
             {
-                return RedirectToAction("VideoCreate", "File");
+                return RedirectToAction("BannerCreate", "File");
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> BannerUpdate()
+        public async Task<IActionResult> BannerUpdate(GetByIdBannerQueryRequest request)
         {
-            bool state = true;
-            if (state)
+            GetByIdBannerQueryResponse response = await _mediator.Send(request);
+            if (response.State)
             {
-                return View();
+                return View(response);
             }
             else
             {
-                return RedirectToAction("VideoList", "File");
+                return RedirectToAction("BannerList", "File");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> BannerUpdate(int a)
+        public async Task<IActionResult> BannerUpdate(BannerUpdateQueryRequest request)
         {
-            bool state = false;
-            if (state)
+            BannerUpdateQueryResponse response = await _mediator.Send(request);
+            if (response.State)
             {
-                return RedirectToAction("VideoList", "File");
+                return RedirectToAction("BannerList", "File");
             }
             else
             {
-                return RedirectToAction("VideoUpdate", "File");
+                return RedirectToAction("BannerCreate", "File");
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> BannerDelete( )
+        public async Task<IActionResult> BannerDelete(BannerDeleteCommandRequest request )
         {
-            
-            return RedirectToAction("VideoList", "File");
+            BannerDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("BannerList", "File");
         }
 
         #endregion

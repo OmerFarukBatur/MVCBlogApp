@@ -1,4 +1,7 @@
-﻿using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
+﻿using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
+using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
+using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
 using MVCBlogApp.Application.Features.Commands.File.Video.VideoCreate;
@@ -9,6 +12,7 @@ using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryD
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -60,6 +64,10 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetBannerCreateItemsQueryResponse> GetBannerCreateItemsAsync();
         Task<GetAllBannerQueryResponse> GetAllBannerAsync();
+        Task<BannerCreateCommandResponse> BannerCreateAsync(BannerCreateCommandRequest request);
+        Task<GetByIdBannerQueryResponse> GetByIdBannerAsync(int id);
+        Task<BannerUpdateQueryResponse> BannerUpdateAsync(BannerUpdateQueryRequest request);
+        Task<BannerDeleteCommandResponse> BannerDeleteAsync(int id);
 
         #endregion
     }
