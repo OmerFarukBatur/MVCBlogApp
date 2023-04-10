@@ -11,6 +11,8 @@ using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -227,6 +229,72 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> VideoDelete(VideoDeleteCommandRequest request)
         {
             VideoDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("VideoList", "File");
+        }
+
+        #endregion
+
+        #region Banner
+        public async Task<IActionResult> BannerList(GetAllBannerQueryRequest request)
+        {
+            GetAllBannerQueryResponse response = await _mediator.Send(request);
+            return View(response.Banners);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BannerCreate(GetBannerCreateItemsQueryRequest request)
+        {
+            GetBannerCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BannerCreate(int a)
+        {
+
+            bool state = true;
+            if (state)
+            {
+                return RedirectToAction("VideoList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoCreate", "File");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BannerUpdate()
+        {
+            bool state = true;
+            if (state)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("VideoList", "File");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BannerUpdate(int a)
+        {
+            bool state = false;
+            if (state)
+            {
+                return RedirectToAction("VideoList", "File");
+            }
+            else
+            {
+                return RedirectToAction("VideoUpdate", "File");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BannerDelete( )
+        {
+            
             return RedirectToAction("VideoList", "File");
         }
 

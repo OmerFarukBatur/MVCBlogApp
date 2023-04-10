@@ -31,6 +31,8 @@
     <Folder Include="wwwroot\Upload\article-files\" />
     <Folder Include="wwwroot\Upload\blog-files\" />
     <Folder Include="wwwroot\Upload\book-files\" />
+    <Folder Include="wwwroot\Upload\fixBmh-files\" />
+    <Folder Include="wwwroot\Upload\fixPulse-files\" />
     <Folder Include="wwwroot\Upload\image-files\" />
     <Folder Include="wwwroot\Upload\ourteam-files\" />
     <Folder Include="wwwroot\Upload\press-files\" />

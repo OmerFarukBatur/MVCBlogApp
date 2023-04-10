@@ -10,6 +10,8 @@ using MVCBlogApp.Application.Features.Commands.File.Video.VideoUpdate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
+using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -19,6 +21,7 @@ using MVCBlogApp.Application.Features.Queries.File.Video.GetVideoCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
+using MVCBlogApp.Application.Repositories.Banner;
 using MVCBlogApp.Application.Repositories.Image;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
@@ -40,6 +43,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IImageReadRepository _imageReadRepository;
         private readonly IImageWriteRepository _imageWriteRepository;
         private readonly IStorageService _storageService;
+        private readonly IBannerReadRepository _bannerReadRepository;
+        private readonly IBannerWriteRepository _bannerWriteRepository;
 
         public FileProcessService(
             ILanguagesReadRepository languagesReadRepository,
@@ -50,7 +55,9 @@ namespace MVCBlogApp.Persistence.Services
             IVideoWriteRepository videoWriteRepository,
             IImageReadRepository imageReadRepository,
             IImageWriteRepository imageWriteRepository,
-            IStorageService storageService)
+            IStorageService storageService,
+            IBannerReadRepository bannerReadRepository,
+            IBannerWriteRepository bannerWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
@@ -61,6 +68,8 @@ namespace MVCBlogApp.Persistence.Services
             _imageReadRepository = imageReadRepository;
             _imageWriteRepository = imageWriteRepository;
             _storageService = storageService;
+            _bannerReadRepository = bannerReadRepository;
+            _bannerWriteRepository = bannerWriteRepository;
         }
 
 
@@ -654,5 +663,54 @@ namespace MVCBlogApp.Persistence.Services
 
         #endregion
 
+        #region Banner
+
+        public async Task<GetBannerCreateItemsQueryResponse> GetBannerCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Statuses = allStatuses,
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllBannerQueryResponse> GetAllBannerAsync()
+        {
+            List<VM_Banner> vM_Banners = await _bannerReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), b => b.LangId, lg => lg.Id, (b, lg) => new { b, lg })
+                .Join(_statusReadRepository.GetAll(), ba => ba.b.StatusId, st => st.Id, (ba, st) => new { ba, st })
+                .Select(x => new VM_Banner
+                {
+                    Id = x.ba.b.Id,
+                    BannerName = x.ba.b.BannerName,
+                    BannerOrder = x.ba.b.BannerOrder,
+                    BannerUrl = x.ba.b.BannerUrl,
+                    Language = x.ba.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Banners = vM_Banners,
+            };
+        }
+
+
+
+        #endregion
     }
 }
