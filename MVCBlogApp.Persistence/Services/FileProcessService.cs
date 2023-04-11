@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselCreate;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselDelete;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -19,6 +21,7 @@ using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetAllCarousel;
+using MVCBlogApp.Application.Features.Queries.File.Carousel.GetByIdCarousel;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetCarouselCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
@@ -852,7 +855,7 @@ namespace MVCBlogApp.Persistence.Services
             Banner banner = await _bannerReadRepository.GetByIdAsync(id);
 
             if (banner != null)
-            { 
+            {
                 _bannerWriteRepository.Remove(banner);
                 await _bannerWriteRepository.SaveAsync();
 
@@ -966,6 +969,132 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdCarouselQueryResponse> GetByIdCarouselAsync(int id)
+        {
+            VM_Carousel? vM_Carousel = await _carouselReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Carousel
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    LangId = x.LangId,
+                    MetaDescription = x.MetaDescription,
+                    MetaKey = x.MetaKey,
+                    MetaTitle = x.MetaTitle,
+                    Orders = x.Orders,
+                    StatusId = x.StatusId,
+                    Title = x.Title,
+                    UrlRoot = x.UrlRoot,
+                    TitleClass = x.TitleClass
+                }).FirstOrDefaultAsync();
+
+            if (vM_Carousel != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Carousel = vM_Carousel,
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Carousel = null,
+                    Languages = null,
+                    Statuses = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<CarouselUpdateCommandResponse> CarouselUpdateAsync(CarouselUpdateCommandRequest request)
+        {
+            Carousel carousel = await _carouselReadRepository.GetByIdAsync(request.Id);
+
+            if (carousel != null)
+            {
+                carousel.MetaTitle = request.MetaTitle;
+                carousel.Title = request.Title;
+                carousel.MetaDescription = request.MetaDescription;
+                carousel.Description = request.Description;
+                carousel.Orders = request.Orders;
+                carousel.LangId = request.LangId;
+                carousel.StatusId = request.StatusId;
+                carousel.UrlRoot = request.UrlRoot;
+                carousel.MetaKey = request.MetaKey;
+                carousel.TitleClass = request.TitleClass;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("carousel-files", request.FormFile);
+                    carousel.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    carousel.ImgName = result[0].fileName;
+                }
+
+                _carouselWriteRepository.Update(carousel);
+                await _carouselWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Beklenmedik bir hata oluştu.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<CarouselDeleteCommandResponse> CarouselDeleteAsync(int id)
+        {
+            Carousel carousel = await _carouselReadRepository.GetByIdAsync(id);
+
+            if (carousel != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                carousel.StatusId = statusId;
+
+                _carouselWriteRepository.Update(carousel);
+                await _carouselWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
                 };
             }
         }

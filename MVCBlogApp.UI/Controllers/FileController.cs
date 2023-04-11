@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselCreate;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselDelete;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -19,6 +21,7 @@ using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetAllCarousel;
+using MVCBlogApp.Application.Features.Queries.File.Carousel.GetByIdCarousel;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetCarouselCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
@@ -336,38 +339,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CarouselUpdate(GetByIdBannerQueryRequest request)
+        public async Task<IActionResult> CarouselUpdate(GetByIdCarouselQueryRequest request)
         {
-            GetByIdBannerQueryResponse response = await _mediator.Send(request);
+            GetByIdCarouselQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("BannerList", "File");
+                return RedirectToAction("CarouselList", "File");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CarouselUpdate(BannerUpdateQueryRequest request)
+        public async Task<IActionResult> CarouselUpdate(CarouselUpdateCommandRequest request)
         {
-            BannerUpdateQueryResponse response = await _mediator.Send(request);
+            CarouselUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("BannerList", "File");
+                return RedirectToAction("CarouselList", "File");
             }
             else
             {
-                return RedirectToAction("BannerCreate", "File");
+                return RedirectToAction("CarouselUpdate", "File");
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> CarouselDelete(BannerDeleteCommandRequest request)
+        public async Task<IActionResult> CarouselDelete(CarouselDeleteCommandRequest request)
         {
-            BannerDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("BannerList", "File");
+            CarouselDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("CarouselList", "File");
         }
 
         #endregion

@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselCreate;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselDelete;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -15,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetAllCarousel;
+using MVCBlogApp.Application.Features.Queries.File.Carousel.GetByIdCarousel;
 using MVCBlogApp.Application.Features.Queries.File.Carousel.GetCarouselCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
@@ -79,6 +82,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetCarouselCreateItemsQueryResponse> GetCarouselCreateItemsAsync();
         Task<GetAllCarouselQueryResponse> GetAllCarouselAsync();
         Task<CarouselCreateCommandResponse> CarouselCreateAsync(CarouselCreateCommandRequest request);
+        Task<GetByIdCarouselQueryResponse> GetByIdCarouselAsync(int id);
+        Task<CarouselUpdateCommandResponse> CarouselUpdateAsync(CarouselUpdateCommandRequest request);
+        Task<CarouselDeleteCommandResponse> CarouselDeleteAsync(int id);
 
         #endregion
     }
