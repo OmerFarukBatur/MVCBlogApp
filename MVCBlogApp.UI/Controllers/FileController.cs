@@ -327,6 +327,7 @@ namespace MVCBlogApp.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> CarouselCreate(CarouselCreateCommandRequest request)
         {
+            request.CreateUserId = _operationService.GetUser().Id;
             CarouselCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {

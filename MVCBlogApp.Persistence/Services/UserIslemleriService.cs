@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
+using MVCBlogApp.Application.Repositories.Confession;
+using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
+using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -20,20 +26,31 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersWriteRepository _membersWriteRepository;
         private readonly IAuthService _authService;
         private readonly IMailService _mailService;
+        private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly IStatusReadRepository _statusReadRepository;
+        private readonly IConfessionReadRepository _confessionReadRepository;
+        private readonly IConfessionWriteRepository _confessionWriteRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
             IMembersReadRepository membersReadRepository,
             IMembersWriteRepository membersWriteRepository,
-            IAuthService authService
-,
-            IMailService mailService)
+            IAuthService authService,
+            IMailService mailService,
+            ILanguagesReadRepository languagesReadRepository,
+            IStatusReadRepository statusReadRepository,
+            IConfessionReadRepository confessionReadRepository,
+            IConfessionWriteRepository confessionWriteRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
             _membersWriteRepository = membersWriteRepository;
             _authService = authService;
             _mailService = mailService;
+            _languagesReadRepository = languagesReadRepository;
+            _statusReadRepository = statusReadRepository;
+            _confessionReadRepository = confessionReadRepository;
+            _confessionWriteRepository = confessionWriteRepository;
         }
 
 
@@ -257,5 +274,77 @@ namespace MVCBlogApp.Persistence.Services
         #region MemberAppointment
         #endregion
 
+        #region Confession
+
+        public async Task<GetConfessionCreateItemsQueryResponse> GetConfessionCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Statuses = allStatuses,
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllConfessionQueryResponse> GetAllConfessionAsync()
+        {
+            List<VM_Confession> vM_Confessions = await _confessionReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), co => co.LangId, lg => lg.Id, (co, lg) => new { co, lg })
+                .Join(_statusReadRepository.GetAll(), con => con.co.StatusId, st => st.Id, (con, st) => new { con, st })
+                .Select(x => new VM_Confession
+                {
+                    Id = x.con.co.Id,
+                    MemberConfession = x.con.co.MemberConfession,
+                    MemberName = x.con.co.MemberName,
+                    CreateDatetime = x.con.co.CreateDatetime,
+                    Language = x.con.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Confessions = vM_Confessions,
+            };
+        }
+
+        public async Task<ConfessionCreateCommandResponse> ConfessionCreateAsync(ConfessionCreateCommandRequest request)
+        {
+            Confession confession = new()
+            {
+                CreateDatetime = DateTime.Now,
+                IsAprove = request.IsAprove,
+                IsRead = request.IsRead,
+                IsVisible = request.IsVisible,
+                LangId = request.LangId,
+                MemberConfession = request.MemberConfession,
+                MemberName = request.MemberName,
+                StatusId = request.StatusId,
+            };
+
+            await _confessionWriteRepository.AddAsync(confession);
+            await _confessionWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+
+        #endregion
     }
 }
