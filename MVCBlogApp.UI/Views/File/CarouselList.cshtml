@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewData["Title"] = "CarouselList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Carousel Listesi</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Başlık</th>
+                                        <th>SEO Url</th>
+                                        <th>Sıra</th>
+                                        <th>Dil</th>
+                                        <th>Durumu</th>
+                                        <th>Görsel</th>
+                                        <th>Güncelle</th>
+                                        <th>Sil</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.Title</td>
+                                            <td>@item.UrlRoot</td>
+                                            <td>@item.Orders</td>
+                                            <td>@item.Language</td>
+                                            <td>@item.StatusName</td>
+                                            <td><img width="50" height="50" src="@item.ImgUrl"></td>
+                                            <td><a class="btn btn-outline-success" asp-action="CarouselUpdate" asp-controller="File" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="CarouselDelete" asp-controller="File" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

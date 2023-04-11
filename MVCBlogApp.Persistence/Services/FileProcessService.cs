@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerCreate;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerDelete;
 using MVCBlogApp.Application.Features.Commands.File.Banner.BannerUpdate;
+using MVCBlogApp.Application.Features.Commands.File.Carousel.CarouselCreate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageDelete;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpdate;
 using MVCBlogApp.Application.Features.Commands.File.Image.ImageUpload;
@@ -17,6 +18,8 @@ using MVCBlogApp.Application.Features.Commands.File.VideoCategory.VideoCategoryU
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetAllBanner;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetBannerCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Banner.GetByIdBanner;
+using MVCBlogApp.Application.Features.Queries.File.Carousel.GetAllCarousel;
+using MVCBlogApp.Application.Features.Queries.File.Carousel.GetCarouselCreateItems;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetAllImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetByIdImage;
 using MVCBlogApp.Application.Features.Queries.File.Image.GetUploadImageItems;
@@ -27,6 +30,7 @@ using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetAllVideoCate
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetByIdVideoCategory;
 using MVCBlogApp.Application.Features.Queries.File.VideoCategory.GetVideoCategoryCreateItems;
 using MVCBlogApp.Application.Repositories.Banner;
+using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.Image;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
@@ -50,6 +54,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStorageService _storageService;
         private readonly IBannerReadRepository _bannerReadRepository;
         private readonly IBannerWriteRepository _bannerWriteRepository;
+        private readonly ICarouselReadRepository _carouselReadRepository;
+        private readonly ICarouselWriteRepository _carouselWriteRepository;
 
         public FileProcessService(
             ILanguagesReadRepository languagesReadRepository,
@@ -62,7 +68,9 @@ namespace MVCBlogApp.Persistence.Services
             IImageWriteRepository imageWriteRepository,
             IStorageService storageService,
             IBannerReadRepository bannerReadRepository,
-            IBannerWriteRepository bannerWriteRepository)
+            IBannerWriteRepository bannerWriteRepository,
+            ICarouselReadRepository carouselReadRepository,
+            ICarouselWriteRepository carouselWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
@@ -75,6 +83,8 @@ namespace MVCBlogApp.Persistence.Services
             _storageService = storageService;
             _bannerReadRepository = bannerReadRepository;
             _bannerWriteRepository = bannerWriteRepository;
+            _carouselReadRepository = carouselReadRepository;
+            _carouselWriteRepository = carouselWriteRepository;
         }
 
 
@@ -862,6 +872,103 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        #endregion
+
+        #region Carousel
+
+        public async Task<GetCarouselCreateItemsQueryResponse> GetCarouselCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Statuses = allStatuses,
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllCarouselQueryResponse> GetAllCarouselAsync()
+        {
+            List<VM_Carousel> vM_Carousels = await _carouselReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), ca => ca.LangId, lg => lg.Id, (ca, lg) => new { ca, lg })
+                .Join(_statusReadRepository.GetAll(), crl => crl.ca.StatusId, st => st.Id, (crl, st) => new { crl, st })
+                .Select(x => new VM_Carousel
+                {
+                    Id = x.crl.ca.Id,
+                    Orders = x.crl.ca.Orders,
+                    CreateDate = x.crl.ca.CreateDate,
+                    ImgUrl = x.crl.ca.ImgUrl,
+                    Language = x.crl.lg.Language,
+                    StatusName = x.st.StatusName,
+                    Title = x.crl.ca.Title,
+                    UrlRoot = x.crl.ca.UrlRoot
+                }).ToListAsync();
+
+            return new()
+            {
+                Carousels = vM_Carousels,
+            };
+        }
+
+        public async Task<CarouselCreateCommandResponse> CarouselCreateAsync(CarouselCreateCommandRequest request)
+        {
+            var check = await _carouselReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("carousel-files", request.FormFile);
+
+                Carousel carousel = new()
+                {
+                    Action = "Create",
+                    Controller = "File",
+                    CreateDate = DateTime.Now,
+                    CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null,
+                    Description = request.Description,
+                    LangId = request.LangId,
+                    MetaDescription = request.MetaDescription,
+                    MetaKey = request.MetaKey,
+                    MetaTitle = request.MetaTitle,
+                    Orders = request.Orders,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    TitleClass = request.TitleClass,
+                    UrlRoot = request.UrlRoot,
+                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName,
+                    ImgName = result[0].fileName
+                };
+
+                await _carouselWriteRepository.AddAsync(carousel);
+                await _carouselWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
 
 
         #endregion

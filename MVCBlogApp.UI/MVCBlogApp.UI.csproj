@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Upload\article-files\" />
+    <Folder Include="wwwroot\Upload\banner-files\" />
     <Folder Include="wwwroot\Upload\blog-files\" />
     <Folder Include="wwwroot\Upload\book-files\" />
     <Folder Include="wwwroot\Upload\fixBmh-files\" />
