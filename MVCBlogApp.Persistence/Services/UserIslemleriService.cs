@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.Confessi
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
@@ -12,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllCon
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -515,6 +518,87 @@ namespace MVCBlogApp.Persistence.Services
                 Message = "Kayıt işlemi başarıyla tamamlandı.",
                 State = true
             };
+        }
+
+        public async Task<GetByIdCFTQueryResponse> GetByIdCFTAsync(int id)
+        {
+            VM_ConsultancyFormType? vM_ConsultancyFormType = await _consultancyFormTypeReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_ConsultancyFormType
+                {
+                    Id = x.Id,
+                    ConsultancyFormTypeName = x.ConsultancyFormTypeName
+                }).FirstOrDefaultAsync();
+
+            if (vM_ConsultancyFormType != null)
+            {
+                return new()
+                {
+                    ConsultancyFormType = vM_ConsultancyFormType,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    ConsultancyFormType = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<CFTUpdateCommandResponse> CFTUpdateAsync(CFTUpdateCommandRequest request)
+        {
+            ConsultancyFormType consultancyFormType = await _consultancyFormTypeReadRepository.GetByIdAsync(request.Id);
+
+            if (consultancyFormType != null)
+            {
+                consultancyFormType.ConsultancyFormTypeName = request.ConsultancyFormTypeName;
+
+                _consultancyFormTypeWriteRepository.Update(consultancyFormType);
+                await _consultancyFormTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<CFTDeleteCommandResponse> CFTDeleteAsync(int id)
+        {
+            ConsultancyFormType consultancyFormType = await _consultancyFormTypeReadRepository.GetByIdAsync(id);
+
+            if (consultancyFormType != null)
+            {
+                _consultancyFormTypeWriteRepository.Remove(consultancyFormType);
+                await _consultancyFormTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

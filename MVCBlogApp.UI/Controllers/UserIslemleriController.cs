@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.Confessi
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
@@ -13,6 +15,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllCon
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -319,38 +322,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConsultancyFormTypeUpdate(GetByIdConfessionQueryRequest request)
+        public async Task<IActionResult> ConsultancyFormTypeUpdate(GetByIdCFTQueryRequest request)
         {
-            GetByIdConfessionQueryResponse response = await _mediator.Send(request);
+            GetByIdCFTQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("ConfessionList", "UserIslemleri");
+                return RedirectToAction("ConsultancyFormTypeList", "UserIslemleri");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConsultancyFormTypeUpdate(ConfessionUpdateCommandRequest request)
+        public async Task<IActionResult> ConsultancyFormTypeUpdate(CFTUpdateCommandRequest request)
         {
-            ConfessionUpdateCommandResponse response = await _mediator.Send(request);
+            CFTUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("ConfessionList", "UserIslemleri");
+                return RedirectToAction("ConsultancyFormTypeList", "UserIslemleri");
             }
             else
             {
-                return RedirectToAction("ConfessionUpdate", "UserIslemleri");
+                return RedirectToAction("ConsultancyFormTypeUpdate", "UserIslemleri");
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConsultancyFormTypeDelete(ConfessionDeleteCommandRequest request)
+        public async Task<IActionResult> ConsultancyFormTypeDelete(CFTDeleteCommandRequest request)
         {
-            ConfessionDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("ConfessionList", "UserIslemleri");
+            CFTDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ConsultancyFormTypeList", "UserIslemleri");
         }
 
         #endregion
