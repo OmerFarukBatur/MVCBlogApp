@@ -14,6 +14,7 @@ using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetAllConsultancyForm;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
@@ -354,6 +355,17 @@ namespace MVCBlogApp.UI.Controllers
         {
             CFTDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("ConsultancyFormTypeList", "UserIslemleri");
+        }
+
+        #endregion
+
+        #region ConsultancyForm
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultancyFormList(GetAllConsultancyFormQueryRequest request)
+        {
+            GetAllConsultancyFormQueryResponse response = await _mediator.Send(request);
+            return View(response.ConsultancyForms);
         }
 
         #endregion

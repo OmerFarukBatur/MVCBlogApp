@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetAllConsultancyForm;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
@@ -600,6 +601,36 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+
+        #endregion
+
+        #region ConsultancyForm
+
+        public async Task<GetAllConsultancyFormQueryResponse> GetAllConsultancyFormAsync()
+        {
+            List<VM_ConsultancyForm> vM_ConsultancyForms = await _consultancyFormReadRepository.GetAll()
+                 .Join(_consultancyFormTypeReadRepository.GetAll(), co => co.ConsultancyFormTypeId, cft => cft.Id, (co, cft) => new { co, cft })
+                 .Join(_statusReadRepository.GetAll(), con => con.co.StatusId, st => st.Id, (con, st) => new { con, st })
+                 .Select(x => new VM_ConsultancyForm
+                 {
+                     Id = x.con.co.Id,
+                     CreateDate = x.con.co.CreateDate,
+                     Email = x.con.co.Email,
+                     Message = x.con.co.Message,
+                     NameSurname = x.con.co.NameSurname,
+                     Phone = x.con.co.Phone,
+                     Subject = x.con.co.Subject,
+                     ConsultancyFormTypeName = x.con.cft.ConsultancyFormTypeName,
+                     StatusName = x.st.StatusName,
+                 }).ToListAsync();
+
+            return new()
+            {
+                ConsultancyForms = vM_ConsultancyForms
+            };
+        }
+
 
 
         #endregion
