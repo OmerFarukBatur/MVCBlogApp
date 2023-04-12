@@ -5,12 +5,14 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -280,6 +282,72 @@ namespace MVCBlogApp.UI.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ConfessionDelete(ConfessionDeleteCommandRequest request)
+        {
+            ConfessionDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ConfessionList", "UserIslemleri");
+        }
+
+        #endregion
+
+        #region ConsultancyFormType
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultancyFormTypeList(GetAllCFTQueryRequest request)
+        {
+            GetAllCFTQueryResponse response = await _mediator.Send(request);
+            return View(response.ConsultancyFormTypes);
+        }
+
+        [HttpGet]
+        public IActionResult ConsultancyFormTypeCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConsultancyFormTypeCreate(CFTCreateCommandRequest request)
+        {
+            CFTCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ConsultancyFormTypeList", "UserIslemleri");
+            }
+            else
+            {
+                return RedirectToAction("ConsultancyFormTypeCreate", "UserIslemleri");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultancyFormTypeUpdate(GetByIdConfessionQueryRequest request)
+        {
+            GetByIdConfessionQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ConfessionList", "UserIslemleri");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConsultancyFormTypeUpdate(ConfessionUpdateCommandRequest request)
+        {
+            ConfessionUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ConfessionList", "UserIslemleri");
+            }
+            else
+            {
+                return RedirectToAction("ConfessionUpdate", "UserIslemleri");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConsultancyFormTypeDelete(ConfessionDeleteCommandRequest request)
         {
             ConfessionDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("ConfessionList", "UserIslemleri");

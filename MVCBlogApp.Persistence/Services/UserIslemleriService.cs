@@ -4,22 +4,27 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.ConsultancyFormType.CFTCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
 using MVCBlogApp.Application.Repositories.Confession;
+using MVCBlogApp.Application.Repositories.ConsultancyForm;
+using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.ConsultancyFormType;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -34,6 +39,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly IConfessionReadRepository _confessionReadRepository;
         private readonly IConfessionWriteRepository _confessionWriteRepository;
+        private readonly IConsultancyFormTypeReadRepository _consultancyFormTypeReadRepository;
+        private readonly IConsultancyFormTypeWriteRepository _consultancyFormTypeWriteRepository;
+        private readonly IConsultancyFormReadRepository _consultancyFormReadRepository;
+        private readonly IConsultancyFormWriteRepository _consultancyFormWriteRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -44,7 +53,11 @@ namespace MVCBlogApp.Persistence.Services
             ILanguagesReadRepository languagesReadRepository,
             IStatusReadRepository statusReadRepository,
             IConfessionReadRepository confessionReadRepository,
-            IConfessionWriteRepository confessionWriteRepository)
+            IConfessionWriteRepository confessionWriteRepository,
+            IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository,
+            IConsultancyFormTypeWriteRepository consultancyFormTypeWriteRepository,
+            IConsultancyFormReadRepository consultancyFormReadRepository,
+            IConsultancyFormWriteRepository consultancyFormWriteRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -55,6 +68,10 @@ namespace MVCBlogApp.Persistence.Services
             _statusReadRepository = statusReadRepository;
             _confessionReadRepository = confessionReadRepository;
             _confessionWriteRepository = confessionWriteRepository;
+            _consultancyFormTypeReadRepository = consultancyFormTypeReadRepository;
+            _consultancyFormTypeWriteRepository = consultancyFormTypeWriteRepository;
+            _consultancyFormReadRepository = consultancyFormReadRepository;
+            _consultancyFormWriteRepository = consultancyFormWriteRepository;
         }
 
 
@@ -461,6 +478,43 @@ namespace MVCBlogApp.Persistence.Services
                     State = false
                 };
             }
+        }
+
+
+        #endregion
+
+        #region ConsultancyFormType
+
+        public async Task<GetAllCFTQueryResponse> GetAllCFTAsync()
+        {
+            List<VM_ConsultancyFormType> vM_ConsultancyFormTypes = await _consultancyFormTypeReadRepository.GetAll()
+                .Select(x => new VM_ConsultancyFormType
+                {
+                    Id = x.Id,
+                    ConsultancyFormTypeName = x.ConsultancyFormTypeName
+                }).ToListAsync();
+
+            return new()
+            {
+                ConsultancyFormTypes = vM_ConsultancyFormTypes,
+            };
+        }
+
+        public async Task<CFTCreateCommandResponse> CFTCreateAsync(CFTCreateCommandRequest request)
+        {
+            ConsultancyFormType consultancyFormType = new()
+            {
+                ConsultancyFormTypeName = request.ConsultancyFormTypeName
+            };
+
+            await _consultancyFormTypeWriteRepository.AddAsync(consultancyFormType);
+            await _consultancyFormTypeWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla tamamlandı.",
+                State = true
+            };
         }
 
 

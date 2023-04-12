@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "ConsultancyFormTypeList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danışan Form Tipi Listesi</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Form Tipi Adı</th>
+                                        <th>Güncelle</th>
+                                        <th>Sil</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.ConsultancyFormTypeName</td>
+                                            <td><a class="btn btn-outline-success" asp-action="ConsultancyFormTypeUpdate" asp-controller="UserIslemleri" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="ConsultancyFormTypeDelete" asp-controller="UserIslemleri" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
