@@ -17,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfes
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetAllConsultancyForm;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -106,123 +107,24 @@ namespace MVCBlogApp.UI.Controllers
 
         #endregion
 
-        #region MemberInformation
-
-        [HttpGet]
-        public async Task<IActionResult> UserInformationList()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserInformationCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserInformationCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserInformationUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserInformationUpdate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserInformationDelete()
-        {
-            return View();
-        }
-
-        #endregion
-
         #region MemberNutritionist
 
         [HttpGet]
-        public async Task<IActionResult> UserNutritionistList()
+        public async Task<IActionResult> MemberNutritionistList()
         {
             return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserNutritionistCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserNutritionistCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserNutritionistUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserNutritionistUpdate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult UserNutritionistDelete()
-        {
-            return View();
-        }
+        }        
 
         #endregion
 
         #region MemberAppointment
 
         [HttpGet]
-        public async Task<IActionResult> UserAppointmentList()
+        public async Task<IActionResult> MemberAppointmentList(GetAllMemberAppointmentQueryRequest request)
         {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserAppointmentCreate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserAppointmentCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserAppointmentUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UserAppointmentUpdate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> UserAppointmentDelete()
-        {
-            return View();
-        }
+            GetAllMemberAppointmentQueryResponse response = await _mediator.Send(request); /// Detay tarafı yapılacak
+            return View(response.D_Appointments);
+        }        
 
         #endregion
 

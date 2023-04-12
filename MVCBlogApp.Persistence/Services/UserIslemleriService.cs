@@ -16,16 +16,19 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfes
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetAllConsultancyForm;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
 using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
+using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Persistence.Repositories.ConsultancyFormType;
@@ -46,7 +49,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IConsultancyFormTypeReadRepository _consultancyFormTypeReadRepository;
         private readonly IConsultancyFormTypeWriteRepository _consultancyFormTypeWriteRepository;
         private readonly IConsultancyFormReadRepository _consultancyFormReadRepository;
-        private readonly IConsultancyFormWriteRepository _consultancyFormWriteRepository;
+        private readonly ID_AppointmentReadRepository _appointmentReadRepository;
+        private readonly IUserReadRepository _userReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -61,7 +65,8 @@ namespace MVCBlogApp.Persistence.Services
             IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository,
             IConsultancyFormTypeWriteRepository consultancyFormTypeWriteRepository,
             IConsultancyFormReadRepository consultancyFormReadRepository,
-            IConsultancyFormWriteRepository consultancyFormWriteRepository)
+            ID_AppointmentReadRepository appointmentReadRepository,
+            IUserReadRepository userReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -75,7 +80,8 @@ namespace MVCBlogApp.Persistence.Services
             _consultancyFormTypeReadRepository = consultancyFormTypeReadRepository;
             _consultancyFormTypeWriteRepository = consultancyFormTypeWriteRepository;
             _consultancyFormReadRepository = consultancyFormReadRepository;
-            _consultancyFormWriteRepository = consultancyFormWriteRepository;
+            _appointmentReadRepository = appointmentReadRepository;
+            _userReadRepository = userReadRepository;
         }
 
 
@@ -291,13 +297,39 @@ namespace MVCBlogApp.Persistence.Services
 
         #endregion
 
-        #region MemberInformation
-        #endregion
-
         #region MemberNutritionist
+
+
+
         #endregion
 
         #region MemberAppointment
+
+        public async Task<GetAllMemberAppointmentQueryResponse> GetAllMemberAppointmentAsync()
+        {
+            List<VM_D_Appointment> vM_D_Appointments = await _appointmentReadRepository.GetAll()
+                .Join(_membersReadRepository.GetAll(), ap => ap.MembersId, mem => mem.Id, (ap, mem) => new { ap, mem })
+                .Join(_userReadRepository.GetAll(), app => app.ap.UserId, us => us.Id, (app, us) => new { app, us })
+                .Join(_statusReadRepository.GetAll(), appo => appo.app.ap.StatusId, st => st.Id, (appo, st) => new { appo, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appo.app.ap.Id,
+                    AppointmentDate = x.appo.app.ap.AppointmentDate,
+                    Subject = x.appo.app.ap.Subject,
+                    Price = x.appo.app.ap.Price,
+                    Description = x.appo.app.ap.Description,
+                    UserName = x.appo.us.Username,
+                    MemeberName = x.appo.app.mem.NameSurname,
+                    StatusName = x.st.StatusName,
+                    CreateDate = x.appo.app.ap.CreateDate
+                }).ToListAsync();
+
+            return new()
+            {
+                D_Appointments = vM_D_Appointments
+            };
+        }
+
         #endregion
 
         #region Confession
@@ -631,8 +663,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-
-
+        
         #endregion
     }
 }

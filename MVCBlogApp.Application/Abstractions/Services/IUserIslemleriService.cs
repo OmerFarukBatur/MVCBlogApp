@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfes
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetAllConsultancyForm;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -32,13 +33,16 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
-        #region MemberInformation
-        #endregion
-
         #region MemberNutritionist
+
+
+
         #endregion
 
         #region MemberAppointment
+
+        Task<GetAllMemberAppointmentQueryResponse> GetAllMemberAppointmentAsync();
+
         #endregion
 
         #region Confession
