@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
@@ -182,7 +186,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 if (request.IsActive)
                 {
-                   // await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
+                    // await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
                 }
 
                 return new()
@@ -228,7 +232,8 @@ namespace MVCBlogApp.Persistence.Services
                     Message = "Güncelleme işlemi başarıyla yapılmıştır.",
                     State = true
                 };
-            }else 
+            }
+            else
             {
                 return new()
                 {
@@ -342,6 +347,120 @@ namespace MVCBlogApp.Persistence.Services
                 Message = "Kayıt işlemi başarıyla yapılmıştır.",
                 State = true
             };
+        }
+
+        public async Task<GetByIdConfessionQueryResponse> GetByIdConfessionAsync(int id)
+        {
+            VM_Confession? vM_Confession = await _confessionReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Confession
+                {
+                    Id = x.Id,
+                    IsAprove = x.IsAprove,
+                    IsRead = x.IsRead,
+                    IsVisible = x.IsVisible,
+                    LangId = x.LangId,
+                    MemberConfession = x.MemberConfession,
+                    MemberName = x.MemberName,
+                    StatusId = x.StatusId
+                }).FirstOrDefaultAsync();
+
+            if (vM_Confession != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Statuses = allStatuses,
+                    Languages = vM_Languages,
+                    Confession = vM_Confession,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Statuses = null,
+                    Languages = null,
+                    Confession = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<ConfessionUpdateCommandResponse> ConfessionUpdateAsync(ConfessionUpdateCommandRequest request)
+        {
+            Confession confession = await _confessionReadRepository.GetByIdAsync(request.Id);
+
+            if (confession != null)
+            {
+                confession.IsAprove = request.IsAprove;
+                confession.MemberConfession = request.MemberConfession;
+                confession.MemberName = request.MemberName;
+                confession.IsRead = request.IsRead;
+                confession.LangId = request.LangId;
+                confession.StatusId = request.StatusId;
+                confession.IsVisible = request.IsVisible;
+
+                _confessionWriteRepository.Update(confession);
+                await _confessionWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ConfessionDeleteCommandResponse> ConfessionDeleteAsync(int id)
+        {
+            Confession confession = await _confessionReadRepository.GetByIdAsync(id);
+
+            if (confession != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                confession.StatusId = statusId;
+
+                _confessionWriteRepository.Update(confession);
+                await _confessionWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

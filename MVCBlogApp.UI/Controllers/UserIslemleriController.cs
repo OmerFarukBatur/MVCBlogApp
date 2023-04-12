@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
@@ -248,21 +251,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfessionUpdate()
+        public async Task<IActionResult> ConfessionUpdate(GetByIdConfessionQueryRequest request)
         {
-            return View();
+            GetByIdConfessionQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ConfessionList", "UserIslemleri");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfessionUpdate(int a)
+        public async Task<IActionResult> ConfessionUpdate(ConfessionUpdateCommandRequest request)
         {
-            return View();
+            ConfessionUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ConfessionList", "UserIslemleri");
+            }
+            else
+            {
+                return RedirectToAction("ConfessionUpdate", "UserIslemleri");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfessionDelete()
+        public async Task<IActionResult> ConfessionDelete(ConfessionDeleteCommandRequest request)
         {
-            return View();
+            ConfessionDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ConfessionList", "UserIslemleri");
         }
 
         #endregion

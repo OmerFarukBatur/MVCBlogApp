@@ -1,8 +1,11 @@
 ﻿using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetAllConfession;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetByIdConfession;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.Confession.GetConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
@@ -37,6 +40,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetConfessionCreateItemsQueryResponse> GetConfessionCreateItemsAsync();
         Task<GetAllConfessionQueryResponse> GetAllConfessionAsync();
         Task<ConfessionCreateCommandResponse> ConfessionCreateAsync(ConfessionCreateCommandRequest request);
+        Task<GetByIdConfessionQueryResponse> GetByIdConfessionAsync(int id);
+        Task<ConfessionUpdateCommandResponse> ConfessionUpdateAsync(ConfessionUpdateCommandRequest request); 
+        Task<ConfessionDeleteCommandResponse> ConfessionDeleteAsync(int id);
 
         #endregion
     }
