@@ -19,6 +19,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -111,9 +112,10 @@ namespace MVCBlogApp.UI.Controllers
         #region MemberNutritionist
 
         [HttpGet]
-        public async Task<IActionResult> MemberNutritionistList()
+        public async Task<IActionResult> MemberNutritionistList(GetAllMemberNutritionistQueryRequest request)
         {
-            return View();
+            GetAllMemberNutritionistQueryResponse response = await _mediator.Send(request);
+            return View(response.MembersInformations);
         }        
 
         #endregion

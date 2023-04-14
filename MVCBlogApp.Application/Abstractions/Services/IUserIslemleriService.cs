@@ -15,6 +15,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -36,7 +37,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region MemberNutritionist
 
-
+        Task<GetAllMemberNutritionistQueryResponse> GetAllMemberNutritionistAsync();
 
         #endregion
 

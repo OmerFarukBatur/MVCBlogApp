@@ -18,6 +18,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -29,6 +30,7 @@ using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
+using MVCBlogApp.Application.Repositories.MembersInformation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
@@ -54,6 +56,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ID_AppointmentReadRepository _appointmentReadRepository;
         private readonly IUserReadRepository _userReadRepository;
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
+        private readonly IMembersInformationReadRepository _membersInformationReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -70,7 +73,8 @@ namespace MVCBlogApp.Persistence.Services
             IConsultancyFormReadRepository consultancyFormReadRepository,
             ID_AppointmentReadRepository appointmentReadRepository,
             IUserReadRepository userReadRepository,
-            IAppointmentDetailReadRepository appointmentDetailReadRepository)
+            IAppointmentDetailReadRepository appointmentDetailReadRepository,
+            IMembersInformationReadRepository membersInformationReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -87,6 +91,7 @@ namespace MVCBlogApp.Persistence.Services
             _appointmentReadRepository = appointmentReadRepository;
             _userReadRepository = userReadRepository;
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
+            _membersInformationReadRepository = membersInformationReadRepository;
         }
 
 
@@ -303,6 +308,29 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region MemberNutritionist
+
+        public async Task<GetAllMemberNutritionistQueryResponse> GetAllMemberNutritionistAsync()
+        {
+            List<VM_MembersInformation> vM_MembersInformations = await _membersInformationReadRepository.GetAll()
+                .Join(_appointmentDetailReadRepository.GetAll(), mem => mem.MembersId, app => app.MembersId, (mem, app) => new { mem, app })
+                .Join(_membersReadRepository.GetAll(), memInfo => memInfo.mem.MembersId, mb => mb.Id, (memInfo, mb) => new { memInfo, mb })
+                .Join(_appointmentReadRepository.GetAll(), memInformation => memInformation.memInfo.mem.MembersId, appo => appo.MembersId, (memInformation, appo) => new { memInformation, appo })
+                .Select(x => new VM_MembersInformation
+                {
+                    Id = x.memInformation.memInfo.mem.Id,
+                    Birthdate = x.memInformation.memInfo.mem.Birthdate,
+                    Job = x.memInformation.memInfo.mem.Job,
+                    MemberNameSurname = x.memInformation.mb.NameSurname,
+                    Weight = x.memInformation.memInfo.app.Weight,
+                    Size = x.memInformation.memInfo.app.Size,
+                    AppointmentDate = x.appo.AppointmentDate
+                }).ToListAsync();
+
+            return new()
+            {
+                MembersInformations = vM_MembersInformations
+            };
+        }
 
 
 
