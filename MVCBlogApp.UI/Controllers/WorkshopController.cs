@@ -1,11 +1,22 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
     [Authorize(Roles ="Admin")]
     public class WorkshopController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public WorkshopController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
         #region Workshop
 
         [HttpGet]
@@ -165,21 +176,31 @@ namespace MVCBlogApp.UI.Controllers
         #region WorkshopType
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopTypeList()
+        public async Task<IActionResult> WorkshopTypeList(GetAllWorkshopTypeQueryRequest request)
         {
-            return View();
+            GetAllWorkshopTypeQueryResponse response = await _mediator.Send(request);
+            return View(response.WorkshopTypes);
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopTypeCreate()
+        public async Task<IActionResult> WorkshopTypeCreate(GetWorkshopTypeCreateItemsQueryRequest request)
         {
-            return View();
+            GetWorkshopTypeCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopTypeCreate(int a)
+        public async Task<IActionResult> WorkshopTypeCreate(WorkshopTypeCreateCommandRequest request)
         {
-            return View();
+            WorkshopTypeCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopTypeList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopTypeCreate", "Workshop");
+            }
         }
 
         [HttpGet]
