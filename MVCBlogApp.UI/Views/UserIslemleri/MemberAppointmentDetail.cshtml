@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewData["Title"] = "MemberAppointmentDetail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+
+    @*  <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="title">
+                                        Diğer Raporlar 
+                                    </label>
+                                    <div class="col-lg-3">
+                                        <a class="btn btn-outline-warning" asp-action="BlogUpdate" asp-controller="UserIslemleri" asp-route-id="@Model.Id"><i class="fa fa-pencil"> Tetkikler</i></a>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <a class="btn btn-outline-success" asp-action="BlogUpdate" asp-controller="UserIslemleri" asp-route-id="@Model.Id"><i class="fa fa-pencil"> Diyet</i></a>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="diagnosis">
+                                        Teşhis 
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="diagnosis" name="diagnosis" required> 
+                                            @Model.Diagnosis
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="history">
+                                        Hasta Hikayesi 
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="history" name="history" required> 
+                                            @Model.History
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="treatment">
+                                        Tedavi/Çözüm 
+                                    </label>
+                                    <div class="col-lg-6 ">
+                                        <textarea class="summernote" id="treatment" name="treatment" required> 
+                                            @Model.Treatment
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="memberName">
+                                        Danışan 
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="memberName" name="memberName" value="@Model.MemberName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="weight">
+                                        Kilo 
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="weight" name="weight" value="@Model.Weight">
+                                    </div>
+                                </div>                                
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="size">
+                                        Boy 
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="size" name="size" value="@Model.Size">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="oilRate">
+                                        Yağ Oranı 
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="oilRate" name="oilRate" value="@Model.OilRate">
+                                    </div>
+                                </div>    
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

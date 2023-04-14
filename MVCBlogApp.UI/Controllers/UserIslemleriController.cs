@@ -18,6 +18,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetA
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -122,9 +123,23 @@ namespace MVCBlogApp.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> MemberAppointmentList(GetAllMemberAppointmentQueryRequest request)
         {
-            GetAllMemberAppointmentQueryResponse response = await _mediator.Send(request); /// Detay tarafı yapılacak
+            GetAllMemberAppointmentQueryResponse response = await _mediator.Send(request);
             return View(response.D_Appointments);
-        }        
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberAppointmentDetail(GetByIdAppointmentDetailQueryRequest request)
+        {
+            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.AppointmentDetail); // Tetkik(Lab) ve Diyet(DietList) ayrıntı kısmı yapılmadı.
+            }
+            else
+            {
+                return RedirectToAction("MemberAppointmentList", "UserIslemleri");
+            }
+        }
 
         #endregion
 

@@ -41,7 +41,7 @@
                                             <td>@item.Subject</td>
                                             <td>@item.Description</td>
                                             <td>@item.Price</td>
-                                            <td><button onclick="QuestionView(@item.Id)">Detay Gör</button></td>
+                                            <td><a class="btn btn-outline-success" asp-action="MemberAppointmentDetail" asp-controller="UserIslemleri" asp-route-id="@item.Id"><i class="fa fa-pencil"> Tetkikler</i></a></td>
                                             <td>@item.StatusName</td>
                                             <td>@item.CreateDate</td>
                                         </tr>

@@ -14,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetA
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -42,6 +43,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region MemberAppointment
 
         Task<GetAllMemberAppointmentQueryResponse> GetAllMemberAppointmentAsync();
+        Task<GetByIdAppointmentDetailQueryResponse> GetByIdAppointmentDetailAsync(int id);
 
         #endregion
 

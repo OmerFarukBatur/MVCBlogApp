@@ -17,9 +17,11 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyForm.GetA
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetAllCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
+using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
@@ -51,6 +53,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IConsultancyFormReadRepository _consultancyFormReadRepository;
         private readonly ID_AppointmentReadRepository _appointmentReadRepository;
         private readonly IUserReadRepository _userReadRepository;
+        private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -66,7 +69,8 @@ namespace MVCBlogApp.Persistence.Services
             IConsultancyFormTypeWriteRepository consultancyFormTypeWriteRepository,
             IConsultancyFormReadRepository consultancyFormReadRepository,
             ID_AppointmentReadRepository appointmentReadRepository,
-            IUserReadRepository userReadRepository)
+            IUserReadRepository userReadRepository,
+            IAppointmentDetailReadRepository appointmentDetailReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -82,6 +86,7 @@ namespace MVCBlogApp.Persistence.Services
             _consultancyFormReadRepository = consultancyFormReadRepository;
             _appointmentReadRepository = appointmentReadRepository;
             _userReadRepository = userReadRepository;
+            _appointmentDetailReadRepository = appointmentDetailReadRepository;
         }
 
 
@@ -329,6 +334,46 @@ namespace MVCBlogApp.Persistence.Services
                 D_Appointments = vM_D_Appointments
             };
         }
+
+        public async Task<GetByIdAppointmentDetailQueryResponse> GetByIdAppointmentDetailAsync(int id)
+        {
+            VM_AppointmentDetail? vM_AppointmentDetail = await _appointmentDetailReadRepository.GetWhere(x => x.AppointmentId == id)
+                .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { app, mem })
+                .Select(x => new VM_AppointmentDetail
+                {
+                    Id = x.app.Id,
+                    AppointmentId = x.app.Id,
+                    History = x.app.History,
+                    MembersId = x.app.Id,
+                    Diagnosis = x.app.Diagnosis,
+                    OilRate = x.app.OilRate,
+                    Size = x.app.Size,
+                    Treatment = x.app.Treatment,
+                    Weight = x.app.Weight,
+                    MemberName = x.mem.NameSurname
+                }).FirstOrDefaultAsync();
+
+            if (vM_AppointmentDetail != null)
+            {
+                return new()
+                {
+                    AppointmentDetail = vM_AppointmentDetail,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    AppointmentDetail = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+
 
         #endregion
 
