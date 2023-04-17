@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
@@ -19,9 +23,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IWorkshopTypeWriteRepository _workshopTypeWriteRepository;
 
         public WorkshopService(
-            ILanguagesReadRepository languagesReadRepository, 
-            IStatusReadRepository statusReadRepository, 
-            IWorkshopTypeReadRepository workshopTypeReadRepository, 
+            ILanguagesReadRepository languagesReadRepository,
+            IStatusReadRepository statusReadRepository,
+            IWorkshopTypeReadRepository workshopTypeReadRepository,
             IWorkshopTypeWriteRepository workshopTypeWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
@@ -30,7 +34,7 @@ namespace MVCBlogApp.Persistence.Services
             _workshopTypeWriteRepository = workshopTypeWriteRepository;
         }
 
-       
+
         #region Workshop
 
 
@@ -121,8 +125,97 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdWorkshopTypeQueryResponse> GetByIdWorkshopTypeAsync(int id)
+        {
+            VM_WorkshopType? vM_WorkshopType = await _workshopTypeReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_WorkshopType
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    WstypeName = x.WstypeName
+                }).FirstOrDefaultAsync();
 
+            if (vM_WorkshopType != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
 
+                return new()
+                {
+                    Languages = vM_Languages,
+                    WorkshopType = vM_WorkshopType,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    WorkshopType = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<WorkshopTypeUpdateCommandResponse> WorkshopTypeUpdateAsync(WorkshopTypeUpdateCommandRequest request)
+        {
+            WorkshopType workshopType = await _workshopTypeReadRepository.GetByIdAsync(request.Id);
+
+            if (workshopType != null)
+            {
+                workshopType.WstypeName = request.WstypeName;
+                workshopType.LangId = request.LangId;
+
+                _workshopTypeWriteRepository.Update(workshopType);
+                await _workshopTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<WorkshopTypeDeleteCommandResponse> WorkshopTypeDeleteAsync(int id)
+        {
+            WorkshopType workshopType = await _workshopTypeReadRepository.GetByIdAsync(id);
+
+            if (workshopType != null)
+            {
+                _workshopTypeWriteRepository.Remove(workshopType);
+                await _workshopTypeWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 

@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
@@ -204,20 +207,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopTypeUpdate()
+        public async Task<IActionResult> WorkshopTypeUpdate(GetByIdWorkshopTypeQueryRequest request)
         {
-            return View();
+            GetByIdWorkshopTypeQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("WorkshopTypeList", "Workshop");
+            }            
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopTypeUpdate(int a)
+        public async Task<IActionResult> WorkshopTypeUpdate(WorkshopTypeUpdateCommandRequest request)
         {
-            return View();
+            WorkshopTypeUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopTypeList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopTypeUpdate", "Workshop");
+            }
         }
 
-        public async Task<IActionResult> WorkshopTypeDelete(int a)
+        public async Task<IActionResult> WorkshopTypeDelete(WorkshopTypeDeleteCommandRequest request)
         {
-            return View();
+            WorkshopTypeDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("WorkshopTypeList", "Workshop");
         }
 
         #endregion
