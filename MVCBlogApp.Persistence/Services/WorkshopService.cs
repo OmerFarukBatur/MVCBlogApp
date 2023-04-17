@@ -4,18 +4,22 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetAllWorkshopEducation;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWorkshopEducationCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.WorkshopCategory;
+using MVCBlogApp.Application.Repositories.WorkshopEducation;
 using MVCBlogApp.Application.Repositories.WorkshopType;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -30,6 +34,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IWorkshopTypeWriteRepository _workshopTypeWriteRepository;
         private readonly IWorkshopCategoryReadRepository _workshopCategoryReadRepository;
         private readonly IWorkshopCategoryWriteRepository _workshopCategoryWriteRepository;
+        private readonly IWorkshopEducationReadRepository _workshopEducationReadRepository;
+        private readonly IWorkshopEducationWriteRepository _workshopEducationWriteRepository;
 
         public WorkshopService(
             ILanguagesReadRepository languagesReadRepository,
@@ -37,7 +43,9 @@ namespace MVCBlogApp.Persistence.Services
             IWorkshopTypeReadRepository workshopTypeReadRepository,
             IWorkshopTypeWriteRepository workshopTypeWriteRepository,
             IWorkshopCategoryReadRepository workshopCategoryReadRepository,
-            IWorkshopCategoryWriteRepository workshopCategoryWriteRepository)
+            IWorkshopCategoryWriteRepository workshopCategoryWriteRepository,
+            IWorkshopEducationReadRepository workshopEducationReadRepository,
+            IWorkshopEducationWriteRepository workshopEducationWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
@@ -45,6 +53,8 @@ namespace MVCBlogApp.Persistence.Services
             _workshopTypeWriteRepository = workshopTypeWriteRepository;
             _workshopCategoryReadRepository = workshopCategoryReadRepository;
             _workshopCategoryWriteRepository = workshopCategoryWriteRepository;
+            _workshopEducationReadRepository = workshopEducationReadRepository;
+            _workshopEducationWriteRepository = workshopEducationWriteRepository;
         }
 
 
@@ -222,6 +232,92 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region WorkshopEducation
+
+        public async Task<GetWorkshopEducationCreateItemsQueryResponse> GetWorkshopEducationCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            List<VM_WorkshopCategory> vM_WorkshopCategories = await _workshopCategoryReadRepository.GetAll()
+                .Select(x => new VM_WorkshopCategory
+                {
+                    Id = x.Id,
+                    WscategoryName = x.WscategoryName
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatuses,
+                WorkshopCategories = vM_WorkshopCategories
+            };
+        }
+
+        public async Task<GetAllWorkshopEducationQueryResponse> GetAllWorkshopEducationAsync()
+        {
+            List<VM_WorkshopEducation> vM_WorkshopEducations = await _workshopEducationReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), wo => wo.LangId, lg => lg.Id, (wo, lg) => new { wo, lg })
+                .Join(_statusReadRepository.GetAll(), work => work.wo.StatusId, st => st.Id, (work, st) => new { work, st })
+                .Join(_workshopCategoryReadRepository.GetAll(), workE => workE.work.wo.WscategoryId, workC => workC.Id, (workE, workC) => new { workE, workC })
+                .Select(x => new VM_WorkshopEducation
+                {
+                    Id = x.workE.work.wo.Id,
+                    WsEducationName = x.workE.work.wo.WsEducationName,
+                    Language = x.workE.work.lg.Language,
+                    StatusName = x.workE.st.StatusName,
+                    WscategoryName = x.workC.WscategoryName
+                }).ToListAsync();
+
+            return new()
+            {
+                WorkshopEducations = vM_WorkshopEducations
+            };
+        }
+
+        public async Task<WorkshopEducationCreateCommandResponse> WorkshopEducationCreateAsync(WorkshopEducationCreateCommandRequest request)
+        {
+            var check = await _workshopEducationReadRepository
+                .GetWhere(x => x.WsEducationName.Trim().ToLower() == request.WsEducationName.Trim().ToLower() || x.WsEducationName.Trim().ToUpper() == request.WsEducationName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                WorkshopEducation workshopEducation = new()
+                {
+                    LangId = request.LangId,
+                    StatusId = request.StatusId,
+                    WscategoryId = request.WscategoryId,
+                    WsEducationName = request.WsEducationName,
+                };
+
+                await _workshopEducationWriteRepository.AddAsync(workshopEducation);
+                await _workshopEducationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
 
 
 

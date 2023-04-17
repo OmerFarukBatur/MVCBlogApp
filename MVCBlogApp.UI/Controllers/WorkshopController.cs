@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetAllWorkshopEducation;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWorkshopEducationCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
@@ -173,21 +176,31 @@ namespace MVCBlogApp.UI.Controllers
         #region WorkshopEducation
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopEducationList()
+        public async Task<IActionResult> WorkshopEducationList(GetAllWorkshopEducationQueryRequest request)
         {
-            return View();
+            GetAllWorkshopEducationQueryResponse response = await _mediator.Send(request);
+            return View(response.WorkshopEducations);
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopEducationCreate()
+        public async Task<IActionResult> WorkshopEducationCreate(GetWorkshopEducationCreateItemsQueryRequest request)
         {
-            return View();
+            GetWorkshopEducationCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopEducationCreate(int a)
+        public async Task<IActionResult> WorkshopEducationCreate(WorkshopEducationCreateCommandRequest request)
         {
-            return View();
+            WorkshopEducationCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopEducationList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopEducationCreate", "Workshop");
+            }
         }
 
         [HttpGet]
