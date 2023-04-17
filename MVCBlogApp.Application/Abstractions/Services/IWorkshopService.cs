@@ -1,8 +1,11 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -29,6 +32,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetWorkshopCategoryCreateItemsQueryResponse> GetWorkshopCategoryCreateItemsAsync();
         Task<GetAllWorkshopCategoryQueryResponse> GetAllWorkshopCategoryAsync();
         Task<WorkshopCategoryCreateCommandResponse> WorkshopCategoryCreateAsync(WorkshopCategoryCreateCommandRequest request);
+        Task<GetByIdWorkshopCategoryQueryResponse> GetByIdWorkshopCategoryAsync(int id);
+        Task<WorkshopCategoryUpdateCommandResponse> WorkshopCategoryUpdateAsync(WorkshopCategoryUpdateCommandRequest request);
+        Task<WorkshopCategoryDeleteCommandResponse> WorkshopCategoryDeleteAsync(int id);
 
         #endregion
 

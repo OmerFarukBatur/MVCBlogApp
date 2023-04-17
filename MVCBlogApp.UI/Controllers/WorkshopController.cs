@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -132,20 +135,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopCategoryUpdate()
+        public async Task<IActionResult> WorkshopCategoryUpdate(GetByIdWorkshopCategoryQueryRequest request)
         {
-            return View();
+            GetByIdWorkshopCategoryQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("WorkshopCategoryList", "Workshop");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopCategoryUpdate(int a)
+        public async Task<IActionResult> WorkshopCategoryUpdate(WorkshopCategoryUpdateCommandRequest request)
         {
-            return View();
+            WorkshopCategoryUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopCategoryList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopCategoryUpdate", "Workshop");
+            }
         }
 
-        public async Task<IActionResult> WorkshopCategoryDelete(int a)
+        public async Task<IActionResult> WorkshopCategoryDelete(WorkshopCategoryDeleteCommandRequest request)
         {
-            return View();
+            WorkshopCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("WorkshopCategoryList", "Workshop");
         }
 
         #endregion

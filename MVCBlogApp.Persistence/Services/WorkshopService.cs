@@ -2,10 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -120,6 +123,96 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdWorkshopCategoryQueryResponse> GetByIdWorkshopCategoryAsync(int id)
+        {
+            VM_WorkshopCategory? vM_WorkshopCategory = await _workshopCategoryReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_WorkshopCategory
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    WscategoryName = x.WscategoryName
+                }).FirstOrDefaultAsync();
+
+            if (vM_WorkshopCategory != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    WorkshopCategory = vM_WorkshopCategory,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    WorkshopCategory = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<WorkshopCategoryUpdateCommandResponse> WorkshopCategoryUpdateAsync(WorkshopCategoryUpdateCommandRequest request)
+        {
+            WorkshopCategory workshopCategory = await _workshopCategoryReadRepository.GetByIdAsync(request.Id);
+            if (workshopCategory != null)
+            {
+                workshopCategory.LangId = request.LangId;
+                workshopCategory.WscategoryName = request.WscategoryName;
+
+                _workshopCategoryWriteRepository.Update(workshopCategory);
+                await _workshopCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<WorkshopCategoryDeleteCommandResponse> WorkshopCategoryDeleteAsync(int id)
+        {
+            WorkshopCategory workshopCategory = await _workshopCategoryReadRepository.GetByIdAsync(id);
+            if (workshopCategory != null)
+            {
+                _workshopCategoryWriteRepository.Remove(workshopCategory);
+                await _workshopCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
