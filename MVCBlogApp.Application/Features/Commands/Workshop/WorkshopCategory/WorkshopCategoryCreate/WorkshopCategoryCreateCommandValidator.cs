@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 
-namespace MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate
+namespace MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate
 {
-    public class WorkshopTypeCreateCommandValidator : AbstractValidator<WorkshopTypeCreateCommandRequest>
+    public class WorkshopCategoryCreateCommandValidator : AbstractValidator<WorkshopCategoryCreateCommandRequest>
     {
-        public WorkshopTypeCreateCommandValidator()
+        public WorkshopCategoryCreateCommandValidator()
         {
-            RuleFor(x => x.WstypeName)
+            RuleFor(x => x.WscategoryName)
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("Lütfen alanı boş geçmeyiniz.")

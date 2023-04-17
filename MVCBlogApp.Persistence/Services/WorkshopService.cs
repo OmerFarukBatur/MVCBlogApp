@@ -1,14 +1,18 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.WorkshopCategory;
 using MVCBlogApp.Application.Repositories.WorkshopType;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -21,17 +25,23 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly IWorkshopTypeReadRepository _workshopTypeReadRepository;
         private readonly IWorkshopTypeWriteRepository _workshopTypeWriteRepository;
+        private readonly IWorkshopCategoryReadRepository _workshopCategoryReadRepository;
+        private readonly IWorkshopCategoryWriteRepository _workshopCategoryWriteRepository;
 
         public WorkshopService(
             ILanguagesReadRepository languagesReadRepository,
             IStatusReadRepository statusReadRepository,
             IWorkshopTypeReadRepository workshopTypeReadRepository,
-            IWorkshopTypeWriteRepository workshopTypeWriteRepository)
+            IWorkshopTypeWriteRepository workshopTypeWriteRepository,
+            IWorkshopCategoryReadRepository workshopCategoryReadRepository,
+            IWorkshopCategoryWriteRepository workshopCategoryWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
             _workshopTypeReadRepository = workshopTypeReadRepository;
             _workshopTypeWriteRepository = workshopTypeWriteRepository;
+            _workshopCategoryReadRepository = workshopCategoryReadRepository;
+            _workshopCategoryWriteRepository = workshopCategoryWriteRepository;
         }
 
 
@@ -48,6 +58,71 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region WorkshopCategory
+
+        public async Task<GetWorkshopCategoryCreateItemsQueryResponse> GetWorkshopCategoryCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllWorkshopCategoryQueryResponse> GetAllWorkshopCategoryAsync()
+        {
+            List<VM_WorkshopCategory> vM_WorkshopCategories = await _workshopCategoryReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), wk => wk.LangId, lg => lg.Id, (wk, lg) => new { wk, lg })
+                .Select(x => new VM_WorkshopCategory
+                {
+                    Id = x.wk.Id,
+                    LangId = x.wk.LangId,
+                    Language = x.lg.Language,
+                    WscategoryName = x.wk.WscategoryName
+                }).ToListAsync();
+
+            return new()
+            {
+                WorkshopCategories = vM_WorkshopCategories
+            };
+        }
+
+        public async Task<WorkshopCategoryCreateCommandResponse> WorkshopCategoryCreateAsync(WorkshopCategoryCreateCommandRequest request)
+        {
+            var check = await _workshopCategoryReadRepository
+                .GetWhere(x => x.WscategoryName.Trim().ToLower() == request.WscategoryName.Trim().ToLower() || x.WscategoryName.Trim().ToUpper() == request.WscategoryName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                WorkshopCategory workshopCategory = new()
+                {
+                    WscategoryName = request.WscategoryName,
+                    LangId = request.LangId
+                };
+
+                await _workshopCategoryWriteRepository.AddAsync(workshopCategory);
+                await _workshopCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
 
 
 
@@ -217,6 +292,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        
         #endregion
 
     }

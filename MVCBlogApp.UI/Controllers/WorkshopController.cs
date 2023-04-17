@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
@@ -101,21 +104,31 @@ namespace MVCBlogApp.UI.Controllers
         #region WorkshopCategory
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopCategoryList()
+        public async Task<IActionResult> WorkshopCategoryList(GetAllWorkshopCategoryQueryRequest request)
         {
-            return View();
+            GetAllWorkshopCategoryQueryResponse response = await _mediator.Send(request);
+            return View(response.WorkshopCategories);
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopCategoryCreate()
+        public async Task<IActionResult> WorkshopCategoryCreate(GetWorkshopCategoryCreateItemsQueryRequest request)
         {
-            return View();
+            GetWorkshopCategoryCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopCategoryCreate(int a)
+        public async Task<IActionResult> WorkshopCategoryCreate(WorkshopCategoryCreateCommandRequest request)
         {
-            return View();
+            WorkshopCategoryCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopCategoryList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopCategoryCreate", "Workshop");
+            }
         }
 
         [HttpGet]
