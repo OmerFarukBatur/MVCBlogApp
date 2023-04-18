@@ -2,6 +2,8 @@
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
@@ -9,6 +11,7 @@ using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWo
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetAllWorkshopEducation;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetByIdWorkshopEducation;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWorkshopEducationCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -46,6 +49,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetWorkshopEducationCreateItemsQueryResponse> GetWorkshopEducationCreateItemsAsync();
         Task<GetAllWorkshopEducationQueryResponse> GetAllWorkshopEducationAsync();
         Task<WorkshopEducationCreateCommandResponse> WorkshopEducationCreateAsync(WorkshopEducationCreateCommandRequest request);
+        Task<GetByIdWorkshopEducationQueryResponse> GetByIdWorkshopEducationAsync(int id);
+        Task<WorkshopEducationUpdateCommandResponse> WorkshopEducationUpdateAsync(WorkshopEducationUpdateCommandRequest request);
+        Task<WorkshopEducationDeleteCommandResponse> WorkshopEducationDeleteAsync(int id);
 
         #endregion
 

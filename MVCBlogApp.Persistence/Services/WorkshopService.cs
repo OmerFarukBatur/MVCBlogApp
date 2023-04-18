@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.Worksho
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
@@ -12,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWo
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetAllWorkshopEducation;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetByIdWorkshopEducation;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWorkshopEducationCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -319,7 +322,122 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdWorkshopEducationQueryResponse> GetByIdWorkshopEducationAsync(int id)
+        {
+            VM_WorkshopEducation? vM_WorkshopEducation = await _workshopEducationReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_WorkshopEducation
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    WscategoryId = x.WscategoryId,
+                    WsEducationName = x.WsEducationName
+                }).FirstOrDefaultAsync();
 
+            if (vM_WorkshopEducation != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+               .Select(x => new VM_Language
+               {
+                   Id = x.Id,
+                   Language = x.Language
+               }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_WorkshopCategory> vM_WorkshopCategories = await _workshopCategoryReadRepository.GetAll()
+                    .Select(x => new VM_WorkshopCategory
+                    {
+                        Id = x.Id,
+                        WscategoryName = x.WscategoryName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    Statuses = allStatuses,
+                    WorkshopCategories = vM_WorkshopCategories,
+                    WorkshopEducation = vM_WorkshopEducation,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    Statuses = null,
+                    WorkshopCategories = null,
+                    WorkshopEducation = null,
+                    State = false,
+                    Message = "Kayıt bulunamadı."
+                };
+            }
+        }
+
+        public async Task<WorkshopEducationUpdateCommandResponse> WorkshopEducationUpdateAsync(WorkshopEducationUpdateCommandRequest request)
+        {
+            WorkshopEducation workshopEducation = await _workshopEducationReadRepository.GetByIdAsync(request.Id);
+
+            if (workshopEducation != null)
+            {
+                workshopEducation.WsEducationName = request.WsEducationName;
+                workshopEducation.WscategoryId = request.WscategoryId;
+                workshopEducation.StatusId = request.StatusId;
+                workshopEducation.LangId = request.LangId;
+
+                _workshopEducationWriteRepository.Update(workshopEducation);
+                await _workshopEducationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<WorkshopEducationDeleteCommandResponse> WorkshopEducationDeleteAsync(int id)
+        {
+            WorkshopEducation workshopEducation = await _workshopEducationReadRepository.GetByIdAsync(id);
+
+            if (workshopEducation != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+
+                workshopEducation.StatusId = statusId;
+
+                _workshopEducationWriteRepository.Update(workshopEducation);
+                await _workshopEducationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 
@@ -481,7 +599,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        
+
         #endregion
 
     }

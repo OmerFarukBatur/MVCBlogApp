@@ -5,6 +5,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.Worksho
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.WorkshopEducationUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
@@ -12,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWo
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetAllWorkshopEducation;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetByIdWorkshopEducation;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWorkshopEducationCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
@@ -204,20 +207,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopEducationUpdate()
+        public async Task<IActionResult> WorkshopEducationUpdate(GetByIdWorkshopEducationQueryRequest request)
         {
-            return View();
+            GetByIdWorkshopEducationQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("WorkshopEducationList", "Workshop");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopEducationUpdate(int a)
+        public async Task<IActionResult> WorkshopEducationUpdate(WorkshopEducationUpdateCommandRequest request)
         {
-            return View();
+            WorkshopEducationUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopEducationList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopEducationUpdate", "Workshop");
+            }
         }
 
-        public async Task<IActionResult> WorkshopEducationDelete(int a)
+        public async Task<IActionResult> WorkshopEducationDelete(WorkshopEducationDeleteCommandRequest request)
         {
-            return View();
+            WorkshopEducationDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("WorkshopEducationList", "Workshop");
         }
 
         #endregion
