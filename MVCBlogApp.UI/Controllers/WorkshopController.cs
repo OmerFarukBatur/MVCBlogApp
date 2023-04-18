@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
@@ -10,6 +12,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopEducation.Worksh
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
+using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
+using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
@@ -26,30 +30,43 @@ namespace MVCBlogApp.UI.Controllers
     public class WorkshopController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
 
-        public WorkshopController(IMediator mediator)
+        public WorkshopController(IMediator mediator, IOperationService operationService)
         {
             _mediator = mediator;
+            _operationService = operationService;
         }
 
         #region Workshop
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopList()
+        public async Task<IActionResult> WorkshopList(GetAllWorkshopQueryRequest request)
         {
-            return View();
+            GetAllWorkshopQueryResponse response = await _mediator.Send(request);
+            return View(response.Workshops);
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopCreate()
+        public async Task<IActionResult> WorkshopCreate(GetWorkshopCreateItemsQueryRequest request)
         {
-            return View();
+            GetWorkshopCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopCreate(int a)
+        public async Task<IActionResult> WorkshopCreate(WorkshopCreateCommandRequest request)
         {
-            return View();
+            request.CreateUserId = _operationService.GetUser().Id;
+            WorkshopCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopCreate", "Workshop");
+            }
         }
 
         [HttpGet]
