@@ -9,6 +9,7 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
+using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
@@ -29,6 +30,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetWorkshopCreateItemsQueryResponse> GetWorkshopCreateItemsAsync();
         Task<GetAllWorkshopQueryResponse> GetAllWorkshopAsync();
         Task<WorkshopCreateCommandResponse> WorkshopCreateAsync(WorkshopCreateCommandRequest request);
+        Task<GetByIdWorkshopQueryResponse> GetByIdWorkshopAsync(int id);
 
         #endregion
 

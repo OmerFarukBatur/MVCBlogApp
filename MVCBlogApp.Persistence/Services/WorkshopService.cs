@@ -12,6 +12,7 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
+using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
@@ -191,6 +192,92 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdWorkshopQueryResponse> GetByIdWorkshopAsync(int id)
+        {
+            VM_Workshop? vM_Workshop = await _workshopReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Workshop
+                {
+                    Id = x.Id,
+                    Address = x.Address,
+                    Description= x.Description,
+                    FinishDateTime= x.FinishDateTime,
+                    LangId= x.LangId,
+                    NavigationId = x.NavigationId,
+                    Price = x.Price,
+                    Orders = x.Orders,
+                    StartDateTime= x.StartDateTime,
+                    StatusId = x.StatusId,
+                    Title = x.Title,
+                    WseducationId = x.WseducationId,
+                    WstypeId = x.WstypeId                    
+                }).FirstOrDefaultAsync();
+
+            if (vM_Workshop != null)
+            {
+                List<VM_WorkshopEducation> vM_WorkshopEducations = await _workshopEducationReadRepository.GetAll()
+                .Select(x => new VM_WorkshopEducation
+                {
+                    Id = x.Id,
+                    WsEducationName = x.WsEducationName,
+                }).ToListAsync();
+
+                List<VM_WorkshopType> vM_WorkshopTypes = await _workshopTypeReadRepository.GetAll()
+                    .Select(x => new VM_WorkshopType
+                    {
+                        Id = x.Id,
+                        WstypeName = x.WstypeName
+                    }).ToListAsync();
+
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                    .Select(x => new VM_Language
+                    {
+                        Id = x.Id,
+                        Language = x.Language
+                    }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                List<VM_Navigation> vM_Navigations = await _navigationReadRepository
+                    .GetAll()
+                    .Select(x => new VM_Navigation
+                    {
+                        Id = x.Id,
+                        NavigationName = x.NavigationName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    Navigations = vM_Navigations,
+                    Statuses = allStatuses,
+                    WorkshopEducations = vM_WorkshopEducations,
+                    WorkshopTypes = vM_WorkshopTypes,
+                    Workshop = vM_Workshop,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    Navigations = null,
+                    Statuses = null,
+                    WorkshopEducations = null,
+                    WorkshopTypes = null,
+                    Workshop = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
                 };
             }
         }
@@ -731,7 +818,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
+        
         #endregion
 
     }

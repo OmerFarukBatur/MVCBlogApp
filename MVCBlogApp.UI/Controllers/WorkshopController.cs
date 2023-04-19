@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTypeUpdate;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
+using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
@@ -70,9 +71,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> WorkshopUpdate()
+        public async Task<IActionResult> WorkshopUpdate(GetByIdWorkshopQueryRequest request)
         {
-            return View();
+            GetByIdWorkshopQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("WorkshopList", "Workshop");
+            }
         }
 
         [HttpPost]

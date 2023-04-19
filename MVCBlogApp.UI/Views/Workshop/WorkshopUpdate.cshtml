@@ -4,5 +4,173 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>WorkshopUpdate</h1>
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
 
+    @*  <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="post" asp-controller="Workshop" asp-action="WorkshopUpdate" accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="title">
+                                        Seminer Başlığı <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="title" name="title" maxlength="250" min="2" value="@Model.Workshop.Title" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="startDatetime">
+                                        Başlangıç Tarihi ve Saati <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-3">
+                                        <input type="date" class="form-control dobpicker" id="startDate" name="startDate" placeholder="Gün/Ay/Yıl" data-date-format="yyyy-mm-dd" value="@Model.Workshop.StartDateTime.ToString("yyyy-MM-dd")" required>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="time" class="form-control dobpicker" id="startTime" name="startTime" value="@Model.Workshop.StartDateTime.TimeOfDay" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="finishDatetime">
+                                        Bitiş Tarihi ve Saati <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-3">
+                                        <input type="date" class="form-control dobpicker" id="finishDate" name="finishDate" placeholder="Gün/Ay/Yıl" data-date-format="yyyy-mm-dd" value="@Model.Workshop.FinishDateTime.ToString("yyyy-MM-dd")" required>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <input type="time" class="form-control dobpicker" id="finishTime" name="finishTime" value="@Model.Workshop.FinishDateTime.TimeOfDay" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="price">
+                                        Fiyat <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="number" class="form-control" id="price" name="price" min="0" value="@Model.Workshop.Price.ToString()" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="address">
+                                        Adres <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="address" name="address" value="@Model.Workshop.Address" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="description">
+                                        İçerik <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" id="description" name="description" value="@Model.Workshop.Description" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="wseducationId">
+                                        Eğitim Tipi <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="wseducationId" name="wseducationId" required>
+                                            <option value="@Model.Workshop.WseducationId">Seçiniz!</option>
+                                            @foreach (var item in Model.WorkshopEducations)
+                                            {
+                                                <option value="@item.Id">@item.WsEducationName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="wstypeId">
+                                        Seminer Kategori <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="wstypeId" name="wstypeId" required>
+                                            <option value="@Model.Workshop.WstypeId">Seçiniz!</option>
+                                            @foreach (var item in Model.WorkshopTypes)
+                                            {
+                                                <option value="@item.Id">@item.WstypeName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="navigationId">
+                                        Navigasyon <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="navigationId" name="navigationId" required>
+                                            <option value="@Model.Workshop.NavigationId">Seçiniz!</option>
+                                            @foreach (var item in Model.Navigations)
+                                            {
+                                                <option value="@item.Id">@item.NavigationName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="langId">
+                                        Dil <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="langId" name="langId" required>
+                                            <option value="@Model.Workshop.LangId">Seçiniz!</option>
+                                            @foreach (var item in Model.Languages)
+                                            {
+                                                <option value="@item.Id">@item.Language</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="statusId">
+                                        Durumu <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select class="form-control" id="statusId" name="statusId" required>
+                                            <option value="@Model.Workshop.StatusId">Seçiniz!</option>
+                                            @foreach (var item in Model.Statuses)
+                                            {
+                                                <option value="@item.Id">@item.StatusName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-8 ml-auto">
+                                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->
+
+<script>
+    jQuery(document).ready(function () {
+        $('.dobpicker').datepicker({
+            autoclose: true,
+        });
+</script>
