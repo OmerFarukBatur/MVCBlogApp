@@ -17,6 +17,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetAllWSAF;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetByIdWSAFDetail;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
@@ -111,39 +113,25 @@ namespace MVCBlogApp.UI.Controllers
         #region WorkShopApplicationForms
 
         [HttpGet]
-        public async Task<IActionResult> WSAFList()
+        public async Task<IActionResult> WSAFList(GetAllWSAFQueryRequest request)
         {
-            return View();
+            GetAllWSAFQueryResponse response = await _mediator.Send(request);
+            return View(response.WorkShopApplicationForms);
         }
 
         [HttpGet]
-        public async Task<IActionResult> WSAFCreate()
+        public async Task<IActionResult> WSAFDetail(GetByIdWSAFDetailQueryRequest request)
         {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> WSAFCreate(int a)
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> WSAFUpdate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> WSAFUpdate(int a)
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> WSAFDelete(int a)
-        {
-            return View();
-        }
+            GetByIdWSAFDetailQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.WorkShopApplicationForm);
+            }
+            else
+            {
+                return RedirectToAction("WSAFList", "Workshop");
+            }
+        }        
 
         #endregion
 

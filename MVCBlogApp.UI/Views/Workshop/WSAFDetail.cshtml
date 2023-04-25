@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewData["Title"] = "WSAFDetail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <form class="form-valide" method="get" accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="nameSurname">
+                                        Adı Soyadı
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="nameSurname">
+                                        @Model.NameSurname 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="email">
+                                        Mail Adresi 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="email">
+                                        @Model.Email 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="phone">
+                                        Telefon Numarası 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="phone">
+                                        @Model.Phone 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="birthDate">
+                                        Doğum Tarihi 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="birthDate">
+                                        @Model.BirthDate 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="gender">
+                                        Cinsiyet 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="gender">
+                                        @Model.GenderName 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="job">
+                                        Meslek 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="job">
+                                        @Model.Job 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="address">
+                                        Adres 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="address">
+                                        @Model.Address 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="attendancePurpose">
+                                        Katılım Amacı 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="attendancePurpose">
+                                        @Model.AttendancePurpose 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="lifeContented">
+                                        Yaşam Tarzınızdan Memnun Musunuz?  
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="lifeContented">
+                                        @Model.LifeCaseName 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="diet">
+                                        Kilo vermek / almak için daha önce hiç diyet yaptınız mı?
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="diet">
+                                        @Model.DietCaseName 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="note">
+                                        Mesaj 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="note">
+                                        @Model.Note 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="isApprove">
+                                        Onay verildi mi? 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="isApprove">
+                                        @if(@Model.IsApprove)
+                                        {
+                                            <i class="fa fa-check" aria-hidden="true"></i>
+                                        }else
+                                        {
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        }
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="createDateTime">
+                                        Kayıt Tarihi 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="createDateTime">
+                                        @Model.CreateDateTime 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="hearAboutUsname">
+                                        Bizi nereden duydunuz? 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="hearAboutUsname">
+                                        @Model.HearAboutUsname 
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="title">
+                                        Workshop 
+                                    </label>
+                                    <label class="col-lg-6 col-form-label" for="title">
+                                        @Model.Title
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

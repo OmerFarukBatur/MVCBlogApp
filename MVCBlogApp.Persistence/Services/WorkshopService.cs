@@ -15,6 +15,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetAllWSAF;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetByIdWSAFDetail;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
@@ -24,10 +26,14 @@ using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopEducation.GetWork
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetAllWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetByIdWorkshopType;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopType.GetWorkshopTypeCreateItems;
+using MVCBlogApp.Application.Repositories.Case;
+using MVCBlogApp.Application.Repositories.Genders;
+using MVCBlogApp.Application.Repositories.HearAboutUS;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.Workshop;
+using MVCBlogApp.Application.Repositories.WorkShopApplicationForm;
 using MVCBlogApp.Application.Repositories.WorkshopCategory;
 using MVCBlogApp.Application.Repositories.WorkshopEducation;
 using MVCBlogApp.Application.Repositories.WorkshopType;
@@ -49,6 +55,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IWorkshopReadRepository _workshopReadRepository;
         private readonly IWorkshopWriteRepository _workshopWriteRepository;
         private readonly INavigationReadRepository _navigationReadRepository;
+        private readonly IWorkShopApplicationFormReadRepository _workshopApplicationFormReadRepository;
+        private readonly IHearAboutUSReadRepository _hearAboutUSReadRepository;
+        private readonly IGendersReadRepository _gendersReadRepository;
+        private readonly ICaseReadRepository _caseReadRepository;
 
         public WorkshopService(
             ILanguagesReadRepository languagesReadRepository,
@@ -61,7 +71,11 @@ namespace MVCBlogApp.Persistence.Services
             IWorkshopEducationWriteRepository workshopEducationWriteRepository,
             IWorkshopReadRepository workshopReadRepository,
             IWorkshopWriteRepository workshopWriteRepository,
-            INavigationReadRepository navigationReadRepository)
+            INavigationReadRepository navigationReadRepository,
+            IWorkShopApplicationFormReadRepository workshopApplicationFormReadRepository,
+            IHearAboutUSReadRepository hearAboutUSReadRepository,
+            IGendersReadRepository gendersReadRepository,
+            ICaseReadRepository caseReadRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _statusReadRepository = statusReadRepository;
@@ -74,6 +88,10 @@ namespace MVCBlogApp.Persistence.Services
             _workshopReadRepository = workshopReadRepository;
             _workshopWriteRepository = workshopWriteRepository;
             _navigationReadRepository = navigationReadRepository;
+            _workshopApplicationFormReadRepository = workshopApplicationFormReadRepository;
+            _hearAboutUSReadRepository = hearAboutUSReadRepository;
+            _gendersReadRepository = gendersReadRepository;
+            _caseReadRepository = caseReadRepository;
         }
 
 
@@ -356,7 +374,78 @@ namespace MVCBlogApp.Persistence.Services
 
         #region WorkShopApplicationForms
 
+        public async Task<GetAllWSAFQueryResponse> GetAllWSAFAsync()
+        {
+            List<VM_WorkShopApplicationForm> vM_WorkShopApplicationForms = await _workshopApplicationFormReadRepository.GetAll()
+                .Select(x => new VM_WorkShopApplicationForm
+                {
+                    Id = x.Id,
+                    NameSurname = x.NameSurname,
+                    Email = x.Email,
+                    Job = x.Job,
+                    AttendancePurpose = x.AttendancePurpose,
+                    CreateDateTime = x.CreateDateTime
+                }).ToListAsync();
 
+            return new()
+            {
+                WorkShopApplicationForms = vM_WorkShopApplicationForms
+            };
+        }
+
+        public async Task<GetByIdWSAFDetailQueryResponse> GetByIdWSAFDetailAsync(int id)
+        {
+            VM_WorkShopApplicationForm? vM_WorkShopApplicationForm = await _workshopApplicationFormReadRepository.GetWhere(x => x.Id == id)
+                .Join(_hearAboutUSReadRepository.GetAll(), wo => wo.HearAboutusId, he => he.Id, (wo, he) => new { wo, he })
+                .Join(_workshopReadRepository.GetAll(), work => work.wo.WorkShopId, sh => sh.Id, (work, sh) => new { work, sh })
+                .Select(x => new VM_WorkShopApplicationForm
+                {
+                    Id = x.work.wo.Id,
+                    NameSurname = x.work.wo.NameSurname,
+                    Email = x.work.wo.Email,
+                    Phone = x.work.wo.Phone,
+                    BirthDate = x.work.wo.BirthDate,
+                    Gender = x.work.wo.Gender,
+                    Job = x.work.wo.Job,
+                    Address = x.work.wo.Address,
+                    AttendancePurpose = x.work.wo.AttendancePurpose,
+                    LifeContented = x.work.wo.LifeContented,//
+                    Diet = x.work.wo.Diet,//
+                    Note = x.work.wo.Note,
+                    IsApprove = x.work.wo.IsApprove,
+                    CreateDateTime = x.work.wo.CreateDateTime,
+                    HearAboutUsname = x.work.he.HearAboutUsname,
+                    Title = x.sh.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_WorkShopApplicationForm != null)
+            {
+                vM_WorkShopApplicationForm.GenderName = await _gendersReadRepository.GetWhere(x => x.Id == vM_WorkShopApplicationForm.Gender)
+                    .Select(x => x.Gender).FirstOrDefaultAsync();
+
+                vM_WorkShopApplicationForm.LifeCaseName = await _caseReadRepository.GetWhere(x => x.Id == vM_WorkShopApplicationForm.LifeContented)
+                    .Select(x => x.CaseName).FirstOrDefaultAsync();
+
+                vM_WorkShopApplicationForm.DietCaseName = await _caseReadRepository.GetWhere(x => x.Id == vM_WorkShopApplicationForm.Diet)
+                    .Select(x => x.CaseName).FirstOrDefaultAsync();
+
+                return new()
+                {
+                    WorkShopApplicationForm = vM_WorkShopApplicationForm,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    WorkShopApplicationForm = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
 
         #endregion
 
@@ -886,8 +975,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
+        
         #endregion
-
     }
 }

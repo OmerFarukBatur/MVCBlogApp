@@ -13,6 +13,8 @@ using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopType.WorkshopTyp
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetAllWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetByIdWorkshop;
 using MVCBlogApp.Application.Features.Queries.Workshop.Workshop.GetWorkshopCreateItems;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetAllWSAF;
+using MVCBlogApp.Application.Features.Queries.Workshop.WorkShopApplicationForm.GetByIdWSAFDetail;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetAllWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetByIdWorkshopCategory;
 using MVCBlogApp.Application.Features.Queries.Workshop.WorkshopCategory.GetWorkshopCategoryCreateItems;
@@ -40,7 +42,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region WorkShopApplicationForms
 
-
+        Task<GetAllWSAFQueryResponse> GetAllWSAFAsync();
+        Task<GetByIdWSAFDetailQueryResponse> GetByIdWSAFDetailAsync(int id);
 
         #endregion
 
