@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
@@ -85,14 +87,23 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkshopUpdate(int a)
+        public async Task<IActionResult> WorkshopUpdate(WorkshopUpdateCommandRequest request)
         {
-            return View();
+            WorkshopUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("WorkshopList", "Workshop");
+            }
+            else
+            {
+                return RedirectToAction("WorkshopUpdate", "Workshop");
+            }
         }
 
-        public async Task<IActionResult> WorkshopDelete(int a)
+        public async Task<IActionResult> WorkshopDelete(WorkshopDeleteCommandRequest request)
         {
-            return View();
+            WorkshopDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("WorkshopList", "Workshop");
         }
 
         #endregion

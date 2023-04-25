@@ -1,7 +1,8 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
@@ -203,17 +204,17 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Id = x.Id,
                     Address = x.Address,
-                    Description= x.Description,
-                    FinishDateTime= x.FinishDateTime,
-                    LangId= x.LangId,
+                    Description = x.Description,
+                    FinishDateTime = x.FinishDateTime,
+                    LangId = x.LangId,
                     NavigationId = x.NavigationId,
                     Price = x.Price,
                     Orders = x.Orders,
-                    StartDateTime= x.StartDateTime,
+                    StartDateTime = x.StartDateTime,
                     StatusId = x.StatusId,
                     Title = x.Title,
                     WseducationId = x.WseducationId,
-                    WstypeId = x.WstypeId                    
+                    WstypeId = x.WstypeId
                 }).FirstOrDefaultAsync();
 
             if (vM_Workshop != null)
@@ -278,6 +279,73 @@ namespace MVCBlogApp.Persistence.Services
                     Workshop = null,
                     State = false,
                     Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<WorkshopUpdateCommandResponse> WorkshopUpdateAsync(WorkshopUpdateCommandRequest request)
+        {
+            Workshop workshop = await _workshopReadRepository.GetByIdAsync(request.Id);
+
+            if (workshop != null)
+            {
+                DateTime StartDateTime = request.StartDate.Date.Add(request.StartTime.TimeOfDay);
+                DateTime FinishDateTime = request.FinishDate.Date.Add(request.FinishTime.TimeOfDay);
+
+                workshop.Address = request.Address;
+                workshop.Price = request.Price;
+                workshop.Description = request.Description;
+                workshop.LangId = request.LangId;
+                workshop.StatusId = request.StatusId;
+                workshop.WstypeId = request.WstypeId;
+                workshop.WseducationId = request.WseducationId;
+                workshop.Title = request.Title;
+                workshop.NavigationId = request.NavigationId;
+                workshop.FinishDateTime = FinishDateTime;
+                workshop.StartDateTime = StartDateTime;
+
+                _workshopWriteRepository.Update(workshop);
+                await _workshopWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla gerçekleştirilmiştir.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<WorkshopDeleteCommandResponse> WorkshopDeleteAsync(int id)
+        {
+            Workshop workshop = await _workshopReadRepository.GetByIdAsync(id);
+
+            if (workshop != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                workshop.StatusId = statusId;
+
+                _workshopWriteRepository.Update(workshop);
+                await _workshopWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
@@ -818,7 +886,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        
+
         #endregion
 
     }

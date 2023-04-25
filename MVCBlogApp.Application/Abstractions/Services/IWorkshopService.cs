@@ -1,4 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopCreate;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopDelete;
+using MVCBlogApp.Application.Features.Commands.Workshop.Workshop.WorkshopUpdate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Workshop.WorkshopCategory.WorkshopCategoryUpdate;
@@ -31,6 +33,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetAllWorkshopQueryResponse> GetAllWorkshopAsync();
         Task<WorkshopCreateCommandResponse> WorkshopCreateAsync(WorkshopCreateCommandRequest request);
         Task<GetByIdWorkshopQueryResponse> GetByIdWorkshopAsync(int id);
+        Task<WorkshopUpdateCommandResponse> WorkshopUpdateAsync(WorkshopUpdateCommandRequest request);
+        Task<WorkshopDeleteCommandResponse> WorkshopDeleteAsync(int id);
 
         #endregion
 
