@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
+﻿using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Press.PressCreate;
@@ -13,6 +14,8 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.Refe
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetAllInfluencer;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetInfluencerCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
@@ -89,6 +92,14 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetByIdPressTypeQueryResponse> GetByIdPressTypeAsync(int id);
         Task<PressTypeUpdateCommandResponse> PressTypeUpdateAsync(PressTypeUpdateCommandRequest request);
         Task<PressTypeDeleteCommandResponse> PressTypeDeleteAsync(int id);
+
+        #endregion
+
+        #region Influencer
+
+        Task<GetInfluencerCreateItemsQueryResponse> GetInfluencerCreateItemsAsync();
+        Task<GetAllInfluencerQueryResponse> GetAllInfluencerAsync();
+        Task<InfluencerCreateCommandResponse> InfluencerCreateAsync(InfluencerCreateCommandRequest request);
 
         #endregion
     }

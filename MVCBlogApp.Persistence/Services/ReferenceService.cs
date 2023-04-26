@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
@@ -16,6 +17,8 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Reference.Refe
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetAllInfluencer;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetInfluencerCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetOurTeamCreateItems;
@@ -30,6 +33,7 @@ using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Reference.GetRe
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetAllSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetByIdSeminarVisual;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.SeminarVisuals.GetSeminarVisualsCreateItems;
+using MVCBlogApp.Application.Repositories.Influencer;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.NewsPaper;
@@ -62,6 +66,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IPressWriteRepository _pressWriteRepository;
         private readonly IMasterRootReadRepository _masterRootReadRepository;
         private readonly IMasterRootWriteRepository _masterRootWriteRepository;
+        private readonly IInfluencerReadRepository _influencerReadRepository;
+        private readonly IInfluencerWriteRepository _influencerWriteRepository;
+
 
         public ReferenceService(
             IStatusReadRepository statusReadRepository,
@@ -79,7 +86,9 @@ namespace MVCBlogApp.Persistence.Services
             IPressReadRepository pressReadRepository,
             IPressWriteRepository pressWriteRepository,
             IMasterRootReadRepository masterRootReadRepository,
-            IMasterRootWriteRepository masterRootWriteRepository)
+            IMasterRootWriteRepository masterRootWriteRepository,
+            IInfluencerReadRepository influencerReadRepository,
+            IInfluencerWriteRepository influencerWriteRepository)
         {
             _statusReadRepository = statusReadRepository;
             _languagesReadRepository = languagesReadRepository;
@@ -97,6 +106,8 @@ namespace MVCBlogApp.Persistence.Services
             _pressWriteRepository = pressWriteRepository;
             _masterRootReadRepository = masterRootReadRepository;
             _masterRootWriteRepository = masterRootWriteRepository;
+            _influencerReadRepository = influencerReadRepository;
+            _influencerWriteRepository = influencerWriteRepository;
         }
 
 
@@ -1102,7 +1113,88 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        
+
+        #endregion
+
+        #region Influencer
+
+        public async Task<GetInfluencerCreateItemsQueryResponse> GetInfluencerCreateItemsAsync()
+        {
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllInfluencerQueryResponse> GetAllInfluencerAsync()
+        {
+            List<VM_Influencer> vM_Influencers = await _influencerReadRepository.GetAll()
+                .Join(_statusReadRepository.GetAll(), inf => inf.StatusId, st => st.Id, (inf, st) => new { inf, st })
+                .Select(x => new VM_Influencer
+                {
+                    Id = x.inf.Id,
+                    NameSurname = x.inf.NameSurname,
+                    CompanyName = x.inf.CompanyName,
+                    CompanySector = x.inf.CompanySector,
+                    CreateDatetime = x.inf.CreateDatetime,
+                    Email = x.inf.Email,
+                    Phone = x.inf.Phone,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Influencers = vM_Influencers
+            };
+        }
+
+        public async Task<InfluencerCreateCommandResponse> InfluencerCreateAsync(InfluencerCreateCommandRequest request)
+        {
+            var check = await _influencerReadRepository
+                .GetWhere(x => x.CompanyName.Trim().ToLower() == request.CompanyName.Trim().ToLower() || x.CompanyName.Trim().ToUpper() == request.CompanyName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Influencer ınfluencer = new()
+                {
+                    NameSurname = request.NameSurname,
+                    CompanyName = request.CompanyName,
+                    CompanySector = request.CompanySector,
+                    Email = request.Email,
+                    Message = request.Message,
+                    Phone = request.Phone,
+                    StatusId = request.StatusId,
+                    CreateDatetime = DateTime.Now
+                };
+
+                await _influencerWriteRepository.AddAsync(ınfluencer);
+                await _influencerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+
+
         #endregion
     }
 }
