@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
@@ -19,6 +21,7 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetAllInfluencer;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetByIdInfluencer;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetInfluencerCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
@@ -422,37 +425,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> InfluencerUpdate(GetByIdPressTypeQueryRequest request)
+        public async Task<IActionResult> InfluencerUpdate(GetByIdInfluencerQueryRequest request)
         {
-            GetByIdPressTypeQueryResponse response = await _mediator.Send(request);
+            GetByIdInfluencerQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return View(response.PressType);
+                return View(response);
             }
             else
             {
-                return RedirectToAction("PressTypeCreate", "Reference");
+                return RedirectToAction("InfluencerUpdate", "Reference");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> InfluencerUpdate(PressTypeUpdateCommandRequest request)
+        public async Task<IActionResult> InfluencerUpdate(InfluencerUpdateCommandRequest request)
         {
-            PressTypeUpdateCommandResponse response = await _mediator.Send(request);
+            InfluencerUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("PressTypeList", "Reference");
+                return RedirectToAction("InfluencerList", "Reference");
             }
             else
             {
-                return RedirectToAction("PressTypeUpdate", "Reference");
+                return RedirectToAction("InfluencerUpdate", "Reference");
             }
         }
 
-        public async Task<IActionResult> InfluencerDelete(PressTypeDeleteCommandRequest request)
+        public async Task<IActionResult> InfluencerDelete(InfluencerDeleteCommandRequest request)
         {
-            PressTypeDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("PressTypeList", "Reference");
+            InfluencerDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("InfluencerList", "Reference");
         }
 
         #endregion

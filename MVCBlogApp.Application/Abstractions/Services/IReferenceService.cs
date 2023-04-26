@@ -1,4 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
@@ -15,6 +17,7 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetAllInfluencer;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetByIdInfluencer;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetInfluencerCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
@@ -100,6 +103,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetInfluencerCreateItemsQueryResponse> GetInfluencerCreateItemsAsync();
         Task<GetAllInfluencerQueryResponse> GetAllInfluencerAsync();
         Task<InfluencerCreateCommandResponse> InfluencerCreateAsync(InfluencerCreateCommandRequest request);
+        Task<GetByIdInfluencerQueryResponse> GetByIdInfluencerAsync(int id);
+        Task<InfluencerUpdateCommandResponse> InfluencerUpdateAsync(InfluencerUpdateCommandRequest request);
+        Task<InfluencerDeleteCommandResponse> InfluencerDeleteAsync(int id);
 
         #endregion
     }

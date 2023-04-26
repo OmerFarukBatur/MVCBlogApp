@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerCreate;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerDelete;
+using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.Influencer.InfluencerUpdate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamCreate;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.OurTeam.OurTeamUpdate;
@@ -18,6 +21,7 @@ using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsDelete;
 using MVCBlogApp.Application.Features.Commands.ReferenceAndOuther.SeminarVisuals.SeminarVisualsUpdate;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetAllInfluencer;
+using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetByIdInfluencer;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.Influencer.GetInfluencerCreateItems;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetAllOurTeam;
 using MVCBlogApp.Application.Features.Queries.ReferenceAndOuther.OurTeam.GetByIdOurTeam;
@@ -939,7 +943,7 @@ namespace MVCBlogApp.Persistence.Services
                 }
 
                 _pressWriteRepository.Update(press);
-                await _pressWriteRepository.SaveAsync();                
+                await _pressWriteRepository.SaveAsync();
 
                 return new()
                 {
@@ -1189,6 +1193,111 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdInfluencerQueryResponse> GetByIdInfluencerAsync(int id)
+        {
+            VM_Influencer? vM_Influencer = await _influencerReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Influencer
+                {
+                    Id = x.Id,
+                    CompanyName = x.CompanyName,
+                    CompanySector = x.CompanySector,
+                    Email = x.Email,
+                    Message = x.Message,
+                    Phone = x.Phone,
+                    StatusId = x.StatusId,
+                    NameSurname = x.NameSurname
+                }).FirstOrDefaultAsync();
+
+            if (vM_Influencer != null)
+            {
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+                return new()
+                {
+                    Statuses = allStatuses,
+                    Influencer = vM_Influencer,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Statuses = null,
+                    Influencer = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<InfluencerUpdateCommandResponse> InfluencerUpdateAsync(InfluencerUpdateCommandRequest request)
+        {
+            Influencer ınfluencer = await _influencerReadRepository.GetByIdAsync(request.Id);
+
+            if (ınfluencer != null)
+            {
+                ınfluencer.NameSurname = request.NameSurname;
+                ınfluencer.Phone = request.Phone;
+                ınfluencer.CompanySector = request.CompanySector;
+                ınfluencer.CompanyName = request.CompanyName;
+                ınfluencer.Email = request.Email;
+                ınfluencer.Message = request.Message;
+                ınfluencer.StatusId = request.StatusId;
+
+                _influencerWriteRepository.Update(ınfluencer);
+                await _influencerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<InfluencerDeleteCommandResponse> InfluencerDeleteAsync(int id)
+        {
+            Influencer ınfluencer = await _influencerReadRepository.GetByIdAsync(id);
+
+            if (ınfluencer != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                ınfluencer.StatusId = statusId;
+
+                _influencerWriteRepository.Update(ınfluencer);
+                await _influencerWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
                 };
             }
         }
