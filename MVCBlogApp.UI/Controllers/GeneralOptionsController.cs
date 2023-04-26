@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -10,6 +11,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
@@ -231,6 +233,23 @@ namespace MVCBlogApp.UI.Controllers
             FormDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("FormList", "GeneralOptions");
         }
+
+        #endregion
+
+        #region Contact
+
+        public async Task<IActionResult> ContactList(GetAllContactQueryRequest request)
+        {
+            GetAllContactQueryResponse response = await _mediator.Send(request);
+            return View(response.Contacts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ContactReadUpdate(ContactReadUpdateCommandRequest request)
+        {
+            ContactReadUpdateCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ContactList", "GeneralOptions");
+        }        
 
         #endregion
     }

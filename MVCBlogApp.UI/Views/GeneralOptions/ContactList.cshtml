@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewData["Title"] = "ContactList";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">İletişim Listesi</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Konu</th>
+                                        <th>Ad Soyad</th>
+                                        <th>Mail</th>
+                                        <th>Tarih</th>
+                                        <th>Telefon</th>
+                                        <th>Açıklama</th>
+                                        <th>Okundu</th>
+                                        <th>Durumu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.ContactCategoryName</td>
+                                            <td>@item.NameSurname</td>
+                                            <td>@item.Email</td>
+                                            <td>@item.CreateDate</td>
+                                            <td>@item.Phone</td>
+                                            <td>@item.Description</td>
+                                            @if (@item.IsRead)
+                                            {
+                                                <td><a class="btn btn-outline-success" asp-action="ContactReadUpdate" asp-controller="GeneralOptions" asp-route-id="@item.Id"><i class="fa fa-check-square" aria-hidden="true"></i></a></td>
+                                            }
+                                            else
+                                            {
+                                                <td><a class="btn btn-outline-success" asp-action="ContactReadUpdate" asp-controller="GeneralOptions" asp-route-id="@item.Id"><i class="fa fa-times" aria-hidden="true"></i></a></td>
+                                            }                                            
+                                            <td>@item.StatusName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

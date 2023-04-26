@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -11,6 +12,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Languages.UpdateLa
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
@@ -20,9 +22,12 @@ using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetAllNa
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetByIdNavigation;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Navigation.GetNavigationCreateItems;
 using MVCBlogApp.Application.Operations;
+using MVCBlogApp.Application.Repositories.Contact;
+using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.Form;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -36,6 +41,11 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INavigationWriteRepository _navigationWriteRepository;
         private readonly IFormReadRepository _formReadRepository;
         private readonly IFormWriteRepository _formWriteRepository;
+        private readonly IContactReadRepository _contactReadRepository;
+        private readonly IContactWriteRepository _contactWriteRepository;
+        private readonly IStatusReadRepository _statusReadRepository;
+        private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
+        private readonly IContactCategoryWriteRepository _contactCategoryWriteRepository;
 
         public GeneralOptionsService(
             ILanguagesReadRepository languagesReadRepository,
@@ -43,7 +53,12 @@ namespace MVCBlogApp.Persistence.Services
             INavigationReadRepository navigationReadRepository,
             INavigationWriteRepository navigationWriteRepository,
             IFormReadRepository formReadRepository,
-            IFormWriteRepository formWriteRepository)
+            IFormWriteRepository formWriteRepository,
+            IContactReadRepository contactReadRepository,
+            IContactWriteRepository contactWriteRepository,
+            IStatusReadRepository statusReadRepository,
+            IContactCategoryReadRepository contactCategoryReadRepository,
+            IContactCategoryWriteRepository contactCategoryWriteRepository)
         {
             _languagesReadRepository = languagesReadRepository;
             _languagesWriteRepository = languagesWriteRepository;
@@ -51,6 +66,11 @@ namespace MVCBlogApp.Persistence.Services
             _navigationWriteRepository = navigationWriteRepository;
             _formReadRepository = formReadRepository;
             _formWriteRepository = formWriteRepository;
+            _contactReadRepository = contactReadRepository;
+            _contactWriteRepository = contactWriteRepository;
+            _statusReadRepository = statusReadRepository;
+            _contactCategoryReadRepository = contactCategoryReadRepository;
+            _contactCategoryWriteRepository = contactCategoryWriteRepository;
         }
 
         #region Language
@@ -587,6 +607,64 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+
+        #endregion
+
+        #region Contact
+
+        public async Task<GetAllContactQueryResponse> GetAllContactAsync()
+        {
+            List<VM_Contact> vM_Contacts = await _contactReadRepository.GetAll()
+                .Join(_statusReadRepository.GetAll(), co => co.StatusId, st => st.Id, (co, st) => new { co, st })
+                .Join(_contactCategoryReadRepository.GetAll(), con => con.co.ContactCategoryId, cr => cr.Id, (con, cr) => new { con, cr })
+                .Select(x => new VM_Contact
+                {
+                    Id = x.con.co.Id,
+                    Description = x.con.co.Description,
+                    IsRead = x.con.co.IsRead,
+                    Email = x.con.co.Email,
+                    NameSurname = x.con.co.NameSurname,
+                    Phone = x.con.co.Phone,
+                    Subject = x.con.co.Subject,
+                    CreateDate = x.con.co.CreateDate,
+                    ContactCategoryName = x.cr.ContactCategoryName,
+                    StatusName = x.con.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Contacts = vM_Contacts
+            };
+        }
+
+        public async Task<ContactReadUpdateCommandResponse> ContactReadUpdateAsync(int id)
+        {
+            Contact contact  = await _contactReadRepository.GetByIdAsync(id);
+
+            if (contact != null)
+            {
+                contact.IsRead = true ? false : true;
+
+                _contactWriteRepository.Update(contact);
+                await _contactWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
 
 
         #endregion
