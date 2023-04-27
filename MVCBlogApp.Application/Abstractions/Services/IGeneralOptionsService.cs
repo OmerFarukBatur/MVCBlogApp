@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -9,6 +10,8 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
@@ -63,6 +66,14 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetAllContactQueryResponse> GetAllContactAsync();
         Task<ContactReadUpdateCommandResponse> ContactReadUpdateAsync(int id);
+
+        #endregion
+
+        #region ContactCategory
+
+        Task<GetContactCategoryCreateItemsQueryResponse> GetContactCategoryCreateItemsAsync();
+        Task<GetAllContactCategoryQueryResponse> GetAllContactCategoryAsync();
+        Task<ContactCategoryCreateCommandResponse> ContactCategoryCreateAsync(ContactCategoryCreateCommandRequest request);
 
         #endregion
     }

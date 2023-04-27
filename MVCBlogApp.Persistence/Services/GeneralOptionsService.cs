@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -13,6 +14,8 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetFormCreateItems;
@@ -664,6 +667,75 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+
+        #endregion
+
+        #region ContactCategory
+
+        public async Task<GetContactCategoryCreateItemsQueryResponse> GetContactCategoryCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language
+            {
+                Id = x.Id,
+                Language = x.Language
+            }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages
+            };
+        }
+
+        public async Task<GetAllContactCategoryQueryResponse> GetAllContactCategoryAsync()
+        {
+            List<VM_ContactCategory> vM_ContactCategories = await _contactCategoryReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), co => co.LangId, lg => lg.Id, (co, lg) => new { co, lg })
+                .Select(x => new VM_ContactCategory
+                {
+                    Id = x.co.Id,
+                    ContactCategoryName = x.co.ContactCategoryName,
+                    Language = x.lg.Language
+                }).ToListAsync();
+
+            return new()
+            {
+                ContactCategories = vM_ContactCategories
+            };
+        }
+
+        public async Task<ContactCategoryCreateCommandResponse> ContactCategoryCreateAsync(ContactCategoryCreateCommandRequest request)
+        {
+            var check = await _contactCategoryReadRepository
+                .GetWhere(x => x.ContactCategoryName.Trim().ToLower() == request.ContactCategoryName.Trim().ToLower() || x.ContactCategoryName.Trim().ToUpper() == request.ContactCategoryName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                ContactCategory contactCategory = new()
+                {
+                    ContactCategoryName = request.ContactCategoryName,
+                    LangId = request.LangId
+                };
+
+                await _contactCategoryWriteRepository.AddAsync(contactCategory);
+                await _contactCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
 
 
 
