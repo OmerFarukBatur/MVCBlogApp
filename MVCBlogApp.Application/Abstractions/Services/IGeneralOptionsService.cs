@@ -1,5 +1,7 @@
 ﻿using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -11,6 +13,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetByIdContactCategory;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
@@ -74,6 +77,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetContactCategoryCreateItemsQueryResponse> GetContactCategoryCreateItemsAsync();
         Task<GetAllContactCategoryQueryResponse> GetAllContactCategoryAsync();
         Task<ContactCategoryCreateCommandResponse> ContactCategoryCreateAsync(ContactCategoryCreateCommandRequest request);
+        Task<GetByIdContactCategoryQueryResponse> GetByIdContactCategoryAsync(int id);
+        Task<ContactCategoryUpdateCommandResponse> ContactCategoryUpdateAsync(ContactCategoryUpdateCommandRequest request);
+        Task<ContactCategoryDeleteCommandResponse> ContactCategoryDeleteAsync(int id);
 
         #endregion
     }

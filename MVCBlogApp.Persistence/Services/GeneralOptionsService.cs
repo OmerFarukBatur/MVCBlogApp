@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -15,6 +17,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetByIdContactCategory;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
@@ -591,7 +594,7 @@ namespace MVCBlogApp.Persistence.Services
             Form form = await _formReadRepository.GetByIdAsync(id);
 
             if (form != null)
-            { 
+            {
                 _formWriteRepository.Remove(form);
                 await _formWriteRepository.SaveAsync();
 
@@ -643,7 +646,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<ContactReadUpdateCommandResponse> ContactReadUpdateAsync(int id)
         {
-            Contact contact  = await _contactReadRepository.GetByIdAsync(id);
+            Contact contact = await _contactReadRepository.GetByIdAsync(id);
 
             if (contact != null)
             {
@@ -732,6 +735,97 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdContactCategoryQueryResponse> GetByIdContactCategoryAsync(int id)
+        {
+            VM_ContactCategory? vM_ContactCategory = await _contactCategoryReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_ContactCategory
+                {
+                    Id = x.Id,
+                    ContactCategoryName = x.ContactCategoryName,
+                    LangId = x.LangId
+                }).FirstOrDefaultAsync();
+
+            if (vM_ContactCategory != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll().Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    ContactCategory = vM_ContactCategory,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    ContactCategory = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ContactCategoryUpdateCommandResponse> ContactCategoryUpdateAsync(ContactCategoryUpdateCommandRequest request)
+        {
+            ContactCategory contactCategory = await _contactCategoryReadRepository.GetByIdAsync(request.Id);
+
+            if (contactCategory != null)
+            {
+                contactCategory.ContactCategoryName = request.ContactCategoryName;
+                contactCategory.LangId = request.LangId;
+
+                _contactCategoryWriteRepository.Update(contactCategory);
+                await _contactCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ContactCategoryDeleteCommandResponse> ContactCategoryDeleteAsync(int id)
+        {
+            ContactCategory contactCategory = await _contactCategoryReadRepository.GetByIdAsync(id);
+
+            if (contactCategory != null)
+            {
+                _contactCategoryWriteRepository.Remove(contactCategory);
+                await _contactCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

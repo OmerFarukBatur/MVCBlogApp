@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Contact.ContactReadUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormCreate;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormDelete;
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Form.FormUpdate;
@@ -14,6 +16,7 @@ using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.Navigat
 using MVCBlogApp.Application.Features.Commands.GeneralOptions.Navigation.NavigationUpdate;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Contact.GetAllContact;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
+using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetByIdContactCategory;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetAllForms;
 using MVCBlogApp.Application.Features.Queries.GeneralOptions.Form.GetByIdForm;
@@ -286,38 +289,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ContactCategoryUpdate(GetByIdFormQueryRequest request)
+        public async Task<IActionResult> ContactCategoryUpdate(GetByIdContactCategoryQueryRequest request)
         {
-            GetByIdFormQueryResponse response = await _mediator.Send(request);
+            GetByIdContactCategoryQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("FormList", "GeneralOptions");
+                return RedirectToAction("ContactCategoryUpdate", "GeneralOptions");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> ContactCategoryUpdate(FormUpdateQueryRequest request)
+        public async Task<IActionResult> ContactCategoryUpdate(ContactCategoryUpdateCommandRequest request)
         {
-            FormUpdateQueryResponse response = await _mediator.Send(request);
+            ContactCategoryUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("FormList", "GeneralOptions");
+                return RedirectToAction("ContactCategoryList", "GeneralOptions");
             }
             else
             {
-                return RedirectToAction("FormUpdate", "GeneralOptions");
+                return RedirectToAction("ContactCategoryUpdate", "GeneralOptions");
             }
         }
 
 
-        public async Task<IActionResult> ContactCategoryDelete(FormDeleteCommandRequest request)
+        public async Task<IActionResult> ContactCategoryDelete(ContactCategoryDeleteCommandRequest request)
         {
-            FormDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("FormList", "GeneralOptions");
+            ContactCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ContactCategoryList", "GeneralOptions");
         }
 
         #endregion
