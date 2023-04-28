@@ -1,12 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyCreate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetAllTKBiography;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetTKBiographyCreateItems;
 using MVCBlogApp.Application.Repositories.Auth;
+using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.TaylanK;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -20,15 +27,37 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IAuthService _authService;
         private readonly IAuthReadRepository _authReadRepository;
         private readonly IMailService _mailService;
+        private readonly ITaylanKReadRepository _waylanKReadRepository;
+        private readonly ITaylanKWriteRepository _waylanKWriteRepository;
+        private readonly IStatusReadRepository _statusReadRepository;
+        private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly IStorageService _storageService;
 
-        public YoneticiIslemleri(IUserReadRepository userReadRepository, IUserWriteRepository userWriteRepository, IAuthService authService, IAuthReadRepository authReadRepository, IMailService mailService)
+        public YoneticiIslemleri(
+            IUserReadRepository userReadRepository,
+            IUserWriteRepository userWriteRepository,
+            IAuthService authService,
+            IAuthReadRepository authReadRepository,
+            IMailService mailService,
+            ITaylanKReadRepository waylanKReadRepository,
+            ITaylanKWriteRepository waylanKWriteRepository,
+            IStatusReadRepository statusReadRepository,
+            ILanguagesReadRepository languagesReadRepository,
+            IStorageService storageService)
         {
             _userReadRepository = userReadRepository;
             _userWriteRepository = userWriteRepository;
             _authService = authService;
             _authReadRepository = authReadRepository;
             _mailService = mailService;
+            _waylanKReadRepository = waylanKReadRepository;
+            _waylanKWriteRepository = waylanKWriteRepository;
+            _statusReadRepository = statusReadRepository;
+            _languagesReadRepository = languagesReadRepository;
+            _storageService = storageService;
         }
+
+        #region Admin
 
         public async Task<AdminByIdRemoveCommandResponse> AdminDeleteAsync(AdminByIdRemoveCommandRequest request)
         {
@@ -151,7 +180,7 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
-
+        
         public async Task<AdminUpdateCommandResponse> UpdateAdminAsync(AdminUpdateCommandRequest request)
         {
             User user = await _userReadRepository.GetByIdAsync(request.Id);
@@ -196,5 +225,100 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region TK
+
+        public async Task<GetTKBiographyCreateItemsQueryResponse> GetTKBiographyCreateItemsAsync()
+        {
+            List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatus = await _statusReadRepository
+                .GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Languages = vM_Languages,
+                Statuses = allStatus
+            };
+        }
+
+        public async Task<GetAllTKBiographyQueryResponse> GetAllTKBiographyAsync()
+        {
+            List<VM_TaylanK> vM_TaylanKs = await _waylanKReadRepository.GetAll()
+                .Join(_languagesReadRepository.GetAll(), ta => ta.LangId, lg => lg.Id, (ta, lg) => new { ta, lg })
+                .Join(_statusReadRepository.GetAll(), tay => tay.ta.StatusId, st => st.Id, (tay, st) => new { tay, st })
+                .Select(x => new VM_TaylanK
+                {
+                    Id = x.tay.ta.Id,
+                    Adress = x.tay.ta.Adress,
+                    CompanyName = x.tay.ta.CompanyName,
+                    Email1 = x.tay.ta.Email1,
+                    Phone1 = x.tay.ta.Phone1,
+                    CreateDate = x.tay.ta.CreateDate,
+                    Language = x.tay.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                TaylanKs = vM_TaylanKs
+            };
+        }
+
+        public async Task<TKBiographyCreateCommandResponse> TKBiographyCreateAsync(TKBiographyCreateCommandRequest request)
+        {
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("taylaK-logo-files", request.FormFile);
+
+            TaylanK taylanK = new()
+            {
+                About = request.About,
+                Adress = request.Adress,
+                Bio = request.Bio,
+                CompanyName = request.CompanyName,
+                CreateDate = DateTime.Now,
+                Email1 = request.Email1,
+                Email2 = request.Email2,
+                Phone1 = request.Phone1,
+                Facebook = request.Facebook,
+                Fax = request.Fax,
+                GoogleMap = request.GoogleMap,
+                Instagram = request.Instagram,
+                LangId = request.LangId,
+                Metadescription = request.Metadescription,
+                Metakey = request.Metakey,
+                Metatitle = request.Metatitle,
+                Phone2 = request.Phone2,
+                Pinterest = request.Pinterest,
+                StatusId = request.StatusId,
+                Twitter = request.Twitter,
+                UserId = request.UserId > 0 ? request.UserId : null,
+                Logo = @"~\Upload\" + result[0].pathOrContainerName
+            };
+
+            await _waylanKWriteRepository.AddAsync(taylanK);
+            await _waylanKWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+
+        #endregion
     }
 }

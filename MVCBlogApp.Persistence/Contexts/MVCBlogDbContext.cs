@@ -1376,7 +1376,8 @@ namespace MVCBlogApp.Persistence.Contexts
 
             modelBuilder.Entity<TaylanK>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID");
 
                 entity.ToTable("TaylanK");
 

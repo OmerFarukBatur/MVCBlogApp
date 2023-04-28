@@ -40,6 +40,7 @@
     <Folder Include="wwwroot\Upload\press-files\" />
     <Folder Include="wwwroot\Upload\reference-files\" />
     <Folder Include="wwwroot\Upload\seminarVisuals-files\" />
+    <Folder Include="wwwroot\Upload\taylaK-logo-files\" />
   </ItemGroup>
 
 </Project>
