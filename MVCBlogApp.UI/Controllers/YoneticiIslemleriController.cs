@@ -2,20 +2,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryCreate;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryDelete;
-using MVCBlogApp.Application.Features.Commands.GeneralOptions.ContactCategory.ContactCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyCreate;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetAllContactCategory;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetByIdContactCategory;
-using MVCBlogApp.Application.Features.Queries.GeneralOptions.ContactCategory.GetContactCategoryCreateItems;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyDelete;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetAllTKBiography;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetByIdTKBiography;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetTKBiographyCreateItems;
 using MVCBlogApp.Application.ViewModels;
 
@@ -119,6 +116,7 @@ namespace MVCBlogApp.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> TKBiographyCreate(TKBiographyCreateCommandRequest request)
         {
+            request.UserId = _operationService.GetUser().Id;
             TKBiographyCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
@@ -131,9 +129,9 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TKBiographyUpdate(GetByIdContactCategoryQueryRequest request)
+        public async Task<IActionResult> TKBiographyUpdate(GetByIdTKBiographyQueryRequest request)
         {
-            GetByIdContactCategoryQueryResponse response = await _mediator.Send(request);
+            GetByIdTKBiographyQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
@@ -145,9 +143,9 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TKBiographyUpdate(ContactCategoryUpdateCommandRequest request)
+        public async Task<IActionResult> TKBiographyUpdate(TKBiographyUpdateCommandRequest request)
         {
-            ContactCategoryUpdateCommandResponse response = await _mediator.Send(request);
+            TKBiographyUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return RedirectToAction("TKBiographyList", "YoneticiIslemleri");
@@ -159,9 +157,9 @@ namespace MVCBlogApp.UI.Controllers
         }
 
 
-        public async Task<IActionResult> TKBiographyDelete(ContactCategoryDeleteCommandRequest request)
+        public async Task<IActionResult> TKBiographyDelete(TKBiographyDeleteCommandRequest request)
         {
-            ContactCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            TKBiographyDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("TKBiographyList", "YoneticiIslemleri");
         }
 

@@ -1,14 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminByIdRemove;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminCreate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.AdminUpdate;
 using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyCreate;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyDelete;
+using MVCBlogApp.Application.Features.Commands.YoneticiIslemleri.TK.TKBiographyUpdate;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AdminRoleList;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.AllAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.GetByIdAdmin;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetAllTKBiography;
+using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetByIdTKBiography;
 using MVCBlogApp.Application.Features.Queries.YoneticiIslemleri.TK.GetTKBiographyCreateItems;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.Languages;
@@ -82,7 +86,7 @@ namespace MVCBlogApp.Persistence.Services
                     State = false
                 };
             }
-            
+
         }
 
         public async Task<AdminRoleListQueryResponse> AdminListRoleAsync()
@@ -97,32 +101,33 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<AllAdminQueryResponse> AllAdminAsync()
         {
             List<AllAdmins> admins = await _userReadRepository.GetAll()
-                .Join(_authReadRepository.GetAll(),us=> us.AuthId, au=> au.Id, (us,au)=> new {us,au})
-                .Select(x => new AllAdmins {
-                Id = x.us.Id,
-                UserName = x.us.Username,
-                AuthName = x.au.AuthName,
-                CreateDate = (DateTime)x.us.CreateDate,
-                CreateUserID = x.us.CreateUserId,
-                ModifiedDate = x.us.ModifiedDate,
-                ModifiedUserID = x.us.ModifiedUserId,
-                IsActive = (bool)x.us.IsActive,
-                Email = x.us.Email
-            }).ToListAsync();
+                .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                .Select(x => new AllAdmins
+                {
+                    Id = x.us.Id,
+                    UserName = x.us.Username,
+                    AuthName = x.au.AuthName,
+                    CreateDate = (DateTime)x.us.CreateDate,
+                    CreateUserID = x.us.CreateUserId,
+                    ModifiedDate = x.us.ModifiedDate,
+                    ModifiedUserID = x.us.ModifiedUserId,
+                    IsActive = (bool)x.us.IsActive,
+                    Email = x.us.Email
+                }).ToListAsync();
 
-            return new() 
-            { 
-                AllAdmins = admins 
+            return new()
+            {
+                AllAdmins = admins
             };
         }
 
         public async Task<AdminCreateCommandResponse> CreateAdminAsync(AdminCreateCommandRequest request)
         {
-            List<User> users = await _userReadRepository.GetWhere(u => u.Email == request.Email || u.Username== request.UserName).ToListAsync();
+            List<User> users = await _userReadRepository.GetWhere(u => u.Email == request.Email || u.Username == request.UserName).ToListAsync();
 
             if (users.Count > 0)
             {
-                return new AdminCreateCommandResponse() 
+                return new AdminCreateCommandResponse()
                 {
                     Message = "Bu bilgilere sahip yönetici kayıtlıdır.",
                     Status = false
@@ -130,7 +135,7 @@ namespace MVCBlogApp.Persistence.Services
             }
             else
             {
-                (byte[] passwordSalt,byte[] passwordHash) = _authService.CreatePasswordHash(request.Password);
+                (byte[] passwordSalt, byte[] passwordHash) = _authService.CreatePasswordHash(request.Password);
                 User user = new();
                 user.Email = request.Email;
                 user.Username = request.UserName;
@@ -146,8 +151,8 @@ namespace MVCBlogApp.Persistence.Services
 
                 //await _mailService.SendMailAsync(user.Email,user.Username,request.Password);
 
-                return new AdminCreateCommandResponse() 
-                { 
+                return new AdminCreateCommandResponse()
+                {
                     Message = "Yönetici başarıyla kayıt edilmiştir.",
                     Status = true
                 };
@@ -160,14 +165,14 @@ namespace MVCBlogApp.Persistence.Services
             if (user != null)
             {
                 List<Auth> auths = await _authReadRepository.GetAll(false).ToListAsync();
-                return new GetByIdAdminQueryResponse() 
+                return new GetByIdAdminQueryResponse()
                 {
-                    Auths= auths,
+                    Auths = auths,
                     Email = user.Email,
                     UserName = user.Username,
-                    Id= user.Id,
+                    Id = user.Id,
                     IsActive = user.IsActive,
-                    AuthId= user.AuthId,
+                    AuthId = user.AuthId,
                     State = true
                 };
             }
@@ -180,17 +185,17 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
-        
+
         public async Task<AdminUpdateCommandResponse> UpdateAdminAsync(AdminUpdateCommandRequest request)
         {
             User user = await _userReadRepository.GetByIdAsync(request.Id);
             if (user != null)
             {
-                byte[] passwordSalt , passwordHash ;
+                byte[] passwordSalt, passwordHash;
 
                 if (request.Password != null)
                 {
-                    (passwordSalt,passwordHash) = _authService.CreatePasswordHash(request.Password);
+                    (passwordSalt, passwordHash) = _authService.CreatePasswordHash(request.Password);
                 }
                 else
                 {
@@ -203,14 +208,14 @@ namespace MVCBlogApp.Persistence.Services
                 user.Email = request.Email;
                 user.ModifiedDate = DateTime.Now;
                 user.ModifiedUserId = request.ModifiedUserID;
-                user.PasswordHash= passwordHash;
-                user.PasswordSalt= passwordSalt; 
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
                 user.IsActive = request.IsActive;
-                
+
                 _userWriteRepository.Update(user);
                 await _userWriteRepository.SaveAsync();
 
-                return new() 
+                return new()
                 {
                     Message = "Kullanıcı başarılı bir şekilde güncellendi.",
                     Status = true
@@ -280,6 +285,13 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<TKBiographyCreateCommandResponse> TKBiographyCreateAsync(TKBiographyCreateCommandRequest request)
         {
+            var check = await _waylanKReadRepository.GetWhere(x => x.StatusId == 1).ToListAsync();
+
+            if (check.Count() > 1)
+            {
+                request.StatusId = 2;
+            }
+
             List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("taylaK-logo-files", request.FormFile);
 
             TaylanK taylanK = new()
@@ -302,7 +314,7 @@ namespace MVCBlogApp.Persistence.Services
                 Metatitle = request.Metatitle,
                 Phone2 = request.Phone2,
                 Pinterest = request.Pinterest,
-                StatusId = request.StatusId,
+                StatusId = 1,
                 Twitter = request.Twitter,
                 UserId = request.UserId > 0 ? request.UserId : null,
                 Logo = @"~\Upload\" + result[0].pathOrContainerName
@@ -316,6 +328,159 @@ namespace MVCBlogApp.Persistence.Services
                 Message = "Kayıt işlemi başarıyla yapılmıştır.",
                 State = true
             };
+        }
+
+        public async Task<GetByIdTKBiographyQueryResponse> GetByIdTKBiographyAsync(int id)
+        {
+            VM_TaylanK? vM_TaylanK = await _waylanKReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_TaylanK
+                {
+                    Id = x.Id,
+                    About = x.About,
+                    Adress = x.Adress,
+                    Bio = x.Bio,
+                    CompanyName = x.CompanyName,
+                    Email1 = x.Email1,
+                    Email2 = x.Email2,
+                    Facebook = x.Facebook,
+                    Fax = x.Fax,
+                    GoogleMap = x.GoogleMap,
+                    Instagram = x.Instagram,
+                    LangId = x.LangId,
+                    Metadescription = x.Metadescription,
+                    Metakey = x.Metakey,
+                    Metatitle = x.Metatitle,
+                    Phone1 = x.Phone1,
+                    Phone2 = x.Phone2,
+                    Pinterest = x.Pinterest,
+                    StatusId = x.StatusId,
+                    Twitter = x.Twitter
+                }).FirstOrDefaultAsync();
+
+            if (vM_TaylanK != null)
+            {
+                List<VM_Language> vM_Languages = await _languagesReadRepository
+                .GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+                List<AllStatus> allStatus = await _statusReadRepository
+                    .GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Languages = vM_Languages,
+                    Statuses = allStatus,
+                    TaylanK = vM_TaylanK,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Languages = null,
+                    Statuses = null,
+                    TaylanK = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<TKBiographyUpdateCommandResponse> TKBiographyUpdateAsync(TKBiographyUpdateCommandRequest request)
+        {
+            TaylanK taylanK = await _waylanKReadRepository.GetByIdAsync(request.Id);
+
+            if (taylanK != null)
+            {
+                taylanK.About = request.About;
+                taylanK.Adress = request.Adress;
+                taylanK.Bio = request.Bio;
+                taylanK.CompanyName = request.CompanyName;
+                taylanK.Email1 = request.Email1;
+                taylanK.Email2 = request.Email2;
+                taylanK.Phone1 = request.Phone1;
+                taylanK.Facebook = request.Facebook;
+                taylanK.Fax = request.Fax;
+                taylanK.GoogleMap = request.GoogleMap;
+                taylanK.Instagram = request.Instagram;
+                taylanK.LangId = request.LangId;
+                taylanK.Metadescription = request.Metadescription;
+                taylanK.Metakey = request.Metakey;
+                taylanK.Metatitle = request.Metatitle;
+                taylanK.Phone2 = request.Phone2;
+                taylanK.Pinterest = request.Pinterest;
+                taylanK.Twitter = request.Twitter;
+                taylanK.StatusId = 1;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("taylaK-logo-files", request.FormFile);
+                    taylanK.Logo = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                var check = await _waylanKReadRepository.GetWhere(x => x.StatusId == 1).ToListAsync();
+
+                if (check.Count() > 1)
+                {
+                    taylanK.StatusId = 2;
+                }
+
+                _waylanKWriteRepository.Update(taylanK);
+                await _waylanKWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<TKBiographyDeleteCommandResponse> TKBiographyDeleteAsync(int id)
+        {
+            TaylanK taylanK = await _waylanKReadRepository.GetByIdAsync(id);
+
+            if (taylanK != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+                taylanK.StatusId = statusId;
+
+                _waylanKWriteRepository.Update(taylanK);
+                await _waylanKWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 
