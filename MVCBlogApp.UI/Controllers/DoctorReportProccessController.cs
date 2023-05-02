@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -17,9 +20,53 @@ namespace MVCBlogApp.UI.Controllers
             _generalOptionsService = generalOptionsService;
         }
 
-        public IActionResult Index()
+        #region Appointment
+
+        [HttpGet]
+        public async Task<IActionResult> AppointmentList(GetAllAppointmentQueryRequest request)
+        {
+            GetAllAppointmentQueryResponse response = await _mediator.Send(request);
+            return View(response.D_Appointments);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AppointmentCreate(GetAppointmentCreateItemsQueryRequest request)
+        {
+            GetAppointmentCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AppointmentCreate(AppointmentCreateCommandRequest request)
+        {
+            AppointmentCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("AppointmentCreate", "DoctorReportProccess");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AppointmentUpdate()
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AppointmentUpdate(int a)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> AppointmentDelete(int a)
+        {
+            return View();
+        }
+
+        #endregion
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly MVCBlogDbContext _context;

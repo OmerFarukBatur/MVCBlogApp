@@ -100,6 +100,10 @@ namespace MVCBlogApp.UI.Controllers
                 {
                     return RedirectToAction("Index", "Admin");
                 }
+                else if (response.AuthRole == "Diyetisyen")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
                 else
                 {
                     return RedirectToAction("Index", "Admin");
