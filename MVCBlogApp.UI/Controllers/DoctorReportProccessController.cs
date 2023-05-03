@@ -87,6 +87,12 @@ namespace MVCBlogApp.UI.Controllers
             return RedirectToAction("AppointmentList", "DoctorReportProccess");
         }
 
+        
+        public async Task<IActionResult> CalenderEventList()
+        {
+            return View();
+        }
+
         #endregion
     }
 }
