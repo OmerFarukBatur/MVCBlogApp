@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -51,20 +54,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AppointmentUpdate()
+        public async Task<IActionResult> AppointmentUpdate(GetByIdAppointmentQueryRequest request)
         {
-            return View();
+            GetByIdAppointmentQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AppointmentUpdate(int a)
+        public async Task<IActionResult> AppointmentUpdate(AppointmentUpdateCommandRequest request)
         {
-            return View();
+            AppointmentUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("AppointmentUpdate", "DoctorReportProccess");
+            }
         }
 
-        public async Task<IActionResult> AppointmentDelete(int a)
+        public async Task<IActionResult> AppointmentDelete(AppointmentDeleteCommandRequest request)
         {
-            return View();
+            AppointmentDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("AppointmentList", "DoctorReportProccess");
         }
 
         #endregion

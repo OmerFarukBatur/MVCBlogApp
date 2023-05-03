@@ -6,8 +6,8 @@
         public int? MembersId { get; set; }
         public DateTime? AppointmentDate { get; set; }
         public decimal? Price { get; set; }
-        public byte[]? Subject { get; set; }
-        public string Description { get; set; } = null!;
+        public string? Subject { get; set; }
+        public string? Description { get; set; }
         public int? Interval { get; set; }
         public int? StatusId { get; set; }
         public bool? IsCompleted { get; set; }

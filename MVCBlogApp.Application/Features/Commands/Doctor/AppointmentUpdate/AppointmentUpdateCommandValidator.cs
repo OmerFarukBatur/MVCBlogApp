@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate
+namespace MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate
 {
-    public class AppointmentCreateCommandValidator : AbstractValidator<AppointmentCreateCommandRequest>
+    public class AppointmentUpdateCommandValidator : AbstractValidator<AppointmentUpdateCommandRequest>
     {
-        public AppointmentCreateCommandValidator()
+        public AppointmentUpdateCommandValidator()
         {
             RuleFor(x => x.Subject)
                 .NotEmpty()
@@ -38,7 +38,7 @@ namespace MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate
                 .WithMessage("Lütfen bir fiyat giriniz.")
                 .InclusiveBetween(0, 100000000)
                 .WithMessage("Lütfen fiyatı en az 0 olacak şekilde giriniz.");
-            
+
             RuleFor(x => x.StatusId)
                .NotEmpty()
                .NotNull()

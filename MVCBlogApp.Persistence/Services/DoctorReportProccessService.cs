@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Members;
@@ -10,7 +13,6 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
-using MVCBlogApp.Persistence.Repositories.Status;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -39,7 +41,7 @@ namespace MVCBlogApp.Persistence.Services
             _authReadRepository = authReadRepository;
         }
 
-        
+
         #region Appointment
 
         public async Task<GetAppointmentCreateItemsQueryResponse> GetAppointmentCreateItemsAsync()
@@ -142,8 +144,136 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdAppointmentQueryResponse> GetByIdAppointmentAsync(int id)
+        {
+            VM_D_Appointment? vM_D_Appointment = await _d_AppointmentReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.Id,
+                    AppointmentDate = x.AppointmentDate,
+                    Description = x.Description,
+                    MembersId = x.MembersId,
+                    Price = x.Price,
+                    StatusId = x.StatusId,
+                    Subject = x.Subject,
+                    UserId = x.UserId
+                }).FirstOrDefaultAsync();
 
+            if (vM_D_Appointment != null)
+            {
+                List<AllStatus> allStatus = await _statusReadRepository
+                .GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
 
+                List<VM_Admin> vM_Admins = await _userReadRepository.GetAll()
+                    .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                    .Select(x => new VM_Admin
+                    {
+                        Id = x.us.Id,
+                        AuthName = x.au.AuthName,
+                        Username = x.us.Username
+                    }).ToListAsync();
+
+                List<VM_Member> vM_Members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+                    .Select(x => new VM_Member
+                    {
+                        Id = x.Id,
+                        NameSurname = x.NameSurname
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Admins = vM_Admins,
+                    Members = vM_Members,
+                    Statuses = allStatus,
+                    D_Appointment = vM_D_Appointment,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Admins = null,
+                    Members = null,
+                    Statuses = null,
+                    D_Appointment = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<AppointmentUpdateCommandResponse> AppointmentUpdateAsync(AppointmentUpdateCommandRequest request)
+        {
+            D_Appointment d_Appointment = await _d_AppointmentReadRepository.GetByIdAsync(request.Id);
+
+            if (d_Appointment != null)
+            {
+                DateTime AppointmentDate = request.AppointmentDate.Date.Add(request.AppointmentTime.TimeOfDay);
+
+                d_Appointment.Price = request.Price;
+                d_Appointment.Description = request.Description;
+                d_Appointment.MembersId = request.MembersId;
+                d_Appointment.StatusId = request.StatusId;
+                d_Appointment.Subject = request.Subject;
+                d_Appointment.UserId = request.UserId;
+                d_Appointment.AppointmentDate = AppointmentDate;
+
+                _d_AppointmentWriteRepository.Update(d_Appointment);
+                await _d_AppointmentWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<AppointmentDeleteCommandResponse> AppointmentDeleteAsync(int id)
+        {
+            D_Appointment d_Appointment = await _d_AppointmentReadRepository.GetByIdAsync(id);
+
+            if (d_Appointment != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+
+                d_Appointment.IsCompleted = true;
+                d_Appointment.StatusId = statusId;
+
+                _d_AppointmentWriteRepository.Update(d_Appointment);
+                await _d_AppointmentWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+
+        }
 
         #endregion
     }
