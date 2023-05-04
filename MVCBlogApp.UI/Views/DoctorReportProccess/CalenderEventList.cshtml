@@ -48,8 +48,8 @@
                             </div>
                             </div>*@
 
-                            <div class="col-md-8">
-                                <div class="card-box m-b-50">
+                            <div class="col-lg-12" style="background-color: powderblue;">
+                                <div class="card-box m-b-6">
                                     <div id="calendar"></div>
                                 </div>
                             </div>
@@ -125,13 +125,30 @@
 <script>
 
     $('#calendar').fullCalendar({
-        //header: {
-        //    left: 'prev,next today',
-        //    center: 'title',
-        //    right: 'month'
-        //},
-        //defaultDate: 'new Date()',
-        //editable: true,
+        monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+        monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+        dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+        dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+        editable: true,
+        buttonText: {
+            today: 'Bugün',
+            month: 'Ay',
+            week: 'Hafta',
+            day: 'Gün',
+            list: 'Liste',
+            listMonth: 'Aylık Liste',
+            listYear: 'Yıllık Liste',
+            listWeek: 'Haftalık Liste',
+            listDay: 'Günlük Liste'
+        },
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,basicWeek,basicDay'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        editable: true,
+        eventLimit: true,
         events:
             [
                 {
@@ -141,14 +158,21 @@
                 },
                 {
                     title: 'Tournament',
-                    start: '2023-07-07',
-                    end: '2023-07-10',
+                    start: '2023-07-07T13:15:30',
+                    end: '2023-07-10T13:20:30',
                     color: 'darkorange'
                 },
                 {
                     title: 'Test Event',
                     url: 'http://google.com/',
-                    start: '2023-07-28'
+                    start: '2023-07-28T13:15:00',
+                    end: '2023-07-28T13:16:30'
+                }, 
+                {
+                    title: 'Bi-weekly Meeting',
+                    start: '2023-07-28T13:12:30',
+                    end: '2023-07-28T13:14:30',
+                    color: 'blue'
                 }
             ]
     });
