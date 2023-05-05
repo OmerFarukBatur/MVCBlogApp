@@ -56,66 +56,106 @@
 
                             <!-- end col -->
                             <!-- BEGIN MODAL -->
-                            @*<div class="modal fade none-border" id="event-modal">
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add New Event</strong></h4>
+                            <div class="modal fade none-border" id="event-modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="ModalTitle"><strong>Add New Event</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <form class="form-valide" accept-charset="utf-8" enctype="multipart/form-data">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="membersId1">
+                                                        Danışan
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="membersId" for="membersId">
+
+                                                    </label>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="userId1">
+                                                        Diyetisyen
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="userId" for="userId">
+
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="appointmentDate1">
+                                                        Randevu Tarihi <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="date" class="form-control dobpicker" id="appointmentDate" name="appointmentDate" data-date-format="yyyy-MM-dd" placeholder="Gün/Ay/Yıl" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="appointmentTime1">
+                                                        Randevu Saati <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
+                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-body"></div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
-                            <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
-                            </div>
-                            </div>
-                            </div>
-                            </div>*@
-                            @*<!-- Modal Add Category -->
-                            <div class="modal fade none-border" id="add-category">
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                            <h4 class="modal-title"><strong>Add a category</strong></h4>
-                            </div>
-                            <div class="modal-body">
-                            <form>
-                            <div class="row">
-                            <div class="col-md-6">
-                            <label class="control-label">Category Name</label>
-                            <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name">
-                            </div>
-                            <div class="col-md-6">
-                            <label class="control-label">Choose Category Color</label>
-                            <select class="form-control form-white" data-placeholder="Choose a color..." name="category-color">
-                            <option value="success">Success</option>
-                            <option value="danger">Danger</option>
-                            <option value="info">Info</option>
-                            <option value="pink">Pink</option>
-                            <option value="primary">Primary</option>
-                            <option value="warning">Warning</option>
-                            </select>
-                            </div>
-                            </div>
-                            </form>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Save</button>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            <!-- END MODAL -->*@
                         </div>
+                        <!-- Modal Add Category -->
+                        <div class="modal fade none-border" id="add-category">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><strong>Add a category</strong></h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Category Name</label>
+                                                    <input class="form-control form-white" placeholder="Enter name" type="text" name="category-name">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label">Choose Category Color</label>
+                                                    <select class="form-control form-white" data-placeholder="Choose a color..." name="category-color">
+                                                        <option value="success">Success</option>
+                                                        <option value="danger">Danger</option>
+                                                        <option value="info">Info</option>
+                                                        <option value="pink">Pink</option>
+                                                        <option value="primary">Primary</option>
+                                                        <option value="warning">Warning</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-danger waves-effect waves-light save-category" data-dismiss="modal">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END MODAL -->
                     </div>
                 </div>
-                <!-- /# card -->
             </div>
-            <!-- /# column -->
+            <!-- /# card -->
         </div>
+        <!-- /# column -->
     </div>
-    <!-- #/ container -->
+</div>
+<!-- #/ container -->
 </div>
 <!--**********************************
     Content body end
@@ -148,7 +188,29 @@
         navLinks: true,
         editable: true,
         eventLimit: true,
-        events: @Json.Serialize(@Model.D_Appointments)
-    });
+        events: @Json.Serialize(@Model.D_Appointments),
+        eventClick: function (info) {
+            $("#event-modal").modal('show');
 
+            $('.dobpicker').datepicker({
+                autoclose: true,
+            });
+
+            $('#ModalTitle').text(info.title + "  Randevu Bilgileri");
+
+            var member = document.getElementById('membersId');
+            member.textContent = info.title;
+
+            var user = document.getElementById('userId');
+            user.textContent = info.description;
+            
+            var datetime = new Date(info.start._i);
+
+            var appointmentDate = document.getElementById('appointmentDate');
+            appointmentDate.setAttribute('value', new Date(datetime).toISOString().slice(0, 10));
+
+            var appointmentTime = document.getElementById('appointmentTime');
+            appointmentTime.setAttribute('value', datetime.getHours() + ":" + datetime.getMinutes());
+        },
+    });
 </script>
