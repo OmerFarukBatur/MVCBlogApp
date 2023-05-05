@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetCalenderEventList;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -17,6 +18,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetByIdAppointmentQueryResponse> GetByIdAppointmentAsync(int id);
         Task<AppointmentUpdateCommandResponse> AppointmentUpdateAsync(AppointmentUpdateCommandRequest request);
         Task<AppointmentDeleteCommandResponse> AppointmentDeleteAsync(int id);
+
+        Task<GetCalenderEventListQueryResponse> GetCalenderEventListAsync();
 
         #endregion
     }

@@ -8,6 +8,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetCalenderEventList;
+using NuGet.Protocol;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -88,9 +90,10 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         
-        public async Task<IActionResult> CalenderEventList()
+        public async Task<IActionResult> CalenderEventList(GetCalenderEventListQueryRequest request)
         {
-            return View();
+            GetCalenderEventListQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         #endregion

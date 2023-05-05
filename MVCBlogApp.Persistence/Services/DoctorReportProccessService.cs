@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.GetCalenderEventList;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Members;
@@ -13,6 +14,7 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using System.Drawing;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -273,6 +275,29 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
 
+        }
+
+        public async Task<GetCalenderEventListQueryResponse> GetCalenderEventListAsync()
+        {
+            List<VM_CalenderData> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x=> x.IsCompleted == false && x.StatusId == 1)
+                .Join(_userReadRepository.GetAll(), app => app.UserId, user => user.Id, (app, user) => new { app, user })
+                .Join(_membersReadRepository.GetAll(), appi => appi.app.MembersId, mem => mem.Id, (appi, mem) => new { appi, mem })
+                .Join(_statusReadRepository.GetAll(), appio => appio.appi.app.StatusId, st => st.Id, (appio, st) => new { appio, st })
+                .Select(x => new VM_CalenderData
+                {
+                    Id = x.appio.appi.app.Id,
+                    Title = x.appio.mem.NameSurname,
+                    Start = x.appio.appi.app.AppointmentDate,
+                    Description = x.appio.appi.user.Username,
+                    End = null,
+                    AllDay = x.appio.appi.app.IsCompleted,
+                    Color = "darkorange"
+                }).ToListAsync();
+
+            return new()
+            {
+                D_Appointments = vM_D_Appointments
+            };
         }
 
         #endregion
