@@ -1,17 +1,34 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation.Results;
+using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Commands.Doctor.ByIdAppointmentDateTimeUpdate
 {
     public class ByIdAppointmentDateTimeUpdateCommandHandler : IRequestHandler<ByIdAppointmentDateTimeUpdateCommandRequest, ByIdAppointmentDateTimeUpdateCommandResponse>
     {
-        public Task<ByIdAppointmentDateTimeUpdateCommandResponse> Handle(ByIdAppointmentDateTimeUpdateCommandRequest request, CancellationToken cancellationToken)
+        private readonly IDoctorReportProccessService _service;
+
+        public ByIdAppointmentDateTimeUpdateCommandHandler(IDoctorReportProccessService service)
         {
-            throw new NotImplementedException();
+            _service = service;
+        }
+
+        public async Task<ByIdAppointmentDateTimeUpdateCommandResponse> Handle(ByIdAppointmentDateTimeUpdateCommandRequest request, CancellationToken cancellationToken)
+        {
+            ByIdAppointmentDateTimeUpdateCommandValidator rules = new();
+            ValidationResult validation = rules.Validate(request);
+            if (validation.IsValid)
+            {
+                return await _service.ByIdAppointmentDateTimeUpdateAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
     }
 }

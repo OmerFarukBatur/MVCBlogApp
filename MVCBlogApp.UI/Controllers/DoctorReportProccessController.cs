@@ -101,14 +101,14 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> ByIdAppointmentDateTimeUpdate(ByIdAppointmentDateTimeUpdateCommandRequest request)
         {
             ByIdAppointmentDateTimeUpdateCommandResponse response = await _mediator.Send(request);
-            if (response.State)
-            {
-                return RedirectToAction("AppointmentList", "DoctorReportProccess");
-            }
-            else
-            {
-                return RedirectToAction("AppointmentUpdate", "DoctorReportProccess");
-            }
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ByIdAppointmentStatusUpdate(AppointmentDeleteCommandRequest request)
+        {
+            AppointmentDeleteCommandResponse response = await _mediator.Send(request);
+            return Ok(response);
         }
 
         #endregion

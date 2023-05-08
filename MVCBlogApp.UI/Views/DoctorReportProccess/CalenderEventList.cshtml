@@ -79,20 +79,20 @@
                                                         <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
                                                     </div>
                                                     <div class="col-md-4 ml-auto">
-                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
-                                                    </div>                                                    
+                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentDateTimeUpdate();" runat="server">Kaydet</button>
+                                                    </div>
                                                     <div class="col-md-4 ml-auto">
-                                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
+                                                        <button type="submit" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal" onclick="return AppointmentStatusUpdate();" runat="server">Randevuyu İptal Et</button>
                                                     </div>
                                                 </div>
-                                                
+
                                             </form>
                                         </div>
                                     </div>
-                                   @* <div class="modal-footer">
-                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
-                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
-                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
+                                    @* <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
+                                    <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
+                                    <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
                                     </div>*@
 
                                 </div>
@@ -162,20 +162,7 @@
         autoclose: true,
     });
 
-
-    async function QuestionView(id) {
-        var write = document.getElementById('modalBody');
-        const response = await DataPost(id);
-
-        write.innerHTML = response;
-
-
-
-        $("#exampleModal").modal('show');
-
-    }
-
-    async function AppointmentUpdate() {
+    async function AppointmentDateTimeUpdate() {
 
         const formCheck = document.getElementById('form1').checkValidity();
         console.log(formCheck);
@@ -187,15 +174,29 @@
             var ATime = document.getElementById('appointmentTime').value;
 
             await $.post("@Url.Action("ByIdAppointmentDateTimeUpdate","DoctorReportProccess")", { Id: parseInt(id), AppointmentDate: ADate, AppointmentTime: ATime }).done(function (response, status, jqxhr) {
-                datas = response;
+                alert(response.Message);
+                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
             }).fail(function (jqxhr, status, error) {
-                datas = error;
+                alert(error);
+                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
             });
-            return datas;
         } else {
             alert("Lütfen tüm alanları geçerli cevaplar ile doldurunuz.");
             document.getElementById('form1').reportValidity();
             return false;
         }
+    }
+
+    async function AppointmentStatusUpdate() {
+
+        var id = document.getElementById('AppointmentId').textContent;
+
+        await $.post("@Url.Action("ByIdAppointmentStatusUpdate","DoctorReportProccess")", { Id: parseInt(id) }).done(function (response, status, jqxhr) {
+            alert(response.Message);
+            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+        }).fail(function (jqxhr, status, error) {
+            alert(error);
+            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+        });
     }
 </script>

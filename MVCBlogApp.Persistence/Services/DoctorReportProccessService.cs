@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.ByIdAppointmentDateTimeUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
@@ -227,6 +229,11 @@ namespace MVCBlogApp.Persistence.Services
                 d_Appointment.UserId = request.UserId;
                 d_Appointment.AppointmentDate = AppointmentDate;
 
+                if (request.StatusId == 1)
+                {
+                    d_Appointment.IsCompleted = false;
+                }
+
                 _d_AppointmentWriteRepository.Update(d_Appointment);
                 await _d_AppointmentWriteRepository.SaveAsync();
 
@@ -279,7 +286,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetCalenderEventListQueryResponse> GetCalenderEventListAsync()
         {
-            List<VM_CalenderData> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x=> x.IsCompleted == false && x.StatusId == 1)
+            List<VM_CalenderData> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x => x.IsCompleted == false && x.StatusId == 1)
                 .Join(_userReadRepository.GetAll(), app => app.UserId, user => user.Id, (app, user) => new { app, user })
                 .Join(_membersReadRepository.GetAll(), appi => appi.app.MembersId, mem => mem.Id, (appi, mem) => new { appi, mem })
                 .Join(_statusReadRepository.GetAll(), appio => appio.appi.app.StatusId, st => st.Id, (appio, st) => new { appio, st })
@@ -298,6 +305,34 @@ namespace MVCBlogApp.Persistence.Services
             {
                 D_Appointments = vM_D_Appointments
             };
+        }
+
+        public async Task<ByIdAppointmentDateTimeUpdateCommandResponse> ByIdAppointmentDateTimeUpdateAsync(ByIdAppointmentDateTimeUpdateCommandRequest request)
+        {
+            D_Appointment d_Appointment = await _d_AppointmentReadRepository.GetByIdAsync(request.Id);
+
+            if (d_Appointment != null)
+            {
+                DateTime AppointmentDate = request.AppointmentDate.Date.Add(request.AppointmentTime.TimeOfDay);
+                d_Appointment.AppointmentDate = AppointmentDate;
+
+                _d_AppointmentWriteRepository.Update(d_Appointment);
+                await _d_AppointmentWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Randevu Tarihi ve Saati Güncellenmiştir.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
         #endregion
