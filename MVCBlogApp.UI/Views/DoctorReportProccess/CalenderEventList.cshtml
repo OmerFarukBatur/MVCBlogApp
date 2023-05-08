@@ -15,7 +15,7 @@
                             <h4>Calendar</h4>
                         </div>
                         <div class="row">
-                            
+
                             <div class="col-lg-12" style="background-color: powderblue;">
                                 <div class="card-box m-b-6">
                                     <div id="calendar"></div>
@@ -25,13 +25,22 @@
                             <!-- BEGIN MODAL -->
                             <div class="modal fade none-border" id="event-modal">
                                 <div class="modal-dialog">
+
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="ModalTitle"><strong>Add New Event</strong></h4>
                                         </div>
                                         <div class="modal-body">
+                                            <form class="form-valide" method="post" id="form1" accept-charset="utf-8" enctype="multipart/form-data">
+                                                @*asp-action="ByIdAppointmentDateTimeUpdate" asp-controller="DoctorReportProccess" *@
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="AppointmentId">
+                                                        Id
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="AppointmentId" for="AppointmentId">
 
-                                            <form class="form-valide" accept-charset="utf-8" enctype="multipart/form-data">
+                                                    </label>
+                                                </div>
                                                 <div class="form-group row">
                                                     <label class="col-lg-4 col-form-label" for="membersId1">
                                                         Danışan
@@ -65,20 +74,31 @@
                                                         <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
                                                     </div>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
+                                                    </div>
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
+                                                    </div>                                                    
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
+                                                    </div>
+                                                </div>
+                                                
                                             </form>
                                         </div>
-
-
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
-                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
-                                    </div>
+                                   @* <div class="modal-footer">
+                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
+                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
+                                        <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
+                                    </div>*@
+
                                 </div>
                             </div>
                             <!-- END MODAL -->
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,18 +137,17 @@
         eventClick: function (info) {
             $("#event-modal").modal('show');
 
-            $('.dobpicker').datepicker({
-                autoclose: true,
-            });
-
             $('#ModalTitle').text(info.title + "  Randevu Bilgileri");
+
+            var appointmentId = document.getElementById('AppointmentId');
+            appointmentId.textContent = info.id;
 
             var member = document.getElementById('membersId');
             member.textContent = info.title;
 
             var user = document.getElementById('userId');
             user.textContent = info.description;
-            
+
             var datetime = new Date(info.start._i);
 
             var appointmentDate = document.getElementById('appointmentDate');
@@ -138,4 +157,45 @@
             appointmentTime.setAttribute('value', datetime.getHours() + ":" + datetime.getMinutes());
         },
     });
+
+    $('.dobpicker').datepicker({
+        autoclose: true,
+    });
+
+
+    async function QuestionView(id) {
+        var write = document.getElementById('modalBody');
+        const response = await DataPost(id);
+
+        write.innerHTML = response;
+
+
+
+        $("#exampleModal").modal('show');
+
+    }
+
+    async function AppointmentUpdate() {
+
+        const formCheck = document.getElementById('form1').checkValidity();
+        console.log(formCheck);
+
+        if (formCheck == true) {
+
+            var id = document.getElementById('AppointmentId').textContent;
+            var ADate = document.getElementById('appointmentDate').value;
+            var ATime = document.getElementById('appointmentTime').value;
+
+            await $.post("@Url.Action("ByIdAppointmentDateTimeUpdate","DoctorReportProccess")", { Id: parseInt(id), AppointmentDate: ADate, AppointmentTime: ATime }).done(function (response, status, jqxhr) {
+                datas = response;
+            }).fail(function (jqxhr, status, error) {
+                datas = error;
+            });
+            return datas;
+        } else {
+            alert("Lütfen tüm alanları geçerli cevaplar ile doldurunuz.");
+            document.getElementById('form1').reportValidity();
+            return false;
+        }
+    }
 </script>

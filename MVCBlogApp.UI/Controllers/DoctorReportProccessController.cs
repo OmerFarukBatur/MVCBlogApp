@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.ByIdAppointmentDateTimeUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
@@ -94,6 +95,20 @@ namespace MVCBlogApp.UI.Controllers
         {
             GetCalenderEventListQueryResponse response = await _mediator.Send(request);
             return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ByIdAppointmentDateTimeUpdate(ByIdAppointmentDateTimeUpdateCommandRequest request)
+        {
+            ByIdAppointmentDateTimeUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("AppointmentUpdate", "DoctorReportProccess");
+            }
         }
 
         #endregion
