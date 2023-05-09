@@ -6,10 +6,12 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentCre
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using NuGet.Protocol;
 
@@ -118,10 +120,10 @@ namespace MVCBlogApp.UI.Controllers
         #region AppointmentDetail
 
         [HttpGet]
-        public async Task<IActionResult> AppointmentDetailList(GetAllAppointmentQueryRequest request)
+        public async Task<IActionResult> AppointmentDetailList(GetAllAppointmentDetailQueryRequest request)
         {
-            GetAllAppointmentQueryResponse response = await _mediator.Send(request);
-            return View(response.D_Appointments);
+            GetAllAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            return View(response.AppointmentDetails);
         }
 
         [HttpGet]
@@ -132,17 +134,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AppointmentDetailCreate(AppointmentCreateCommandRequest request)
+        public async Task<IActionResult> AppointmentDetailCreate(AppointmentDetailCreateCommandRequest request)
         {
-            
-            AppointmentCreateCommandResponse response = await _mediator.Send(request);
+
+            AppointmentDetailCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
             }
             else
             {
-                return RedirectToAction("AppointmentCreate", "DoctorReportProccess");
+                return RedirectToAction("AppointmentDetailCreate", "DoctorReportProccess");
             }
         }
 

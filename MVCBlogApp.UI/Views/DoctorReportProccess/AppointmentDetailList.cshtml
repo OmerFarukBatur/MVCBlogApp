@@ -4,5 +4,54 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>AppointmentDetailList</h1>
-
+<!--**********************************
+           Content body start
+       ***********************************-->
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Danışan Rapor Listesi</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered zero-configuration">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Danışan Adı</th>
+                                        <th>Doktor Adı</th>
+                                        <th>Kilo</th>
+                                        <th>Boy</th>
+                                        <th>Yağ Oranı</th>
+                                        <th>Güncelle</th>
+                                        <th>Sil</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Id</td>
+                                            <td>@item.MemberName</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.Weight</td>
+                                            <td>@item.Size</td>
+                                            <td>@item.OilRate</td>
+                                            <td><a class="btn btn-outline-success" asp-action="AppointmentDetailUpdate" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="AppointmentDetailDelete" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

@@ -2,10 +2,12 @@
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
@@ -28,6 +30,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region AppointmentDetail
 
         Task<GetAppointmentDetailCreateItemsQueryResponse> GetAppointmentDetailCreateItemsAsync();
+        Task<GetAllAppointmentDetailQueryResponse> GetAllAppointmentDetailAsync();
+        Task<AppointmentDetailCreateCommandResponse> AppointmentDetailCreateAsync(AppointmentDetailCreateCommandRequest request);
 
         #endregion
     }

@@ -5,10 +5,12 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentCre
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
@@ -380,6 +382,53 @@ namespace MVCBlogApp.Persistence.Services
                 Admins = vM_Admins,
                 Members = vM_Members,
                 D_Appointments = vM_D_Appointments
+            };
+        }
+
+        public async Task<GetAllAppointmentDetailQueryResponse> GetAllAppointmentDetailAsync()
+        {
+            List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
+                .Join(_userReadRepository.GetAll(), ap => ap.UserId, user => user.Id, (ap, user) => new { ap, user })
+                .Join(_membersReadRepository.GetAll(), app => app.ap.MembersId, mem => mem.Id, (app, mem) => new { app, mem })
+                .Select(x => new VM_AppointmentDetail
+                {
+                    Id = x.app.ap.Id,
+                    Size = x.app.ap.Size,
+                    OilRate = x.app.ap.OilRate,
+                    Weight = x.app.ap.Weight,
+                    MemberName = x.mem.NameSurname,
+                    UserName = x.app.user.Username,
+                    
+                }).ToListAsync();
+
+            return new()
+            {
+                AppointmentDetails = vM_AppointmentDetails
+            };
+        }
+
+        public async Task<AppointmentDetailCreateCommandResponse> AppointmentDetailCreateAsync(AppointmentDetailCreateCommandRequest request)
+        {
+            AppointmentDetail appointmentDetail = new()
+            {
+                AppointmentId = request.AppointmentId,
+                Diagnosis = request.Diagnosis,
+                History = request.History,
+                MembersId = request.MembersId,
+                OilRate = request.OilRate,
+                Size = request.Size,
+                Treatment = request.Treatment,
+                UserId = request.UserId,
+                Weight = request.Weight
+            };
+
+            await _appointmentDetailWriteRepository.AddAsync(appointmentDetail);
+            await _appointmentDetailWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
             };
         }
 
