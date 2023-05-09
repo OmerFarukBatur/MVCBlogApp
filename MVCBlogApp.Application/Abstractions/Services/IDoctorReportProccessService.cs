@@ -1,11 +1,12 @@
-﻿using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
-using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
-using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
-using MVCBlogApp.Application.Features.Commands.Doctor.ByIdAppointmentDateTimeUpdate;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetCalenderEventList;
+﻿using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -21,6 +22,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<AppointmentDeleteCommandResponse> AppointmentDeleteAsync(int id);
         Task<GetCalenderEventListQueryResponse> GetCalenderEventListAsync();
         Task<ByIdAppointmentDateTimeUpdateCommandResponse> ByIdAppointmentDateTimeUpdateAsync(ByIdAppointmentDateTimeUpdateCommandRequest request);
+
+        #endregion
+
+        #region AppointmentDetail
+
+        Task<GetAppointmentDetailCreateItemsQueryResponse> GetAppointmentDetailCreateItemsAsync();
 
         #endregion
     }

@@ -1,14 +1,16 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentCreate;
-using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDelete;
-using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentUpdate;
-using MVCBlogApp.Application.Features.Commands.Doctor.ByIdAppointmentDateTimeUpdate;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetAllAppointment;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetAppointmentCreateItems;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetByIdAppointment;
-using MVCBlogApp.Application.Features.Queries.Doctor.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
+using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
+using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Members;
@@ -28,6 +30,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IUserReadRepository _userReadRepository;
         private readonly IMembersReadRepository _membersReadRepository;
         private readonly IAuthReadRepository _authReadRepository;
+        private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
+        private readonly IAppointmentDetailWriteRepository _appointmentDetailWriteRepository;
 
         public DoctorReportProccessService(
             ID_AppointmentReadRepository d_AppointmentReadRepository,
@@ -35,7 +39,9 @@ namespace MVCBlogApp.Persistence.Services
             IStatusReadRepository statusRepository,
             IUserReadRepository userReadRepository,
             IMembersReadRepository membersReadRepository,
-            IAuthReadRepository authReadRepository)
+            IAuthReadRepository authReadRepository,
+            IAppointmentDetailReadRepository appointmentDetailReadRepository,
+            IAppointmentDetailWriteRepository appointmentDetailWriteRepository)
         {
             _d_AppointmentReadRepository = d_AppointmentReadRepository;
             _d_AppointmentWriteRepository = d_AppointmentWriteRepository;
@@ -43,6 +49,8 @@ namespace MVCBlogApp.Persistence.Services
             _userReadRepository = userReadRepository;
             _membersReadRepository = membersReadRepository;
             _authReadRepository = authReadRepository;
+            _appointmentDetailReadRepository = appointmentDetailReadRepository;
+            _appointmentDetailWriteRepository = appointmentDetailWriteRepository;
         }
 
 
@@ -229,7 +237,9 @@ namespace MVCBlogApp.Persistence.Services
                 d_Appointment.UserId = request.UserId;
                 d_Appointment.AppointmentDate = AppointmentDate;
 
-                if (request.StatusId == 1)
+                string? statusName = await _statusReadRepository.GetWhere(x=> x.Id == request.StatusId).Select(x=> x.StatusName).FirstAsync();
+
+                if (statusName == "Aktif")
                 {
                     d_Appointment.IsCompleted = false;
                 }
@@ -334,6 +344,45 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region AppointmentDetail
+
+        public async Task<GetAppointmentDetailCreateItemsQueryResponse> GetAppointmentDetailCreateItemsAsync()
+        {
+            List<VM_Admin> vM_Admins = await _userReadRepository.GetAll()
+                .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                .Select(x => new VM_Admin
+                {
+                    Id = x.us.Id,
+                    AuthName = x.au.AuthName,
+                    Username = x.us.Username
+                }).ToListAsync();
+
+            List<VM_Member> vM_Members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+                .Select(x => new VM_Member
+                {
+                    Id = x.Id,
+                    NameSurname = x.NameSurname
+                }).ToListAsync();
+
+            List<VM_D_Appointment> vM_D_Appointments = await _d_AppointmentReadRepository.GetAll()
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.Id,
+                    Subject = x.Subject,
+                    AppointmentDate = x.AppointmentDate
+                }).ToListAsync();
+
+            return new()
+            {
+                Admins = vM_Admins,
+                Members = vM_Members,
+                D_Appointments = vM_D_Appointments
+            };
+        }
+
 
         #endregion
     }
