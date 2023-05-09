@@ -6,12 +6,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDel
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
@@ -239,7 +242,7 @@ namespace MVCBlogApp.Persistence.Services
                 d_Appointment.UserId = request.UserId;
                 d_Appointment.AppointmentDate = AppointmentDate;
 
-                string? statusName = await _statusReadRepository.GetWhere(x=> x.Id == request.StatusId).Select(x=> x.StatusName).FirstAsync();
+                string? statusName = await _statusReadRepository.GetWhere(x => x.Id == request.StatusId).Select(x => x.StatusName).FirstAsync();
 
                 if (statusName == "Aktif")
                 {
@@ -398,7 +401,7 @@ namespace MVCBlogApp.Persistence.Services
                     Weight = x.app.ap.Weight,
                     MemberName = x.mem.NameSurname,
                     UserName = x.app.user.Username,
-                    
+
                 }).ToListAsync();
 
             return new()
@@ -432,6 +435,132 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdAppointmentDetailQueryResponse> GetByIdAppointmentDetailQueryResponse(int id)
+        {
+            VM_AppointmentDetail? vM_AppointmentDetail = await _appointmentDetailReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_AppointmentDetail
+                {
+                    Id = x.Id,
+                    AppointmentId = x.AppointmentId,
+                    History = x.History,
+                    MembersId = x.Id,
+                    Diagnosis = x.Diagnosis,
+                    OilRate = x.OilRate,
+                    Size = x.Size,
+                    Treatment = x.Treatment,
+                    Weight = x.Weight,
+                    UserId= x.UserId
+                }).FirstOrDefaultAsync();
+
+            if (vM_AppointmentDetail != null)
+            {
+                List<VM_Admin> vM_Admins = await _userReadRepository.GetAll()
+                .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                .Select(x => new VM_Admin
+                {
+                    Id = x.us.Id,
+                    AuthName = x.au.AuthName,
+                    Username = x.us.Username
+                }).ToListAsync();
+
+                List<VM_Member> vM_Members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+                    .Select(x => new VM_Member
+                    {
+                        Id = x.Id,
+                        NameSurname = x.NameSurname
+                    }).ToListAsync();
+
+                List<VM_D_Appointment> vM_D_Appointments = await _d_AppointmentReadRepository.GetAll()
+                    .Select(x => new VM_D_Appointment
+                    {
+                        Id = x.Id,
+                        Subject = x.Subject,
+                        AppointmentDate = x.AppointmentDate
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Admins = vM_Admins,
+                    Members = vM_Members,
+                    D_Appointments = vM_D_Appointments,
+                    AppointmentDetail = vM_AppointmentDetail,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Admins = null,
+                    Members = null,
+                    D_Appointments = null,
+                    AppointmentDetail = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<AppointmentDetailUpdateCommandResponse> AppointmentDetailUpdateAsync(AppointmentDetailUpdateCommandRequest request)
+        {
+            AppointmentDetail appointmentDetail = await _appointmentDetailReadRepository.GetByIdAsync(request.Id);
+
+            if (appointmentDetail != null)
+            {
+                appointmentDetail.History = request.History;
+                appointmentDetail.Diagnosis = request.Diagnosis;
+                appointmentDetail.Size = request.Size;
+                appointmentDetail.OilRate = request.OilRate;
+                appointmentDetail.Treatment = request.Treatment;
+                appointmentDetail.UserId = request.UserId;
+                appointmentDetail.MembersId = request.MembersId;
+                appointmentDetail.AppointmentId = request.AppointmentId;
+                appointmentDetail.Weight = request.Weight;
+
+                _appointmentDetailWriteRepository.Update(appointmentDetail);
+                await _appointmentDetailWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<AppointmentDetailDeleteCommandResponse> AppointmentDetailDeleteAsync(int id)
+        {
+            AppointmentDetail appointmentDetail = await _appointmentDetailReadRepository.GetByIdAsync(id);
+
+            if (appointmentDetail != null)
+            {
+                _appointmentDetailWriteRepository.Remove(appointmentDetail);
+                await _appointmentDetailWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
     }

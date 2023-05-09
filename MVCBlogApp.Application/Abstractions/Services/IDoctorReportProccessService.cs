@@ -3,12 +3,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDel
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -32,6 +35,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetAppointmentDetailCreateItemsQueryResponse> GetAppointmentDetailCreateItemsAsync();
         Task<GetAllAppointmentDetailQueryResponse> GetAllAppointmentDetailAsync();
         Task<AppointmentDetailCreateCommandResponse> AppointmentDetailCreateAsync(AppointmentDetailCreateCommandRequest request);
+        Task<GetByIdAppointmentDetailQueryResponse> GetByIdAppointmentDetailQueryResponse(int id);
+        Task<AppointmentDetailUpdateCommandResponse> AppointmentDetailUpdateAsync(AppointmentDetailUpdateCommandRequest request);
+        Task<AppointmentDetailDeleteCommandResponse> AppointmentDetailDeleteAsync(int id);
 
         #endregion
     }

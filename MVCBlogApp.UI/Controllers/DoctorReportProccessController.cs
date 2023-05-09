@@ -7,12 +7,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDel
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmentDateTimeUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEventList;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using NuGet.Protocol;
 
 namespace MVCBlogApp.UI.Controllers
@@ -149,37 +152,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AppointmentDetailUpdate(GetByIdAppointmentQueryRequest request)
+        public async Task<IActionResult> AppointmentDetailUpdate(GetByIdAppointmentDetailQueryRequest request)
         {
-            GetByIdAppointmentQueryResponse response = await _mediator.Send(request);
+            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AppointmentDetailUpdate(AppointmentUpdateCommandRequest request)
+        public async Task<IActionResult> AppointmentDetailUpdate(AppointmentDetailUpdateCommandRequest request)
         {
-            AppointmentUpdateCommandResponse response = await _mediator.Send(request);
+            AppointmentDetailUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("AppointmentList", "DoctorReportProccess");
+                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
             }
             else
             {
-                return RedirectToAction("AppointmentUpdate", "DoctorReportProccess");
+                return RedirectToAction("AppointmentDetailUpdate", "DoctorReportProccess");
             }
         }
 
-        public async Task<IActionResult> AppointmentDetailDelete(AppointmentDeleteCommandRequest request)
+        public async Task<IActionResult> AppointmentDetailDelete(AppointmentDetailDeleteCommandRequest request)
         {
-            AppointmentDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("AppointmentList", "DoctorReportProccess");
+            AppointmentDetailDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
         }
         
         #endregion
