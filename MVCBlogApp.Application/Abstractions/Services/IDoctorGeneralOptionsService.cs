@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
+using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -10,7 +7,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
     {
         #region Day
 
-
+        Task<GetAllDaysQueryResponse> GetAllDaysAsync();
+        Task<DayCreateCommandResponse> DayCreateAsync(DayCreateCommandRequest request);
 
         #endregion
 

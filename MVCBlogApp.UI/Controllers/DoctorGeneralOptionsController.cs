@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
+using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -15,21 +17,30 @@ namespace MVCBlogApp.UI.Controllers
         #region Day
 
         [HttpGet]
-        public async Task<IActionResult> DayList()
+        public async Task<IActionResult> DayList(GetAllDaysQueryRequest request)
         {
-            return View();
+            GetAllDaysQueryResponse response = await _mediator.Send(request);
+            return View(response.Days);
         }
 
         [HttpGet]
-        public async Task<IActionResult> DayCreate()
+        public IActionResult DayCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> DayCreate(int a)
+        public async Task<IActionResult> DayCreate(DayCreateCommandRequest request)
         {
-            return View();
+            DayCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("DayList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("DayCreate", "DoctorGeneralOptions");
+            }
         }
 
         [HttpGet]
