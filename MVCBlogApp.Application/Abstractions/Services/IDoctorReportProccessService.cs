@@ -40,5 +40,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<AppointmentDetailDeleteCommandResponse> AppointmentDetailDeleteAsync(int id);
 
         #endregion
+
+
     }
 }

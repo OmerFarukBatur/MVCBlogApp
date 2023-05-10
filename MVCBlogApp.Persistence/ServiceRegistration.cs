@@ -476,6 +476,7 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<ICalcService,CalcService>();
             services.AddScoped<IFixService,FixService>();
             services.AddScoped<IDoctorReportProccessService,DoctorReportProccessService>();
+            services.AddScoped<IDoctorGeneralOptionsService,DoctorGeneralOptionsService>();
             #endregion      
             
         }
