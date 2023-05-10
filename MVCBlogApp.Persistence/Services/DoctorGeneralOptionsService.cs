@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
+using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.ViewModels;
@@ -17,9 +21,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMealWriteRepository _mealWriteRepository;
 
         public DoctorGeneralOptionsService(
-            IDaysReadRepository daysReadRepository, 
-            IDaysWriteRepository daysWriteRepository, 
-            IMealReadRepository mealReadRepository, 
+            IDaysReadRepository daysReadRepository,
+            IDaysWriteRepository daysWriteRepository,
+            IMealReadRepository mealReadRepository,
             IMealWriteRepository mealWriteRepository)
         {
             _daysReadRepository = daysReadRepository;
@@ -28,7 +32,7 @@ namespace MVCBlogApp.Persistence.Services
             _mealWriteRepository = mealWriteRepository;
         }
 
-        
+
         #region Day
 
         public async Task<GetAllDaysQueryResponse> GetAllDaysAsync()
@@ -73,6 +77,87 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdDayQueryResponse> GetByIdDayAsync(int id)
+        {
+            VM_Days? vM_Days = await _daysReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Days
+                {
+                    Id = x.Id,
+                    DayName = x.DayName
+                }).FirstOrDefaultAsync();
+
+            if (vM_Days != null)
+            {
+                return new()
+                {
+                    Day = vM_Days,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Day = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DayUpdateCommandResponse> DayUpdateAsync(DayUpdateCommandRequest request)
+        {
+            Days days = await _daysReadRepository.GetByIdAsync(request.Id);
+
+            if (days != null)
+            {
+                days.DayName = request.DayName;
+
+                _daysWriteRepository.Update(days);
+                await _daysWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DayDeleteCommandResponse> DayDeleteAsync(int id)
+        {
+            Days days = await _daysReadRepository.GetByIdAsync(id);
+
+            if (days != null)
+            {
+                _daysWriteRepository.Remove(days);
+                await _daysWriteRepository.SaveAsync() ;
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }

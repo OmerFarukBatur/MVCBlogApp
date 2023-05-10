@@ -1,7 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
+using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -44,20 +47,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DayUpdate()
+        public async Task<IActionResult> DayUpdate(GetByIdDayQueryRequest request)
         {
-            return View();
+            GetByIdDayQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("DayList", "DoctorGeneralOptions");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> DayUpdate(int a)
+        public async Task<IActionResult> DayUpdate(DayUpdateCommandRequest request)
         {
-            return View();
+            DayUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("DayList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("DayUpdate", "DoctorGeneralOptions");
+            }
         }
 
-        public async Task<IActionResult> DayDelete(int a)
+        public async Task<IActionResult> DayDelete(DayDeleteCommandRequest request)
         {
-            return View();
+            DayDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("DayList", "DoctorGeneralOptions");
         }
 
         #endregion
