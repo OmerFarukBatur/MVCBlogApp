@@ -20,9 +20,4 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Commands\Doctor\Meal\" />
-    <Folder Include="Features\Queries\Doctor\Meal\" />
-  </ItemGroup>
-
 </Project>

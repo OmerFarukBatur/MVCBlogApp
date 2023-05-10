@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
+using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -85,21 +87,30 @@ namespace MVCBlogApp.UI.Controllers
         #region Meal
 
         [HttpGet]
-        public async Task<IActionResult> MealList()
+        public async Task<IActionResult> MealList(GetAllMealsQueryRequest request)
         {
-            return View();
+            GetAllMealsQueryResponse response = await _mediator.Send(request);
+            return View(response.Meals);
         }
 
         [HttpGet]
-        public async Task<IActionResult> MealCreate()
+        public IActionResult MealCreate()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> MealCreate(int a)
+        public async Task<IActionResult> MealCreate(MealCreateCommandRequest request)
         {
-            return View();
+            MealCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("MealList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("MealCreate", "DoctorGeneralOptions");
+            }
         }
 
         [HttpGet]

@@ -1,11 +1,12 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
+using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.ViewModels;
@@ -144,7 +145,7 @@ namespace MVCBlogApp.Persistence.Services
             if (days != null)
             {
                 _daysWriteRepository.Remove(days);
-                await _daysWriteRepository.SaveAsync() ;
+                await _daysWriteRepository.SaveAsync();
 
                 return new()
                 {
@@ -162,11 +163,56 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
-
         #endregion
 
         #region Meal
+
+        public async Task<GetAllMealsQueryResponse> GetAllMealsAsync()
+        {
+            List<VM_Meal> vM_Meals = await _mealReadRepository.GetAll()
+                .Select(x => new VM_Meal
+                {
+                    Id = x.Id,
+                    MealName = x.MealName
+                }).ToListAsync();
+
+            return new()
+            {
+                Meals = vM_Meals
+            };
+        }
+
+        public async Task<MealCreateCommandResponse> MealCreateAsync(MealCreateCommandRequest request)
+        {
+            var check = await _mealReadRepository
+                .GetWhere(x => x.MealName.Trim().ToLower() == request.MealName.Trim().ToLower() || x.MealName.Trim().ToUpper() == request.MealName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bu bilgilere sahip kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Meal meal = new()
+                {
+                    MealName = request.MealName
+                };
+
+                await _mealWriteRepository.AddAsync(meal);
+                await _mealWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
 
 
 
