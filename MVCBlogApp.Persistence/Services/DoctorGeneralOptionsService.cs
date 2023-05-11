@@ -8,10 +8,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
+using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
+using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
+using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Days;
+using MVCBlogApp.Application.Repositories.DietList;
 using MVCBlogApp.Application.Repositories.Meal;
+using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -23,17 +28,29 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IDaysWriteRepository _daysWriteRepository;
         private readonly IMealReadRepository _mealReadRepository;
         private readonly IMealWriteRepository _mealWriteRepository;
+        private readonly IDietListReadRepository _ietListReadRepository;
+        private readonly IDietListWriteRepository _ietListWriteRepository;
+        private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
+        private readonly IMembersReadRepository _membersReadRepository;
 
         public DoctorGeneralOptionsService(
             IDaysReadRepository daysReadRepository,
             IDaysWriteRepository daysWriteRepository,
             IMealReadRepository mealReadRepository,
-            IMealWriteRepository mealWriteRepository)
+            IMealWriteRepository mealWriteRepository,
+            IDietListReadRepository ietListReadRepository,
+            IDietListWriteRepository ietListWriteRepository,
+            IAppointmentDetailReadRepository appointmentDetailReadRepository,
+            IMembersReadRepository membersReadRepository)
         {
             _daysReadRepository = daysReadRepository;
             _daysWriteRepository = daysWriteRepository;
             _mealReadRepository = mealReadRepository;
             _mealWriteRepository = mealWriteRepository;
+            _ietListReadRepository = ietListReadRepository;
+            _ietListWriteRepository = ietListWriteRepository;
+            _appointmentDetailReadRepository = appointmentDetailReadRepository;
+            _membersReadRepository = membersReadRepository;
         }
 
 
@@ -295,6 +312,49 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region DietList
+
+        public async Task<GetDietListCreateItemsQueryResponse> GetDietListCreateItemsAsync()
+        {
+            List<VM_Days> vM_Days = await _daysReadRepository.GetAll()
+                .Select(x => new VM_Days
+                {
+                    Id = x.Id,
+                    DayName = x.DayName
+                }).ToListAsync();
+
+            List<VM_Meal> vM_Meals = await _mealReadRepository.GetAll()
+                .Select(x => new VM_Meal
+                {
+                    Id = x.Id,
+                    MealName = x.MealName
+                }).ToListAsync();
+
+            List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
+                .Join(_membersReadRepository.GetAll(), app => app.MembersId,mem=> mem.Id,(app,mem)=> new {mem,app})
+                .Select(x=> new VM_AppointmentDetail
+                { 
+                    Id = x.app.Id,
+                    MemberName = x.mem.NameSurname,
+                    Diagnosis = x.app.Diagnosis                    
+                }).ToListAsync();
+
+            return new()
+            {
+                AppointmentDetails = vM_AppointmentDetails,
+                Days = vM_Days,
+                Meals = vM_Meals
+            };
+        }
+
+        public Task<GetAllDietListQueryResponse> GetAllDietListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
     }
