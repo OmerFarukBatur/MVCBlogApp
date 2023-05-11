@@ -4,9 +4,12 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
+using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.ViewModels;
@@ -213,8 +216,85 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdMealQueryResponse> GetByIdMealAsync(int id)
+        {
+            VM_Meal? vM_Meal = await _mealReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Meal
+                {
+                    Id = x.Id,
+                    MealName = x.MealName
+                }).FirstOrDefaultAsync();
 
+            if (vM_Meal != null)
+            {
+                return new()
+                {
+                    Meal = vM_Meal,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Meal = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
+        public async Task<MealUpdateCommandResponse> MealUpdateAsync(MealUpdateCommandRequest request)
+        {
+            Meal meal = await _mealReadRepository.GetByIdAsync(request.Id);
+
+            if (meal != null)
+            {
+                meal.MealName = request.MealName;
+
+                _mealWriteRepository.Update(meal);
+                await _mealWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<MealDeleteCommandResponse> MealDeleteAsync(int id)
+        {
+            Meal meal = await _mealReadRepository.GetByIdAsync(id);
+            if (meal != null)
+            {
+                _mealWriteRepository.Remove(meal);
+                await _mealWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla gerçekleştirilmiştir.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
     }
