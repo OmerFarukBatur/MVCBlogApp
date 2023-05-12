@@ -6,6 +6,7 @@
         public int? AppointmentDetailId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
+        public DateTime? CreateDate { get; set; }
         public int? _DaysMealId { get; set; }
         public int? DaysId { get; set; }
         public TimeSpan? TimeInterval { get; set; }
@@ -13,6 +14,8 @@
         public string? _DaysMealDescription { get; set; }
 
         public string? Diagnosis { get; set; }
+        public string? DaysName { get; set; }
+        public string? MealName { get; set; }
         public string? MemberName { get; set; }
     }
 }

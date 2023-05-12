@@ -1,13 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
+using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
@@ -17,10 +20,12 @@ namespace MVCBlogApp.UI.Controllers
     public class DoctorGeneralOptionsController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IOperationService _operationService;
 
-        public DoctorGeneralOptionsController(IMediator mediator)
+        public DoctorGeneralOptionsController(IMediator mediator, IOperationService operationService)
         {
             _mediator = mediator;
+            _operationService = operationService;
         }
 
         #region Day
@@ -156,10 +161,10 @@ namespace MVCBlogApp.UI.Controllers
         #region DietList
 
         [HttpGet]
-        public async Task<IActionResult> DietList(GetAllMealsQueryRequest request)
+        public async Task<IActionResult> DietList(GetAllDietListQueryRequest request)
         {
-            GetAllMealsQueryResponse response = await _mediator.Send(request);
-            return View(response.Meals);
+            GetAllDietListQueryResponse response = await _mediator.Send(request);
+            return View(response.AllDietLists);
         }
 
         [HttpGet]
@@ -170,16 +175,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DietListCreate(MealCreateCommandRequest request)
+        public async Task<IActionResult> DietListCreate(DietListCreateCommandRequest request)
         {
-            MealCreateCommandResponse response = await _mediator.Send(request);
+            request.UserId = _operationService.GetUser().Id;
+            DietListCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("MealList", "DoctorGeneralOptions");
+                return RedirectToAction("DietList", "DoctorGeneralOptions");
             }
             else
             {
-                return RedirectToAction("MealCreate", "DoctorGeneralOptions");
+                return RedirectToAction("DietListCreate", "DoctorGeneralOptions");
             }
         }
 

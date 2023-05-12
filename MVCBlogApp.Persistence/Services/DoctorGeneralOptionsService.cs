@@ -3,6 +3,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -12,6 +13,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
+using MVCBlogApp.Application.Repositories._DaysMeal;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.DietList;
@@ -32,6 +34,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IDietListWriteRepository _ietListWriteRepository;
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
         private readonly IMembersReadRepository _membersReadRepository;
+        private readonly I_DaysMealReadRepository _daysMealReadRepository;
+        private readonly I_DaysMealWriteRepository _daysMealWriteRepository;
 
         public DoctorGeneralOptionsService(
             IDaysReadRepository daysReadRepository,
@@ -41,7 +45,9 @@ namespace MVCBlogApp.Persistence.Services
             IDietListReadRepository ietListReadRepository,
             IDietListWriteRepository ietListWriteRepository,
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
-            IMembersReadRepository membersReadRepository)
+            IMembersReadRepository membersReadRepository,
+            I_DaysMealReadRepository daysMealReadRepository,
+            I_DaysMealWriteRepository daysMealWriteRepository)
         {
             _daysReadRepository = daysReadRepository;
             _daysWriteRepository = daysWriteRepository;
@@ -51,6 +57,8 @@ namespace MVCBlogApp.Persistence.Services
             _ietListWriteRepository = ietListWriteRepository;
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
             _membersReadRepository = membersReadRepository;
+            _daysMealReadRepository = daysMealReadRepository;
+            _daysMealWriteRepository = daysMealWriteRepository;
         }
 
 
@@ -350,9 +358,69 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-        public Task<GetAllDietListQueryResponse> GetAllDietListAsync()
+        public async Task<GetAllDietListQueryResponse> GetAllDietListAsync()
         {
-            throw new NotImplementedException();
+            List<VM_AllDietList> vM_AllDietLists = await _ietListReadRepository.GetAll()
+                .Join(_appointmentDetailReadRepository.GetAll(), di => di.AppointmentDetailId, app => app.Id, (di, app) => new { di, app })
+                .Join(_daysMealReadRepository.GetAll(), die => die.di.Id, meal => meal.DietListId, (die, meal) => new { die, meal })
+                .Join(_daysReadRepository.GetAll(), diet => diet.meal.DaysId, days => days.Id, (diet, days) => new { diet, days })
+                .Join(_mealReadRepository.GetAll(), dietLi => dietLi.diet.meal.MealId, eal => eal.Id, (dietLi, eal) => new { dietLi, eal })
+                .Join(_membersReadRepository.GetAll(), dietList => dietList.dietLi.diet.die.app.MembersId, mem => mem.Id, (dietList, mem) => new { dietList, mem })
+                .Select(x => new VM_AllDietList
+                {
+                    Id = x.dietList.dietLi.diet.die.di.Id,
+                    AppointmentDetailId = x.dietList.dietLi.diet.die.di.AppointmentDetailId,
+                    DaysId = x.dietList.dietLi.diet.meal.DaysId,
+                    DaysName = x.dietList.dietLi.days.DayName,
+                    Description = x.dietList.dietLi.diet.die.di.Description,
+                    Diagnosis = x.dietList.dietLi.diet.die.app.Diagnosis,
+                    MealId = x.dietList.dietLi.diet.meal.MealId,
+                    MealName = x.dietList.eal.MealName,
+                    MemberName = x.mem.NameSurname,
+                    TimeInterval = x.dietList.dietLi.diet.meal.TimeInterval,
+                    Title = x.dietList.dietLi.diet.die.di.Title,
+                    _DaysMealDescription = x.dietList.dietLi.diet.meal.Description,
+                    _DaysMealId = x.dietList.dietLi.diet.meal.Id,
+                    CreateDate = x.dietList.dietLi.diet.die.di.CreateDate
+                }).ToListAsync();
+
+            return new()
+            {
+                AllDietLists = vM_AllDietLists
+            };
+        }
+
+        public async Task<DietListCreateCommandResponse> DietListCreateAsync(DietListCreateCommandRequest request)
+        {
+            DietList dietList = new()
+            {
+                AppointmentDetailId = request.AppointmentDetailId,
+                Description = request.Description,
+                Title = request.Title,
+                UserId = request.UserId > 0 ? request.UserId : null,
+                CreateDate = DateTime.Now
+            };
+
+            await _ietListWriteRepository.AddAsync(dietList);
+            await _ietListWriteRepository.SaveAsync();
+
+            _DaysMeal _DaysMeal = new()
+            {
+                DaysId = request.DaysId,
+                Description = request._DaysDescription,
+                DietListId = dietList.Id,
+                MealId = request.MealId,
+                TimeInterval = request.TimeInterval
+            };
+
+            await _daysMealWriteRepository.AddAsync(_DaysMeal);
+            await _daysMealWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
         }
 
 

@@ -1,6 +1,7 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -39,6 +40,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetDietListCreateItemsQueryResponse> GetDietListCreateItemsAsync();
         Task<GetAllDietListQueryResponse> GetAllDietListAsync();
+        Task<DietListCreateCommandResponse> DietListCreateAsync(DietListCreateCommandRequest request);
 
         #endregion
     }

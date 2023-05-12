@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList
 {
-    internal class GetAllDietListQueryHandler
+    public class GetAllDietListQueryHandler : IRequestHandler<GetAllDietListQueryRequest, GetAllDietListQueryResponse>
     {
+        private readonly IDoctorGeneralOptionsService _optionsService;
+
+        public GetAllDietListQueryHandler(IDoctorGeneralOptionsService optionsService)
+        {
+            _optionsService = optionsService;
+        }
+
+        public async Task<GetAllDietListQueryResponse> Handle(GetAllDietListQueryRequest request, CancellationToken cancellationToken)
+        {
+            return await _optionsService.GetAllDietListAsync();
+        }
     }
 }
