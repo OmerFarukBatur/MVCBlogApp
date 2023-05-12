@@ -5,12 +5,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
+using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
@@ -132,7 +135,7 @@ namespace MVCBlogApp.UI.Controllers
             }
             else
             {
-                return RedirectToAction("MealCreate", "DoctorGeneralOptions");
+                return RedirectToAction("MealUpdate", "DoctorGeneralOptions");
             }
         }
 
@@ -190,37 +193,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DietListUpdate(GetByIdMealQueryRequest request)
+        public async Task<IActionResult> DietListUpdate(GetByIdDietListQueryRequest request)
         {
-            GetByIdMealQueryResponse response = await _mediator.Send(request);
+            GetByIdDietListQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("MealCreate", "DoctorGeneralOptions");
+                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> DietListUpdate(MealUpdateCommandRequest request)
+        public async Task<IActionResult> DietListUpdate(DietListUpdateCommandRequest request)
         {
-            MealUpdateCommandResponse response = await _mediator.Send(request);
+            DietListUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("MealList", "DoctorGeneralOptions");
+                return RedirectToAction("DietList", "DoctorGeneralOptions");
             }
             else
             {
-                return RedirectToAction("MealUpdate", "DoctorGeneralOptions");
+                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
             }
         }
 
-        public async Task<IActionResult> DietListDelete(MealDeleteCommandRequest request)
+        public async Task<IActionResult> DietListDelete(DietListDeleteCommandRequest request)
         {
-            MealDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("MealList", "DoctorGeneralOptions");
+            DietListDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("DietList", "DoctorGeneralOptions");
         }
 
         #endregion        

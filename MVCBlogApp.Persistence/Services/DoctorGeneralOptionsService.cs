@@ -4,12 +4,15 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetAllDays;
 using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
+using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
@@ -342,12 +345,12 @@ namespace MVCBlogApp.Persistence.Services
                 }).ToListAsync();
 
             List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
-                .Join(_membersReadRepository.GetAll(), app => app.MembersId,mem=> mem.Id,(app,mem)=> new {mem,app})
-                .Select(x=> new VM_AppointmentDetail
-                { 
+                .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { mem, app })
+                .Select(x => new VM_AppointmentDetail
+                {
                     Id = x.app.Id,
                     MemberName = x.mem.NameSurname,
-                    Diagnosis = x.app.Diagnosis                    
+                    Diagnosis = x.app.Diagnosis
                 }).ToListAsync();
 
             return new()
@@ -421,6 +424,167 @@ namespace MVCBlogApp.Persistence.Services
                 Message = "Kayıt işlemi başarıyla yapılmıştır.",
                 State = true
             };
+        }
+
+        public async Task<GetByIdDietListQueryResponse> GetByIdDietListAsync(int id)
+        {
+            VM_DietList? vM_DietList = await _ietListReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_DietList
+                {
+                    Id = x.Id,
+                    AppointmentDetailId = x.AppointmentDetailId,
+                    Description = x.Description,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_DietList != null)
+            {
+                VM__DaysMeal? vM__DaysMeal = await _daysMealReadRepository.GetWhere(x => x.DietListId == id)
+                    .Select(x => new VM__DaysMeal
+                    {
+                        Id = x.Id,
+                        DaysId = x.DaysId,
+                        Description = x.Description,
+                        DietListId = x.DietListId,
+                        MealId = x.MealId,
+                        TimeInterval = x.TimeInterval
+                    }).FirstOrDefaultAsync();                
+
+                List<VM_Days> vM_Days = await _daysReadRepository.GetAll()
+                .Select(x => new VM_Days
+                {
+                    Id = x.Id,
+                    DayName = x.DayName
+                }).ToListAsync();
+
+                List<VM_Meal> vM_Meals = await _mealReadRepository.GetAll()
+                    .Select(x => new VM_Meal
+                    {
+                        Id = x.Id,
+                        MealName = x.MealName
+                    }).ToListAsync();
+
+                List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
+                    .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { mem, app })
+                    .Select(x => new VM_AppointmentDetail
+                    {
+                        Id = x.app.Id,
+                        MemberName = x.mem.NameSurname,
+                        Diagnosis = x.app.Diagnosis
+                    }).ToListAsync();
+
+                return new()
+                {
+                    AppointmentDetails = vM_AppointmentDetails,
+                    Days = vM_Days,
+                    Meals = vM_Meals,
+                    DaysMeal = vM__DaysMeal,
+                    DietList = vM_DietList,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    AppointmentDetails = null,
+                    Days = null,
+                    Meals = null,
+                    DaysMeal = null,
+                    DietList = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DietListUpdateCommandResponse> DietListUpdateAsync(DietListUpdateCommandRequest request)
+        {
+            DietList dietList = await _ietListReadRepository.GetByIdAsync(request.Id);
+
+            if (dietList != null)
+            {
+                dietList.Title = request.Title;
+                dietList.AppointmentDetailId = request.AppointmentDetailId;
+                dietList.Description = request.Description;
+
+                _DaysMeal? _daysMeal = await _daysMealReadRepository.GetWhere(x => x.DietListId == dietList.Id).FirstOrDefaultAsync();
+
+                if (_daysMeal != null)
+                {
+                    _daysMeal.Description = request._DaysDescription;
+                    _daysMeal.DaysId = request.DaysId;
+                    _daysMeal.MealId = request.MealId;
+                    _daysMeal.TimeInterval = request.TimeInterval;
+
+                    _daysMealWriteRepository.Update(_daysMeal);
+                    await _daysMealWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    _DaysMeal _Days = new()
+                    {
+                        DaysId = request.DaysId,
+                        MealId = request.MealId,
+                        Description = request._DaysDescription,
+                        DietListId = dietList.Id,
+                        TimeInterval = request.TimeInterval
+                    };
+
+                    await _daysMealWriteRepository.AddAsync(_Days);
+                    await _daysMealWriteRepository.SaveAsync();
+                }
+
+                _ietListWriteRepository.Update(dietList);
+                await _ietListWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DietListDeleteCommandResponse> DietListDeleteAsync(int id)
+        {
+            DietList dietList = await _ietListReadRepository.GetByIdAsync(id);
+
+            if (dietList != null)
+            {
+                _DaysMeal? _daysMeal = await _daysMealReadRepository.GetWhere(x => x.DietListId == dietList.Id).FirstOrDefaultAsync();
+                if (_daysMeal != null)
+                {
+                    _daysMealWriteRepository.Remove(_daysMeal);
+                    await _daysMealWriteRepository.SaveAsync();
+                }
+
+                _ietListWriteRepository.Remove(dietList);
+                await _ietListWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 
