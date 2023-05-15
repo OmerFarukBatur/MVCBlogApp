@@ -17,6 +17,8 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetAllLab;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetLabCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 
@@ -62,6 +64,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetByIdExaminationQueryResponse> GetByIdExaminationAsync(int id);
         Task<ExaminationUpdateCommandResponse> ExaminationUpdateAsync(ExaminationUpdateCommandRequest request);
         Task<ExaminationDeleteCommandResponse> ExaminationDeleteAsync(int id);
+
+        #endregion
+
+        #region Lab
+
+        Task<GetLabCreateItemsQueryResponse> GetLabCreateItemsAsync();
+        Task<GetAllLabQueryResponse> GetAllLabAsync();
 
         #endregion
     }

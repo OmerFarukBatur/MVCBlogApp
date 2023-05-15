@@ -20,15 +20,21 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetAllLab;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetLabCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 using MVCBlogApp.Application.Repositories._DaysMeal;
+using MVCBlogApp.Application.Repositories._Examination;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
+using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.DietList;
 using MVCBlogApp.Application.Repositories.Examination;
+using MVCBlogApp.Application.Repositories.Lab;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.Repositories.Members;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -48,6 +54,12 @@ namespace MVCBlogApp.Persistence.Services
         private readonly I_DaysMealWriteRepository _daysMealWriteRepository;
         private readonly IExaminationReadRepository _examinationReadRepository;
         private readonly IExaminationWriteRepository _examinationWriteRepository;
+        private readonly IUserReadRepository _userReadRepository;
+        private readonly IAuthReadRepository _authReadRepository;
+        private readonly ILabReadRepository _labReadRepository;
+        private readonly ILabWriteRepository _labWriteRepository;
+        private readonly I_ExaminationReadRepository __examinationReadRepository;
+        private readonly IExaminationWriteRepository __examinationWriteRepository;
 
         public DoctorGeneralOptionsService(
             IDaysReadRepository daysReadRepository,
@@ -61,7 +73,11 @@ namespace MVCBlogApp.Persistence.Services
             I_DaysMealReadRepository daysMealReadRepository,
             I_DaysMealWriteRepository daysMealWriteRepository,
             IExaminationReadRepository examinationReadRepository,
-            IExaminationWriteRepository examinationWriteRepository)
+            IExaminationWriteRepository examinationWriteRepository,
+            IUserReadRepository userReadRepository,
+            IAuthReadRepository authReadRepository,
+            ILabReadRepository labReadRepository,
+            ILabWriteRepository labWriteRepository)
         {
             _daysReadRepository = daysReadRepository;
             _daysWriteRepository = daysWriteRepository;
@@ -75,6 +91,10 @@ namespace MVCBlogApp.Persistence.Services
             _daysMealWriteRepository = daysMealWriteRepository;
             _examinationReadRepository = examinationReadRepository;
             _examinationWriteRepository = examinationWriteRepository;
+            _userReadRepository = userReadRepository;
+            _authReadRepository = authReadRepository;
+            _labReadRepository = labReadRepository;
+            _labWriteRepository = labWriteRepository;
         }
 
 
@@ -732,6 +752,75 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        #endregion
+
+        #region Lab
+
+        public async Task<GetLabCreateItemsQueryResponse> GetLabCreateItemsAsync()
+        {
+            List<VM_Admin> vM_Admins = await _userReadRepository.GetAll()
+                .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                .Select(x => new VM_Admin
+                {
+                    Id = x.us.Id,
+                    AuthName = x.au.AuthName,
+                    Username = x.us.Username
+                }).ToListAsync();
+
+            //List<VM_Member> vM_Members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+            //    .Select(x => new VM_Member
+            //    {
+            //        Id = x.Id,
+            //        NameSurname = x.NameSurname
+            //    }).ToListAsync();
+
+            List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
+                .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { mem, app })
+                .Select(x => new VM_AppointmentDetail
+                {
+                    Id = x.app.Id,
+                    MemberName = x.mem.NameSurname,
+                    Diagnosis = x.app.Diagnosis,
+                    MembersId = x.app.MembersId
+                }).ToListAsync();
+
+            List<VM_Examination> vM_Examinations = await _examinationReadRepository.GetAll()
+                .Select(x => new VM_Examination
+                {
+                    Id = x.Id,
+                    ExaminatioName = x.ExaminatioName
+                }).ToListAsync();
+
+            return new()
+            {
+                Admins = vM_Admins,
+                AppointmentDetails = vM_AppointmentDetails,
+                Examinations = vM_Examinations
+            };
+        }
+
+        public async Task<GetAllLabQueryResponse> GetAllLabAsync()
+        {
+            List<VM_Lab> vM_Labs = await _labReadRepository.GetAll()
+                .Join(_userReadRepository.GetAll(), la => la.UsersId, us => us.Id, (la, us) => new { la, us })
+                .Join(_membersReadRepository.GetAll(), lab => lab.la.MembersId, mem => mem.Id, (lab, mem) => new { lab, mem })
+                .Join(_appointmentDetailReadRepository.GetAll(), labR => labR.lab.la.AppointmentDetailId, app => app.Id, (labR, app) => new { labR, app })
+                .Select(x => new VM_Lab
+                {
+                    Id = x.labR.lab.la.Id,
+                    Diagnosis = x.app.Diagnosis,
+                    CreateDate = x.labR.lab.la.CreateDate,
+                    LabDateTime = x.labR.lab.la.LabDateTime,
+                    MemberName = x.labR.mem.NameSurname,
+                    Title = x.labR.lab.la.Title,
+                    UserName = x.labR.lab.us.Username
+                }).ToListAsync();
+
+            return new()
+            {
+                Labs = vM_Labs
+            };
+        }
 
 
         #endregion

@@ -20,6 +20,8 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetAllLab;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetLabCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 
@@ -297,5 +299,72 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         #endregion
+
+        #region Lab
+
+        [HttpGet]
+        public async Task<IActionResult> LabList(GetAllLabQueryRequest request)
+        {
+            GetAllLabQueryResponse response = await _mediator.Send(request);
+            return View(response.Labs);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LabCreate(GetLabCreateItemsQueryRequest request)
+        {
+            GetLabCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LabCreate(DietListCreateCommandRequest request)
+        {
+            request.UserId = _operationService.GetUser().Id;
+            DietListCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("DietList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("DietListCreate", "DoctorGeneralOptions");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LabUpdate(GetByIdDietListQueryRequest request)
+        {
+            GetByIdDietListQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LabUpdate(DietListUpdateCommandRequest request)
+        {
+            DietListUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("DietList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
+            }
+        }
+
+        public async Task<IActionResult> LabDelete(DietListDeleteCommandRequest request)
+        {
+            DietListDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("DietList", "DoctorGeneralOptions");
+        }
+
+        #endregion        
     }
 }
