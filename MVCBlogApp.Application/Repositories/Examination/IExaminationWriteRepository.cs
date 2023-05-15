@@ -2,7 +2,7 @@
 
 namespace MVCBlogApp.Application.Repositories.Examination
 {
-    public interface IExaminationWriteRepository : IWriteRepository<E._Examination>
+    public interface IExaminationWriteRepository : IWriteRepository<E.Examination>
     {
     }
 }

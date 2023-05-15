@@ -7,6 +7,9 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -15,6 +18,8 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
+using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 
@@ -227,5 +232,70 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         #endregion        
+
+        #region Examination
+
+        [HttpGet]
+        public async Task<IActionResult> ExaminationList(GetAllExaminationQueryRequest request)
+        {
+            GetAllExaminationQueryResponse response = await _mediator.Send(request);
+            return View(response.Examinations);
+        }
+
+        [HttpGet]
+        public IActionResult ExaminationCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExaminationCreate(ExaminationCreateCommandRequest request)
+        {
+            ExaminationCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ExaminationList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("ExaminationCreate", "DoctorGeneralOptions");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExaminationUpdate(GetByIdExaminationQueryRequest request)
+        {
+            GetByIdExaminationQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("ExaminationUpdate", "DoctorGeneralOptions");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExaminationUpdate(ExaminationUpdateCommandRequest request)
+        {
+            ExaminationUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("ExaminationList", "DoctorGeneralOptions");
+            }
+            else
+            {
+                return RedirectToAction("ExaminationUpdate", "DoctorGeneralOptions");
+            }
+        }
+
+        public async Task<IActionResult> ExaminationDelete(ExaminationDeleteCommandRequest request)
+        {
+            ExaminationDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("ExaminationList", "DoctorGeneralOptions");
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayDelete;
@@ -6,6 +7,9 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Day.DayUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -14,12 +18,15 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Day.GetByIdDay;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetAllDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetByIdDietList;
 using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateItems;
+using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
+using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
 using MVCBlogApp.Application.Repositories._DaysMeal;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Days;
 using MVCBlogApp.Application.Repositories.DietList;
+using MVCBlogApp.Application.Repositories.Examination;
 using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.ViewModels;
@@ -39,6 +46,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersReadRepository _membersReadRepository;
         private readonly I_DaysMealReadRepository _daysMealReadRepository;
         private readonly I_DaysMealWriteRepository _daysMealWriteRepository;
+        private readonly IExaminationReadRepository _examinationReadRepository;
+        private readonly IExaminationWriteRepository _examinationWriteRepository;
 
         public DoctorGeneralOptionsService(
             IDaysReadRepository daysReadRepository,
@@ -50,7 +59,9 @@ namespace MVCBlogApp.Persistence.Services
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
             IMembersReadRepository membersReadRepository,
             I_DaysMealReadRepository daysMealReadRepository,
-            I_DaysMealWriteRepository daysMealWriteRepository)
+            I_DaysMealWriteRepository daysMealWriteRepository,
+            IExaminationReadRepository examinationReadRepository,
+            IExaminationWriteRepository examinationWriteRepository)
         {
             _daysReadRepository = daysReadRepository;
             _daysWriteRepository = daysWriteRepository;
@@ -62,6 +73,8 @@ namespace MVCBlogApp.Persistence.Services
             _membersReadRepository = membersReadRepository;
             _daysMealReadRepository = daysMealReadRepository;
             _daysMealWriteRepository = daysMealWriteRepository;
+            _examinationReadRepository = examinationReadRepository;
+            _examinationWriteRepository = examinationWriteRepository;
         }
 
 
@@ -586,6 +599,139 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+
+        #endregion
+
+        #region Examination
+
+        public async Task<ExaminationCreateCommandResponse> ExaminationCreateAsync(ExaminationCreateCommandRequest request)
+        {
+            var check = await _examinationReadRepository
+                .GetWhere(x => x.ExaminatioName.Trim().ToLower() == request.ExaminatioName.Trim().ToLower() || x.ExaminatioName.Trim().ToUpper() == request.ExaminatioName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                Examination examination = new()
+                {
+                    ExaminatioName = request.ExaminatioName
+                };
+
+                await _examinationWriteRepository.AddAsync(examination);
+                await _examinationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
+
+        public async Task<GetAllExaminationQueryResponse> GetAllExaminationAsync()
+        {
+            List<VM_Examination> vM_Examinations = await _examinationReadRepository.GetAll()
+                .Select(x=> new VM_Examination
+                {
+                    Id = x.Id,
+                    ExaminatioName = x.ExaminatioName
+                }).ToListAsync();
+
+            return new()
+            {
+                Examinations = vM_Examinations
+            };
+        }
+
+        public async Task<GetByIdExaminationQueryResponse> GetByIdExaminationAsync(int id)
+        {
+            VM_Examination? vM_Examination = await _examinationReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Examination
+                {
+                    Id = x.Id,
+                    ExaminatioName = x.ExaminatioName
+                }).FirstOrDefaultAsync();
+
+            if (vM_Examination != null)
+            {
+                return new()
+                {
+                    Examination = vM_Examination,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Examination = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ExaminationUpdateCommandResponse> ExaminationUpdateAsync(ExaminationUpdateCommandRequest request)
+        {
+            Examination examination = await _examinationReadRepository.GetByIdAsync(request.Id);
+
+            if (examination != null)
+            {
+                examination.ExaminatioName = request.ExaminatioName;
+
+                _examinationWriteRepository.Update(examination);
+                await _examinationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<ExaminationDeleteCommandResponse> ExaminationDeleteAsync(int id)
+        {
+            Examination examination = await _examinationReadRepository.GetByIdAsync(id);
+
+            if (examination != null)
+            {
+                _examinationWriteRepository.Remove(examination);
+                await _examinationWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
 
 
         #endregion
