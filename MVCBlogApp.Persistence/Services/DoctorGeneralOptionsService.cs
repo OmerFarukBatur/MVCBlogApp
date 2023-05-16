@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -59,7 +60,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ILabReadRepository _labReadRepository;
         private readonly ILabWriteRepository _labWriteRepository;
         private readonly I_ExaminationReadRepository __examinationReadRepository;
-        private readonly IExaminationWriteRepository __examinationWriteRepository;
+        private readonly I_ExaminationWriteRepository __examinationWriteRepository;
 
         public DoctorGeneralOptionsService(
             IDaysReadRepository daysReadRepository,
@@ -77,7 +78,10 @@ namespace MVCBlogApp.Persistence.Services
             IUserReadRepository userReadRepository,
             IAuthReadRepository authReadRepository,
             ILabReadRepository labReadRepository,
-            ILabWriteRepository labWriteRepository)
+            ILabWriteRepository labWriteRepository,
+            I_ExaminationReadRepository _ExaminationReadRepository,
+            I_ExaminationWriteRepository _ExaminationWriteRepository
+            )
         {
             _daysReadRepository = daysReadRepository;
             _daysWriteRepository = daysWriteRepository;
@@ -95,6 +99,8 @@ namespace MVCBlogApp.Persistence.Services
             _authReadRepository = authReadRepository;
             _labReadRepository = labReadRepository;
             _labWriteRepository = labWriteRepository;
+            __examinationReadRepository = _ExaminationReadRepository;
+            __examinationWriteRepository = _ExaminationWriteRepository;
         }
 
 
@@ -819,6 +825,48 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 Labs = vM_Labs
+            };
+        }
+
+        public async Task<LabCreateCommandResponse> LabCreateAsync(LabCreateCommandRequest request)
+        {
+            int memberId = (int)Convert.ToInt64(request.AppointmentDetailId.Split('-')[1]);
+            int appId = (int)Convert.ToInt64(request.AppointmentDetailId.Split('-')[0]);
+
+            Lab lab = new()
+            {
+                Title = request.Title,
+                Description = request.Description,
+                LabDateTime = request.LabDateTime,
+                CreateDate = DateTime.Now,
+                UsersId = request.UsersId,
+                MembersId = memberId,
+                AppointmentDetailId = appId
+            };
+
+            await _labWriteRepository.AddAsync(lab);
+            await _labWriteRepository.SaveAsync();
+
+
+            List<_Examination> _examination = new();
+
+            foreach (var item in request.ExaminationId)
+            {
+                _examination.Add(new()
+                {
+                    ExaminationId = item,
+                    LabId = lab.Id,
+                    Value = null
+                });
+            }
+
+            await __examinationWriteRepository.AddRangeAsync(_examination);
+            await __examinationWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
             };
         }
 

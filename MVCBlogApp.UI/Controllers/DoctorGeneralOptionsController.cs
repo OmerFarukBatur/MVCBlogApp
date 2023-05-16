@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -317,17 +318,16 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LabCreate(DietListCreateCommandRequest request)
+        public async Task<IActionResult> LabCreate(LabCreateCommandRequest request)
         {
-            request.UserId = _operationService.GetUser().Id;
-            DietListCreateCommandResponse response = await _mediator.Send(request);
+            LabCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("DietList", "DoctorGeneralOptions");
+                return RedirectToAction("LabList", "DoctorGeneralOptions");
             }
             else
             {
-                return RedirectToAction("DietListCreate", "DoctorGeneralOptions");
+                return RedirectToAction("LabCreate", "DoctorGeneralOptions");
             }
         }
 

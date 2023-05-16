@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.DietList.DietListUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -71,6 +72,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetLabCreateItemsQueryResponse> GetLabCreateItemsAsync();
         Task<GetAllLabQueryResponse> GetAllLabAsync();
+        Task<LabCreateCommandResponse> LabCreateAsync(LabCreateCommandRequest request);
 
         #endregion
     }
