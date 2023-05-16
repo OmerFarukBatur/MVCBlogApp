@@ -4,5 +4,7 @@
     {
         public int? Id { get; set; }
         public string? ExaminatioName { get; set; }
+
+        public bool? Selected { get; set; }
     }
 }

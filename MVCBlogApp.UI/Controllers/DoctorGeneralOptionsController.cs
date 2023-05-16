@@ -11,6 +11,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCre
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -22,6 +24,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateI
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetAllLab;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetByIdLab;
 using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetLabCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
@@ -332,37 +335,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LabUpdate(GetByIdDietListQueryRequest request)
+        public async Task<IActionResult> LabUpdate(GetByIdLabQueryRequest request)
         {
-            GetByIdDietListQueryResponse response = await _mediator.Send(request);
+            GetByIdLabQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
+                return RedirectToAction("LabUpdate", "DoctorGeneralOptions");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> LabUpdate(DietListUpdateCommandRequest request)
+        public async Task<IActionResult> LabUpdate(LabUpdateCommandRequest request)
         {
-            DietListUpdateCommandResponse response = await _mediator.Send(request);
+            LabUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("DietList", "DoctorGeneralOptions");
+                return RedirectToAction("LabList", "DoctorGeneralOptions");
             }
             else
             {
-                return RedirectToAction("DietListUpdate", "DoctorGeneralOptions");
+                return RedirectToAction("LabUpdate", "DoctorGeneralOptions");
             }
         }
 
-        public async Task<IActionResult> LabDelete(DietListDeleteCommandRequest request)
+        public async Task<IActionResult> LabDelete(LabDeleteCommandRequest request)
         {
-            DietListDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("DietList", "DoctorGeneralOptions");
+            LabDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("LabList", "DoctorGeneralOptions");
         }
 
         #endregion        

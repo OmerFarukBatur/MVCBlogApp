@@ -11,6 +11,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationCre
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Examination.ExaminationUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Lab.LabUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Meal.MealUpdate;
@@ -22,6 +24,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.DietList.GetDietListCreateI
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetAllExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Examination.GetByIdExamination;
 using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetAllLab;
+using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetByIdLab;
 using MVCBlogApp.Application.Features.Queries.Doctor.Lab.GetLabCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetAllMeals;
 using MVCBlogApp.Application.Features.Queries.Doctor.Meal.GetByIdMeal;
@@ -487,7 +490,7 @@ namespace MVCBlogApp.Persistence.Services
                         DietListId = x.DietListId,
                         MealId = x.MealId,
                         TimeInterval = x.TimeInterval
-                    }).FirstOrDefaultAsync();                
+                    }).FirstOrDefaultAsync();
 
                 List<VM_Days> vM_Days = await _daysReadRepository.GetAll()
                 .Select(x => new VM_Days
@@ -665,7 +668,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllExaminationQueryResponse> GetAllExaminationAsync()
         {
             List<VM_Examination> vM_Examinations = await _examinationReadRepository.GetAll()
-                .Select(x=> new VM_Examination
+                .Select(x => new VM_Examination
                 {
                     Id = x.Id,
                     ExaminatioName = x.ExaminatioName
@@ -773,13 +776,6 @@ namespace MVCBlogApp.Persistence.Services
                     Username = x.us.Username
                 }).ToListAsync();
 
-            //List<VM_Member> vM_Members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
-            //    .Select(x => new VM_Member
-            //    {
-            //        Id = x.Id,
-            //        NameSurname = x.NameSurname
-            //    }).ToListAsync();
-
             List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
                 .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { mem, app })
                 .Select(x => new VM_AppointmentDetail
@@ -870,6 +866,197 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<GetByIdLabQueryResponse> GetByIdLabAsync(int id)
+        {
+            VM_Lab? vM_Lab = await _labReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Lab
+                {
+                    Id = x.Id,
+                    AppointmentDetailId = x.AppointmentDetailId,
+                    Description = x.Description,
+                    LabDateTime = x.LabDateTime,
+                    MembersId = x.MembersId,
+                    Title = x.Title,
+                    UsersId = x.UsersId
+                }).FirstOrDefaultAsync();
+
+            if (vM_Lab != null)
+            {
+                List<VM_Admin> vM_Admins = await _userReadRepository.GetAll()
+                .Join(_authReadRepository.GetAll(), us => us.AuthId, au => au.Id, (us, au) => new { us, au })
+                .Select(x => new VM_Admin
+                {
+                    Id = x.us.Id,
+                    AuthName = x.au.AuthName,
+                    Username = x.us.Username
+                }).ToListAsync();
+
+                List<VM_AppointmentDetail> vM_AppointmentDetails = await _appointmentDetailReadRepository.GetAll()
+                    .Join(_membersReadRepository.GetAll(), app => app.MembersId, mem => mem.Id, (app, mem) => new { mem, app })
+                    .Select(x => new VM_AppointmentDetail
+                    {
+                        Id = x.app.Id,
+                        MemberName = x.mem.NameSurname,
+                        Diagnosis = x.app.Diagnosis,
+                        MembersId = x.app.MembersId
+                    }).ToListAsync();
+
+                List<VM_Examination> vM_Examinations = await _examinationReadRepository.GetAll()
+                    .Select(x => new VM_Examination
+                    {
+                        Id = x.Id,
+                        ExaminatioName = x.ExaminatioName
+                    }).ToListAsync();
+
+                List<_Examination> __examination = await __examinationReadRepository.GetWhere(x => x.LabId == vM_Lab.Id).ToListAsync();
+
+                foreach (var item in __examination)
+                {
+                    foreach (var __item in vM_Examinations)
+                    {
+                        if (item.ExaminationId == __item.Id)
+                        {
+                            __item.Selected = true;
+                        }
+                        else
+                        {
+                            __item.Selected = false;
+                        }
+                    }
+                }
+
+                return new()
+                {
+                    Admins = vM_Admins,
+                    AppointmentDetails = vM_AppointmentDetails,
+                    Examinations = vM_Examinations,
+                    Lab = vM_Lab,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Admins = null,
+                    AppointmentDetails = null,
+                    Examinations = null,
+                    Lab = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<LabUpdateCommandResponse> LabUpdateAsync(LabUpdateCommandRequest request)
+        {
+            Lab lab = await _labReadRepository.GetByIdAsync(request.Id);
+
+            if (lab != null)
+            {
+                int memberId = (int)Convert.ToInt64(request.AppointmentDetailId.Split('-')[1]);
+                int appId = (int)Convert.ToInt64(request.AppointmentDetailId.Split('-')[0]);
+
+                lab.Description = request.Description;
+                lab.LabDateTime = request.LabDateTime;
+                lab.CreateDate = DateTime.Now;
+                lab.UsersId = request.UsersId;
+                lab.MembersId = memberId;
+                lab.AppointmentDetailId = appId;
+                lab.Title = request.Title;
+
+                _labWriteRepository.Update(lab);
+                await _labWriteRepository.SaveAsync();
+
+                List<_Examination> _Examinations = await __examinationReadRepository.GetWhere(x => x.LabId == lab.Id).ToListAsync();
+
+                if (_Examinations.Count() > 0)
+                {
+                    __examinationWriteRepository.RemoveRange(_Examinations);
+                    await __examinationWriteRepository.SaveAsync();
+
+                    List<_Examination> _examination = new();
+
+                    foreach (var item in request.ExaminationId)
+                    {
+                        _examination.Add(new()
+                        {
+                            ExaminationId = item,
+                            LabId = lab.Id,
+                            Value = null
+                        });
+                    }
+
+                    await __examinationWriteRepository.AddRangeAsync(_examination);
+                    await __examinationWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    List<_Examination> _examination = new();
+
+                    foreach (var item in request.ExaminationId)
+                    {
+                        _examination.Add(new()
+                        {
+                            ExaminationId = item,
+                            LabId = lab.Id,
+                            Value = null
+                        });
+                    }
+
+                    await __examinationWriteRepository.AddRangeAsync(_examination);
+                    await __examinationWriteRepository.SaveAsync();
+                }
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<LabDeleteCommandResponse> LabDeleteAsync(int id)
+        {
+            Lab lab = await _labReadRepository.GetByIdAsync(id);
+
+            if (lab != null)
+            {
+                List<_Examination> _Examinations = await __examinationReadRepository.GetWhere(x => x.LabId == lab.Id).ToListAsync();
+
+                if (_Examinations.Count() > 0)
+                {
+                    __examinationWriteRepository.RemoveRange(_Examinations);
+                    await __examinationWriteRepository.SaveAsync();
+                }
+
+                _labWriteRepository.Remove(lab);
+                await _labWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
     }
