@@ -41,6 +41,16 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
+        #region MembersInfo
 
+
+
+        #endregion
+
+        #region MembersNutritionist
+
+
+
+        #endregion
     }
 }

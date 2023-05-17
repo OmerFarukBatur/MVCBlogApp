@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "GetByIdMembersInformation";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body">
+
+   @* <div class="row page-titles mx-0">
+        <div class="col p-md-0">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="#" id="step-form-horizontal" class="step-form-horizontal">
+                    <div>
+                        <h4>Detaylı Danışan Bilgileri:</h4>
+                        <section>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Ad Soyad
+                                </label>
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Ad Soyad
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Doğum Tarihi
+                                </label>
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Doğum Tarihi
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Mesleği
+                                </label>
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Mesleği
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Cep Telefonu
+                                </label>
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Cep Telefonu
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    E-Posta Adresi
+                                </label>
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    E-Posta Adresi
+                                </label>
+                            </div>
+                        </section>
+                        <h4>Bilgi Formu Adım 2</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Kilo Öykünüz
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" disabled>
+                                                Kilo Öykünüz
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            DM (Şeker Hastalığı)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" checked disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Kalp / Tansiyon
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            @*<div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="nameSurname">
+                            Ad Soyad
+                            </label>
+                            <label class="col-lg-4 col-form-label" for="nameSurname">
+                            Ad Soyad
+                            </label>
+                            </div>*@
+                        </section>
+                        <h4>Bilgi Formu Adım 3</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="creditCard" placeholder="Credit Card Number">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="date" placeholder="Expiration Date">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="owner" placeholder="Credit Card Owner">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <h4>Bilgi Formu Adım 4</h4>
+                        <section>
+                            <div class="row h-100">
+                                <div class="col-12 h-100 d-flex flex-column justify-content-center align-items-center">
+                                    <h2>You have submitted form successfully!</h2>
+                                    <p>Thank you very much for you information. we will procceed accordingly.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

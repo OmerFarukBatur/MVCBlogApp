@@ -109,6 +109,16 @@ namespace MVCBlogApp.UI.Controllers
 
         #endregion
 
+        #region MembersInformation
+
+        [HttpGet]
+        public async Task<IActionResult> GetByIdMembersInformation(int id)
+        {
+            return View();
+        }
+
+        #endregion
+
         #region MemberNutritionist
 
         [HttpGet]

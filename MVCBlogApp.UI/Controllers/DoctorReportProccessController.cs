@@ -184,7 +184,23 @@ namespace MVCBlogApp.UI.Controllers
             AppointmentDetailDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
         }
-        
+
+        #endregion
+
+        #region MembersInfo
+
+        [HttpGet]
+        public async Task<IActionResult> MemberNutritionistList()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region MembersNutritionist
+
+
+
         #endregion
     }
 }

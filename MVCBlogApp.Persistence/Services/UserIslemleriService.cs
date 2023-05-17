@@ -36,6 +36,7 @@ using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Persistence.Repositories.ConsultancyFormType;
+using System.Linq;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -311,6 +312,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetAllMemberNutritionistQueryResponse> GetAllMemberNutritionistAsync()
         {
+
             List<VM_MembersInformation> vM_MembersInformations = await _membersInformationReadRepository.GetAll()
                 .Join(_appointmentDetailReadRepository.GetAll(), mem => mem.MembersId, app => app.MembersId, (mem, app) => new { mem, app })
                 .Join(_membersReadRepository.GetAll(), memInfo => memInfo.mem.MembersId, mb => mb.Id, (memInfo, mb) => new { memInfo, mb })
@@ -326,11 +328,16 @@ namespace MVCBlogApp.Persistence.Services
                     AppointmentDate = x.appo.AppointmentDate
                 }).ToListAsync();
 
+
             return new()
             {
                 MembersInformations = vM_MembersInformations
             };
         }
+
+        #endregion
+
+        #region MembersInformation
 
 
 
@@ -736,7 +743,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-        
+
         #endregion
     }
 }

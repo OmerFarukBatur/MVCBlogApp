@@ -563,5 +563,17 @@ namespace MVCBlogApp.Persistence.Services
         }
 
         #endregion
+
+        #region MembersInfo
+
+
+
+        #endregion
+
+        #region MembersNutritionist
+
+
+
+        #endregion
     }
 }

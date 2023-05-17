@@ -35,6 +35,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
+        #region MembersInformation
+
+
+
+        #endregion
+
         #region MemberNutritionist
 
         Task<GetAllMemberNutritionistQueryResponse> GetAllMemberNutritionistAsync();
