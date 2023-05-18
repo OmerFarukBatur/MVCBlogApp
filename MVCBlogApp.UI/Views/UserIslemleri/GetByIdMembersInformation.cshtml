@@ -8,13 +8,13 @@
 ***********************************-->
 <div class="content-body">
 
-   @* <div class="row page-titles mx-0">
-        <div class="col p-md-0">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
-            </ol>
-        </div>
+    @* <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
     </div>
     <!-- row -->*@
 
@@ -23,59 +23,64 @@
             <div class="col-md-12">
                 <form action="#" id="step-form-horizontal" class="step-form-horizontal">
                     <div>
+                        <!-- Section 1 Start-->
                         <h4>Detaylı Danışan Bilgileri:</h4>
                         <section>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="nameSurname">
                                     Ad Soyad
                                 </label>
-                                <label class="col-lg-4 col-form-label" for="nameSurname">
-                                    Ad Soyad
-                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Ad Soyad" disabled>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="nameSurname">
                                     Doğum Tarihi
                                 </label>
-                                <label class="col-lg-4 col-form-label" for="nameSurname">
-                                    Doğum Tarihi
-                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Doğum Tarihi" disabled>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="nameSurname">
                                     Mesleği
                                 </label>
-                                <label class="col-lg-4 col-form-label" for="nameSurname">
-                                    Mesleği
-                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Mesleği" disabled>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="nameSurname">
                                     Cep Telefonu
                                 </label>
-                                <label class="col-lg-4 col-form-label" for="nameSurname">
-                                    Cep Telefonu
-                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Cep Telefonu" disabled>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="nameSurname">
                                     E-Posta Adresi
                                 </label>
-                                <label class="col-lg-4 col-form-label" for="nameSurname">
-                                    E-Posta Adresi
-                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="E-Posta Adresi" disabled>
+                                </div>
                             </div>
                         </section>
+                        <!-- Section 1 End-->
+
+                        <!-- Section 2 Start-->
                         <h4>Bilgi Formu Adım 2</h4>
                         <section>
                             <div class="row">
                                 <div class="col-6">
+                                    <h5>Aile de olan, bilinen hastalıklar:</h5>
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="contents">
                                             Kilo Öykünüz
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="contents" name="contents" disabled>
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
                                                 Kilo Öykünüz
                                             </textarea>
                                         </div>
@@ -96,42 +101,243 @@
                                             <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Tiroid
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Hormon Düzensizliği
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Kanser
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Gut
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Epilepsi
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Teşhisi konulmuş bir hastalık var mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Bir günlük beslenme alışkanlığı:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Sabah
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Sabah
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Sabah Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Sabah Ara
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Öğlen
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Öğlen
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Öğlen Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Öğlen Ara
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Akşam
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Akşam
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Akşam Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Akşam Ara
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Geçmişte yapılan bir diyetin bir gününü
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Geçmişte yapılan bir diyetin bir gününü
+                                            </textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-
-
-
-
-                            @*<div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="nameSurname">
-                            Ad Soyad
-                            </label>
-                            <label class="col-lg-4 col-form-label" for="nameSurname">
-                            Ad Soyad
-                            </label>
-                            </div>*@
                         </section>
+                        <!-- Section 2 End-->
+
+                        <!-- Section 3 Start-->
                         <h4>Bilgi Formu Adım 3</h4>
                         <section>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="creditCard" placeholder="Credit Card Number">
+                                    <h5>Bir günde tüketilen sıvı miktarı:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Su
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Su" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Çay
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Çay" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Kahve
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Kahve" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Gazlı İçecekler
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Gazlı İçecekler" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Alkol
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="nameSurname" name="nameSurname" value="Alkol" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Sigara kullanıyor mu?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="nameSurname">
+                                            Bırakıldıysa bu süreçte kilo alındı mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" disabled>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="date" placeholder="Expiration Date">
+                                    <h5>Sevilen, sevilmeyen ve alerjisi olduğu yiyecekler nelerdir?:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Sevdikleri
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Sevdikleri
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Sevmedikleri
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Sevmedikleri
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Alerjisi olan
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Alerjisi olan
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Yemekleri evde mi, dışarıda mı yersiniz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" disabled>
+                                                Yemekleri evde mi, dışarıda mı yersiniz?
+                                        </textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="owner" placeholder="Credit Card Owner">
-                                    </div>
-                                </div>
-                            </div>
+                            </div>                            
                         </section>
+                        <!-- Section 3 End-->
+
+                        <!-- Section 4 Start-->
                         <h4>Bilgi Formu Adım 4</h4>
                         <section>
                             <div class="row h-100">
@@ -141,6 +347,7 @@
                                 </div>
                             </div>
                         </section>
+                        <!-- Section 4 End-->
                     </div>
                 </form>
             </div>
