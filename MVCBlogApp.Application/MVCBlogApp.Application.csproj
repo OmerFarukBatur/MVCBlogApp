@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Features\Queries\Doctor\MembersInfo\" />
     <Folder Include="Features\Queries\Doctor\MembersNutritionist\" />
-    <Folder Include="Features\Queries\UserIslemleri\MembersInformation\GetAllMembers\" />
   </ItemGroup>
 
 </Project>

@@ -19,6 +19,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -338,6 +339,22 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region MembersInformation
+
+        public async Task<GetByIdMIQueryResponse> GetByIdMIAsync(int id)
+        {
+            VM_MembersInformation? vM_MembersInformation = await _membersInformationReadRepository.GetWhere(x=> x.Id == id)
+                .Select(x=> new VM_MembersInformation
+                {
+                    Id = x.Id,
+                    MembersId = x.MembersId,
+                    Birthdate= x.Birthdate,
+                    ConsumedVegetables = x.ConsumedVegetables,
+                    CpreviousDisease = x.CpreviousDisease,
+                    DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy,
+                    DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
+                    
+                })
+        }
 
 
 
@@ -743,7 +760,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-
+        
         #endregion
     }
 }
