@@ -10,6 +10,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.Appointm
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -18,7 +20,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllApp
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
-using NuGet.Protocol;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -236,37 +238,37 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DiseasesUpdate(GetByIdAppointmentDetailQueryRequest request)
+        public async Task<IActionResult> DiseasesUpdate(GetByIdDiseasesQueryRequest request)
         {
-            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            GetByIdDiseasesQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return View(response);
             }
             else
             {
-                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+                return RedirectToAction("DiseasesList", "DoctorReportProccess");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiseasesUpdate(AppointmentDetailUpdateCommandRequest request)
+        public async Task<IActionResult> DiseasesUpdate(DiseasesUpdateCommandRequest request)
         {
-            AppointmentDetailUpdateCommandResponse response = await _mediator.Send(request);
+            DiseasesUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+                return RedirectToAction("DiseasesList", "DoctorReportProccess");
             }
             else
             {
-                return RedirectToAction("AppointmentDetailUpdate", "DoctorReportProccess");
+                return RedirectToAction("DiseasesUpdate", "DoctorReportProccess");
             }
         }
 
-        public async Task<IActionResult> DiseasesDelete(AppointmentDetailDeleteCommandRequest request)
+        public async Task<IActionResult> DiseasesDelete(DiseasesDeleteCommandRequest request)
         {
-            AppointmentDetailDeleteCommandResponse response = await _mediator.Send(request);
-            return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+            DiseasesDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("DiseasesList", "DoctorReportProccess");
         }
 
         #endregion

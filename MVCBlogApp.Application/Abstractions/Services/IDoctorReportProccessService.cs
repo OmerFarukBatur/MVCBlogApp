@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.Appointm
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -14,6 +16,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllApp
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -59,6 +62,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync();
         Task<DiseasesCreateCommandResponse> DiseasesCreateAsync(DiseasesCreateCommandRequest request);
+        Task<GetByIdDiseasesQueryResponse> GetByIdDiseasesAsync(int id);
+        Task<DiseasesUpdateCommandResponse> DiseasesUpdateAsync(DiseasesUpdateCommandRequest request);
+        Task<DiseasesDeleteCommandResponse> DiseasesDeleteAsync(int id);
 
         #endregion
     }

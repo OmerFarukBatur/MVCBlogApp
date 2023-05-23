@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.AppointmentDelete;
@@ -9,6 +8,8 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.Appointm
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesDelete;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -17,6 +18,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllApp
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
@@ -26,7 +28,6 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
-using System.Drawing;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -458,7 +459,7 @@ namespace MVCBlogApp.Persistence.Services
                     Size = x.Size,
                     Treatment = x.Treatment,
                     Weight = x.Weight,
-                    UserId= x.UserId
+                    UserId = x.UserId
                 }).FirstOrDefaultAsync();
 
             if (vM_AppointmentDetail != null)
@@ -590,7 +591,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync()
         {
             List<VM_Diseases> vM_Diseases = await _iseasesReadRepository.GetAll()
-                .Select(x=> new VM_Diseases
+                .Select(x => new VM_Diseases
                 {
                     Id = x.Id,
                     DiseasesName = x.DiseasesName,
@@ -606,7 +607,7 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<DiseasesCreateCommandResponse> DiseasesCreateAsync(DiseasesCreateCommandRequest request)
         {
             var check = await _iseasesReadRepository
-                .GetWhere(x=> x.DiseasesName.Trim().ToLower() == request.DiseasesName.Trim().ToLower() || x.DiseasesName.Trim().ToUpper() == request.DiseasesName.Trim().ToUpper()).ToListAsync();
+                .GetWhere(x => x.DiseasesName.Trim().ToLower() == request.DiseasesName.Trim().ToLower() || x.DiseasesName.Trim().ToUpper() == request.DiseasesName.Trim().ToUpper()).ToListAsync();
 
             if (check.Count() > 0)
             {
@@ -617,7 +618,7 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
             else
-            {                
+            {
                 Diseases diseases = new()
                 {
                     DiseasesName = request.DiseasesName,
@@ -631,6 +632,89 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdDiseasesQueryResponse> GetByIdDiseasesAsync(int id)
+        {
+            VM_Diseases? vM_Diseases = await _iseasesReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Diseases
+                {
+                    Id = x.Id,
+                    DiseasesName = x.DiseasesName,
+                    Type = x.Type
+                }).FirstOrDefaultAsync();
+
+            if (vM_Diseases != null)
+            {
+                return new()
+                {
+                    Diseases = vM_Diseases,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Diseases = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DiseasesUpdateCommandResponse> DiseasesUpdateAsync(DiseasesUpdateCommandRequest request)
+        {
+            Diseases diseases = await _iseasesReadRepository.GetByIdAsync(request.Id);
+
+            if (diseases != null)
+            {
+                diseases.DiseasesName = request.DiseasesName;
+                diseases.Type = request.Type;
+
+                _iseasesWriteRepository.Update(diseases);
+                await _iseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<DiseasesDeleteCommandResponse> DiseasesDeleteAsync(int id)
+        {
+            Diseases diseases = await _iseasesReadRepository.GetByIdAsync(id);
+
+            if (diseases != null)
+            {
+                _iseasesWriteRepository.Remove(diseases);
+                await _iseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
