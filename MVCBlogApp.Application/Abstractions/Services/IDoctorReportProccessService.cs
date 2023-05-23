@@ -52,12 +52,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
-        #region MembersNutritionist
-
-
-
-        #endregion
-
         #region Diseases
 
         Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync();

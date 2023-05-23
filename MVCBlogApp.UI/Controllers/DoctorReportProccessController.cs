@@ -21,6 +21,8 @@ using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppoin
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -203,7 +205,19 @@ namespace MVCBlogApp.UI.Controllers
 
         #region MembersNutritionist
 
+        [HttpGet]
+        public async Task<IActionResult> UserList(GetAllUserQueryRequest request)
+        {
+            GetAllUserQueryResponse response = await _mediator.Send(request);
+            return View(response.Members);
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> AllMembersNutritionistList(GetAllMemberNutritionistQueryRequest request)
+        {
+            GetAllMemberNutritionistQueryResponse response = await _mediator.Send(request);
+            return View(response.MembersInformations);
+        }
 
         #endregion
 
