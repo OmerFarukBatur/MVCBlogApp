@@ -9,6 +9,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmen
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -16,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEven
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using NuGet.Protocol;
 
 namespace MVCBlogApp.UI.Controllers
@@ -200,6 +202,72 @@ namespace MVCBlogApp.UI.Controllers
         #region MembersNutritionist
 
 
+
+        #endregion
+
+        #region Diseases
+
+        [HttpGet]
+        public async Task<IActionResult> DiseasesList(GetAllDiseasesQueryRequest request)
+        {
+            GetAllDiseasesQueryResponse response = await _mediator.Send(request);
+            return View(response.Diseases);
+        }
+
+        [HttpGet]
+        public IActionResult DiseasesCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DiseasesCreate(DiseasesCreateCommandRequest request)
+        {
+
+            DiseasesCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("DiseasesList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("DiseasesCreate", "DoctorReportProccess");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DiseasesUpdate(GetByIdAppointmentDetailQueryRequest request)
+        {
+            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DiseasesUpdate(AppointmentDetailUpdateCommandRequest request)
+        {
+            AppointmentDetailUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("AppointmentDetailUpdate", "DoctorReportProccess");
+            }
+        }
+
+        public async Task<IActionResult> DiseasesDelete(AppointmentDetailDeleteCommandRequest request)
+        {
+            AppointmentDetailDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("AppointmentDetailList", "DoctorReportProccess");
+        }
 
         #endregion
     }

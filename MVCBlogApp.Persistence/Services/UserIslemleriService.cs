@@ -342,18 +342,25 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdMIQueryResponse> GetByIdMIAsync(int id)
         {
-            VM_MembersInformation? vM_MembersInformation = await _membersInformationReadRepository.GetWhere(x=> x.Id == id)
-                .Select(x=> new VM_MembersInformation
+            VM_MembersInformation? vM_MembersInformation = await _membersInformationReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_MembersInformation
                 {
                     Id = x.Id,
                     MembersId = x.MembersId,
-                    Birthdate= x.Birthdate,
+                    Birthdate = x.Birthdate,
                     ConsumedVegetables = x.ConsumedVegetables,
                     CpreviousDisease = x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
-                    
-                })
+
+                }).FirstOrDefaultAsync();
+
+            return new()
+            {
+                MembersInformation = vM_MembersInformation,
+                Message = null,
+                State = true
+            };
         }
 
 

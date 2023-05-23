@@ -8,6 +8,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmen
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -15,9 +16,11 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEven
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
+using MVCBlogApp.Application.Repositories.Diseases;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
@@ -37,6 +40,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IAuthReadRepository _authReadRepository;
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
         private readonly IAppointmentDetailWriteRepository _appointmentDetailWriteRepository;
+        private readonly IDiseasesReadRepository _iseasesReadRepository;
+        private readonly IDiseasesWriteRepository _iseasesWriteRepository;
 
         public DoctorReportProccessService(
             ID_AppointmentReadRepository d_AppointmentReadRepository,
@@ -46,7 +51,9 @@ namespace MVCBlogApp.Persistence.Services
             IMembersReadRepository membersReadRepository,
             IAuthReadRepository authReadRepository,
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
-            IAppointmentDetailWriteRepository appointmentDetailWriteRepository)
+            IAppointmentDetailWriteRepository appointmentDetailWriteRepository,
+            IDiseasesReadRepository iseasesReadRepository,
+            IDiseasesWriteRepository iseasesWriteRepository)
         {
             _d_AppointmentReadRepository = d_AppointmentReadRepository;
             _d_AppointmentWriteRepository = d_AppointmentWriteRepository;
@@ -56,6 +63,8 @@ namespace MVCBlogApp.Persistence.Services
             _authReadRepository = authReadRepository;
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
             _appointmentDetailWriteRepository = appointmentDetailWriteRepository;
+            _iseasesReadRepository = iseasesReadRepository;
+            _iseasesWriteRepository = iseasesWriteRepository;
         }
 
 
@@ -572,6 +581,59 @@ namespace MVCBlogApp.Persistence.Services
 
         #region MembersNutritionist
 
+
+
+        #endregion
+
+        #region Diseases
+
+        public async Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync()
+        {
+            List<VM_Diseases> vM_Diseases = await _iseasesReadRepository.GetAll()
+                .Select(x=> new VM_Diseases
+                {
+                    Id = x.Id,
+                    DiseasesName = x.DiseasesName,
+                    Type = x.Type
+                }).ToListAsync();
+
+            return new()
+            {
+                Diseases = vM_Diseases
+            };
+        }
+
+        public async Task<DiseasesCreateCommandResponse> DiseasesCreateAsync(DiseasesCreateCommandRequest request)
+        {
+            var check = await _iseasesReadRepository
+                .GetWhere(x=> x.DiseasesName.Trim().ToLower() == request.DiseasesName.Trim().ToLower() || x.DiseasesName.Trim().ToUpper() == request.DiseasesName.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {                
+                Diseases diseases = new()
+                {
+                    DiseasesName = request.DiseasesName,
+                    Type = request.Type
+                };
+
+                await _iseasesWriteRepository.AddAsync(diseases);
+                await _iseasesWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
 
 
         #endregion

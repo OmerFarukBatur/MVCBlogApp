@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppointmen
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.AppointmentDetailUpdate;
+using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -12,6 +13,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEven
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -50,6 +52,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region MembersNutritionist
 
 
+
+        #endregion
+
+        #region Diseases
+
+        Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync();
+        Task<DiseasesCreateCommandResponse> DiseasesCreateAsync(DiseasesCreateCommandRequest request);
 
         #endregion
     }
