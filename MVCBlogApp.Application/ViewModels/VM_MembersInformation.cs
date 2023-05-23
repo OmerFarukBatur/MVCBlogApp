@@ -4,28 +4,28 @@
     {
         public int? Id { get; set; }
         public int? MembersId { get; set; }
-        public string? Name { get; set; }
-        public string? Surname { get; set; }
-        public DateTime? Birthdate { get; set; }
-        public string? Job { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Email { get; set; }
+        public string? Name { get; set; } // 1
+        public string? Surname { get; set; } // 1
+        public DateTime? Birthdate { get; set; } // 1
+        public string? Job { get; set; } // 1
+        public string? PhoneNumber { get; set; } // 1
+        public string? Email { get; set; } // 1
         public string? ImageUrl { get; set; }
-        public string? HistoryOfWeigh { get; set; }
-        public bool? CpreviousDisease { get; set; }
-        public string? OneDaySummary { get; set; }
-        public string? TheQuantityConsumedWater { get; set; }
-        public string? TheQuantityConsumedTea { get; set; }
-        public string? TheQuantityConsumedCoffe { get; set; }
-        public string? TheQuantityConsumedFizzy { get; set; }
-        public string? TheQuantityConsumedAlchol { get; set; }
-        public bool? DoYouUseCigarettes { get; set; }
-        public bool? HaveYouGainedWeight { get; set; }
-        public string? FoodLocation { get; set; }
-        public string? FoodMade { get; set; }
-        public string? ManTheNeedForEatingVaries { get; set; }
-        public bool? DidYouGainWeightInTheArmy { get; set; }
-        public string? IsBloodCoagulationDisorders { get; set; }
+        public string? HistoryOfWeigh { get; set; } // 2
+        public bool? CpreviousDisease { get; set; } // 2
+        public string? OneDaySummary { get; set; } // 2
+        public string? TheQuantityConsumedWater { get; set; } // 3
+        public string? TheQuantityConsumedTea { get; set; } // 3
+        public string? TheQuantityConsumedCoffe { get; set; } // 3
+        public string? TheQuantityConsumedFizzy { get; set; } // 3
+        public string? TheQuantityConsumedAlchol { get; set; } // 3
+        public bool? DoYouUseCigarettes { get; set; } // 3
+        public bool? HaveYouGainedWeight { get; set; } // 3
+        public string? FoodLocation { get; set; } // 3
+        public string? FoodMade { get; set; } // 3
+        public string? ManTheNeedForEatingVaries { get; set; } // 5
+        public bool? DidYouGainWeightInTheArmy { get; set; } // 5
+        public string? IsBloodCoagulationDisorders { get; set; } 
         public string? DoYouHaveHormonalProblem { get; set; }
         public int? HowDoYouFeel { get; set; }
         public int? HowIsYourEnergy { get; set; }

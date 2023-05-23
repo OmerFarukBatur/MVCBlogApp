@@ -196,7 +196,7 @@ namespace MVCBlogApp.UI.Controllers
         #region MembersInfo
 
         [HttpGet]
-        public async Task<IActionResult> MemberNutritionistList()
+        public async Task<IActionResult> GetByIdMembersInfo()
         {
             return View();
         }
