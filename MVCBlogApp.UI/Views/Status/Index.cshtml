@@ -20,8 +20,8 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Durum Adı</th>                                        
-                                        <th>Güncelle</th>
-                                        <th>Sil</th>
+                                        @*<th>Güncelle</th>
+                                        <th>Sil</th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -30,8 +30,8 @@
                                         <tr>
                                             <td>@item.Id</td>
                                             <td>@item.StatusName</td>
-                                            <td><a class="btn btn-outline-success" asp-action="UpdateStatus" asp-controller="Status" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
-                                            <td><a class="btn btn-outline-danger" asp-action="DeleteStatus" asp-controller="Status" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
+                                            @*<td><a class="btn btn-outline-success" asp-action="UpdateStatus" asp-controller="Status" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="DeleteStatus" asp-controller="Status" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>*@
                                         </tr>
                                     }
                                 </tbody>

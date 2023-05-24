@@ -6,6 +6,6 @@ namespace MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformati
     {
         public string? Message { get; set; }
         public bool State { get; set; }
-        public VM_MembersInformation? MembersInformation { get; set; }
+        public VM_MemberAllDetail? MemberAllDetail { get; set; }
     }
 }

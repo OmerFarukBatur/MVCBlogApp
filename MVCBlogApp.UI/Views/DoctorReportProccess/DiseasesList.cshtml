@@ -21,8 +21,8 @@
                                         <th>Id</th>
                                         <th>Hastalık Adı</th>
                                         <th>Tip</th>
-                                        <th>Güncelle</th>
-                                        <th>Sil</th>
+                                        @*<th>Güncelle</th>
+                                        <th>Sil</th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,8 +32,8 @@
                                             <td>@item.Id</td>
                                             <td>@item.DiseasesName</td>
                                             <td>@item.Type</td>
-                                            <td><a class="btn btn-outline-success" asp-action="DiseasesUpdate" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
-                                            <td><a class="btn btn-outline-danger" asp-action="DiseasesDelete" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
+                                            @*<td><a class="btn btn-outline-success" asp-action="DiseasesUpdate" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="DiseasesDelete" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>*@
                                         </tr>
                                     }
                                 </tbody>

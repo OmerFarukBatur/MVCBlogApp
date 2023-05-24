@@ -23,11 +23,16 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.G
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
+using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.D_Appointment;
+using MVCBlogApp.Application.Repositories.FemaleMentalState;
+using MVCBlogApp.Application.Repositories.FoodHabitMood;
+using MVCBlogApp.Application.Repositories.FoodHabits;
+using MVCBlogApp.Application.Repositories.FoodTime;
 using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
@@ -59,6 +64,11 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IUserReadRepository _userReadRepository;
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
         private readonly IMembersInformationReadRepository _membersInformationReadRepository;
+        private readonly IFoodHabitMoodReadRepository _foodHabitMoodReadRepository;
+        private readonly IAllergyProducingFoodsReadRepository _allergyProducingsReadRepository;
+        private readonly IFoodTimeReadRepository _foodTimeReadRepository;
+        private readonly IFemaleMentalStateReadRepository _emaleMentalStateReadRepository;
+        private readonly IFoodHabitsReadRepository _foodHabitsReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -76,7 +86,12 @@ namespace MVCBlogApp.Persistence.Services
             ID_AppointmentReadRepository appointmentReadRepository,
             IUserReadRepository userReadRepository,
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
-            IMembersInformationReadRepository membersInformationReadRepository)
+            IMembersInformationReadRepository membersInformationReadRepository,
+            IFoodHabitMoodReadRepository foodHabitMoodReadRepository,
+            IAllergyProducingFoodsReadRepository allergyProducingsReadRepository,
+            IFoodTimeReadRepository foodTimeReadRepository,
+            IFemaleMentalStateReadRepository emaleMentalStateReadRepository,
+            IFoodHabitsReadRepository foodHabitsReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -94,6 +109,11 @@ namespace MVCBlogApp.Persistence.Services
             _userReadRepository = userReadRepository;
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
             _membersInformationReadRepository = membersInformationReadRepository;
+            _foodHabitMoodReadRepository = foodHabitMoodReadRepository;
+            _allergyProducingsReadRepository = allergyProducingsReadRepository;
+            _foodTimeReadRepository = foodTimeReadRepository;
+            _emaleMentalStateReadRepository = emaleMentalStateReadRepository;
+            _foodHabitsReadRepository = foodHabitsReadRepository;
         }
 
 
@@ -342,25 +362,114 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdMIQueryResponse> GetByIdMIAsync(int id)
         {
-            VM_MembersInformation? vM_MembersInformation = await _membersInformationReadRepository.GetWhere(x => x.Id == id)
-                .Select(x => new VM_MembersInformation
+            VM_MemberAllDetail? vM_MemberAllDetail = await _membersInformationReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_MemberAllDetail
                 {
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
-                    ConsumedVegetables = x.ConsumedVegetables,
+                    ConsumedVegetables = x.ConsumedVegetables == 1 ? "3 - 4 Porsiyon" : x.ConsumedVegetables == 2 ? "1 - 2 Porsiyon" : "1 veya hiç",
                     CpreviousDisease = x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
-
+                    DoYouUseVitaminAndMinerals = x.DoYouUseVitaminAndMinerals,
+                    DoYouUseCigarettes = x.DoYouUseCigarettes,
+                    Email = x.Email,
+                    FoodLocation = x.FoodLocation,
+                    FoodMade = x.FoodMade,
+                    HaveYouGainedWeight = x.HaveYouGainedWeight,
+                    GetDrugged = x.GetDrugged,
+                    HistoryOfWeigh = x.HistoryOfWeigh,
+                    HowDoYouFeel = x.HowDoYouFeel == 1 ? "Çok sağlıklı" : x.HowDoYouFeel == 2 ? "Şöyle - Böyle" : "Kötü",
+                    HowFrequencyOfActivity = x.HowFrequencyOfActivity == 1 ? "Düzenli yürüyüş / spor" : x.HowFrequencyOfActivity == 2 ? "Arada bir yürüyüş / spor" : "Hiç hareket yok",
+                    HowIsYourEnergy = x.HowIsYourEnergy == 1 ? "Çok iyi" : x.HowIsYourEnergy == 2 ? "İyi" : "Kötü",
+                    IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
+                    ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
+                    Name = x.Name,
+                    ImageUrl = x.ImageUrl,
+                    Job = x.Job,
+                    OneDaySummary = x.OneDaySummary,
+                    OtherMessage = x.OtherMessage,
+                    PhoneNumber = x.PhoneNumber,
+                    TheQuantityConsumedAlchol = x.TheQuantityConsumedAlchol,
+                    TheQuantityConsumedCoffe = x.TheQuantityConsumedCoffe,
+                    TheQuantityConsumedFizzy = x.TheQuantityConsumedFizzy,
+                    TheQuantityConsumedTea = x.TheQuantityConsumedTea,
+                    TheQuantityConsumedWater = x.TheQuantityConsumedWater,
+                    Surname = x.Surname
                 }).FirstOrDefaultAsync();
 
-            return new()
+            if (vM_MemberAllDetail != null)
             {
-                MembersInformation = vM_MembersInformation,
-                Message = null,
-                State = true
-            };
+                vM_MemberAllDetail = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_MemberAllDetail
+                    {
+                        FoodHabitsMoodHappy = x.Happy == null ? false : x.Happy,
+                        FoodHabitsMoodSad = x.Sad == null ? false : x.Sad,
+                        FoodHabitsMoodStress = x.Stress == null ? false : x.Stress,
+                        FoodHabitsMoodDoomy = x.Doomy == null ? false : x.Doomy,
+                        FoodHabitsMoodAll = x.All == null ? false : x.All
+                    }).FirstOrDefaultAsync();
+
+                vM_MemberAllDetail = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_MemberAllDetail
+                    {
+                        AllergyProducingFoodsLike = x.Like,
+                        AllergyProducingDislike = x.Dislike,
+                        AllergyProducingFoodsAllergen = x.Allergen
+                    }).FirstOrDefaultAsync();
+
+                vM_MemberAllDetail = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_MemberAllDetail
+                    {
+                        FoodTimeWeekdayMorning = x.WeekdayMorning,
+                        FoodTimeWeekdayNoon = x.WeekdayNoon,
+                        FoodTimeWeekdayNight = x.WeekdayNight,
+                        FoodTimeWeekendMorning = x.WeekendMorning,
+                        FoodTimeWeekendNoon = x.WeekendNoon,
+                        FoodTimeWeekendNight = x.WeekendNight
+                    }).FirstOrDefaultAsync();
+
+                vM_MemberAllDetail = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_MemberAllDetail
+                    {
+                        FemaleMentalStateMenstruation = x.Menstruation,
+                        FemaleMentalStateMenopause = x.Menopause,
+                        FemaleMentalStateGravidity = x.Gravidity,
+                        FemaleMentalStateBreastFeeding = x.BreastFeeding,
+                        FemaleMentalStateIsBreastFeedingPeriod = x.IsBreastFeedingPeriod,
+                        FemaleMentalStateIsMenstruatioRegular = x.IsMenstruatioRegular,
+                        FemaleMentalStateIsHormontherapy = x.IsHormontherapy,
+                        FemaleMentalStateIsGiveBirthTo = x.IsGiveBirthTo
+                    }).FirstOrDefaultAsync();
+
+                vM_MemberAllDetail = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_MemberAllDetail
+                    {
+                        FoodHabitsBreakfast = x.Breakfast,
+                        FoodHabitsBreakfastSnack = x.BreakfastSnack,
+                        FoodHabitsLunch = x.Lunch,
+                        FoodHabitsLunchSnack = x.LunchSnack,
+                        FoodHabitsDinner = x.Dinner,
+                        FoodHabitsDinnerSnack = x.DinnerSnack
+                    }).FirstOrDefaultAsync();                
+
+                return new()
+                {
+                    MemberAllDetail = vM_MemberAllDetail,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    MemberAllDetail = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 
@@ -767,7 +876,7 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
-        
+
         #endregion
     }
 }
