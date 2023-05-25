@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Enums;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionCreate;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionDelete;
 using MVCBlogApp.Application.Features.Commands.UserIslemleri.Confession.ConfessionUpdate;
@@ -29,6 +30,11 @@ using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.D_Appointment;
+using MVCBlogApp.Application.Repositories.Diseases;
+using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
+using MVCBlogApp.Application.Repositories.DiseasesDiabetes;
+using MVCBlogApp.Application.Repositories.DiseasesDigestiveDisorders;
+using MVCBlogApp.Application.Repositories.DiseasesFamilyMembers;
 using MVCBlogApp.Application.Repositories.FemaleMentalState;
 using MVCBlogApp.Application.Repositories.FoodHabitMood;
 using MVCBlogApp.Application.Repositories.FoodHabits;
@@ -69,6 +75,11 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IFoodTimeReadRepository _foodTimeReadRepository;
         private readonly IFemaleMentalStateReadRepository _emaleMentalStateReadRepository;
         private readonly IFoodHabitsReadRepository _foodHabitsReadRepository;
+        private readonly IDiseasesFamilyMembersReadRepository _iseasesFamilyMembersReadRepository;
+        private readonly IDiseasesReadRepository _iseasesReadRepository;
+        private readonly IDiseasesDigestiveDisordersReadRepository _iseasesDigestiveDisordersReadRepository;
+        private readonly IDiseasesCardiovascularReadRepository _iseasesCardsReadRepository;
+        private readonly IDiseasesDiabetesReadRepository _diseasesDiabetesReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -91,7 +102,12 @@ namespace MVCBlogApp.Persistence.Services
             IAllergyProducingFoodsReadRepository allergyProducingsReadRepository,
             IFoodTimeReadRepository foodTimeReadRepository,
             IFemaleMentalStateReadRepository emaleMentalStateReadRepository,
-            IFoodHabitsReadRepository foodHabitsReadRepository)
+            IFoodHabitsReadRepository foodHabitsReadRepository,
+            IDiseasesFamilyMembersReadRepository iseasesFamilyMembersReadRepository,
+            IDiseasesReadRepository iseasesReadRepository,
+            IDiseasesDigestiveDisordersReadRepository iseasesDigestiveDisordersReadRepository,
+            IDiseasesCardiovascularReadRepository iseasesCardsReadRepository,
+            IDiseasesDiabetesReadRepository diseasesDiabetesReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -114,6 +130,11 @@ namespace MVCBlogApp.Persistence.Services
             _foodTimeReadRepository = foodTimeReadRepository;
             _emaleMentalStateReadRepository = emaleMentalStateReadRepository;
             _foodHabitsReadRepository = foodHabitsReadRepository;
+            _iseasesFamilyMembersReadRepository = iseasesFamilyMembersReadRepository;
+            _iseasesReadRepository = iseasesReadRepository;
+            _iseasesDigestiveDisordersReadRepository = iseasesDigestiveDisordersReadRepository;
+            _iseasesCardsReadRepository = iseasesCardsReadRepository;
+            _diseasesDiabetesReadRepository = diseasesDiabetesReadRepository;
         }
 
 
@@ -452,7 +473,75 @@ namespace MVCBlogApp.Persistence.Services
                         FoodHabitsLunchSnack = x.LunchSnack,
                         FoodHabitsDinner = x.Dinner,
                         FoodHabitsDinnerSnack = x.DinnerSnack
-                    }).FirstOrDefaultAsync();                
+                    }).FirstOrDefaultAsync(); 
+                
+                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetAll()
+                    .Join(_iseasesReadRepository.GetAll(),fa=> fa.DiseasesId,di=> di.Id,(fa,di)=> new {fa,di})
+                    .Select(x=> new VM_DiseasesFamilyMembers
+                    {
+                        Id = x.fa.Id,
+                        DiseasesId = x.di.Id,
+                        DiseasesName = x.di.DiseasesName,
+                        MembersInformationId = x.fa.MembersInformationId,
+                        Type = x.di.Type
+                    }).ToListAsync();
+
+                foreach (var item in vM_DiseasesFamilyMembers)
+                {
+                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
+                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                }
+
+                List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetAll()
+                    .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
+                    .Select(x => new VM_DiseasesDigestiveDisorders
+                    {
+                        Id = x.fa.Id,
+                        DiseasesId = x.di.Id,
+                        DiseasesName = x.di.DiseasesName,
+                        MembersInformationId = x.fa.MembersInformationId,
+                        Type = x.di.Type
+                    }).ToListAsync();
+
+                foreach (var item in vM_DiseasesDigestiveDisorders)
+                {
+                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
+                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                }
+
+                List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetAll()
+                    .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
+                    .Select(x => new VM_DiseasesCardiovascular
+                    {
+                        Id = x.fa.Id,
+                        DiseasesId = x.di.Id,
+                        DiseasesName = x.di.DiseasesName,
+                        MembersInformationId = x.fa.MembersInformationId,
+                        Type = x.di.Type
+                    }).ToListAsync();
+
+                foreach (var item in vM_DiseasesCardiovasculars)
+                {
+                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
+                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                }
+
+                List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetAll()
+                    .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
+                    .Select(x => new VM_DiseasesDiabetes
+                    {
+                        Id = x.fa.Id,
+                        DiseasesId = x.di.Id,
+                        DiseasesName = x.di.DiseasesName,
+                        MembersInformationId = x.fa.MembersInformationId,
+                        Type = x.di.Type
+                    }).ToListAsync();
+
+                foreach (var item in vM_DiseasesDiabetes)
+                {
+                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
+                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                }
 
                 return new()
                 {

@@ -20,6 +20,7 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
@@ -112,9 +113,17 @@ namespace MVCBlogApp.UI.Controllers
         #region MembersInformation
 
         [HttpGet]
-        public async Task<IActionResult> GetByIdMembersInformation(int id)
+        public async Task<IActionResult> GetByIdMembersInformation(GetByIdMIQueryRequest request)
         {
-            return View();
+            GetByIdMIQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.MemberAllDetail);
+            }
+            else
+            {
+                return RedirectToAction("UserList", "UserIslemleri");
+            }
         }
 
         #endregion
