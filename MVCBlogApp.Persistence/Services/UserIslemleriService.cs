@@ -48,6 +48,7 @@ using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Persistence.Repositories.ConsultancyFormType;
+using System.IO;
 using System.Linq;
 
 namespace MVCBlogApp.Persistence.Services
@@ -383,22 +384,22 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdMIQueryResponse> GetByIdMIAsync(int id)
         {
-            VM_MemberAllDetail? vM_MemberAllDetail = await _membersInformationReadRepository.GetWhere(x => x.Id == id)
+            VM_MemberAllDetail? vM_MemberAllDetail = await _membersInformationReadRepository.GetWhere(x => x.MembersId == id)
                 .Select(x => new VM_MemberAllDetail
                 {
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
                     ConsumedVegetables = x.ConsumedVegetables == 1 ? "3 - 4 Porsiyon" : x.ConsumedVegetables == 2 ? "1 - 2 Porsiyon" : "1 veya hiç",
-                    CpreviousDisease = x.CpreviousDisease,
-                    DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy,
+                    CpreviousDisease = x.CpreviousDisease == null ? false : x.CpreviousDisease,
+                    DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? false : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
                     DoYouUseVitaminAndMinerals = x.DoYouUseVitaminAndMinerals,
-                    DoYouUseCigarettes = x.DoYouUseCigarettes,
+                    DoYouUseCigarettes = x.DoYouUseCigarettes == null ? false : x.DoYouUseCigarettes,
                     Email = x.Email,
                     FoodLocation = x.FoodLocation,
                     FoodMade = x.FoodMade,
-                    HaveYouGainedWeight = x.HaveYouGainedWeight,
+                    HaveYouGainedWeight = x.HaveYouGainedWeight == null ? false : x.HaveYouGainedWeight,
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
                     HowDoYouFeel = x.HowDoYouFeel == 1 ? "Çok sağlıklı" : x.HowDoYouFeel == 2 ? "Şöyle - Böyle" : "Kötü",
@@ -422,62 +423,110 @@ namespace MVCBlogApp.Persistence.Services
 
             if (vM_MemberAllDetail != null)
             {
-                vM_MemberAllDetail = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == id)
-                    .Select(x => new VM_MemberAllDetail
+                VM_FoodHabitMood? vM_FoodHabitMood = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_FoodHabitMood
                     {
-                        FoodHabitsMoodHappy = x.Happy == null ? false : x.Happy,
-                        FoodHabitsMoodSad = x.Sad == null ? false : x.Sad,
-                        FoodHabitsMoodStress = x.Stress == null ? false : x.Stress,
-                        FoodHabitsMoodDoomy = x.Doomy == null ? false : x.Doomy,
-                        FoodHabitsMoodAll = x.All == null ? false : x.All
+                        Happy = x.Happy == null ? false : x.Happy,
+                        Sad = x.Sad == null ? false : x.Sad,
+                        Stress = x.Stress == null ? false : x.Stress,
+                        Doomy = x.Doomy == null ? false : x.Doomy,
+                        All = x.All == null ? false : x.All
                     }).FirstOrDefaultAsync();
 
-                vM_MemberAllDetail = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == id)
-                    .Select(x => new VM_MemberAllDetail
+                if (vM_FoodHabitMood != null)
+                {
+                    vM_MemberAllDetail.FoodHabitsMoodHappy = vM_FoodHabitMood.Happy;
+                    vM_MemberAllDetail.FoodHabitsMoodSad = vM_FoodHabitMood.Sad;
+                    vM_MemberAllDetail.FoodHabitsMoodStress = vM_FoodHabitMood.Stress;
+                    vM_MemberAllDetail.FoodHabitsMoodDoomy = vM_FoodHabitMood.Doomy;
+                    vM_MemberAllDetail.FoodHabitsMoodAll = vM_FoodHabitMood.All;
+                }
+
+                VM_AllergyProducingFoods? vM_AllergyProducingFoods = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_AllergyProducingFoods
                     {
-                        AllergyProducingFoodsLike = x.Like,
-                        AllergyProducingDislike = x.Dislike,
-                        AllergyProducingFoodsAllergen = x.Allergen
+                        Like = x.Like == null ? "" : x.Like,
+                        Dislike = x.Dislike == null ? "" : x.Dislike,
+                        Allergen = x.Allergen == null ? "" : x.Allergen
                     }).FirstOrDefaultAsync();
 
-                vM_MemberAllDetail = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == id)
-                    .Select(x => new VM_MemberAllDetail
+                if (vM_AllergyProducingFoods != null)
+                {
+                    vM_MemberAllDetail.AllergyProducingFoodsLike = vM_AllergyProducingFoods.Like;
+                    vM_MemberAllDetail.AllergyProducingDislike = vM_AllergyProducingFoods.Dislike;
+                    vM_MemberAllDetail.AllergyProducingFoodsAllergen = vM_AllergyProducingFoods.Allergen;
+                }
+
+                VM_FoodTime? vM_FoodTime = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_FoodTime
                     {
-                        FoodTimeWeekdayMorning = x.WeekdayMorning,
-                        FoodTimeWeekdayNoon = x.WeekdayNoon,
-                        FoodTimeWeekdayNight = x.WeekdayNight,
-                        FoodTimeWeekendMorning = x.WeekendMorning,
-                        FoodTimeWeekendNoon = x.WeekendNoon,
-                        FoodTimeWeekendNight = x.WeekendNight
+                        WeekdayMorning = x.WeekdayMorning == null ? "" : x.WeekdayMorning,
+                        WeekdayNoon = x.WeekdayNoon == null ? "" : x.WeekdayNoon,
+                        WeekdayNight = x.WeekdayNight == null ? "" : x.WeekdayNight,
+                        WeekendMorning = x.WeekendMorning == null ? "" : x.WeekendMorning,
+                        WeekendNoon = x.WeekendNoon == null ? "" : x.WeekendNoon,
+                        WeekendNight = x.WeekendNight == null ? "" : x.WeekendNight
                     }).FirstOrDefaultAsync();
 
-                vM_MemberAllDetail = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == id)
-                    .Select(x => new VM_MemberAllDetail
+                if (vM_FoodTime != null)
+                {
+                    vM_MemberAllDetail.FoodTimeWeekdayMorning = vM_FoodTime.WeekdayMorning;
+                    vM_MemberAllDetail.FoodTimeWeekdayNoon = vM_FoodTime.WeekdayNoon;
+                    vM_MemberAllDetail.FoodTimeWeekdayNight = vM_FoodTime.WeekdayNight;
+                    vM_MemberAllDetail.FoodTimeWeekendMorning = vM_FoodTime.WeekendMorning;
+                    vM_MemberAllDetail.FoodTimeWeekendNoon = vM_FoodTime.WeekendNoon;
+                    vM_MemberAllDetail.FoodTimeWeekendNight = vM_FoodTime.WeekendNight;
+                }
+
+                VM_FemaleMentalState? vM_FemaleMentalState = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_FemaleMentalState
                     {
-                        FemaleMentalStateMenstruation = x.Menstruation,
-                        FemaleMentalStateMenopause = x.Menopause,
-                        FemaleMentalStateGravidity = x.Gravidity,
-                        FemaleMentalStateBreastFeeding = x.BreastFeeding,
-                        FemaleMentalStateIsBreastFeedingPeriod = x.IsBreastFeedingPeriod,
-                        FemaleMentalStateIsMenstruatioRegular = x.IsMenstruatioRegular,
-                        FemaleMentalStateIsHormontherapy = x.IsHormontherapy,
-                        FemaleMentalStateIsGiveBirthTo = x.IsGiveBirthTo
+                        Menstruation = x.Menstruation == null ? "" : x.Menstruation,
+                        Menopause = x.Menopause == null ? "" : x.Menopause,
+                        Gravidity = x.Gravidity == null ? "" : x.Gravidity,
+                        BreastFeeding = x.BreastFeeding == null ? "" : x.BreastFeeding,
+                        IsBreastFeedingPeriod = x.IsBreastFeedingPeriod == null ? "" : x.IsBreastFeedingPeriod,
+                        IsMenstruatioRegular = x.IsMenstruatioRegular == null ? "" : x.IsMenstruatioRegular,
+                        IsHormontherapy = x.IsHormontherapy == null ? "" : x.IsHormontherapy,
+                        IsGiveBirthTo = x.IsGiveBirthTo == null ? "" : x.IsGiveBirthTo
                     }).FirstOrDefaultAsync();
 
-                vM_MemberAllDetail = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == id)
-                    .Select(x => new VM_MemberAllDetail
+                if (vM_FemaleMentalState != null)
+                {
+                    vM_MemberAllDetail.FemaleMentalStateMenstruation = vM_FemaleMentalState.Menstruation;
+                    vM_MemberAllDetail.FemaleMentalStateMenopause = vM_FemaleMentalState.Menopause;
+                    vM_MemberAllDetail.FemaleMentalStateGravidity = vM_FemaleMentalState.Gravidity;
+                    vM_MemberAllDetail.FemaleMentalStateBreastFeeding = vM_FemaleMentalState.BreastFeeding;
+                    vM_MemberAllDetail.FemaleMentalStateIsBreastFeedingPeriod = vM_FemaleMentalState.IsBreastFeedingPeriod;
+                    vM_MemberAllDetail.FemaleMentalStateIsMenstruatioRegular = vM_FemaleMentalState.IsMenstruatioRegular;
+                    vM_MemberAllDetail.FemaleMentalStateIsHormontherapy = vM_FemaleMentalState.IsHormontherapy;
+                    vM_MemberAllDetail.FemaleMentalStateIsGiveBirthTo = vM_FemaleMentalState.IsGiveBirthTo;
+                }
+
+                VM_FoodHabits? vM_FoodHabits = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                    .Select(x => new VM_FoodHabits
                     {
-                        FoodHabitsBreakfast = x.Breakfast,
-                        FoodHabitsBreakfastSnack = x.BreakfastSnack,
-                        FoodHabitsLunch = x.Lunch,
-                        FoodHabitsLunchSnack = x.LunchSnack,
-                        FoodHabitsDinner = x.Dinner,
-                        FoodHabitsDinnerSnack = x.DinnerSnack
-                    }).FirstOrDefaultAsync(); 
-                
+                        Breakfast = x.Breakfast == null ? "" : x.Breakfast,
+                        BreakfastSnack = x.BreakfastSnack == null ? "" : x.BreakfastSnack,
+                        Lunch = x.Lunch == null ? "" : x.Lunch,
+                        LunchSnack = x.LunchSnack == null ? "" : x.LunchSnack,
+                        Dinner = x.Dinner == null ? "" : x.Dinner,
+                        DinnerSnack = x.DinnerSnack == null ? "" : x.DinnerSnack
+                    }).FirstOrDefaultAsync();
+
+                if (vM_FoodHabits != null)
+                {
+                    vM_MemberAllDetail.FoodHabitsBreakfast = vM_FoodHabits.Breakfast;
+                    vM_MemberAllDetail.FoodHabitsBreakfastSnack = vM_FoodHabits.BreakfastSnack;
+                    vM_MemberAllDetail.FoodHabitsLunch = vM_FoodHabits.Lunch;
+                    vM_MemberAllDetail.FoodHabitsLunchSnack = vM_FoodHabits.LunchSnack;
+                    vM_MemberAllDetail.FoodHabitsDinner = vM_FoodHabits.Dinner;
+                    vM_MemberAllDetail.FoodHabitsDinnerSnack = vM_FoodHabits.DinnerSnack;
+                }
+
                 List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetAll()
-                    .Join(_iseasesReadRepository.GetAll(),fa=> fa.DiseasesId,di=> di.Id,(fa,di)=> new {fa,di})
-                    .Select(x=> new VM_DiseasesFamilyMembers
+                    .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
+                    .Select(x => new VM_DiseasesFamilyMembers
                     {
                         Id = x.fa.Id,
                         DiseasesId = x.di.Id,

@@ -22,6 +22,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAp
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 
 namespace MVCBlogApp.UI.Controllers
@@ -196,9 +197,17 @@ namespace MVCBlogApp.UI.Controllers
         #region MembersInfo
 
         [HttpGet]
-        public async Task<IActionResult> GetByIdMembersInfo()
+        public async Task<IActionResult> GetByIdMembersInfo(GetByIdMIQueryRequest request)
         {
-            return View();
+            GetByIdMIQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.MemberAllDetail);
+            }
+            else
+            {
+                return RedirectToAction("UserList", "DoctorReportProccess");
+            }
         }
 
         #endregion

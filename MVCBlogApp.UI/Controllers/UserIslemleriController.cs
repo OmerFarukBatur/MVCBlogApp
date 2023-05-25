@@ -162,6 +162,20 @@ namespace MVCBlogApp.UI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetByIdLab(GetByIdAppointmentDetailQueryRequest request)
+        {
+            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response.AppointmentDetail); // Tetkik(Lab) ve Diyet(DietList) ayrıntı kısmı yapılmadı.
+            }
+            else
+            {
+                return RedirectToAction("MemberAppointmentList", "UserIslemleri");
+            }
+        }
+
         #endregion
 
         #region Confession

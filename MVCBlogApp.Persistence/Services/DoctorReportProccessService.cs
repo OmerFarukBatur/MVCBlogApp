@@ -574,12 +574,6 @@ namespace MVCBlogApp.Persistence.Services
 
         #endregion
 
-        #region MembersInfo
-
-
-
-        #endregion
-
         #region Diseases
 
         public async Task<GetAllDiseasesQueryResponse> GetAllDiseasesAsync()
