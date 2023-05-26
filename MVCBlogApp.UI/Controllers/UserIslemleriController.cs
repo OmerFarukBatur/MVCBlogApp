@@ -156,7 +156,7 @@ namespace MVCBlogApp.UI.Controllers
             GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return View(response.AppointmentDetail); // Diyet(DietList) ayrıntı kısmı yapılmadı.
+                return View(response.AppointmentDetail);
             }
             else
             {
