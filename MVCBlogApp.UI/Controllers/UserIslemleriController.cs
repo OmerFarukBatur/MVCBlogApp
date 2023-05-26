@@ -19,6 +19,8 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdDietList;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdLab;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
@@ -154,7 +156,7 @@ namespace MVCBlogApp.UI.Controllers
             GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return View(response.AppointmentDetail); // Tetkik(Lab) ve Diyet(DietList) ayrıntı kısmı yapılmadı.
+                return View(response.AppointmentDetail); // Diyet(DietList) ayrıntı kısmı yapılmadı.
             }
             else
             {
@@ -163,12 +165,26 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetByIdLab(GetByIdAppointmentDetailQueryRequest request)
+        public async Task<IActionResult> GetByIdLab(GetByIdLabQueryRequest request)
         {
-            GetByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            GetByIdLabQueryResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return View(response.AppointmentDetail); // Tetkik(Lab) ve Diyet(DietList) ayrıntı kısmı yapılmadı.
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("MemberAppointmentList", "UserIslemleri");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetByIdDietList(GetByIdDietListQueryRequest request)
+        {
+            GetByIdDietListQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
             }
             else
             {

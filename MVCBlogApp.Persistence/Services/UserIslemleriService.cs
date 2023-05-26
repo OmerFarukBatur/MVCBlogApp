@@ -19,27 +19,37 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdDietList;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdLab;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
+using MVCBlogApp.Application.Repositories._DaysMeal;
+using MVCBlogApp.Application.Repositories._Examination;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
+using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.D_Appointment;
+using MVCBlogApp.Application.Repositories.Days;
+using MVCBlogApp.Application.Repositories.DietList;
 using MVCBlogApp.Application.Repositories.Diseases;
 using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
 using MVCBlogApp.Application.Repositories.DiseasesDiabetes;
 using MVCBlogApp.Application.Repositories.DiseasesDigestiveDisorders;
 using MVCBlogApp.Application.Repositories.DiseasesFamilyMembers;
+using MVCBlogApp.Application.Repositories.Examination;
 using MVCBlogApp.Application.Repositories.FemaleMentalState;
 using MVCBlogApp.Application.Repositories.FoodHabitMood;
 using MVCBlogApp.Application.Repositories.FoodHabits;
 using MVCBlogApp.Application.Repositories.FoodTime;
+using MVCBlogApp.Application.Repositories.Lab;
 using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Meal;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersAuth;
 using MVCBlogApp.Application.Repositories.MembersInformation;
@@ -47,6 +57,7 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.Auth;
 using MVCBlogApp.Persistence.Repositories.ConsultancyFormType;
 using System.IO;
 using System.Linq;
@@ -81,6 +92,13 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IDiseasesDigestiveDisordersReadRepository _iseasesDigestiveDisordersReadRepository;
         private readonly IDiseasesCardiovascularReadRepository _iseasesCardsReadRepository;
         private readonly IDiseasesDiabetesReadRepository _diseasesDiabetesReadRepository;
+        private readonly ILabReadRepository _labReadRepository;
+        private readonly I_ExaminationReadRepository __examinationReadRepository;
+        private readonly IExaminationReadRepository _examinationReadRepository;
+        private readonly I_DaysMealReadRepository _daysMealReadRepository;
+        private readonly IDaysReadRepository _daysReadRepository;
+        private readonly IMealReadRepository _mealReadRepository;
+        private readonly IDietListReadRepository _ietListReadRepository;
 
         public UserIslemleriService(
             IMembersAuthReadRepository membersAuthReadRepository,
@@ -108,7 +126,14 @@ namespace MVCBlogApp.Persistence.Services
             IDiseasesReadRepository iseasesReadRepository,
             IDiseasesDigestiveDisordersReadRepository iseasesDigestiveDisordersReadRepository,
             IDiseasesCardiovascularReadRepository iseasesCardsReadRepository,
-            IDiseasesDiabetesReadRepository diseasesDiabetesReadRepository)
+            IDiseasesDiabetesReadRepository diseasesDiabetesReadRepository,
+            ILabReadRepository labReadRepository,
+            I_ExaminationReadRepository __ExaminationReadRepository,
+            IExaminationReadRepository examinationReadRepository,
+            I_DaysMealReadRepository daysMealReadRepository,
+            IDaysReadRepository daysReadRepository,
+            IMealReadRepository mealReadRepository,
+            IDietListReadRepository ietListReadRepository)
         {
             _membersAuthReadRepository = membersAuthReadRepository;
             _membersReadRepository = membersReadRepository;
@@ -136,6 +161,13 @@ namespace MVCBlogApp.Persistence.Services
             _iseasesDigestiveDisordersReadRepository = iseasesDigestiveDisordersReadRepository;
             _iseasesCardsReadRepository = iseasesCardsReadRepository;
             _diseasesDiabetesReadRepository = diseasesDiabetesReadRepository;
+            _labReadRepository = labReadRepository;
+            __examinationReadRepository = __ExaminationReadRepository;
+            _examinationReadRepository = examinationReadRepository;
+            _daysMealReadRepository = daysMealReadRepository;
+            _daysReadRepository = daysReadRepository;
+            _mealReadRepository = mealReadRepository;
+            _ietListReadRepository = ietListReadRepository;
         }
 
 
@@ -679,7 +711,119 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdLabQueryResponse> GetByIdLabAsync(int id)
+        {
+            VM_Lab? vM_Lab = await _labReadRepository.GetWhere(x => x.AppointmentDetailId == id)
+                .Join(_membersReadRepository.GetAll(),la=> la.MembersId, mem=> mem.Id,(la,mem)=> new {la,mem})
+                .Join(_userReadRepository.GetAll(),lab=> lab.la.UsersId, use => use.Id, (lab, use) => new {lab,use})
+                .Select(x => new VM_Lab
+                {
+                    Id = x.lab.la.Id,
+                    AppointmentDetailId = x.lab.la.AppointmentDetailId,
+                    Description = x.lab.la.Description,
+                    LabDateTime = x.lab.la.LabDateTime,
+                    MembersId = x.lab.la.MembersId,
+                    Title = x.lab.la.Title,
+                    UsersId = x.lab.la.UsersId,
+                    MemberName = x.lab.mem.NameSurname,
+                    UserName = x.use.Username
+                }).FirstOrDefaultAsync();
 
+            if (vM_Lab != null)
+            {
+                List<VM_Examination> vM_Examinations = await _examinationReadRepository.GetAll()
+                    .Select(x => new VM_Examination
+                    {
+                        Id = x.Id,
+                        ExaminatioName = x.ExaminatioName
+                    }).ToListAsync();
+
+                List<_Examination> __examination = await __examinationReadRepository.GetWhere(x => x.LabId == vM_Lab.Id).ToListAsync();
+
+                foreach (var item in __examination)
+                {
+                    foreach (var __item in vM_Examinations)
+                    {
+                        if (item.ExaminationId == __item.Id)
+                        {
+                            __item.Selected = true;
+                        }
+                        else
+                        {
+                            __item.Selected = false;
+                        }
+                    }
+                }
+
+                return new()
+                {
+                    Examinations = vM_Examinations,
+                    Lab = vM_Lab,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Examinations = null,
+                    Lab = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<GetByIdDietListQueryResponse> GetByIdDietListAsync(int id)
+        {
+            VM_DietList? vM_DietList = await _ietListReadRepository.GetWhere(x => x.AppointmentDetailId == id)
+                .Select(x => new VM_DietList
+                {
+                    Id = x.Id,
+                    AppointmentDetailId = x.AppointmentDetailId,
+                    Description = x.Description,
+                    Title = x.Title,
+                    UserId = x.UserId,
+                    CreateDate = x.CreateDate
+                }).FirstOrDefaultAsync();
+
+            if (vM_DietList != null)
+            {
+                List<VM__DaysMeal> vM__DaysMeal = await _daysMealReadRepository.GetWhere(x => x.DietListId == id)
+                    .Join(_daysReadRepository.GetAll(),dm=> dm.DaysId, day=> day.Id,(dm,day)=> new {dm,day})
+                    .Join(_mealReadRepository.GetAll(),dmMe=> dmMe.dm.MealId, meal=> meal.Id,(dmMe,meal)=> new {dmMe,meal})
+                    .Select(x => new VM__DaysMeal
+                    {
+                        Id = x.dmMe.dm.Id,
+                        DaysId = x.dmMe.dm.DaysId,
+                        Description = x.dmMe.dm.Description,
+                        DietListId = x.dmMe.dm.DietListId,
+                        MealId = x.dmMe.dm.MealId,
+                        TimeInterval = x.dmMe.dm.TimeInterval,
+                        DaysName = x.dmMe.day.DayName,
+                        MealName = x.meal.MealName
+                    }).ToListAsync();                
+
+                return new()
+                { 
+                    DaysMeals = vM__DaysMeal,
+                    DietList = vM_DietList,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    DaysMeals = null,
+                    DietList = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
 
         #endregion
 
@@ -1013,8 +1157,7 @@ namespace MVCBlogApp.Persistence.Services
                 ConsultancyForms = vM_ConsultancyForms
             };
         }
-
-
+        
         #endregion
     }
 }

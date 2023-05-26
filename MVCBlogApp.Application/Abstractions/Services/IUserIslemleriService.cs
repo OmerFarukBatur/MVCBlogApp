@@ -15,6 +15,8 @@ using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.ConsultancyFormType.GetByIdCFT;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetAllMemberAppointment;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdDietList;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberAppointment.GetByIdLab;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
@@ -52,6 +54,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetAllMemberAppointmentQueryResponse> GetAllMemberAppointmentAsync();
         Task<GetByIdAppointmentDetailQueryResponse> GetByIdAppointmentDetailAsync(int id);
+        Task<GetByIdLabQueryResponse> GetByIdLabAsync(int id);
+        Task<GetByIdDietListQueryResponse> GetByIdDietListAsync(int id);
 
         #endregion
 
