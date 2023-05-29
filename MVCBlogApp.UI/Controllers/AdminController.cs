@@ -6,6 +6,9 @@ using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
+using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -98,21 +101,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EventCategoryUpdate()
+        public async Task<IActionResult> EventCategoryUpdate(GetByIdEventCategoryQueryRequest request)
         {
-            return View();
+            GetByIdEventCategoryQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("EventCategoryList", "Admin");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventCategoryUpdate(int a)
+        public async Task<IActionResult> EventCategoryUpdate(EventCategoryUpdateCommandRequest request)
         {
-            return View();
+            EventCategoryUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("EventCategoryList", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("EventCategoryUpdate", "Admin");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> EventCategoryDelete()
+        public async Task<IActionResult> EventCategoryDelete(EventCategoryDeleteCommandRequest request)
         {
-            return View();
+            EventCategoryDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("EventCategoryList", "Admin");
         }
 
         #endregion

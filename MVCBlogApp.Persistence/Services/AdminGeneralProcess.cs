@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
+using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
 using MVCBlogApp.Application.Repositories.Event;
 using MVCBlogApp.Application.Repositories.EventCategory;
 using MVCBlogApp.Application.ViewModels;
@@ -82,6 +86,86 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Message = "Kayıt işlemi başarıyla yapılmıştır.",
                     State = true
+                };
+            }
+        }
+
+        public async Task<GetByIdEventCategoryQueryResponse> GetByIdEventCategoryAsync(int id)
+        {
+            VM_EventCategory? vM_EventCategory = await _eventCategoryReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_EventCategory
+                {
+                    Id = x.Id,
+                    EventCategoryName = x.EventCategoryName
+                }).FirstOrDefaultAsync();
+
+            if (vM_EventCategory != null)
+            {
+                return new()
+                {
+                    EventCategory = vM_EventCategory,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    EventCategory = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<EventCategoryUpdateCommandResponse> EventCategoryUpdateAsync(EventCategoryUpdateCommandRequest request)
+        {
+            EventCategory eventCategory = await _eventCategoryReadRepository.GetByIdAsync(request.Id);
+
+            if (eventCategory != null)
+            {
+                eventCategory.EventCategoryName = request.EventCategoryName;
+                _eventCategoryWriteRepository.Update(eventCategory);
+                await _eventCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+        }
+
+        public async Task<EventCategoryDeleteCommandResponse> EventCategoryDeleteAsync(int id)
+        {
+            EventCategory eventCategory = await _eventCategoryReadRepository.GetByIdAsync(id);
+
+            if (eventCategory != null)
+            {
+                _eventCategoryWriteRepository.Remove(eventCategory);
+                await _eventCategoryWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Silme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
                 };
             }
         }
