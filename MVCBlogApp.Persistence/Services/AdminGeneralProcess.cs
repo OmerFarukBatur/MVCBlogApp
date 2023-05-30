@@ -2,10 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
@@ -70,9 +73,9 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<GetAllEventQueryResponse> GetAllEventAsync()
         {
             List<VM_Event> vM_Events = await _eventReadRepository.GetAll()
-                .Join(_statusReadRepository.GetAll(),ev=> ev.StatusId,st=> st.Id,(ev,st)=> new {ev,st})
-                .Join(_eventCategoryReadRepository.GetAll(),eve=> eve.ev.EventCategoryId,ca=> ca.Id,(eve,ca)=> new {eve,ca})
-                .Select(x=> new VM_Event
+                .Join(_statusReadRepository.GetAll(), ev => ev.StatusId, st => st.Id, (ev, st) => new { ev, st })
+                .Join(_eventCategoryReadRepository.GetAll(), eve => eve.ev.EventCategoryId, ca => ca.Id, (eve, ca) => new { eve, ca })
+                .Select(x => new VM_Event
                 {
                     Id = x.eve.ev.Id,
                     CreateDate = x.eve.ev.CreateDate,
@@ -131,6 +134,122 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        public async Task<GetByIdEventQueryResponse> GetByIdEventAsync(int id)
+        {
+            VM_Event? vM_Event = await _eventReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Event
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    EventCategoryId = x.EventCategoryId,
+                    FinishDatetime = x.FinishDatetime,
+                    StartDatetime = x.StartDatetime,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            if (vM_Event != null)
+            {
+                List<VM_EventCategory> vM_EventCategories = await _eventCategoryReadRepository.GetAll()
+                .Select(x => new VM_EventCategory
+                {
+                    Id = x.Id,
+                    EventCategoryName = x.EventCategoryName
+                }).ToListAsync();
+
+                List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                    .Select(x => new AllStatus
+                    {
+                        Id = x.Id,
+                        StatusName = x.StatusName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    EventCategories = vM_EventCategories,
+                    Statuses = allStatuses,
+                    Event = vM_Event,
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    EventCategories = null,
+                    Statuses = null,
+                    Event = null,
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<EventUpdateCommandResponse> EventUpdateAsync(EventUpdateCommandRequest request)
+        {
+            Event eventt = await _eventReadRepository.GetByIdAsync(request.Id);
+
+            if (eventt != null)
+            {
+                DateTime StartDateTime = request.StartDate.Date.Add(request.StartTime.TimeOfDay);
+                DateTime FinishDateTime = request.FinishDate.Date.Add(request.FinishTime.TimeOfDay);
+
+                eventt.Title = request.Title;
+                eventt.Description = request.Description;
+                eventt.StartDatetime = StartDateTime;
+                eventt.FinishDatetime = FinishDateTime;
+                eventt.StatusId = request.StatusId;
+                eventt.EventCategoryId = request.EventCategoryId;
+
+                _eventWriteRepository.Update(eventt);
+                await _eventWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+        }
+
+        public async Task<EventDeleteCommandResponse> EventDeleteAsync(int id)
+        {
+            Event eventt = await _eventReadRepository.GetByIdAsync(id);
+
+            if (eventt != null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Pasif").Select(x => x.Id).FirstAsync();
+
+                eventt.StatusId = statusId;
+
+                _eventWriteRepository.Update(eventt);
+                await _eventWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    State = true,
+                    Message = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    State = false,
+                    Message = "Kayıt bulunamamıştır."
+                };
+            }
+
+        }
 
         #endregion
 
@@ -262,7 +381,6 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        
         #endregion
 
         #endregion

@@ -12,6 +12,9 @@ using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategory
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -65,21 +68,38 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EventUpdate()
+        public async Task<IActionResult> EventUpdate(GetByIdEventQueryRequest request)
         {
-            return View();
+            GetByIdEventQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("EventList", "Admin");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventUpdate(int a)
+        public async Task<IActionResult> EventUpdate(EventUpdateCommandRequest request)
         {
-            return View();
+            EventUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("EventList", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("EventUpdate", "Admin");
+            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> EventDelete()
+        public async Task<IActionResult> EventDelete(EventDeleteCommandRequest request)
         {
-            return View();
+            EventDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("EventList", "Admin");
         }
 
         #endregion
