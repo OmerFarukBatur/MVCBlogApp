@@ -1,13 +1,17 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
 using MVCBlogApp.Application.Repositories.Event;
 using MVCBlogApp.Application.Repositories.EventCategory;
+using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -19,25 +23,113 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IEventWriteRepository _eventWriteRepository;
         private readonly IEventCategoryReadRepository _eventCategoryReadRepository;
         private readonly IEventCategoryWriteRepository _eventCategoryWriteRepository;
+        private readonly IStatusReadRepository _statusReadRepository;
 
         public AdminGeneralProcess(
-            IEventReadRepository eventReadRepository, 
-            IEventWriteRepository eventWriteRepository, 
-            IEventCategoryReadRepository eventCategoryReadRepository, 
-            IEventCategoryWriteRepository eventCategoryWriteRepository
-            )
+            IEventReadRepository eventReadRepository,
+            IEventWriteRepository eventWriteRepository,
+            IEventCategoryReadRepository eventCategoryReadRepository,
+            IEventCategoryWriteRepository eventCategoryWriteRepository,
+            IStatusReadRepository statusReadRepository)
         {
             _eventReadRepository = eventReadRepository;
             _eventWriteRepository = eventWriteRepository;
             _eventCategoryReadRepository = eventCategoryReadRepository;
             _eventCategoryWriteRepository = eventCategoryWriteRepository;
+            _statusReadRepository = statusReadRepository;
         }
 
-        
+
         #region AdminCalendar
 
         #region Event
 
+        public async Task<GetEventCreateItemsQueryResponse> GetEventCreateItemsAsync()
+        {
+            List<VM_EventCategory> vM_EventCategories = await _eventCategoryReadRepository.GetAll()
+                .Select(x => new VM_EventCategory
+                {
+                    Id = x.Id,
+                    EventCategoryName = x.EventCategoryName
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                EventCategories = vM_EventCategories,
+                Statuses = allStatuses
+            };
+        }
+
+        public async Task<GetAllEventQueryResponse> GetAllEventAsync()
+        {
+            List<VM_Event> vM_Events = await _eventReadRepository.GetAll()
+                .Join(_statusReadRepository.GetAll(),ev=> ev.StatusId,st=> st.Id,(ev,st)=> new {ev,st})
+                .Join(_eventCategoryReadRepository.GetAll(),eve=> eve.ev.EventCategoryId,ca=> ca.Id,(eve,ca)=> new {eve,ca})
+                .Select(x=> new VM_Event
+                {
+                    Id = x.eve.ev.Id,
+                    CreateDate = x.eve.ev.CreateDate,
+                    EventCategoryName = x.ca.EventCategoryName,
+                    FinishDatetime = x.eve.ev.FinishDatetime,
+                    StartDatetime = x.eve.ev.StartDatetime,
+                    StatusName = x.eve.st.StatusName,
+                    Title = x.eve.ev.Title,
+                    Description = x.eve.ev.Description
+                }).ToListAsync();
+
+            return new()
+            {
+                Events = vM_Events
+            };
+        }
+
+        public async Task<EventCreateCommandResponse> EventCreateAsync(EventCreateCommandRequest request)
+        {
+            var check = await _eventReadRepository
+                .GetWhere(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower() || x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper()).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                DateTime StartDateTime = request.StartDate.Date.Add(request.StartTime.TimeOfDay);
+                DateTime FinishDateTime = request.FinishDate.Date.Add(request.FinishTime.TimeOfDay);
+
+                Event eventt = new()
+                {
+                    CreateDate = DateTime.Now,
+                    CreateUserId = request.CreateUserId != null ? request.CreateUserId : null,
+                    Description = request.Description,
+                    EventCategoryId = request.EventCategoryId,
+                    StatusId = request.StatusId,
+                    Title = request.Title,
+                    FinishDatetime = FinishDateTime,
+                    StartDatetime = StartDateTime
+                };
+
+                await _eventWriteRepository.AddAsync(eventt);
+                await _eventWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+        }
 
 
         #endregion
@@ -170,8 +262,7 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
-
+        
         #endregion
 
         #endregion

@@ -21,8 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\Admin\Event\" />
-    <Folder Include="Features\Queries\Admin\Event\" />
     <Folder Include="Features\Queries\Doctor\MembersInfo\" />
   </ItemGroup>
 

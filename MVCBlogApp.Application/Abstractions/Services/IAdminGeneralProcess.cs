@@ -1,6 +1,9 @@
-﻿using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
+﻿using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
 
@@ -12,7 +15,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region Event
 
-
+        Task<GetEventCreateItemsQueryResponse> GetEventCreateItemsAsync();
+        Task<GetAllEventQueryResponse> GetAllEventAsync();
+        Task<EventCreateCommandResponse> EventCreateAsync(EventCreateCommandRequest request);
 
         #endregion
 

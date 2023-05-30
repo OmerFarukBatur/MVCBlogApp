@@ -9,10 +9,13 @@ using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategory
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;
@@ -34,21 +37,31 @@ namespace MVCBlogApp.UI.Controllers
         #region Event
 
         [HttpGet]
-        public async Task<IActionResult> EventList()
+        public async Task<IActionResult> EventList(GetAllEventQueryRequest request)
         {
-            return View();
+            GetAllEventQueryResponse response = await _mediator.Send(request);
+            return View(response.Events);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EventCreate()
+        public async Task<IActionResult> EventCreate(GetEventCreateItemsQueryRequest request)
         {
-            return View();
+            GetEventCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EventCreate(int a)
+        public async Task<IActionResult> EventCreate(EventCreateCommandRequest request)
         {
-            return View();
+            EventCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("EventList", "Admin");
+            }
+            else
+            {
+                return RedirectToAction("EventCreate", "Admin");
+            }
         }
 
         [HttpGet]
