@@ -383,6 +383,11 @@ namespace MVCBlogApp.Persistence.Services
 
         #endregion
 
+        #region Calendar
+
+
+        #endregion
+
         #endregion
     }
 }

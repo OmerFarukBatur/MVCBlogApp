@@ -18,7 +18,7 @@ using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;
@@ -35,7 +35,16 @@ namespace MVCBlogApp.UI.Controllers
             return View();
         }
 
+        #region Calendar Islemleri
+
         #region Calendar
+
+        public async Task<IActionResult> Calendar()
+        {
+            return View();
+        }
+
+        #endregion
 
         #region Event
 

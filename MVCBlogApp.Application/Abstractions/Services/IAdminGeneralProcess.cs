@@ -37,6 +37,11 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #endregion
 
+        #region Calendar
+
+
+        #endregion
+
         #endregion
     }
 }

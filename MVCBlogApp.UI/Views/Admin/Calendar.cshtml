@@ -1,0 +1,202 @@
+﻿
+@{
+    ViewData["Title"] = "Calendar";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="content-body">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h4>Calendar</h4>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-12" style="background-color: powderblue;">
+                                <div class="card-box m-b-6">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+
+                            <!-- BEGIN MODAL -->
+                            <div class="modal fade none-border" id="event-modal">
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="ModalTitle"><strong>Add New Event</strong></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="form-valide" method="post" id="form1" accept-charset="utf-8" enctype="multipart/form-data">
+                                                @*asp-action="ByIdAppointmentDateTimeUpdate" asp-controller="DoctorReportProccess" *@
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="AppointmentId">
+                                                        Id
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="AppointmentId" for="AppointmentId">
+
+                                                    </label>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="membersId1">
+                                                        Danışan
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="membersId" for="membersId">
+
+                                                    </label>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="userId1">
+                                                        Diyetisyen
+                                                    </label>
+                                                    <label class="col-lg-4 col-form-label" id="userId" for="userId">
+
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="appointmentDate1">
+                                                        Randevu Tarihi <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="date" class="form-control dobpicker" id="appointmentDate" name="appointmentDate" data-date-format="yyyy-MM-dd" placeholder="Gün/Ay/Yıl" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="appointmentTime1">
+                                                        Randevu Saati <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-6">
+                                                        <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
+                                                    </div>
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentDateTimeUpdate();" runat="server">Kaydet</button>
+                                                    </div>
+                                                    <div class="col-md-4 ml-auto">
+                                                        <button type="submit" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal" onclick="return AppointmentStatusUpdate();" runat="server">Randevuyu İptal Et</button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @* <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
+                                    <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
+                                    <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
+                                    </div>*@
+
+                                </div>
+                            </div>
+                            <!-- END MODAL -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#calendar').fullCalendar({
+        monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+        monthNamesShort: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+        dayNames: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+        dayNamesShort: ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'],
+        editable: true,
+        buttonText: {
+            today: 'Bugün',
+            month: 'Ay',
+            week: 'Hafta',
+            day: 'Gün',
+            list: 'Liste',
+            listMonth: 'Aylık Liste',
+            listYear: 'Yıllık Liste',
+            listWeek: 'Haftalık Liste',
+            listDay: 'Günlük Liste'
+        },
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,basicWeek,basicDay'
+        },
+        navLinks: true,
+        editable: true,
+        eventLimit: true,
+        events: @Json.Serialize(@Model.D_Appointments),
+        eventClick: function (info) {
+            $("#event-modal").modal('show');
+
+            $('#ModalTitle').text(info.title + "  Randevu Bilgileri");
+
+            var appointmentId = document.getElementById('AppointmentId');
+            appointmentId.textContent = info.id;
+
+            var member = document.getElementById('membersId');
+            member.textContent = info.title;
+
+            var user = document.getElementById('userId');
+            user.textContent = info.description;
+
+            var datetime = new Date(info.start._i);
+
+            var appointmentDate = document.getElementById('appointmentDate');
+            appointmentDate.setAttribute('value', new Date(datetime).toISOString().slice(0, 10));
+
+            var appointmentTime = document.getElementById('appointmentTime');
+            appointmentTime.setAttribute('value', datetime.getHours() + ":" + datetime.getMinutes());
+        },
+    });
+
+    $('.dobpicker').datepicker({
+        autoclose: true,
+    });
+
+    async function AppointmentDateTimeUpdate() {
+
+        const formCheck = document.getElementById('form1').checkValidity();
+        console.log(formCheck);
+
+        if (formCheck == true) {
+
+            var id = document.getElementById('AppointmentId').textContent;
+            var ADate = document.getElementById('appointmentDate').value;
+            var ATime = document.getElementById('appointmentTime').value;
+
+            await $.post("@Url.Action("ByIdAppointmentDateTimeUpdate","DoctorReportProccess")", { Id: parseInt(id), AppointmentDate: ADate, AppointmentTime: ATime }).done(function (response, status, jqxhr) {
+                alert(response.Message);
+                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+            }).fail(function (jqxhr, status, error) {
+                alert(error);
+                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+            });
+        } else {
+            alert("Lütfen tüm alanları geçerli cevaplar ile doldurunuz.");
+            document.getElementById('form1').reportValidity();
+            return false;
+        }
+    }
+
+    async function AppointmentStatusUpdate() {
+
+        var id = document.getElementById('AppointmentId').textContent;
+
+        await $.post("@Url.Action("ByIdAppointmentStatusUpdate","DoctorReportProccess")", { Id: parseInt(id) }).done(function (response, status, jqxhr) {
+            alert(response.Message);
+            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+        }).fail(function (jqxhr, status, error) {
+            alert(error);
+            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+        });
+    }
+</script>
