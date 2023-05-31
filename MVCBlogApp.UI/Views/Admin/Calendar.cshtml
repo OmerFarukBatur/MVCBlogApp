@@ -28,73 +28,62 @@
 
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="ModalTitle"><strong>Add New Event</strong></h4>
+                                            <h4 class="modal-title" id="ModalTitle"><strong>Etkinlik Güncelle</strong></h4>
                                         </div>
                                         <div class="modal-body">
                                             <form class="form-valide" method="post" id="form1" accept-charset="utf-8" enctype="multipart/form-data">
-                                                @*asp-action="ByIdAppointmentDateTimeUpdate" asp-controller="DoctorReportProccess" *@
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="AppointmentId">
+                                                    <label class="col-lg-4 col-form-label" for="EventId">
                                                         Id
                                                     </label>
-                                                    <label class="col-lg-4 col-form-label" id="AppointmentId" for="AppointmentId">
+                                                    <label class="col-lg-4 col-form-label" id="EventId" for="EventId">
 
                                                     </label>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="membersId1">
-                                                        Danışan
-                                                    </label>
-                                                    <label class="col-lg-4 col-form-label" id="membersId" for="membersId">
-
-                                                    </label>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="userId1">
-                                                        Diyetisyen
-                                                    </label>
-                                                    <label class="col-lg-4 col-form-label" id="userId" for="userId">
-
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="appointmentDate1">
-                                                        Randevu Tarihi <span class="text-danger">*</span>
+                                                    <label class="col-lg-4 col-form-label" for="title">
+                                                        Başlık <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="date" class="form-control dobpicker" id="appointmentDate" name="appointmentDate" data-date-format="yyyy-MM-dd" placeholder="Gün/Ay/Yıl" required>
+                                                        <input type="text" class="form-control" id="Title" name="Title" maxlength="250" min="2" required>
+                                                    </div>
+                                                </div>                                                
+                                                <div class="form-group row">
+                                                    <label class="col-lg-4 col-form-label" for="startDatetime">
+                                                        Başlangıç Tarihi ve Saati <span class="text-danger">*</span>
+                                                    </label>
+                                                    <div class="col-lg-3">
+                                                        <input type="date" class="form-control dobpicker" id="StartDate" name="StartDate" placeholder="Gün/Ay/Yıl" data-date-format="yyyy-mm-dd" required>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <input type="time" class="form-control dobpicker" id="StartTime" name="StartTime" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label class="col-lg-4 col-form-label" for="appointmentTime1">
-                                                        Randevu Saati <span class="text-danger">*</span>
+                                                    <label class="col-lg-4 col-form-label" for="finishDatetime">
+                                                        Bitiş Tarihi ve Saati <span class="text-danger">*</span>
                                                     </label>
-                                                    <div class="col-lg-6">
-                                                        <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
+                                                    <div class="col-lg-3">
+                                                        <input type="date" class="form-control dobpicker" id="FinishDate" name="FinishDate" placeholder="Gün/Ay/Yıl" data-date-format="yyyy-MM-dd" required>
                                                     </div>
-                                                </div>
+                                                    <div class="col-lg-3">
+                                                        <input type="time" class="form-control dobpicker" id="FinishTime" name="FinishTime" required>
+                                                    </div>
+                                                </div>                                                
                                                 <div class="form-group row">
                                                     <div class="col-md-4 ml-auto">
                                                         <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
                                                     </div>
                                                     <div class="col-md-4 ml-auto">
-                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentDateTimeUpdate();" runat="server">Kaydet</button>
+                                                        <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return EventDateTimeUpdate();" runat="server">Kaydet</button>
                                                     </div>
                                                     <div class="col-md-4 ml-auto">
-                                                        <button type="submit" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal" onclick="return AppointmentStatusUpdate();" runat="server">Randevuyu İptal Et</button>
+                                                        <button type="submit" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal" onclick="return EventStatusUpdate();" runat="server">Etkinliği İptal Et</button>
                                                     </div>
                                                 </div>
-
                                             </form>
                                         </div>
                                     </div>
-                                    @* <div class="modal-footer">
-                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Kapat</button>
-                                    <button type="submit" class="btn btn-success save-event waves-effect waves-light" onclick="return AppointmentUpdate();" runat="server">Kaydet</button>
-                                    <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Randevuyu İptal Et</button>
-                                    </div>*@
-
                                 </div>
                             </div>
                             <!-- END MODAL -->
@@ -133,28 +122,39 @@
         navLinks: true,
         editable: true,
         eventLimit: true,
-        events: @Json.Serialize(@Model.D_Appointments),
+        events: @Json.Serialize(@Model.AllEvents),
         eventClick: function (info) {
             $("#event-modal").modal('show');
 
-            $('#ModalTitle').text(info.title + "  Randevu Bilgileri");
+            console.log(info);
 
-            var appointmentId = document.getElementById('AppointmentId');
-            appointmentId.textContent = info.id;
+            var EventId = document.getElementById('EventId');
+            EventId.textContent = info.id;
 
-            var member = document.getElementById('membersId');
-            member.textContent = info.title;
+            var title = document.getElementById('Title');
+            title.setAttribute('value',info.title);
 
-            var user = document.getElementById('userId');
-            user.textContent = info.description;
+            // start
 
-            var datetime = new Date(info.start._i);
+            var datetimeStart = new Date(info.start._i);
 
-            var appointmentDate = document.getElementById('appointmentDate');
-            appointmentDate.setAttribute('value', new Date(datetime).toISOString().slice(0, 10));
+            var startDate = document.getElementById('StartDate');
+            startDate.setAttribute('value', new Date(datetimeStart).toISOString().slice(0, 10));
 
-            var appointmentTime = document.getElementById('appointmentTime');
-            appointmentTime.setAttribute('value', datetime.getHours() + ":" + datetime.getMinutes());
+            var startTime = document.getElementById('StartTime');
+            startTime.setAttribute('value', datetimeStart.getHours() + ":" + datetimeStart.getMinutes());
+            //
+
+            //end
+
+            var datetimeFinish = new Date(info.end._i);
+
+            var finishDate = document.getElementById('FinishDate');
+            finishDate.setAttribute('value', new Date(datetimeFinish).toISOString().slice(0, 10));
+
+            var finishTime = document.getElementById('FinishTime');
+            finishTime.setAttribute('value', datetimeFinish.getHours() + ":" + datetimeFinish.getMinutes());
+            //
         },
     });
 

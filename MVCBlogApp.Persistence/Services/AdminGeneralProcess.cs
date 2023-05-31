@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
@@ -384,6 +385,27 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region Calendar
+
+        public async Task<GetAllCalendarEventQueryResponse> GetAllCalendarEventAsync()
+        {
+            List<VM_CalenderData> vM_CalenderDatas = await _eventReadRepository.GetAll()
+                .Join(_statusReadRepository.GetWhere(x => x.StatusName == "Aktif"), eventt => eventt.StatusId, st => st.Id, (eventt, st) => new { eventt, st })
+                .Select(x => new VM_CalenderData
+                {
+                    Id = x.eventt.Id,
+                    Description = null,
+                    End = x.eventt.FinishDatetime,
+                    Start = x.eventt.StartDatetime,
+                    Title = x.eventt.Title,
+                    Color = "darkorange",
+                    AllDay = x.eventt.FinishDatetime.Value.Date == DateTime.Now.Date ? true : x.eventt.FinishDatetime.Value.Date > DateTime.Now.Date ? true : false
+                }).ToListAsync();
+
+            return new()
+            {
+                AllEvents = vM_CalenderDatas
+            };
+        }
 
 
         #endregion

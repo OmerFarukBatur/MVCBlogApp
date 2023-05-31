@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
@@ -39,6 +40,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region Calendar
 
+        Task<GetAllCalendarEventQueryResponse> GetAllCalendarEventAsync();
 
         #endregion
 

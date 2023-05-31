@@ -15,6 +15,7 @@ using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
+using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -39,9 +40,10 @@ namespace MVCBlogApp.UI.Controllers
 
         #region Calendar
 
-        public async Task<IActionResult> Calendar()
+        public async Task<IActionResult> Calendar(GetAllCalendarEventQueryRequest request)
         {
-            return View();
+            GetAllCalendarEventQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
 
         #endregion
@@ -65,6 +67,7 @@ namespace MVCBlogApp.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> EventCreate(EventCreateCommandRequest request)
         {
+            request.CreateUserId = _operationService.GetUser().Id;
             EventCreateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
