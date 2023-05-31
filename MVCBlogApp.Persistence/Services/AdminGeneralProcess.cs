@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Admin.Calendar.EventDateTimeUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
@@ -397,14 +398,45 @@ namespace MVCBlogApp.Persistence.Services
                     End = x.eventt.FinishDatetime,
                     Start = x.eventt.StartDatetime,
                     Title = x.eventt.Title,
-                    Color = "darkorange",
-                    AllDay = x.eventt.FinishDatetime.Value.Date == DateTime.Now.Date ? true : x.eventt.FinishDatetime.Value.Date > DateTime.Now.Date ? true : false
-                }).ToListAsync();
+                    Color = "darkorange", // x.eventt.FinishDatetime.Value.Date == DateTime.Now.Date ? true : x.eventt.FinishDatetime.Value.Date > DateTime.Now.Date ? true : false
+                    AllDay = false
+                }).ToListAsync();           
 
             return new()
             {
                 AllEvents = vM_CalenderDatas
             };
+        }
+
+        public async Task<EventDateTimeUpdateCommandResponse> EventDateTimeAsync(EventDateTimeUpdateCommandRequest request)
+        {
+            Event eventt = await _eventReadRepository.GetByIdAsync(request.Id);
+
+            if (eventt != null)
+            {
+                DateTime StartDateTime = request.StartDate.Date.Add(request.StartTime.TimeOfDay);
+                DateTime FinishDateTime = request.FinishDate.Date.Add(request.FinishTime.TimeOfDay);
+
+                eventt.StartDatetime = StartDateTime;
+                eventt.FinishDatetime = FinishDateTime;
+
+                _eventWriteRepository.Update(eventt);
+                await _eventWriteRepository.SaveAsync();
+
+                return new()
+                {
+                    Message = "Güncelleme başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

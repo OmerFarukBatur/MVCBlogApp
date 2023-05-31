@@ -147,7 +147,7 @@
             appointmentDate.setAttribute('value', new Date(datetime).toISOString().slice(0, 10));
 
             var appointmentTime = document.getElementById('appointmentTime');
-            appointmentTime.setAttribute('value', datetime.getHours() + ":" + datetime.getMinutes());
+            appointmentTime.setAttribute('value', datetime.getHours() + ":" + (datetime.getMinutes() < 10 ? '0' + datetime.getMinutes() : datetime.getMinutes()));
         },
     });
 

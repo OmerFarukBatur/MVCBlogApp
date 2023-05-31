@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
+﻿using MVCBlogApp.Application.Features.Commands.Admin.Calendar.EventDateTimeUpdate;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
@@ -41,6 +42,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region Calendar
 
         Task<GetAllCalendarEventQueryResponse> GetAllCalendarEventAsync();
+        Task<EventDateTimeUpdateCommandResponse> EventDateTimeAsync(EventDateTimeUpdateCommandRequest request);
 
         #endregion
 

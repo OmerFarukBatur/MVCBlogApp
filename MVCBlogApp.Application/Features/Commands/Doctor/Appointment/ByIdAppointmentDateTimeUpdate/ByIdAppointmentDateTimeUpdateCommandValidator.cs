@@ -6,6 +6,11 @@ namespace MVCBlogApp.Application.Features.Commands.Doctor.Appointment.ByIdAppoin
     {
         public ByIdAppointmentDateTimeUpdateCommandValidator()
         {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .NotNull()
+                .GreaterThan(0);
+
             RuleFor(x => x.AppointmentDate)
                .NotNull()
                .WithMessage("Lütfen bir Başlangıç Tarihi giriniz.");

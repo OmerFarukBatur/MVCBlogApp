@@ -16,6 +16,7 @@ using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
 using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
 using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
+using MVCBlogApp.Application.Features.Commands.Admin.Calendar.EventDateTimeUpdate;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -44,6 +45,18 @@ namespace MVCBlogApp.UI.Controllers
         {
             GetAllCalendarEventQueryResponse response = await _mediator.Send(request);
             return View(response);
+        }
+
+        public async Task<IActionResult> EventDateTimeUpdate(EventDateTimeUpdateCommandRequest request)
+        {
+            EventDateTimeUpdateCommandResponse response = await _mediator.Send(request);
+            return Ok(response);
+        }
+
+        public async Task<IActionResult> EventStatusUpdate(EventDeleteCommandRequest request)
+        {
+            EventDeleteCommandResponse response = await _mediator.Send(request);
+            return Ok(response);
         }
 
         #endregion

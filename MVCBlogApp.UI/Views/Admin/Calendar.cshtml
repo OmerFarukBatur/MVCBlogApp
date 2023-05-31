@@ -36,7 +36,7 @@
                                                     <label class="col-lg-4 col-form-label" for="EventId">
                                                         Id
                                                     </label>
-                                                    <label class="col-lg-4 col-form-label" id="EventId" for="EventId">
+                                                    <label class="col-lg-6 col-form-label" id="EventId" for="EventId">
 
                                                     </label>
                                                 </div>
@@ -45,7 +45,7 @@
                                                         Başlık <span class="text-danger">*</span>
                                                     </label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="Title" name="Title" maxlength="250" min="2" required>
+                                                        <input type="text" class="form-control" id="Title" name="Title" disabled>
                                                     </div>
                                                 </div>                                                
                                                 <div class="form-group row">
@@ -142,7 +142,7 @@
             startDate.setAttribute('value', new Date(datetimeStart).toISOString().slice(0, 10));
 
             var startTime = document.getElementById('StartTime');
-            startTime.setAttribute('value', datetimeStart.getHours() + ":" + datetimeStart.getMinutes());
+            startTime.setAttribute('value', datetimeStart.getHours() + ":" + (datetimeStart.getMinutes() < 10 ? '0' + datetimeStart.getMinutes() : datetimeStart.getMinutes()));
             //
 
             //end
@@ -153,7 +153,7 @@
             finishDate.setAttribute('value', new Date(datetimeFinish).toISOString().slice(0, 10));
 
             var finishTime = document.getElementById('FinishTime');
-            finishTime.setAttribute('value', datetimeFinish.getHours() + ":" + datetimeFinish.getMinutes());
+            finishTime.setAttribute('value', datetimeFinish.getHours() + ":" + (datetimeFinish.getMinutes() < 10 ? '0' + datetimeFinish.getMinutes() : datetimeFinish.getMinutes()));
             //
         },
     });
@@ -162,23 +162,25 @@
         autoclose: true,
     });
 
-    async function AppointmentDateTimeUpdate() {
+    async function EventDateTimeUpdate() {
 
         const formCheck = document.getElementById('form1').checkValidity();
         console.log(formCheck);
 
         if (formCheck == true) {
 
-            var id = document.getElementById('AppointmentId').textContent;
-            var ADate = document.getElementById('appointmentDate').value;
-            var ATime = document.getElementById('appointmentTime').value;
+            var id = document.getElementById('EventId').textContent;
+            var SDate = document.getElementById('StartDate').value;
+            var STime = document.getElementById('StartTime').value;
+            var EDate = document.getElementById('FinishDate').value;
+            var ETime = document.getElementById('FinishTime').value;
 
-            await $.post("@Url.Action("ByIdAppointmentDateTimeUpdate","DoctorReportProccess")", { Id: parseInt(id), AppointmentDate: ADate, AppointmentTime: ATime }).done(function (response, status, jqxhr) {
+            await $.post("@Url.Action("EventDateTimeUpdate","Admin")", { Id: parseInt(id), StartDate: SDate, StartTime: STime, FinishDate: EDate, FinishTime: ETime }).done(function (response, status, jqxhr) {
                 alert(response.Message);
-                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+                window.location.href = "@Url.Action("Calendar", "Admin")";
             }).fail(function (jqxhr, status, error) {
                 alert(error);
-                window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+                window.location.href = "@Url.Action("Calendar", "Admin")";
             });
         } else {
             alert("Lütfen tüm alanları geçerli cevaplar ile doldurunuz.");
@@ -187,16 +189,16 @@
         }
     }
 
-    async function AppointmentStatusUpdate() {
+    async function EventStatusUpdate() {
 
-        var id = document.getElementById('AppointmentId').textContent;
+        var id = document.getElementById('EventId').textContent;
 
-        await $.post("@Url.Action("ByIdAppointmentStatusUpdate","DoctorReportProccess")", { Id: parseInt(id) }).done(function (response, status, jqxhr) {
+        await $.post("@Url.Action("EventStatusUpdate","Admin")", { Id: parseInt(id) }).done(function (response, status, jqxhr) {
             alert(response.Message);
-            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+            window.location.href = "@Url.Action("Calendar", "Admin")";
         }).fail(function (jqxhr, status, error) {
             alert(error);
-            window.location.href = "@Url.Action("CalenderEventList", "DoctorReportProccess")";
+            window.location.href = "@Url.Action("Calendar", "Admin")";
         });
     }
 </script>

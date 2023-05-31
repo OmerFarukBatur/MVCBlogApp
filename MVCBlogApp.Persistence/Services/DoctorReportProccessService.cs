@@ -322,7 +322,7 @@ namespace MVCBlogApp.Persistence.Services
                     Start = x.appio.appi.app.AppointmentDate,
                     Description = x.appio.appi.user.Username,
                     End = null,
-                    AllDay = x.appio.appi.app.IsCompleted,
+                    AllDay = false, //x.appio.appi.app.IsCompleted
                     Color = "darkorange"
                 }).ToListAsync();
 
