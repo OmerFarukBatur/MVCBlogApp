@@ -642,8 +642,6 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-
-
         #endregion
 
         #region MemberAppointment

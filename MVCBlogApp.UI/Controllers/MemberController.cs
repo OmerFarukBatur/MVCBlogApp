@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -17,21 +18,42 @@ namespace MVCBlogApp.UI.Controllers
             _operationService = operationService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            GetByIdMemberInfoQueryRequest request = new GetByIdMemberInfoQueryRequest();
+            request.Id = _operationService.GetUser().Id;
+            GetByIdMemberInfoQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("MemberInfoCreate", "Member");
+            }            
         }
 
         #region MemberInfo
 
         [HttpGet]
-        public async Task<IActionResult> MemberInfoView()
+        public async Task<IActionResult> MemberInfoView(GetByIdMemberInfoQueryRequest request)
         {
-            return View();
+            request.Id = _operationService.GetUser().Id;
+            GetByIdMemberInfoQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response.MemberAllDetail);
+            }
+            else
+            {
+                return RedirectToAction("MemberInfoCreate", "Member");
+            }            
         }
 
         [HttpGet]
-        public async Task<IActionResult> MemberInfoCreate()
+        public IActionResult MemberInfoCreate()
         {
             return View();
         }

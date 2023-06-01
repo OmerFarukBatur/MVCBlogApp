@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Features\Commands\Member\" />
     <Folder Include="Features\Queries\Doctor\MembersInfo\" />
-    <Folder Include="Features\Queries\Member\" />
   </ItemGroup>
 
 </Project>

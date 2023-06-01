@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
 {
     public interface IMemberGeneralProcess
     {
+        Task<GetByIdMemberInfoQueryResponse> GetByIdMemberAsync(int id);
     }
 }
