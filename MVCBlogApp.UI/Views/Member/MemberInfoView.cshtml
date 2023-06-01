@@ -1,0 +1,892 @@
+﻿
+@{
+    ViewData["Title"] = "MemberInfoView";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!--**********************************
+    Content body start
+***********************************-->
+<div class="content-body">
+
+    @* <div class="row page-titles mx-0">
+    <div class="col p-md-0">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+    </ol>
+    </div>
+    </div>
+    <!-- row -->*@
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="#" id="step-form-horizontal" class="step-form-horizontal">
+                    <div>
+                        <!-- Section 1 Start-->
+                        <h4>Detaylı Danışan Bilgileri:</h4>
+                        <section>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="nameSurname">
+                                    Ad Soyad
+                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="birthdate">
+                                    Doğum Tarihi
+                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="birthdate" name="birthdate" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="job">
+                                    Mesleği
+                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="job" name="job" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="phoneNumber">
+                                    Cep Telefonu
+                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="email">
+                                    E-Posta Adresi
+                                </label>
+                                <div class="col-lg-6 ">
+                                    <input type="text" class="form-control" id="email" name="email" required>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 1 End-->
+                        <!-- Section 2 Start-->
+                        <h4>Bilgi Formu Adım 2</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Aile de olan, bilinen hastalıklar:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="contents">
+                                            Kilo Öykünüz
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="contents" name="contents" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyDiabetes">
+                                            DM (Şeker Hastalığı)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyDiabetes" name="diseasesFamilyDiabetes" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyHeart">
+                                            Kalp / Tansiyon
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyHeart" name="diseasesFamilyHeart" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyTiroid">
+                                            Tiroid
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyTiroid" name="diseasesFamilyTiroid" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyHormone">
+                                            Hormon Düzensizliği
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyHormone" name="diseasesFamilyHormone" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyCancer">
+                                            Kanser
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyCancer" name="diseasesFamilyCancer" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyGout">
+                                            Gut
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyGout" name="diseasesFamilyGout" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesFamilyEpilepsy">
+                                            Epilepsi
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesFamilyEpilepsy" name="diseasesFamilyEpilepsy" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="cPreviousDisease">
+                                            Teşhisi konulmuş bir hastalık var mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="cPreviousDisease" name="cPreviousDisease" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Bir günlük beslenme alışkanlığı:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsBreakfast">
+                                            Sabah
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsBreakfast" name="foodHabitsBreakfast" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsBreakfastSnack">
+                                            Sabah Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsBreakfastSnack" name="foodHabitsBreakfastSnack" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsLunch">
+                                            Öğlen
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsLunch" name="foodHabitsLunch" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsLunchSnack">
+                                            Öğlen Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsLunchSnack" name="foodHabitsLunchSnack" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsDinner">
+                                            Akşam
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsDinner" name="foodHabitsDinner" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsDinnerSnack">
+                                            Akşam Ara
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodHabitsDinnerSnack" name="foodHabitsDinnerSnack" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="oneDaySummary">
+                                            Geçmişte yapılan bir diyetin bir gününü
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="oneDaySummary" name="oneDaySummary" rows="1" required>
+                                                
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 2 End-->
+                        <!-- Section 3 Start-->
+                        <h4>Bilgi Formu Adım 3</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Bir günde tüketilen sıvı miktarı:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="theQuantityConsumedWater">
+                                            Su
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="theQuantityConsumedWater" name="theQuantityConsumedWater" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="theQuantityConsumedTea">
+                                            Çay
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="theQuantityConsumedTea" name="theQuantityConsumedTea" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="theQuantityConsumedCoffe">
+                                            Kahve
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="theQuantityConsumedCoffe" name="theQuantityConsumedCoffe" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="theQuantityConsumedFizzy">
+                                            Gazlı İçecekler
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="theQuantityConsumedFizzy" name="theQuantityConsumedFizzy" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="theQuantityConsumedAlchol">
+                                            Alkol
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="theQuantityConsumedAlchol" name="theQuantityConsumedAlchol" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="doYouUseCigarettes">
+                                            Sigara kullanıyor mu?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="doYouUseCigarettes" name="doYouUseCigarettes" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="haveYouGainedWeight">
+                                            Bırakıldıysa bu süreçte kilo alındı mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="haveYouGainedWeight" name="haveYouGainedWeight" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Sevilen, sevilmeyen ve alerjisi olduğu yiyecekler nelerdir?:</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="allergyProducingFoodsLike">
+                                            Sevdikleri
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="allergyProducingFoodsLike" name="allergyProducingFoodsLike" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="allergyProducingDislike">
+                                            Sevmedikleri
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="allergyProducingDislike" name="allergyProducingDislike" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="allergyProducingFoodsAllergen">
+                                            Alerjisi olan
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="allergyProducingFoodsAllergen" name="allergyProducingFoodsAllergen" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodLocation">
+                                            Yemekleri evde mi, dışarıda mı yersiniz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodLocation" name="foodLocation" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodMade">
+                                            Evde yemekleri kim yapıyor? İşyerinize yemek götürebilir misiniz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="foodMade" name="foodMade" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 3 End-->
+                        <!-- Section 4 Start-->
+                        <h4>Bilgi Formu Adım 4</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>Sosyal hayatınızda haftaiçi - haftasonu hangi saatlerde yemek yersiniz? Hangi yemekleri tercih edersiniz?</h5>
+                                    <h6>Haftaiçi</h6>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekdayMorning">
+                                            Sabah :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekdayMorning" name="foodTimeWeekdayMorning" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekdayNoon">
+                                            Öğle :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekdayNoon" name="foodTimeWeekdayNoon" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekdayNight">
+                                            Akşam :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekdayNight" name="foodTimeWeekdayNight" required>
+                                        </div>
+                                    </div>
+                                    <h6>Haftasonu</h6>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekendMorning">
+                                            Sabah :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekendMorning" name="foodTimeWeekendMorning" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekendNoon">
+                                            Öğle :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekendNoon" name="foodTimeWeekendNoon" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodTimeWeekendNight">
+                                            Akşam :
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="foodTimeWeekendNight" name="foodTimeWeekendNight" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Ruh haliniz beslenmenizi nasıl etkiler? :</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsMoodSad">
+                                            Üzüntülü olduğumda yerim
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodSad" name="foodHabitsMoodSad" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsMoodStress">
+                                            Stresli olduğumda yerim
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodStress" name="foodHabitsMoodStress" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsMoodDoomy">
+                                            Depresif olduğumda yerim
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodDoomy" name="foodHabitsMoodDoomy" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsMoodHappy">
+                                            Mutlu olduğumda yerim
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodHappy" name="foodHabitsMoodHappy" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="foodHabitsMoodAll">
+                                            Yukarıdakilerin hepsi
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodAll" name="foodHabitsMoodAll" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 4 End-->
+                        <!-- Section 5 Start-->
+                        <h4>Bilgi Formu Adım 5</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h5>
+                                        Kadınsanız
+                                    </h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateMenstruation">
+                                            Mensturasyon
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateMenstruation" name="femaleMentalStateMenstruation" rows="1" required>
+                                               
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateMenopause">
+                                            Menapoz
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateMenopause" name="femaleMentalStateMenopause" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateGravidity">
+                                            Hamilelik
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateGravidity" name="femaleMentalStateGravidity" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateBreastFeeding">
+                                            Emzirme
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateBreastFeeding" name="femaleMentalStateBreastFeeding" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateIsBreastFeedingPeriod">
+                                            Şu anda emzirme döneminde misiniz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateIsBreastFeedingPeriod" name="femaleMentalStateIsBreastFeedingPeriod" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateIsMenstruatioRegular">
+                                            Mensturasyonunuz düzenli mi?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateIsMenstruatioRegular" name="femaleMentalStateIsMenstruatioRegular" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateIsHormontherapy">
+                                            Herhangi bir hormon tedavisi görüyor musunuz? Gördünüz mü?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateIsHormontherapy" name="femaleMentalStateIsHormontherapy" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="femaleMentalStateIsGiveBirthTo">
+                                            Doğum yaptınız mı? (normal - sezeryan) Kaç kere?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <textarea class="form-control" id="femaleMentalStateIsGiveBirthTo" name="femaleMentalStateIsGiveBirthTo" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h5>Erkekseniz</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="manTheNeedForEatingVaries">
+                                            Hangi koşullarda yemek ihtiyacınızın değiştiğini not ediniz
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="manTheNeedForEatingVaries" name="manTheNeedForEatingVaries" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="didYouGainWeightInTheArmy">
+                                            Askerlik döneminde kilo aldınız mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="didYouGainWeightInTheArmy" name="didYouGainWeightInTheArmy" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 5 End-->
+                        <!-- Section 6 Start-->
+                        <h4>Bilgi Formu Adım 6</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h5>Sindirim sistemi ile ilgili probleminiz var mı? :</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesReflux">
+                                            Reflü özofajit (Mide yanması)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesReflux" name="diseasesReflux" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesDifaji">
+                                            Yutma güçlüğü (Difaji)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDifaji" name="diseasesDifaji" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesRegurgitation">
+                                            Ağıza yiyeceklerin gelmesi (Regürjitasyon)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesRegurgitation" name="diseasesRegurgitation" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesHernia">
+                                            Mide fıtığı (Sürekli açlık-kazıntı)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHernia" name="diseasesHernia" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesDyspepsia">
+                                            Bulantı - kusma hazımsızlık (Dispepsi)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDyspepsia" name="diseasesDyspepsia" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesHelicobacterPylori">
+                                            Helikopbacter pylori (Mide mikrobu) (Mide ağrısı)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHelicobacterPylori" name="diseasesHelicobacterPylori" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesGastritis">
+                                            Gastrit
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastritis" name="diseasesGastritis" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesUlcer">
+                                            Ülser
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcer" name="diseasesUlcer" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesGastricCancer">
+                                            Mide kanseri
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastricCancer" name="diseasesGastricCancer" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesIntestinalObstruction">
+                                            Bağırsak tıkanması
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalObstruction" name="diseasesIntestinalObstruction" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesAcuteDiarrhea">
+                                            Akut ishaller
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesAcuteDiarrhea" name="diseasesAcuteDiarrhea" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesChronicDiarrhea">
+                                            Sürekli ishaller (Kronik diyare)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesChronicDiarrhea" name="diseasesChronicDiarrhea" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesConstipation">
+                                            Kabızlık (Constipation)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesConstipation" name="diseasesConstipation" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesSpasticColon">
+                                            Spastik kolon (İrritabi bağırsak sendromu)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesSpasticColon" name="diseasesSpasticColon" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesGas">
+                                            Karında gaz - şişkinlik
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGas" name="diseasesGas" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesIntestinalParasites">
+                                            Bağırsak parazitleri
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalParasites" name="diseasesIntestinalParasites" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesUlcerativeColitis">
+                                            Kolitis ülseroza (Ülseratif kolit)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcerativeColitis" name="diseasesUlcerativeColitis" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesCrohn">
+                                            Crohn hastalığı
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCrohn" name="diseasesCrohn" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesColonCancer">
+                                            Kalın bağırsak kanseri (Kolon kanseri)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesColonCancer" name="diseasesColonCancer" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 6 End-->
+                        <!-- Section 7 Start-->
+                        <h4>Bilgi Formu Adım 7</h4>
+                        <section>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h5>Kalp - damar hastalıklarınız var mı? :</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesCardiovascularHypertension">
+                                            Hipertansiyon
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypertension" name="diseasesCardiovascularHypertension" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesCardiovascularHypotension">
+                                            Hipotansiyon
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypotension" name="diseasesCardiovascularHypotension" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesCardiovascularPalpitation">
+                                            Çarpıntı
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularPalpitation" name="diseasesCardiovascularPalpitation" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesCardiovascularHeart">
+                                            Kalp hastalığı
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHeart" name="diseasesCardiovascularHeart" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <h5>Şeker hastalığınız var mı?</h5>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesDiabetesHypoglycemia">
+                                            Hipoglisemi
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesHypoglycemia" name="diseasesDiabetesHypoglycemia" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesDiabetesTypeOneDiabetes">
+                                            Tip 1 diabet
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeOneDiabetes" name="diseasesDiabetesTypeOneDiabetes" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="diseasesDiabetesTypeTwoDiabetes">
+                                            Tip 2 diabet
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeTwoDiabetes" name="diseasesDiabetesTypeTwoDiabetes" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="isBloodCoagulationDisorders">
+                                            Kan pıhtılaşma probleminiz var mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="isBloodCoagulationDisorders" name="isBloodCoagulationDisorders" rows="1" required>
+                                               
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="doYouHaveHormonalProblem">
+                                            Hormonal bir probleminiz var mı? (Triod, kadınlık hormonu, kortizol v.s.)
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="doYouHaveHormonalProblem" name="doYouHaveHormonalProblem" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="howDoYouFeel">
+                                            Kendinizi nasıl hissediyorsunuz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="howDoYouFeel" name="howDoYouFeel" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="howIsYourEnergy">
+                                            Enerjiniz nasıl?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="howIsYourEnergy" name="howIsYourEnergy" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="howFrequencyOfActivity">
+                                            Hangi ifade aktivite sıklığınızı belirler?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="howFrequencyOfActivity" name="howFrequencyOfActivity" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="consumedVegetables">
+                                            Bir gün boyunca ne kadar taze meyve ve sebze yiyorsunuz?
+                                        </label>
+                                        <div class="col-lg-6 ">
+                                            <input type="text" class="form-control" id="consumedVegetables" name="consumedVegetables" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="getDrugged">
+                                            Düzenli kullandığınız bir ilaç var mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="getDrugged" name="getDrugged" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="doYouUseVitaminAndMinerals">
+                                            Vitamin - mineral kullanıyor musunuz?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="contents" name="doYouUseVitaminAndMinerals" rows="1" required>
+                                               
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="otherMessage">
+                                            Kendinizle ilgili bilgi vermek istediğiniz başka konu var mı?
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea class="form-control" id="otherMessage" name="otherMessage" rows="1" required>
+                                                
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Section 7 End-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- #/ container -->
+</div>
+<!--**********************************
+    Content body end
+***********************************-->

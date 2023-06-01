@@ -1,26 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MVCBlogApp.Persistence.Contexts;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
-using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
-using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
-using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
-using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
-using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
-using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
-using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
-using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
-using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
-using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
-using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
 using MVCBlogApp.Application.Features.Commands.Admin.Calendar.EventDateTimeUpdate;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventCreate;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventDelete;
+using MVCBlogApp.Application.Features.Commands.Admin.Event.EventUpdate;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryCreate;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryDelete;
+using MVCBlogApp.Application.Features.Commands.Admin.EventCategory.EventCategoryUpdate;
+using MVCBlogApp.Application.Features.Queries.Admin.Calendar.GetAllCalendarEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetAllEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
+using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
+using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
+using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
 
 namespace MVCBlogApp.UI.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly IMediator _mediator;

@@ -478,6 +478,7 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IDoctorReportProccessService,DoctorReportProccessService>();
             services.AddScoped<IDoctorGeneralOptionsService,DoctorGeneralOptionsService>();
             services.AddScoped<IAdminGeneralProcess,AdminGeneralProcess>();
+            services.AddScoped<IMemberGeneralProcess,MemberGeneralProcess>();
             #endregion      
             
         }

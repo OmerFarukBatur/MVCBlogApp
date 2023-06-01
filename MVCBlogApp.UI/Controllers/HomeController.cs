@@ -78,35 +78,17 @@ namespace MVCBlogApp.UI.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsidentity), authProperties);
 
 
-
-                //switch (response.Role)
-                //{
-                //    case "Danışan":
-                //        RedirectToAction("Index", "Admin");
-                //        break;
-                //    case "Admin":
-                //        break;
-                //    case "Moderator":
-                //        break;
-                //    case "Diyetisyen":
-                //        break;
-                //    case "Asistan":
-                //        break;
-                //    default:
-                //        RedirectToAction("Index","Admin");
-                //        break;
-                //}
-                if (response.AuthRole == "Danışan")
+                if (response.AuthRole == "Admin")
                 {
                     return RedirectToAction("Index", "Admin");
                 }
                 else if (response.AuthRole == "Diyetisyen")
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Doctor");
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Member");
                 }               
             }
             else
