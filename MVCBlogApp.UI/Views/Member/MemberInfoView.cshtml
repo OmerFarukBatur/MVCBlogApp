@@ -564,8 +564,8 @@
                         <!-- Section 6 Start-->
                         <h4>Bilgi Formu Adım 6</h4>
                         <section>
-                            <div class="row">                                
-                                <div class="col-4">     
+                            <div class="row">
+                                <div class="col-4">
                                     <h5>Sindirim sistemi ile ilgili probleminiz var mı? :</h5>
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="diseasesReflux">
@@ -622,7 +622,7 @@
                                         <div class="col-lg-6">
                                             <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastritis" name="diseasesGastritis" checked="@Model.DiseasesGastritis" required>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group row">
@@ -640,7 +640,7 @@
                                         <div class="col-lg-6">
                                             <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastricCancer" name="diseasesGastricCancer" checked="@Model.DiseasesGastricCancer" required>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="diseasesIntestinalObstruction">
                                             Bağırsak tıkanması
@@ -674,7 +674,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-4">                                    
+                                <div class="col-4">
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="diseasesSpasticColon">
                                             Spastik kolon (İrritabi bağırsak sendromu)
@@ -817,9 +817,31 @@
                                             Kendinizi nasıl hissediyorsunuz?
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="howDoYouFeel" name="howDoYouFeel" value="@Model.HowDoYouFeel" required>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howDoYouFeel">
+                                                    Çok sağlıklı
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howDoYouFeel" name="howDoYouFeel" value="1" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howDoYouFeel">
+                                                    Şöyle - Böyle
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howDoYouFeel" name="howDoYouFeel" value="2" required>
+                                                </div>
+                                            </div><div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howDoYouFeel">
+                                                    Kötü
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howDoYouFeel" name="howDoYouFeel" value="3" required>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>                                                                        
+                                    </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group row">
@@ -827,7 +849,29 @@
                                             Enerjiniz nasıl?
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="howIsYourEnergy" name="howIsYourEnergy" value="@Model.HowIsYourEnergy" required>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howIsYourEnergy">
+                                                    Çok iyi
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howIsYourEnergy" name="howIsYourEnergy" value="1" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howIsYourEnergy">
+                                                    İyi
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howIsYourEnergy" name="howIsYourEnergy" value="2" required>
+                                                </div>
+                                            </div><div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howIsYourEnergy">
+                                                    Kötü
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howIsYourEnergy" name="howIsYourEnergy" value="3" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -835,7 +879,29 @@
                                             Hangi ifade aktivite sıklığınızı belirler?
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="howFrequencyOfActivity" name="howFrequencyOfActivity" value="@Model.HowFrequencyOfActivity" required>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howFrequencyOfActivity">
+                                                    Düzenli yürüyüş / spor
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howFrequencyOfActivity" name="howFrequencyOfActivity" value="1" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howFrequencyOfActivity">
+                                                    Arada bir yürüyüş / spor
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howFrequencyOfActivity" name="howFrequencyOfActivity" value="2" required>
+                                                </div>
+                                            </div><div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="howFrequencyOfActivity">
+                                                    Hiç hareket yok
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="howFrequencyOfActivity" name="howFrequencyOfActivity" value="3" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -843,7 +909,29 @@
                                             Bir gün boyunca ne kadar taze meyve ve sebze yiyorsunuz?
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="consumedVegetables" name="consumedVegetables" value="@Model.ConsumedVegetables" required>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="consumedVegetables">
+                                                    3 - 4 Porsiyon
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="consumedVegetables" name="consumedVegetables" value="1" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="consumedVegetables">
+                                                    1 - 2 Porsiyon
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="consumedVegetables" name="consumedVegetables" value="2" required>
+                                                </div>
+                                            </div><div class="col-lg-2">
+                                                <label class="col-lg-4 col-form-label" for="consumedVegetables">
+                                                    1 veya hiç
+                                                </label>
+                                                <div class="col-lg-6 ">
+                                                    <input type="radio" class="form-control" id="consumedVegetables" name="consumedVegetables" value="3" required>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -890,3 +978,14 @@
 <!--**********************************
     Content body end
 ***********************************-->
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        $('a:contains("Finish")').click(function () {
+            const formCheck = document.getElementById('step-form-horizontal').checkValidity();
+            if (formCheck == true) {
+                document.getElementById("step-form-horizontal").submit();
+            }
+        });
+    });
+</script>

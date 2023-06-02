@@ -71,13 +71,13 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdMemberInfoQueryResponse> GetByIdMemberAsync(int id)
         {
-            VM_MemberAllDetail? vM_MemberAllDetail = await _membersInformationReadRepository.GetWhere(x => x.MembersId == id)
-                .Select(x => new VM_MemberAllDetail
+            VM_MemberAllDetailODataType? vM_MemberAllDetail = await _membersInformationReadRepository.GetWhere(x => x.MembersId == id)
+                .Select(x => new VM_MemberAllDetailODataType
                 {
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
-                    ConsumedVegetables = x.ConsumedVegetables == 1 ? "3 - 4 Porsiyon" : x.ConsumedVegetables == 2 ? "1 - 2 Porsiyon" : x.ConsumedVegetables == null ? "" : x.ConsumedVegetables == 0 ? "" : "1 veya hiç" ,
+                    ConsumedVegetables = x.ConsumedVegetables ,
                     CpreviousDisease = x.CpreviousDisease == null ? null : x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? null : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
@@ -89,9 +89,9 @@ namespace MVCBlogApp.Persistence.Services
                     HaveYouGainedWeight = x.HaveYouGainedWeight == null ? null : x.HaveYouGainedWeight,
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
-                    HowDoYouFeel = x.HowDoYouFeel == 1 ? "Çok sağlıklı" : x.HowDoYouFeel == 2 ? "Şöyle - Böyle" : x.HowDoYouFeel == null ? "" : x.HowDoYouFeel == 0 ? "" : "Kötü",
-                    HowFrequencyOfActivity = x.HowFrequencyOfActivity == 1 ? "Düzenli yürüyüş / spor" : x.HowFrequencyOfActivity == 2 ? "Arada bir yürüyüş / spor" : x.HowFrequencyOfActivity == null ? "" : x.HowFrequencyOfActivity == 0 ? "" : "Hiç hareket yok",
-                    HowIsYourEnergy = x.HowIsYourEnergy == 1 ? "Çok iyi" : x.HowIsYourEnergy == 2 ? "İyi" : x.HowIsYourEnergy == null ? "" : x.HowIsYourEnergy == 0 ? "" : "Kötü",
+                    HowDoYouFeel = x.HowDoYouFeel ,
+                    HowFrequencyOfActivity = x.HowFrequencyOfActivity ,
+                    HowIsYourEnergy = x.HowIsYourEnergy ,
                     IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
                     ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
                     Name = x.Name,
