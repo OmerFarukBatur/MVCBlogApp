@@ -59,7 +59,7 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MemberInfoCreate(string a)
+        public async Task<IActionResult> MemberInfoCreate(int HowDoYouFeel)
         {
             return View();
         }

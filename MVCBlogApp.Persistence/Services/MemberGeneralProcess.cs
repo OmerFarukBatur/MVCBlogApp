@@ -77,7 +77,7 @@ namespace MVCBlogApp.Persistence.Services
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
-                    ConsumedVegetables = x.ConsumedVegetables ,
+                    ConsumedVegetables = x.ConsumedVegetables == null ? 2 : 2, //
                     CpreviousDisease = x.CpreviousDisease == null ? null : x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? null : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
@@ -89,9 +89,9 @@ namespace MVCBlogApp.Persistence.Services
                     HaveYouGainedWeight = x.HaveYouGainedWeight == null ? null : x.HaveYouGainedWeight,
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
-                    HowDoYouFeel = x.HowDoYouFeel ,
-                    HowFrequencyOfActivity = x.HowFrequencyOfActivity ,
-                    HowIsYourEnergy = x.HowIsYourEnergy ,
+                    HowDoYouFeel = x.HowDoYouFeel == null ? 1 : 1 , // 
+                    HowFrequencyOfActivity = x.HowFrequencyOfActivity == null ? 3 : 3, //
+                    HowIsYourEnergy = x.HowIsYourEnergy == null ? 1 : 1, //
                     IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
                     ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
                     Name = x.Name,
