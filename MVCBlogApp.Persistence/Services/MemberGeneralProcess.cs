@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Enums;
+using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.Diseases;
@@ -15,11 +16,6 @@ using MVCBlogApp.Application.Repositories.FoodTime;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersInformation;
 using MVCBlogApp.Application.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -295,6 +291,11 @@ namespace MVCBlogApp.Persistence.Services
                     State = false
                 };
             }
+        }
+
+        public Task<MemberInfoCreateCommandResponse> MemberInfoCreateAsync(MemberInfoCreateCommandRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

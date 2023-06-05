@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\Member\" />
     <Folder Include="Features\Queries\Doctor\MembersInfo\" />
   </ItemGroup>
 
