@@ -1,17 +1,34 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation.Results;
+using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate
 {
     public class MemberInfoCreateCommandHandler : IRequestHandler<MemberInfoCreateCommandRequest, MemberInfoCreateCommandResponse>
     {
-        public Task<MemberInfoCreateCommandResponse> Handle(MemberInfoCreateCommandRequest request, CancellationToken cancellationToken)
+        private readonly IMemberGeneralProcess _process;
+
+        public MemberInfoCreateCommandHandler(IMemberGeneralProcess process)
         {
-            throw new NotImplementedException();
+            _process = process;
+        }
+
+        public async Task<MemberInfoCreateCommandResponse> Handle(MemberInfoCreateCommandRequest request, CancellationToken cancellationToken)
+        {
+            MemberInfoCreateCommandValidator rules = new();
+            ValidationResult validation = rules.Validate(request);
+            if (validation.IsValid)
+            {
+                return await _process.MemberInfoCreateAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Lütfen alanları geçerli değerlerle doldurunuz.",
+                    State = false
+                };
+            }
         }
     }
 }
