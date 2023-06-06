@@ -16,6 +16,7 @@ using MVCBlogApp.Application.Repositories.FoodTime;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersInformation;
 using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -74,15 +75,15 @@ namespace MVCBlogApp.Persistence.Services
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
                     ConsumedVegetables = x.ConsumedVegetables == null ? 2 : 2, //
-                    CpreviousDisease = x.CpreviousDisease == null ? null : x.CpreviousDisease,
-                    DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? null : x.DidYouGainWeightInTheArmy,
+                    CpreviousDisease = x.CpreviousDisease == null ? false : x.CpreviousDisease,
+                    DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? false : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
                     DoYouUseVitaminAndMinerals = x.DoYouUseVitaminAndMinerals,
-                    DoYouUseCigarettes = x.DoYouUseCigarettes == null ? null : x.DoYouUseCigarettes,
+                    DoYouUseCigarettes = x.DoYouUseCigarettes == null ? false : x.DoYouUseCigarettes,
                     Email = x.Email,
                     FoodLocation = x.FoodLocation,
                     FoodMade = x.FoodMade,
-                    HaveYouGainedWeight = x.HaveYouGainedWeight == null ? null : x.HaveYouGainedWeight,
+                    HaveYouGainedWeight = x.HaveYouGainedWeight == null ? false : x.HaveYouGainedWeight,
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
                     HowDoYouFeel = x.HowDoYouFeel == null ? 1 : 1 , // 
@@ -293,9 +294,62 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        public Task<MemberInfoCreateCommandResponse> MemberInfoCreateAsync(MemberInfoCreateCommandRequest request)
+        public async Task<MemberInfoCreateCommandResponse> MemberInfoCreateAsync(MemberInfoCreateCommandRequest request)
         {
-            throw new NotImplementedException();
+            var check = await _membersInformationReadRepository.GetWhere(x=> x.MembersId == request.MembersId).ToListAsync();
+
+            if (check.Count() > 0)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }
+            else
+            {
+                MembersInformation membersInformation = new()
+                {
+                    Birthdate = request.Birthdate,
+                    ConsumedVegetables = request.ConsumedVegetables,
+                    CpreviousDisease = request.CpreviousDisease,
+                    CreateDate = DateTime.Now,
+                    DidYouGainWeightInTheArmy = request.DidYouGainWeightInTheArmy,
+                    DoYouHaveHormonalProblem = request.DoYouHaveHormonalProblem,
+                    DoYouUseCigarettes = request.DoYouUseCigarettes,
+                    DoYouUseVitaminAndMinerals = request.DoYouUseVitaminAndMinerals,
+                    Email = request.Email,
+                    FoodLocation = request.FoodLocation,
+                    FoodMade = request.FoodMade,
+                    GetDrugged = request.GetDrugged,
+                    HaveYouGainedWeight = request.HaveYouGainedWeight,
+                    HistoryOfWeigh = request.HistoryOfWeigh,
+                    TheQuantityConsumedWater = request.TheQuantityConsumedWater,
+                    HowDoYouFeel = request.HowDoYouFeel,
+                    HowFrequencyOfActivity = request.HowFrequencyOfActivity,
+                    HowIsYourEnergy = request.HowIsYourEnergy,
+                    IsBloodCoagulationDisorders = request.IsBloodCoagulationDisorders,
+                    Job = request.Job,
+                    ManTheNeedForEatingVaries = request.ManTheNeedForEatingVaries,
+                    MembersId = request.MembersId,
+                    Name = request.Name,
+                    OneDaySummary = request.OneDaySummary,
+                    OtherMessage = request.OtherMessage,
+                    PhoneNumber = request.PhoneNumber,
+                    Surname = request.Surname,
+                    TheQuantityConsumedAlchol = request.TheQuantityConsumedAlchol,
+                    TheQuantityConsumedCoffe = request.TheQuantityConsumedCoffe,
+                    TheQuantityConsumedFizzy = request.TheQuantityConsumedFizzy,
+                    TheQuantityConsumedTea = request.TheQuantityConsumedTea
+                };
+
+
+                return new()
+                {
+                    Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
         }
 
         #endregion

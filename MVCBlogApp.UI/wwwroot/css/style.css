@@ -128,6 +128,8 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 }
 
 
+/////////// /// //////////// ///////////////////////////////////////
+
 
 .avatar-wrapper {
     position: relative;
@@ -163,7 +165,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
         width: 100%;
         height: 100%;
         position: absolute;
-        font-size: 190px;
+        font-size: 100px;
         background: #ecf0f1;
         color: #34495e;
         text-align: center;
@@ -179,7 +181,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 .fa-arrow-circle-up {
     position: absolute;
-    font-size: 234px;
+    font-size: 200px;
     top: -17px;
     left: 0;
     text-align: center;
@@ -194,7 +196,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 
 
-
+/////////// /// //////////// ///////////////////////////////////////
 
 
 

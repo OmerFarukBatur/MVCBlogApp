@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate
 {
@@ -11,7 +12,7 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoC
         public string Job { get; set; } // 1
         public string PhoneNumber { get; set; } // 1
         public string Email { get; set; } // 1
-        public string? ImageUrl { get; set; }         ///
+        public IFormFileCollection? FormFile { get; set; }         ///
         public string HistoryOfWeigh { get; set; } // 2
         public bool CpreviousDisease { get; set; } // 2
         public string OneDaySummary { get; set; } // 2

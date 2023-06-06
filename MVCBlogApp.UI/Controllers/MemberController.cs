@@ -74,6 +74,21 @@ namespace MVCBlogApp.UI.Controllers
             }            
         }
 
+        [HttpPost]
+        public async Task<IActionResult> MemberInfoUpdate(MemberInfoCreateCommandRequest request)
+        {
+            request.MembersId = _operationService.GetUser().Id;
+            MemberInfoCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("MemberInfoView", "Member");
+            }
+            else
+            {
+                return RedirectToAction("MemberInfoCreate", "Member");
+            }
+        }
+
         #endregion
 
     }
