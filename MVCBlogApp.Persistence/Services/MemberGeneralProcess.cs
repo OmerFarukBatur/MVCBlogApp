@@ -452,6 +452,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 FoodHabits foodHabits = new()
                 {
+                    MembersInformationId = membersInformation.Id,
                     Breakfast = request.FoodHabitsBreakfast,
                     BreakfastSnack = request.FoodHabitsBreakfastSnack,
                     Lunch = request.FoodHabitsLunch,
