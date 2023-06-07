@@ -372,6 +372,213 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoC
                 .NotNull()
                 .WithMessage("Lütfen bir değer seçiniz.")
                 .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesReflux)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesDifaji)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesRegurgitation)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesHernia)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesDyspepsia)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesHelicobacterPylori)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesGastritis)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesUlcer)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesGastricCancer)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesIntestinalObstruction)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesAcuteDiarrhea)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesChronicDiarrhea)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesConstipation)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesSpasticColon)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesGas)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesIntestinalParasites)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesUlcerativeColitis)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesCrohn)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesColonCancer)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesCardiovascularHypertension)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesCardiovascularHypotension)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesCardiovascularPalpitation)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesCardiovascularHeart)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesDiabetesHypoglycemia)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesDiabetesTypeOneDiabetes)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.DiseasesDiabetesTypeTwoDiabetes)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen bir değer seçiniz.")
+                .Must(x => x == false || x == true);
+
+            RuleFor(x => x.IsBloodCoagulationDisorders)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen alanı boş geçmeyiniz.")
+                .MaximumLength(450)
+                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+
+            RuleFor(x => x.DoYouHaveHormonalProblem)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen alanı boş geçmeyiniz.")
+                .MaximumLength(450)
+                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+
+            RuleFor(x => x.HowDoYouFeel)
+                .InclusiveBetween(0,4)
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
+
+            RuleFor(x => x.HowIsYourEnergy)
+                .InclusiveBetween(0, 4)
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
+
+            RuleFor(x => x.HowFrequencyOfActivity)
+                .InclusiveBetween(0, 4)
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
+
+            RuleFor(x => x.ConsumedVegetables)
+                .InclusiveBetween(0, 4)
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
+
+            RuleFor(x => x.GetDrugged)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen alanı boş geçmeyiniz.")
+                .MaximumLength(250)
+                .WithMessage("Lütfen alanı ençok 250 karakter olacak şekilde giriniz.");
+
+            RuleFor(x => x.DoYouUseVitaminAndMinerals)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen alanı boş geçmeyiniz.")
+                .MaximumLength(350)
+                .WithMessage("Lütfen alanı ençok 350 karakter olacak şekilde giriniz.");
+
+            RuleFor(x => x.OtherMessage)
+                .NotEmpty()
+                .NotNull()
+                .WithMessage("Lütfen alanı boş geçmeyiniz.")
+                .MaximumLength(450)
+                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
         }
     }
 }
