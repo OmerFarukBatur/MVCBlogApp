@@ -47,7 +47,7 @@
                                     Ad <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" required>
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" maxlength="100" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -55,7 +55,7 @@
                                     Soyad <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" required>
+                                    <input type="text" class="form-control" id="nameSurname" name="nameSurname" maxlength="100" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -63,7 +63,7 @@
                                     Doğum Tarihi <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="birthdate" name="birthdate" required>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -71,7 +71,7 @@
                                     Mesleği <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="job" name="job" required>
+                                    <input type="text" class="form-control" id="job" name="job" maxlength="250" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -79,7 +79,7 @@
                                     Cep Telefonu <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" maxlength="150" minlength="10" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -87,7 +87,7 @@
                                     E-Posta Adresi <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="text" class="form-control" id="email" name="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" maxlength="250" required>
                                 </div>
                             </div>
                         </section>
@@ -99,11 +99,11 @@
                                 <div class="col-6">
                                     <h5>Aile de olan, bilinen hastalıklar:</h5>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="contents">
+                                        <label class="col-lg-4 col-form-label" for="historyOfWeigh">
                                             Kilo Öykünüz <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="contents" name="contents" rows="1" required>
+                                            <textarea class="form-control" id="historyOfWeigh" name="historyOfWeigh" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -180,7 +180,7 @@
                                             Sabah <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsBreakfast" name="foodHabitsBreakfast" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsBreakfast" name="foodHabitsBreakfast" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -190,7 +190,7 @@
                                             Sabah Ara <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsBreakfastSnack" name="foodHabitsBreakfastSnack" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsBreakfastSnack" name="foodHabitsBreakfastSnack" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -200,7 +200,7 @@
                                             Öğlen <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsLunch" name="foodHabitsLunch" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsLunch" name="foodHabitsLunch" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -210,7 +210,7 @@
                                             Öğlen Ara <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsLunchSnack" name="foodHabitsLunchSnack" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsLunchSnack" name="foodHabitsLunchSnack" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -220,7 +220,7 @@
                                             Akşam <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsDinner" name="foodHabitsDinner" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsDinner" name="foodHabitsDinner" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -230,7 +230,7 @@
                                             Akşam Ara <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodHabitsDinnerSnack" name="foodHabitsDinnerSnack" rows="1" required>
+                                            <textarea class="form-control" id="foodHabitsDinnerSnack" name="foodHabitsDinnerSnack" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -240,7 +240,7 @@
                                             Geçmişte yapılan bir diyetin bir gününü <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="oneDaySummary" name="oneDaySummary" rows="1" required>
+                                            <textarea class="form-control" id="oneDaySummary" name="oneDaySummary" rows="1" maxlength="350" required>
 
                                             </textarea>
                                         </div>
@@ -260,7 +260,7 @@
                                             Su <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="theQuantityConsumedWater" name="theQuantityConsumedWater" required>
+                                            <input type="text" class="form-control" id="theQuantityConsumedWater" name="theQuantityConsumedWater" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -268,7 +268,7 @@
                                             Çay <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="theQuantityConsumedTea" name="theQuantityConsumedTea" required>
+                                            <input type="text" class="form-control" id="theQuantityConsumedTea" name="theQuantityConsumedTea" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -276,7 +276,7 @@
                                             Kahve <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="theQuantityConsumedCoffe" name="theQuantityConsumedCoffe" required>
+                                            <input type="text" class="form-control" id="theQuantityConsumedCoffe" name="theQuantityConsumedCoffe" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -284,7 +284,7 @@
                                             Gazlı İçecekler <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="theQuantityConsumedFizzy" name="theQuantityConsumedFizzy" required>
+                                            <input type="text" class="form-control" id="theQuantityConsumedFizzy" name="theQuantityConsumedFizzy" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -292,7 +292,7 @@
                                             Alkol <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="theQuantityConsumedAlchol" name="theQuantityConsumedAlchol" required>
+                                            <input type="text" class="form-control" id="theQuantityConsumedAlchol" name="theQuantityConsumedAlchol" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -319,7 +319,7 @@
                                             Sevdikleri <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="allergyProducingFoodsLike" name="allergyProducingFoodsLike" rows="1" required>
+                                            <textarea class="form-control" id="allergyProducingFoodsLike" name="allergyProducingFoodsLike" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -329,7 +329,7 @@
                                             Sevmedikleri <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="allergyProducingDislike" name="allergyProducingDislike" rows="1" required>
+                                            <textarea class="form-control" id="allergyProducingDislike" name="allergyProducingDislike" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -339,7 +339,7 @@
                                             Alerjisi olan <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="allergyProducingFoodsAllergen" name="allergyProducingFoodsAllergen" rows="1" required>
+                                            <textarea class="form-control" id="allergyProducingFoodsAllergen" name="allergyProducingFoodsAllergen" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -349,7 +349,7 @@
                                             Yemekleri evde mi, dışarıda mı yersiniz? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodLocation" name="foodLocation" rows="1" required>
+                                            <textarea class="form-control" id="foodLocation" name="foodLocation" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -359,7 +359,7 @@
                                             Evde yemekleri kim yapıyor? İşyerinize yemek götürebilir misiniz? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="foodMade" name="foodMade" rows="1" required>
+                                            <textarea class="form-control" id="foodMade" name="foodMade" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -380,7 +380,7 @@
                                             Sabah <span class="text-danger">*</span>:
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekdayMorning" name="foodTimeWeekdayMorning" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekdayMorning" name="foodTimeWeekdayMorning" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -388,7 +388,7 @@
                                             Öğle <span class="text-danger">*</span> :
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekdayNoon" name="foodTimeWeekdayNoon" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekdayNoon" name="foodTimeWeekdayNoon" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -396,7 +396,7 @@
                                             Akşam <span class="text-danger">*</span>:
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekdayNight" name="foodTimeWeekdayNight" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekdayNight" name="foodTimeWeekdayNight" maxlength="350" required>
                                         </div>
                                     </div>
                                     <h6>Haftasonu</h6>
@@ -405,7 +405,7 @@
                                             Sabah <span class="text-danger">*</span>:
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekendMorning" name="foodTimeWeekendMorning" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekendMorning" name="foodTimeWeekendMorning" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -413,7 +413,7 @@
                                             Öğle <span class="text-danger">*</span>:
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekendNoon" name="foodTimeWeekendNoon" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekendNoon" name="foodTimeWeekendNoon" maxlength="350" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -421,7 +421,7 @@
                                             Akşam <span class="text-danger">*</span>:
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <input type="text" class="form-control" id="foodTimeWeekendNight" name="foodTimeWeekendNight" required>
+                                            <input type="text" class="form-control" id="foodTimeWeekendNight" name="foodTimeWeekendNight" maxlength="350" required>
                                         </div>
                                     </div>
                                 </div>
@@ -484,7 +484,7 @@
                                             Mensturasyon <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateMenstruation" name="femaleMentalStateMenstruation" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateMenstruation" name="femaleMentalStateMenstruation" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -494,7 +494,7 @@
                                             Menapoz <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateMenopause" name="femaleMentalStateMenopause" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateMenopause" name="femaleMentalStateMenopause" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -504,7 +504,7 @@
                                             Hamilelik <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateGravidity" name="femaleMentalStateGravidity" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateGravidity" name="femaleMentalStateGravidity" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -514,7 +514,7 @@
                                             Emzirme <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateBreastFeeding" name="femaleMentalStateBreastFeeding" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateBreastFeeding" name="femaleMentalStateBreastFeeding" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -524,7 +524,7 @@
                                             Şu anda emzirme döneminde misiniz? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateIsBreastFeedingPeriod" name="femaleMentalStateIsBreastFeedingPeriod" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateIsBreastFeedingPeriod" name="femaleMentalStateIsBreastFeedingPeriod" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -534,7 +534,7 @@
                                             Mensturasyonunuz düzenli mi? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateIsMenstruatioRegular" name="femaleMentalStateIsMenstruatioRegular" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateIsMenstruatioRegular" name="femaleMentalStateIsMenstruatioRegular" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -544,7 +544,7 @@
                                             Herhangi bir hormon tedavisi görüyor musunuz? Gördünüz mü? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateIsHormontherapy" name="femaleMentalStateIsHormontherapy" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateIsHormontherapy" name="femaleMentalStateIsHormontherapy" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -554,7 +554,7 @@
                                             Doğum yaptınız mı? (normal - sezeryan) Kaç kere? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6 ">
-                                            <textarea class="form-control" id="femaleMentalStateIsGiveBirthTo" name="femaleMentalStateIsGiveBirthTo" rows="1" required>
+                                            <textarea class="form-control" id="femaleMentalStateIsGiveBirthTo" name="femaleMentalStateIsGiveBirthTo" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -567,7 +567,7 @@
                                             Hangi koşullarda yemek ihtiyacınızın değiştiğini not ediniz <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="manTheNeedForEatingVaries" name="manTheNeedForEatingVaries" rows="1" required>
+                                            <textarea class="form-control" id="manTheNeedForEatingVaries" name="manTheNeedForEatingVaries" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -820,7 +820,7 @@
                                             Kan pıhtılaşma probleminiz var mı? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="isBloodCoagulationDisorders" name="isBloodCoagulationDisorders" rows="1" required>
+                                            <textarea class="form-control" id="isBloodCoagulationDisorders" name="isBloodCoagulationDisorders" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -830,7 +830,7 @@
                                             Hormonal bir probleminiz var mı? (Triod, kadınlık hormonu, kortizol v.s.) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="doYouHaveHormonalProblem" name="doYouHaveHormonalProblem" rows="1" required>
+                                            <textarea class="form-control" id="doYouHaveHormonalProblem" name="doYouHaveHormonalProblem" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
@@ -909,7 +909,7 @@
                                             Düzenli kullandığınız bir ilaç var mı? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="getDrugged" name="getDrugged" rows="1" required>
+                                            <textarea class="form-control" id="getDrugged" name="getDrugged" rows="1" maxlength="250" required>
 
                                         </textarea>
                                         </div>
@@ -919,7 +919,7 @@
                                             Vitamin - mineral kullanıyor musunuz? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="contents" name="doYouUseVitaminAndMinerals" rows="1" required>
+                                            <textarea class="form-control" id="contents" name="doYouUseVitaminAndMinerals" rows="1" maxlength="350" required>
 
                                         </textarea>
                                         </div>
@@ -929,7 +929,7 @@
                                             Kendinizle ilgili bilgi vermek istediğiniz başka konu var mı? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <textarea class="form-control" id="otherMessage" name="otherMessage" rows="1" required>
+                                            <textarea class="form-control" id="otherMessage" name="otherMessage" rows="1" maxlength="450" required>
 
                                         </textarea>
                                         </div>
