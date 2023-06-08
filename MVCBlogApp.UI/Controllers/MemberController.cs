@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
+using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
 
 namespace MVCBlogApp.UI.Controllers
@@ -75,17 +76,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> MemberInfoUpdate(MemberInfoCreateCommandRequest request)
+        public async Task<IActionResult> MemberInfoUpdate(MemberInfoUpdateCommandRequest request)
         {
             request.MembersId = _operationService.GetUser().Id;
-            MemberInfoCreateCommandResponse response = await _mediator.Send(request);
+            MemberInfoUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
                 return RedirectToAction("MemberInfoView", "Member");
             }
             else
             {
-                return RedirectToAction("MemberInfoCreate", "Member");
+                return RedirectToAction("MemberInfoView", "Member");
             }
         }
 

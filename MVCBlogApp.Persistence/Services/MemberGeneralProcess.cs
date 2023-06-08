@@ -20,6 +20,7 @@ using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 using System.Reflection;
 using System;
+using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -568,6 +569,11 @@ namespace MVCBlogApp.Persistence.Services
                     State = true
                 };
             }
+        }
+
+        public Task<MemberInfoUpdateCommandResponse> MemberInfoUpdateAsync(MemberInfoUpdateCommandRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
