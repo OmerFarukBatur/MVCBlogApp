@@ -27,7 +27,7 @@
                         <!-- Section 1 Start-->
                         <h4>Detaylı Danışan Bilgileri:</h4>
                         <section>
-                            <div class="form-group row">
+                            @*<div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="FormFile">
                                     Fotoğraf Ekleyin
                                 </label>
@@ -42,7 +42,7 @@
                                         <input class="fa fa-arrow-circle-up" type="file" name="FormFile" id="FormFile" accept=".png,.jpg,.jpeg" runat="server" />
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="name">
                                     Ad <span class="text-danger">*</span>
@@ -64,7 +64,7 @@
                                     Doğum Tarihi <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-lg-6 ">
-                                    <input type="date" class="form-control" id="birthdate" name="birthdate" value="@Model.Birthdate" required>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Gün/Ay/Yıl" data-date-format="yyyy-mm-dd" value="@Model.Birthdate.ToString("yyyy-MM-dd")" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -301,7 +301,7 @@
                                             Sigara kullanıyor mu? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="doYouUseCigarettes" name="doYouUseCigarettes" checked="@Model.DoYouUseCigarettes" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="doYouUseCigarettes" name="doYouUseCigarettes" data-val="@Model.DoYouUseCigarettes" checked="@Model.DoYouUseCigarettes" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -309,7 +309,7 @@
                                             Bırakıldıysa bu süreçte kilo alındı mı? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="haveYouGainedWeight" name="haveYouGainedWeight" checked="@Model.HaveYouGainedWeight" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="True" data-off="False" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="haveYouGainedWeight" name="haveYouGainedWeight" data-val="@Model.HaveYouGainedWeight" checked="@Model.HaveYouGainedWeight" required>
                                         </div>
                                     </div>
                                 </div>
@@ -433,7 +433,7 @@
                                             Üzüntülü olduğumda yerim <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodSad" name="foodHabitsMoodSad" checked="@Model.FoodHabitsMoodSad" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodSad" name="foodHabitsMoodSad" data-val="@Model.FoodHabitsMoodSad" checked="@Model.FoodHabitsMoodSad" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -441,7 +441,7 @@
                                             Stresli olduğumda yerim <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodStress" name="foodHabitsMoodStress" checked="@Model.FoodHabitsMoodStress" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodStress" name="foodHabitsMoodStress" data-val="@Model.FoodHabitsMoodStress" checked="@Model.FoodHabitsMoodStress" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -449,7 +449,7 @@
                                             Depresif olduğumda yerim <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodDoomy" name="foodHabitsMoodDoomy" checked="@Model.FoodHabitsMoodDoomy" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodDoomy" name="foodHabitsMoodDoomy" data-val="@Model.FoodHabitsMoodDoomy" checked="@Model.FoodHabitsMoodDoomy" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -457,7 +457,7 @@
                                             Mutlu olduğumda yerim <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodHappy" name="foodHabitsMoodHappy" checked="@Model.FoodHabitsMoodHappy" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodHappy" name="foodHabitsMoodHappy" data-val="@Model.FoodHabitsMoodHappy" checked="@Model.FoodHabitsMoodHappy" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -465,7 +465,7 @@
                                             Yukarıdakilerin hepsi <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodAll" name="foodHabitsMoodAll" checked="@Model.FoodHabitsMoodAll" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="foodHabitsMoodAll" name="foodHabitsMoodAll" data-val="@Model.FoodHabitsMoodAll" checked="@Model.FoodHabitsMoodAll" required>
                                         </div>
                                     </div>
                                 </div>
@@ -578,7 +578,7 @@
                                             Askerlik döneminde kilo aldınız mı? <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="didYouGainWeightInTheArmy" name="didYouGainWeightInTheArmy" checked="@Model.DidYouGainWeightInTheArmy" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="didYouGainWeightInTheArmy" name="didYouGainWeightInTheArmy" data-val="@Model.DidYouGainWeightInTheArmy" checked="@Model.DidYouGainWeightInTheArmy" required>
                                         </div>
                                     </div>
                                 </div>
@@ -596,7 +596,7 @@
                                             Reflü özofajit (Mide yanması) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesReflux" name="diseasesReflux" checked="@Model.DiseasesReflux" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesReflux" name="diseasesReflux" data-val="@Model.DiseasesReflux" checked="@Model.DiseasesReflux" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -604,7 +604,7 @@
                                             Yutma güçlüğü (Difaji) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDifaji" name="diseasesDifaji" checked="@Model.DiseasesDifaji" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDifaji" name="diseasesDifaji" data-val="@Model.DiseasesDifaji" checked="@Model.DiseasesDifaji" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -612,7 +612,7 @@
                                             Ağıza yiyeceklerin gelmesi (Regürjitasyon) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesRegurgitation" name="diseasesRegurgitation" checked="@Model.DiseasesRegurgitation" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesRegurgitation" name="diseasesRegurgitation" data-val="@Model.DiseasesRegurgitation" checked="@Model.DiseasesRegurgitation" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -620,7 +620,7 @@
                                             Mide fıtığı (Sürekli açlık-kazıntı) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHernia" name="diseasesHernia" checked="@Model.DiseasesHernia" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHernia" name="diseasesHernia" data-val="@Model.DiseasesHernia" checked="@Model.DiseasesHernia" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -628,7 +628,7 @@
                                             Bulantı - kusma hazımsızlık (Dispepsi) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDyspepsia" name="diseasesDyspepsia" checked="@Model.DiseasesDyspepsia" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDyspepsia" name="diseasesDyspepsia" data-val="@Model.DiseasesDyspepsia" checked="@Model.DiseasesDyspepsia" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -636,7 +636,7 @@
                                             Helikopbacter pylori (Mide mikrobu) (Mide ağrısı) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHelicobacterPylori" name="diseasesHelicobacterPylori" checked="@Model.DiseasesHelicobacterPylori" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesHelicobacterPylori" name="diseasesHelicobacterPylori" data-val="@Model.DiseasesHelicobacterPylori" checked="@Model.DiseasesHelicobacterPylori" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -644,7 +644,7 @@
                                             Gastrit <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastritis" name="diseasesGastritis" checked="@Model.DiseasesGastritis" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastritis" name="diseasesGastritis" data-val="@Model.DiseasesGastritis" checked="@Model.DiseasesGastritis" required>
                                         </div>
                                     </div>
                                 </div>
@@ -654,7 +654,7 @@
                                             Ülser <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcer" name="diseasesUlcer" checked="@Model.DiseasesUlcer" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcer" name="diseasesUlcer" data-val="@Model.DiseasesUlcer" checked="@Model.DiseasesUlcer" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -662,7 +662,7 @@
                                             Mide kanseri <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastricCancer" name="diseasesGastricCancer" checked="@Model.DiseasesGastricCancer" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGastricCancer" name="diseasesGastricCancer" data-val="@Model.DiseasesGastricCancer" checked="@Model.DiseasesGastricCancer" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -670,7 +670,7 @@
                                             Bağırsak tıkanması <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalObstruction" name="diseasesIntestinalObstruction" checked="@Model.DiseasesIntestinalObstruction" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalObstruction" name="diseasesIntestinalObstruction" data-val="@Model.DiseasesIntestinalObstruction" checked="@Model.DiseasesIntestinalObstruction" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -678,7 +678,7 @@
                                             Akut ishaller <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesAcuteDiarrhea" name="diseasesAcuteDiarrhea" checked="@Model.DiseasesAcuteDiarrhea" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesAcuteDiarrhea" name="diseasesAcuteDiarrhea" data-val="@Model.DiseasesAcuteDiarrhea" checked="@Model.DiseasesAcuteDiarrhea" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -686,7 +686,7 @@
                                             Sürekli ishaller (Kronik diyare) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesChronicDiarrhea" name="diseasesChronicDiarrhea" checked="@Model.DiseasesChronicDiarrhea" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesChronicDiarrhea" name="diseasesChronicDiarrhea" data-val="@Model.DiseasesChronicDiarrhea" checked="@Model.DiseasesChronicDiarrhea" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -694,7 +694,7 @@
                                             Kabızlık (Constipation) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesConstipation" name="diseasesConstipation" checked="@Model.DiseasesConstipation" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesConstipation" name="diseasesConstipation" data-val="@Model.DiseasesConstipation" checked="@Model.DiseasesConstipation" required>
                                         </div>
                                     </div>
                                 </div>
@@ -704,7 +704,7 @@
                                             Spastik kolon (İrritabi bağırsak sendromu) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesSpasticColon" name="diseasesSpasticColon" checked="@Model.DiseasesSpasticColon" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesSpasticColon" name="diseasesSpasticColon" data-val="@Model.DiseasesSpasticColon" checked="@Model.DiseasesSpasticColon" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -712,7 +712,7 @@
                                             Karında gaz - şişkinlik <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGas" name="diseasesGas" checked="@Model.DiseasesGas" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesGas" name="diseasesGas" data-val="@Model.DiseasesGas" checked="@Model.DiseasesGas" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -720,7 +720,7 @@
                                             Bağırsak parazitleri <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalParasites" name="diseasesIntestinalParasites" checked="@Model.DiseasesIntestinalParasites" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesIntestinalParasites" name="diseasesIntestinalParasites" data-val="@Model.DiseasesIntestinalParasites" checked="@Model.DiseasesIntestinalParasites" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -728,7 +728,7 @@
                                             Kolitis ülseroza (Ülseratif kolit) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcerativeColitis" name="diseasesUlcerativeColitis" checked="@Model.DiseasesUlcerativeColitis" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesUlcerativeColitis" name="diseasesUlcerativeColitis" data-val="@Model.DiseasesUlcerativeColitis" checked="@Model.DiseasesUlcerativeColitis" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -736,7 +736,7 @@
                                             Crohn hastalığı <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCrohn" name="diseasesCrohn" checked="@Model.DiseasesCrohn" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCrohn" name="diseasesCrohn" data-val="@Model.DiseasesCrohn" checked="@Model.DiseasesCrohn" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -744,7 +744,7 @@
                                             Kalın bağırsak kanseri (Kolon kanseri) <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesColonCancer" name="diseasesColonCancer" checked="@Model.DiseasesColonCancer" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesColonCancer" name="diseasesColonCancer" data-val="@Model.DiseasesColonCancer" checked="@Model.DiseasesColonCancer" required>
                                         </div>
                                     </div>
                                 </div>
@@ -762,7 +762,7 @@
                                             Hipertansiyon <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypertension" name="diseasesCardiovascularHypertension" checked="@Model.DiseasesCardiovascularHypertension" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypertension" name="diseasesCardiovascularHypertension" data-val="@Model.DiseasesCardiovascularHypertension" checked="@Model.DiseasesCardiovascularHypertension" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -770,7 +770,7 @@
                                             Hipotansiyon <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypotension" name="diseasesCardiovascularHypotension" checked="@Model.DiseasesCardiovascularHypotension" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHypotension" name="diseasesCardiovascularHypotension" data-val="@Model.DiseasesCardiovascularHypotension" checked="@Model.DiseasesCardiovascularHypotension" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -778,7 +778,7 @@
                                             Çarpıntı <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularPalpitation" name="diseasesCardiovascularPalpitation" checked="@Model.DiseasesCardiovascularPalpitation" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularPalpitation" name="diseasesCardiovascularPalpitation" data-val="@Model.DiseasesCardiovascularPalpitation" checked="@Model.DiseasesCardiovascularPalpitation" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -786,7 +786,7 @@
                                             Kalp hastalığı <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHeart" name="diseasesCardiovascularHeart" checked="@Model.DiseasesCardiovascularHeart" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesCardiovascularHeart" name="diseasesCardiovascularHeart" data-val="@Model.DiseasesCardiovascularHeart" checked="@Model.DiseasesCardiovascularHeart" required>
                                         </div>
                                     </div>
                                 </div>
@@ -797,7 +797,7 @@
                                             Hipoglisemi <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesHypoglycemia" name="diseasesDiabetesHypoglycemia" checked="@Model.DiseasesDiabetesHypoglycemia" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesHypoglycemia" name="diseasesDiabetesHypoglycemia" data-val="@Model.DiseasesDiabetesHypoglycemia" checked="@Model.DiseasesDiabetesHypoglycemia" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -805,7 +805,7 @@
                                             Tip 1 diabet <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeOneDiabetes" name="diseasesDiabetesTypeOneDiabetes" checked="@Model.DiseasesDiabetesTypeOneDiabetes" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeOneDiabetes" name="diseasesDiabetesTypeOneDiabetes" data-val="@Model.DiseasesDiabetesTypeOneDiabetes" checked="@Model.DiseasesDiabetesTypeOneDiabetes" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -813,7 +813,7 @@
                                             Tip 2 diabet <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeTwoDiabetes" name="diseasesDiabetesTypeTwoDiabetes" checked="@Model.DiseasesDiabetesTypeTwoDiabetes" required>
+                                            <input type="checkbox" class="form-control" data-toggle="toggle" data-on="Evet" data-off="Hayır" data-width="75" data-height="30" data-onstyle="success" data-offstyle="danger" id="diseasesDiabetesTypeTwoDiabetes" name="diseasesDiabetesTypeTwoDiabetes" data-val="@Model.DiseasesDiabetesTypeTwoDiabetes" checked="@Model.DiseasesDiabetesTypeTwoDiabetes" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">

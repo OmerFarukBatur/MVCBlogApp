@@ -260,8 +260,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesFamilyMembers)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
                 List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetAll()
@@ -277,8 +276,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesDigestiveDisorders)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
                 List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetAll()
@@ -294,8 +292,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesCardiovasculars)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
                 List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetAll()
@@ -311,8 +308,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesDiabetes)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
                 return new()
