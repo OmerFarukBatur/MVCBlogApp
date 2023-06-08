@@ -146,7 +146,7 @@ namespace MVCBlogApp.Persistence.Services
 
             if (vM_MemberAllDetail != null)
             {
-                VM_FoodHabitMood? vM_FoodHabitMood = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == id)
+                VM_FoodHabitMood? vM_FoodHabitMood = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Select(x => new VM_FoodHabitMood
                     {
                         Happy = x.Happy == null ? false : x.Happy,
@@ -165,7 +165,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FoodHabitsMoodAll = vM_FoodHabitMood.All;
                 }
 
-                VM_AllergyProducingFoods? vM_AllergyProducingFoods = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                VM_AllergyProducingFoods? vM_AllergyProducingFoods = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Select(x => new VM_AllergyProducingFoods
                     {
                         Like = x.Like == null ? "" : x.Like,
@@ -180,7 +180,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.AllergyProducingFoodsAllergen = vM_AllergyProducingFoods.Allergen;
                 }
 
-                VM_FoodTime? vM_FoodTime = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == id)
+                VM_FoodTime? vM_FoodTime = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Select(x => new VM_FoodTime
                     {
                         WeekdayMorning = x.WeekdayMorning == null ? "" : x.WeekdayMorning,
@@ -201,7 +201,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FoodTimeWeekendNight = vM_FoodTime.WeekendNight;
                 }
 
-                VM_FemaleMentalState? vM_FemaleMentalState = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == id)
+                VM_FemaleMentalState? vM_FemaleMentalState = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Select(x => new VM_FemaleMentalState
                     {
                         Menstruation = x.Menstruation == null ? "" : x.Menstruation,
@@ -226,7 +226,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FemaleMentalStateIsGiveBirthTo = vM_FemaleMentalState.IsGiveBirthTo;
                 }
 
-                VM_FoodHabits? vM_FoodHabits = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == id)
+                VM_FoodHabits? vM_FoodHabits = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Select(x => new VM_FoodHabits
                     {
                         Breakfast = x.Breakfast == null ? "" : x.Breakfast,
@@ -247,7 +247,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FoodHabitsDinnerSnack = vM_FoodHabits.DinnerSnack;
                 }
 
-                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetAll()
+                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x=> x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesFamilyMembers
                     {
@@ -263,7 +263,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetAll()
+                List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesDigestiveDisorders
                     {
@@ -279,7 +279,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetAll()
+                List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesCardiovascular
                     {
@@ -295,7 +295,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetAll()
+                List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesDiabetes
                     {
