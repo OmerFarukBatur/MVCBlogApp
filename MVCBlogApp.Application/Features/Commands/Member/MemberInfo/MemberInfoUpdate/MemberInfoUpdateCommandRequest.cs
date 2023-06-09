@@ -5,7 +5,6 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
 {
     public class MemberInfoUpdateCommandRequest : IRequest<MemberInfoUpdateCommandResponse>
     {
-        public int Id { get; set; }
         public int MembersId { get; set; }
         public string Name { get; set; } // 1
         public string Surname { get; set; } // 1

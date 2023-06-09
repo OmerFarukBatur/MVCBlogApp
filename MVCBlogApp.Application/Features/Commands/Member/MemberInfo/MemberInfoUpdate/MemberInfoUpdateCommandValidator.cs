@@ -49,9 +49,7 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.HistoryOfWeigh)
 
                 .NotNull()
-                .WithMessage("Lütfen Kilo Öykünüz alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Kilo Öykünüz ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Kilo Öykünüz alanını boş geçmeyiniz.");
 
             RuleFor(x => x.DiseasesFamilyDiabetes)
 
@@ -104,86 +102,62 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.FoodHabitsBreakfast)
 
                 .NotNull()
-                .WithMessage("Lütfen Sabah öğünü alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Sabah öğünü alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sabah öğünü alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsBreakfastSnack)
 
                 .NotNull()
-                .WithMessage("Lütfen Sabah ara öğünü alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Sabah ara öğünü alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sabah ara öğünü alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsLunch)
 
                 .NotNull()
-                .WithMessage("Lütfen Öğlen öğün alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Öğlen öğün alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Öğlen öğün alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsLunchSnack)
 
                 .NotNull()
-                .WithMessage("Lütfen Öğlen ara öğün alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Öğlen ara öğün alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Öğlen ara öğün alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsDinner)
 
                 .NotNull()
-                .WithMessage("Lütfen Akşam öğün alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Akşam öğün alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Akşam öğün alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsDinnerSnack)
 
                 .NotNull()
-                .WithMessage("Lütfen Akşam ara öğün alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Akşam ara öğün alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Akşam ara öğün alanını boş geçmeyiniz.");
 
             RuleFor(x => x.OneDaySummary)
 
                 .NotNull()
-                .WithMessage("Lütfen Geçmiş diyet alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Geçmiş diyet alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Geçmiş diyet alanını boş geçmeyiniz.");
 
             RuleFor(x => x.TheQuantityConsumedWater)
 
                 .NotNull()
-                .WithMessage("Lütfen Su alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Su alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Su alanını boş geçmeyiniz.");
 
             RuleFor(x => x.TheQuantityConsumedTea)
 
                 .NotNull()
-                .WithMessage("Lütfen Çay alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Çay alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Çay alanını boş geçmeyiniz.");
 
             RuleFor(x => x.TheQuantityConsumedCoffe)
 
                 .NotNull()
-                .WithMessage("Lütfen Kahve alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Kahve alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Kahve alanını boş geçmeyiniz.");
 
             RuleFor(x => x.TheQuantityConsumedFizzy)
 
                 .NotNull()
-                .WithMessage("Lütfen Gazlı içecek alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Gazlı içecek alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Gazlı içecek alanını boş geçmeyiniz.");
 
             RuleFor(x => x.TheQuantityConsumedAlchol)
 
                 .NotNull()
-                .WithMessage("Lütfen Alkol alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Alkol alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Alkol alanını boş geçmeyiniz.");
 
             RuleFor(x => x.DoYouUseCigarettes)
 
@@ -200,79 +174,57 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.AllergyProducingFoodsLike)
 
                 .NotNull()
-                .WithMessage("Lütfen Sevdikleri alanını boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Sevdikleri alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sevdikleri alanını boş geçmeyiniz.");
 
             RuleFor(x => x.AllergyProducingDislike)
 
                 .NotNull()
-                .WithMessage("Lütfen Sevmedikleri alanını boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Sevmedikleri alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sevmedikleri alanını boş geçmeyiniz.");
 
             RuleFor(x => x.AllergyProducingFoodsAllergen)
 
                 .NotNull()
-                .WithMessage("Lütfen Alerjisi olan alanını boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Alerjisi olan alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Alerjisi olan alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodLocation)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.FoodMade)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekdayMorning)
 
                 .NotNull()
-                .WithMessage("Lütfen Sabah alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Sabah alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sabah alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekdayNoon)
 
                 .NotNull()
-                .WithMessage("Lütfen Öğlen alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Öğlen alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Öğlen alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekdayNight)
 
                 .NotNull()
-                .WithMessage("Lütfen Akşam alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Akşam alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Akşam alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekendMorning)
 
                 .NotNull()
-                .WithMessage("Lütfen Sabah alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Sabah alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Sabah alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekendNoon)
 
                 .NotNull()
-                .WithMessage("Lütfen Öğlen alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Öğlen alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Öğlen alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodTimeWeekendNight)
 
                 .NotNull()
-                .WithMessage("Lütfen Akşam alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Akşam alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Akşam alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FoodHabitsMoodSad)
 
@@ -307,65 +259,47 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.FemaleMentalStateMenstruation)
 
                 .NotNull()
-                .WithMessage("Lütfen Mensturasyon alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Lütfen Mensturasyon alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Mensturasyon alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateMenopause)
 
                 .NotNull()
-                .WithMessage("Lütfen Menapoz alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Menapoz alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Menapoz alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateGravidity)
 
                 .NotNull()
-                .WithMessage("Lütfen Hamilelik alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Hamilelik alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Hamilelik alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateBreastFeeding)
 
                 .NotNull()
-                .WithMessage("Lütfen Emzirme alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Emzirme alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Emzirme alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateIsBreastFeedingPeriod)
 
                 .NotNull()
-                .WithMessage("Lütfen Emzirme dönemi alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Emzirme dönemi alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Emzirme dönemi alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateIsMenstruatioRegular)
 
                 .NotNull()
-                .WithMessage("Lütfen Mensturasyon düzeni alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Mensturasyon düzeni alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Mensturasyon düzeni alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateIsHormontherapy)
 
                 .NotNull()
-                .WithMessage("Lütfen Hormon tedavisi alanını boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Hormon tedavisi alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Hormon tedavisi alanını boş geçmeyiniz.");
 
             RuleFor(x => x.FemaleMentalStateIsGiveBirthTo)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Lütfen alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.ManTheNeedForEatingVaries)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Lütfen alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.DidYouGainWeightInTheArmy)
 
@@ -532,16 +466,12 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.IsBloodCoagulationDisorders)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.DoYouHaveHormonalProblem)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.HowDoYouFeel)
                 .InclusiveBetween(0, 4)
@@ -560,7 +490,7 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
                 .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.GetDrugged)
-
+                .NotEmpty()
                 .NotNull()
                 .WithMessage("Lütfen alanı boş geçmeyiniz.")
                 .MaximumLength(250)
@@ -569,16 +499,12 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoU
             RuleFor(x => x.DoYouUseVitaminAndMinerals)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(350)
-                .WithMessage("Lütfen alanı ençok 350 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.OtherMessage)
 
                 .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(450)
-                .WithMessage("Lütfen alanı ençok 450 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen alanı boş geçmeyiniz.");
         }
     }
 }

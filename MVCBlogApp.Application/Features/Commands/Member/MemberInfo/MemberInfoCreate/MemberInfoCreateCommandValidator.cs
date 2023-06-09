@@ -560,11 +560,11 @@ namespace MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoC
                 .WithMessage("Lütfen alanı boş geçmeyiniz.");
 
             RuleFor(x => x.GetDrugged)
-
-                .NotNull()
-                .WithMessage("Lütfen alanı boş geçmeyiniz.")
-                .MaximumLength(250)
-                .WithMessage("Lütfen alanı ençok 250 karakter olacak şekilde giriniz.");
+               .NotEmpty()
+               .NotNull()
+               .WithMessage("Lütfen alanı boş geçmeyiniz.")
+               .MaximumLength(250)
+               .WithMessage("Lütfen alanı ençok 250 karakter olacak şekilde giriniz.");
 
             RuleFor(x => x.DoYouUseVitaminAndMinerals)
 

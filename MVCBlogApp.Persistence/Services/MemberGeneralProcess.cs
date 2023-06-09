@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
-using MVCBlogApp.Application.Enums;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
+using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.Diseases;
@@ -18,9 +18,6 @@ using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersInformation;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
-using System.Reflection;
-using System;
-using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -114,7 +111,7 @@ namespace MVCBlogApp.Persistence.Services
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
-                    ConsumedVegetables = x.ConsumedVegetables == null ? 2 : 2, //
+                    ConsumedVegetables = x.ConsumedVegetables , //== null ? 2 : 2
                     CpreviousDisease = x.CpreviousDisease == null ? false : x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? false : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
@@ -126,8 +123,8 @@ namespace MVCBlogApp.Persistence.Services
                     HaveYouGainedWeight = x.HaveYouGainedWeight == null ? false : x.HaveYouGainedWeight,
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
-                    HowDoYouFeel = x.HowDoYouFeel == null ? 1 : 1, // 
-                    HowFrequencyOfActivity = x.HowFrequencyOfActivity == null ? 3 : 3, //
+                    HowDoYouFeel = x.HowDoYouFeel, //  == null ? 1 : 1
+                    HowFrequencyOfActivity = x.HowFrequencyOfActivity , //== null ? 3 : 3
                     HowIsYourEnergy = x.HowIsYourEnergy == null ? 1 : 1, //
                     IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
                     ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
@@ -142,7 +139,40 @@ namespace MVCBlogApp.Persistence.Services
                     TheQuantityConsumedFizzy = x.TheQuantityConsumedFizzy,
                     TheQuantityConsumedTea = x.TheQuantityConsumedTea,
                     TheQuantityConsumedWater = x.TheQuantityConsumedWater,
-                    Surname = x.Surname
+                    Surname = x.Surname,
+                    DiseasesAcuteDiarrhea = false,
+                    DiseasesCardiovascularHeart = false,
+                    DiseasesCardiovascularHypertension = false,
+                    DiseasesCardiovascularHypotension = false,
+                    DiseasesCardiovascularPalpitation = false,
+                    DiseasesChronicDiarrhea = false,
+                    DiseasesColonCancer = false,
+                    DiseasesConstipation = false,
+                    DiseasesCrohn = false,
+                    DiseasesDiabetesHypoglycemia = false,
+                    DiseasesDiabetesTypeOneDiabetes = false,
+                    DiseasesDiabetesTypeTwoDiabetes = false,
+                    DiseasesDifaji = false,
+                    DiseasesDyspepsia = false,
+                    DiseasesFamilyCancer = false,
+                    DiseasesFamilyDiabetes = false,
+                    DiseasesFamilyEpilepsy = false,
+                    DiseasesFamilyGout = false,
+                    DiseasesFamilyHeart = false,
+                    DiseasesFamilyHormone = false,
+                    DiseasesFamilyTiroid = false,
+                    DiseasesGas = false,
+                    DiseasesGastricCancer = false,
+                    DiseasesGastritis = false,
+                    DiseasesHelicobacterPylori = false,
+                    DiseasesHernia = false,
+                    DiseasesIntestinalObstruction = false,
+                    DiseasesIntestinalParasites = false,
+                    DiseasesReflux = false,
+                    DiseasesRegurgitation = false,
+                    DiseasesSpasticColon = false,
+                    DiseasesUlcer = false,
+                    DiseasesUlcerativeColitis = false
                 }).FirstOrDefaultAsync();
 
             if (vM_MemberAllDetail != null)
@@ -248,7 +278,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FoodHabitsDinnerSnack = vM_FoodHabits.DinnerSnack;
                 }
 
-                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x=> x.MembersInformationId == vM_MemberAllDetail.Id)
+                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesFamilyMembers
                     {
@@ -571,9 +601,356 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        public Task<MemberInfoUpdateCommandResponse> MemberInfoUpdateAsync(MemberInfoUpdateCommandRequest request)
+        public async Task<MemberInfoUpdateCommandResponse> MemberInfoUpdateAsync(MemberInfoUpdateCommandRequest request)
         {
-            throw new NotImplementedException();
+            MembersInformation? membersInformation = await _membersInformationReadRepository.GetWhere(x=> x.MembersId == request.MembersId).FirstOrDefaultAsync();
+
+            if (membersInformation == null)
+            {
+                return new()
+                {
+                    Message = "Bilgilere ait kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
+            else
+            {
+                membersInformation.Birthdate = request.Birthdate;
+                membersInformation.ConsumedVegetables = request.ConsumedVegetables;
+                membersInformation.CpreviousDisease = request.CpreviousDisease;
+                membersInformation.DidYouGainWeightInTheArmy = request.DidYouGainWeightInTheArmy;
+                membersInformation.DoYouHaveHormonalProblem = request.DoYouHaveHormonalProblem;
+                membersInformation.DoYouUseCigarettes = request.DoYouUseCigarettes;
+                membersInformation.DoYouUseVitaminAndMinerals = request.DoYouUseVitaminAndMinerals;
+                membersInformation.Email = request.Email;
+                membersInformation.FoodLocation = request.FoodLocation;
+                membersInformation.FoodMade = request.FoodMade;
+                membersInformation.GetDrugged = request.GetDrugged;
+                membersInformation.HaveYouGainedWeight = request.HaveYouGainedWeight;
+                membersInformation.HistoryOfWeigh = request.HistoryOfWeigh;
+                membersInformation.TheQuantityConsumedWater = request.TheQuantityConsumedWater;
+                membersInformation.HowDoYouFeel = request.HowDoYouFeel;
+                membersInformation.HowFrequencyOfActivity = request.HowFrequencyOfActivity;
+                membersInformation.HowIsYourEnergy = request.HowIsYourEnergy;
+                membersInformation.IsBloodCoagulationDisorders = request.IsBloodCoagulationDisorders;
+                membersInformation.Job = request.Job;
+                membersInformation.ManTheNeedForEatingVaries = request.ManTheNeedForEatingVaries;
+                membersInformation.Name = request.Name;
+                membersInformation.OneDaySummary = request.OneDaySummary;
+                membersInformation.OtherMessage = request.OtherMessage;
+                membersInformation.PhoneNumber = request.PhoneNumber;
+                membersInformation.Surname = request.Surname;
+                membersInformation.TheQuantityConsumedAlchol = request.TheQuantityConsumedAlchol;
+                membersInformation.TheQuantityConsumedCoffe = request.TheQuantityConsumedCoffe;
+                membersInformation.TheQuantityConsumedFizzy = request.TheQuantityConsumedFizzy;
+                membersInformation.TheQuantityConsumedTea = request.TheQuantityConsumedTea;
+                membersInformation.UpdateDate = DateTime.Now;
+
+                if (request.FormFile != null)
+                {
+                    List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("profile-image-files", request.FormFile);
+                    membersInformation.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                }
+
+                _membersInformationWriteRepository.Update(membersInformation);
+                await _membersInformationWriteRepository.SaveAsync();
+
+                FoodHabitMood? foodHabitMood = await _foodHabitMoodReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).FirstOrDefaultAsync();
+
+                if (foodHabitMood != null)
+                {
+                    foodHabitMood.Happy = request.FoodHabitsMoodHappy;
+                    foodHabitMood.Sad = request.FoodHabitsMoodSad;
+                    foodHabitMood.Stress = request.FoodHabitsMoodStress;
+                    foodHabitMood.Doomy = request.FoodHabitsMoodDoomy;
+                    foodHabitMood.All = request.FoodHabitsMoodAll;
+
+                    _foodHabitMoodWriteRepository.Update(foodHabitMood);
+                    await _foodHabitMoodWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    FoodHabitMood newFoodHabitMood = new()
+                    {
+                        MembersInformationId = membersInformation.Id,
+                        Happy = request.FoodHabitsMoodHappy,
+                        Sad = request.FoodHabitsMoodSad,
+                        Stress = request.FoodHabitsMoodStress,
+                        Doomy = request.FoodHabitsMoodDoomy,
+                        All = request.FoodHabitsMoodAll
+                    };
+
+                    await _foodHabitMoodWriteRepository.AddAsync(newFoodHabitMood);
+                    await _foodHabitMoodWriteRepository.SaveAsync();
+                }
+
+                AllergyProducingFoods? allergyProducingFoods = await _allergyProducingsReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).FirstOrDefaultAsync();
+
+                if (allergyProducingFoods != null)
+                {
+                    allergyProducingFoods.Like = request.AllergyProducingFoodsLike;
+                    allergyProducingFoods.Dislike = request.AllergyProducingDislike;
+                    allergyProducingFoods.Allergen = request.AllergyProducingFoodsAllergen;
+
+                    _allergyProducingFoodsWriteRepository.Update(allergyProducingFoods);
+                    await _allergyProducingFoodsWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    AllergyProducingFoods newAllergyProducingFoods = new()
+                    {
+                        MembersInformationId = membersInformation.Id,
+                        Like = request.AllergyProducingFoodsLike,
+                        Dislike = request.AllergyProducingDislike,
+                        Allergen = request.AllergyProducingFoodsAllergen
+                    };
+
+                    await _allergyProducingFoodsWriteRepository.AddAsync(newAllergyProducingFoods);
+                    await _allergyProducingFoodsWriteRepository.SaveAsync();
+                }
+
+                FoodTime? foodTime = await _foodTimeReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).FirstOrDefaultAsync();
+
+                if (foodTime != null)
+                {
+                    foodTime.WeekdayMorning = request.FoodTimeWeekdayMorning;
+                    foodTime.WeekdayNoon = request.FoodTimeWeekdayNoon;
+                    foodTime.WeekdayNight = request.FoodTimeWeekdayNight;
+                    foodTime.WeekendMorning = request.FoodTimeWeekendMorning;
+                    foodTime.WeekendNoon = request.FoodTimeWeekendNoon;
+                    foodTime.WeekendNight = request.FoodTimeWeekendNight;
+
+                    _foodTimeWriteRepository.Update(foodTime);
+                    await _foodTimeWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    FoodTime newFoodTime = new()
+                    {
+                        MembersInformationId = membersInformation.Id,
+                        WeekdayMorning = request.FoodTimeWeekdayMorning,
+                        WeekdayNoon = request.FoodTimeWeekdayNoon,
+                        WeekdayNight = request.FoodTimeWeekdayNight,
+                        WeekendMorning = request.FoodTimeWeekendMorning,
+                        WeekendNoon = request.FoodTimeWeekendNoon,
+                        WeekendNight = request.FoodTimeWeekendNight
+                    };
+
+                    await _foodTimeWriteRepository.AddAsync(newFoodTime);
+                    await _foodTimeWriteRepository.SaveAsync();
+                }
+
+                FemaleMentalState? femaleMentalState = await _emaleMentalStateReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).FirstOrDefaultAsync();
+
+                if (femaleMentalState != null)
+                {
+                    femaleMentalState.Menstruation = request.FemaleMentalStateMenstruation;
+                    femaleMentalState.Menopause = request.FemaleMentalStateMenopause;
+                    femaleMentalState.Gravidity = request.FemaleMentalStateGravidity;
+                    femaleMentalState.BreastFeeding = request.FemaleMentalStateBreastFeeding;
+                    femaleMentalState.IsBreastFeedingPeriod = request.FemaleMentalStateIsBreastFeedingPeriod;
+                    femaleMentalState.IsMenstruatioRegular = request.FemaleMentalStateIsMenstruatioRegular;
+                    femaleMentalState.IsHormontherapy = request.FemaleMentalStateIsHormontherapy;
+                    femaleMentalState.IsGiveBirthTo = request.FemaleMentalStateIsGiveBirthTo;
+
+                    _femaleMentalStateWriteRepository.Update(femaleMentalState);
+                    await _femaleMentalStateWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    FemaleMentalState newFemaleMentalState = new()
+                    {
+                        MembersInformationId = membersInformation.Id,
+                        Menstruation = request.FemaleMentalStateMenstruation,
+                        Menopause = request.FemaleMentalStateMenopause,
+                        Gravidity = request.FemaleMentalStateGravidity,
+                        BreastFeeding = request.FemaleMentalStateBreastFeeding,
+                        IsBreastFeedingPeriod = request.FemaleMentalStateIsBreastFeedingPeriod,
+                        IsMenstruatioRegular = request.FemaleMentalStateIsMenstruatioRegular,
+                        IsHormontherapy = request.FemaleMentalStateIsHormontherapy,
+                        IsGiveBirthTo = request.FemaleMentalStateIsGiveBirthTo
+                    };
+
+                    await _femaleMentalStateWriteRepository.AddAsync(newFemaleMentalState);
+                    await _femaleMentalStateWriteRepository.SaveAsync();
+                }
+
+                FoodHabits? foodHabits = await _foodHabitsReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).FirstOrDefaultAsync();
+
+                if (foodHabits != null)
+                {
+                    foodHabits.Breakfast = request.FoodHabitsBreakfast;
+                    foodHabits.BreakfastSnack = request.FoodHabitsBreakfastSnack;
+                    foodHabits.Lunch = request.FoodHabitsLunch;
+                    foodHabits.LunchSnack = request.FoodHabitsLunchSnack;
+                    foodHabits.Dinner = request.FoodHabitsDinner;
+                    foodHabits.DinnerSnack = request.FoodHabitsDinnerSnack;
+
+                    _foodHabitsWriteRepository.Update(foodHabits);
+                    await _foodHabitsWriteRepository.SaveAsync();
+                }
+                else
+                {
+                    FoodHabits newFoodHabits = new()
+                    {
+                        MembersInformationId = membersInformation.Id,
+                        Breakfast = request.FoodHabitsBreakfast,
+                        BreakfastSnack = request.FoodHabitsBreakfastSnack,
+                        Lunch = request.FoodHabitsLunch,
+                        LunchSnack = request.FoodHabitsLunchSnack,
+                        Dinner = request.FoodHabitsDinner,
+                        DinnerSnack = request.FoodHabitsDinnerSnack
+                    };
+
+
+                    await _foodHabitsWriteRepository.AddAsync(newFoodHabits);
+                    await _foodHabitsWriteRepository.SaveAsync();
+                }
+                
+                
+                /// type 1
+                List<DiseasesFamilyMembers> diseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).ToListAsync();
+
+                if (diseasesFamilyMembers.Count() > 0)
+                {
+                    _diseasesFamilyMembersWriteRepository.RemoveRange(diseasesFamilyMembers);
+                    await _diseasesFamilyMembersWriteRepository.SaveAsync();
+                }
+
+                
+                List <Diseases> diseasesFammily = await _iseasesReadRepository.GetWhere(x => x.Type == 1).ToListAsync();
+
+                if (diseasesFammily != null)
+                {
+                    List<DiseasesFamilyMembers> newDiseasesFamilyMembers = new();
+
+                    foreach (var item in diseasesFammily)
+                    {
+                        bool dValue = Convert.ToBoolean(request.GetType().GetProperty(item.DiseasesName).GetValue(request, null));
+
+                        if (dValue)
+                        {
+                            newDiseasesFamilyMembers.Add(new()
+                            {
+                                DiseasesId = item.Id,
+                                MembersInformationId = membersInformation.Id
+                            });
+                        }
+                    }
+                    await _diseasesFamilyMembersWriteRepository.AddRangeAsync(newDiseasesFamilyMembers);
+                    await _diseasesFamilyMembersWriteRepository.SaveAsync();
+                }
+
+
+                /// type 2
+
+                List<DiseasesDigestiveDisorders> diseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).ToListAsync();
+
+                if (diseasesDigestiveDisorders != null)
+                {
+                    _diseasesDigestiveDisordersWriteRepository.RemoveRange(diseasesDigestiveDisorders);
+                    await _diseasesDigestiveDisordersWriteRepository.SaveAsync();
+                }
+
+                List <Diseases> diseasesDigestion = await _iseasesReadRepository.GetWhere(x => x.Type == 2).ToListAsync();
+
+                if (diseasesDigestion != null)
+                {
+                    List<DiseasesDigestiveDisorders> newDiseasesDigestiveDisorders = new();
+
+                    foreach (var item in diseasesDigestion)
+                    {
+                        bool dValue = Convert.ToBoolean(request.GetType().GetProperty(item.DiseasesName).GetValue(request, null));
+
+                        if (dValue)
+                        {
+                            newDiseasesDigestiveDisorders.Add(new()
+                            {
+                                DiseasesId = item.Id,
+                                MembersInformationId = membersInformation.Id
+                            });
+                        }
+                    }
+
+                    await _diseasesDigestiveDisordersWriteRepository.AddRangeAsync(newDiseasesDigestiveDisorders);
+                    await _diseasesDigestiveDisordersWriteRepository.SaveAsync();
+                }
+
+                /// type 3
+
+                List<DiseasesCardiovascular> diseasesCardiovasculars = await _iseasesCardsReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).ToListAsync();
+
+                if (diseasesCardiovasculars != null)
+                {
+                    _diseasesCardiovascularWriteRepository.RemoveRange(diseasesCardiovasculars);
+                    await _diseasesCardiovascularWriteRepository.SaveAsync();
+                }
+
+                List <Diseases> diseasesCardiovascular = await _iseasesReadRepository.GetWhere(x => x.Type == 3).ToListAsync();
+
+                if (diseasesCardiovascular != null)
+                {
+                    List<DiseasesCardiovascular> newDiseasesCardiovasculars = new();
+
+                    foreach (var item in diseasesCardiovascular)
+                    {
+                        bool dValue = Convert.ToBoolean(request.GetType().GetProperty(item.DiseasesName).GetValue(request, null));
+
+                        if (dValue)
+                        {
+                            newDiseasesCardiovasculars.Add(new()
+                            {
+                                DiseasesId = item.Id,
+                                MembersInformationId = membersInformation.Id
+                            });
+                        }
+                    }
+
+                    await _diseasesCardiovascularWriteRepository.AddRangeAsync(newDiseasesCardiovasculars);
+                    await _diseasesCardiovascularWriteRepository.SaveAsync();
+                }
+
+                /// type 4
+
+                List<DiseasesDiabetes> diseasesDiabetess = await _diseasesDiabetesReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).ToListAsync();
+
+                if (diseasesDiabetess != null)
+                {
+                    _diseasesDiabetesWriteRepository.RemoveRange(diseasesDiabetess);
+                    await _diseasesCardiovascularWriteRepository.SaveAsync();
+                }
+
+                List <Diseases> diseasesDiabetes = await _iseasesReadRepository.GetWhere(x => x.Type == 4).ToListAsync();
+
+                if (diseasesCardiovascular != null)
+                {
+                    List<DiseasesDiabetes> newDiseasesDiabetes = new();
+
+                    foreach (var item in diseasesDiabetes)
+                    {
+                        bool dValue = Convert.ToBoolean(request.GetType().GetProperty(item.DiseasesName).GetValue(request, null));
+
+                        if (dValue)
+                        {
+                            newDiseasesDiabetes.Add(new()
+                            {
+                                DiseasesId = item.Id,
+                                MembersInformationId = membersInformation.Id
+                            });
+                        }
+                    }
+
+                    await _diseasesDiabetesWriteRepository.AddRangeAsync(newDiseasesDiabetes);
+                    await _diseasesCardiovascularWriteRepository.SaveAsync();
+                }
+
+
+                return new()
+                {
+                    Message = "Güncelleme işlemi başarıyla yapılmıştır.",
+                    State = true
+                };
+            }
         }
 
         #endregion
