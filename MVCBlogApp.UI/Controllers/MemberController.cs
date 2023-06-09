@@ -67,7 +67,7 @@ namespace MVCBlogApp.UI.Controllers
             MemberInfoCreateCommandResponse response = await _mediator.Send(request);            
             if (response.State)
             {
-                return RedirectToAction("MemberInfoView", "Member");
+                return RedirectToAction("Index", "Member");
             }
             else
             {
@@ -82,7 +82,7 @@ namespace MVCBlogApp.UI.Controllers
             MemberInfoUpdateCommandResponse response = await _mediator.Send(request);
             if (response.State)
             {
-                return RedirectToAction("MemberInfoView", "Member");
+                return RedirectToAction("Index", "Member");
             }
             else
             {

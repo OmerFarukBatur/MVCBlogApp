@@ -125,7 +125,7 @@ namespace MVCBlogApp.Persistence.Services
                     HistoryOfWeigh = x.HistoryOfWeigh,
                     HowDoYouFeel = x.HowDoYouFeel, //  == null ? 1 : 1
                     HowFrequencyOfActivity = x.HowFrequencyOfActivity , //== null ? 3 : 3
-                    HowIsYourEnergy = x.HowIsYourEnergy == null ? 1 : 1, //
+                    HowIsYourEnergy = x.HowIsYourEnergy, // == null ? 1 : 1
                     IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
                     ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
                     Name = x.Name,
