@@ -92,5 +92,43 @@ namespace MVCBlogApp.UI.Controllers
 
         #endregion
 
+        #region MemberAppointment
+
+        [HttpGet]
+        public async Task<IActionResult> MemberByIdAppointmentList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberByIdAppointmentCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MemberByIdAppointmentCreate(int a)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberByIdAppointmentUpdate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MemberByIdAppointmentUpdate(int a)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> MemberByIdAppointmentDelete()
+        {
+            return View();
+        }
+
+        #endregion
     }
 }
