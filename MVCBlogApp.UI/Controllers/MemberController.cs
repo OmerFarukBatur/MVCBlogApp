@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
-using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
+using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 
 namespace MVCBlogApp.UI.Controllers
 {

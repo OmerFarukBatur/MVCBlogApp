@@ -3,7 +3,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
-using MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo;
+using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.Diseases;
 using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
@@ -952,6 +952,12 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region MemberAppointment
+
+
 
         #endregion
     }

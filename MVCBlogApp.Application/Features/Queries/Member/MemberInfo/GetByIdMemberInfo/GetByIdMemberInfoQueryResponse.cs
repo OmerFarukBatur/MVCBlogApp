@@ -1,6 +1,6 @@
 ﻿using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo
+namespace MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo
 {
     public class GetByIdMemberInfoQueryResponse
     {

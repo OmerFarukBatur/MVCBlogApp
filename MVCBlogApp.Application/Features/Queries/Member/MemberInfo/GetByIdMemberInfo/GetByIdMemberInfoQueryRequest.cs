@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo
+namespace MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo
 {
     public class GetByIdMemberInfoQueryRequest : IRequest<GetByIdMemberInfoQueryResponse>
     {

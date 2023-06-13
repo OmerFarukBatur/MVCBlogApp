@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MVCBlogApp.Application.Abstractions.Services;
 
-namespace MVCBlogApp.Application.Features.Queries.Member.GetByIdMemberInfo
+namespace MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo
 {
     public class GetByIdMemberInfoQueryHandler : IRequestHandler<GetByIdMemberInfoQueryRequest, GetByIdMemberInfoQueryResponse>
     {
