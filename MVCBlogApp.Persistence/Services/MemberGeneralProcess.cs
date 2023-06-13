@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
+using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
@@ -24,6 +25,7 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.Auth;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -994,6 +996,44 @@ namespace MVCBlogApp.Persistence.Services
             {
                 D_Appointments = vM_D_Appointments
             };
+        }
+
+        public async Task<GetByIdMemberByIdAppointmentDetailQueryResponse> GetByIdMemberByIdAppointmentAsync(int id)
+        {
+            VM_D_Appointment? vM_D_Appointment = await _d_AppointmentReadRepository.GetWhere(x => x.Id == id)
+                .Join(_userReadRepository.GetAll(), app => app.UserId, user => user.Id, (app, user) => new { app, user })
+                .Join(_statusReadRepository.GetAll(), appio => appio.app.StatusId, st => st.Id, (appio, st) => new { appio, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appio.app.Id,
+                    Price = x.appio.app.Price,
+                    AppointmentDate = x.appio.app.AppointmentDate,
+                    StatusName = x.st.StatusName,
+                    UserName = x.appio.user.Username,
+                    Description = x.appio.app.Description,
+                    Interval = x.appio.app.Interval,
+                    IsCompleted = x.appio.app.IsCompleted,
+                    Subject = x.appio.app.Subject
+                }).FirstOrDefaultAsync();
+
+            if (vM_D_Appointment != null)
+            {
+                return new()
+                {
+                    D_Appointment = vM_D_Appointment,
+                    Message = null,
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    D_Appointment = null,
+                    Message = "Kayıt bulunamamıştır.",
+                    State = false
+                };
+            }
         }
 
 

@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
+using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 
 namespace MVCBlogApp.UI.Controllers
@@ -104,9 +105,17 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> MemberByIdAppointmentDetail()
+        public async Task<IActionResult> MemberByIdAppointmentDetail(GetByIdMemberByIdAppointmentDetailQueryRequest request)
         {
-            return View();
+            GetByIdMemberByIdAppointmentDetailQueryResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("MemberByIdAppointmentList", "Member");
+            }
         }     
 
         #endregion
