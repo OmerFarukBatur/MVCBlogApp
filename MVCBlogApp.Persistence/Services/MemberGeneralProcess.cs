@@ -3,8 +3,12 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
+using MVCBlogApp.Application.Repositories.AppointmentDetail;
+using MVCBlogApp.Application.Repositories.Auth;
+using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Diseases;
 using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
 using MVCBlogApp.Application.Repositories.DiseasesDiabetes;
@@ -16,6 +20,8 @@ using MVCBlogApp.Application.Repositories.FoodHabits;
 using MVCBlogApp.Application.Repositories.FoodTime;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersInformation;
+using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -47,6 +53,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IDiseasesDigestiveDisordersWriteRepository _diseasesDigestiveDisordersWriteRepository;
         private readonly IDiseasesCardiovascularWriteRepository _diseasesCardiovascularWriteRepository;
         private readonly IDiseasesDiabetesWriteRepository _diseasesDiabetesWriteRepository;
+        private readonly ID_AppointmentReadRepository _d_AppointmentReadRepository;
+        private readonly IStatusReadRepository _statusReadRepository;
+        private readonly IUserReadRepository _userReadRepository;
+        private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
 
         public MemberGeneralProcess(
             IMembersReadRepository membersReadRepository,
@@ -72,7 +82,11 @@ namespace MVCBlogApp.Persistence.Services
             IDiseasesWriteRepository iseasesWriteRepository,
             IDiseasesDigestiveDisordersWriteRepository diseasesDigestiveDisordersWriteRepository,
             IDiseasesCardiovascularWriteRepository diseasesCardiovascularWriteRepository,
-            IDiseasesDiabetesWriteRepository diseasesDiabetesWriteRepository)
+            IDiseasesDiabetesWriteRepository diseasesDiabetesWriteRepository,
+            ID_AppointmentReadRepository d_AppointmentReadRepository,
+            IStatusReadRepository statusReadRepository,
+            IUserReadRepository userReadRepository,
+            IAppointmentDetailReadRepository appointmentDetailReadRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersInformationReadRepository = membersInformationReadRepository;
@@ -98,6 +112,10 @@ namespace MVCBlogApp.Persistence.Services
             _diseasesDigestiveDisordersWriteRepository = diseasesDigestiveDisordersWriteRepository;
             _diseasesCardiovascularWriteRepository = diseasesCardiovascularWriteRepository;
             _diseasesDiabetesWriteRepository = diseasesDiabetesWriteRepository;
+            _d_AppointmentReadRepository = d_AppointmentReadRepository;
+            _statusReadRepository = statusReadRepository;
+            _userReadRepository = userReadRepository;
+            _appointmentDetailReadRepository = appointmentDetailReadRepository;
         }
 
 
@@ -956,6 +974,27 @@ namespace MVCBlogApp.Persistence.Services
         #endregion
 
         #region MemberAppointment
+
+        public async Task<GetByIdMemberAllAppointmentQueryResponse> GetByIdMemberAllAppointmentAsync(int id)
+        {
+            List<VM_D_Appointment> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x=> x.MembersId == id)
+                .Join(_userReadRepository.GetAll(), app => app.UserId, user => user.Id, (app, user) => new { app, user })
+                .Join(_statusReadRepository.GetAll(), appio => appio.app.StatusId, st => st.Id, (appio, st) => new { appio, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appio.app.Id,
+                    Price = x.appio.app.Price,
+                    AppointmentDate = x.appio.app.AppointmentDate,
+                    StatusName = x.st.StatusName,
+                    UserName = x.appio.user.Username,
+                    CreateDate = x.appio.app.CreateDate                    
+                }).ToListAsync();
+
+            return new()
+            {
+                D_Appointments = vM_D_Appointments
+            };
+        }
 
 
 

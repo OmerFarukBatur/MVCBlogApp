@@ -1,5 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 
 namespace MVCBlogApp.Application.Abstractions.Services
@@ -16,7 +17,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         #region MemberAppointment
 
-
+        Task<GetByIdMemberAllAppointmentQueryResponse> GetByIdMemberAllAppointmentAsync(int id);
 
         #endregion
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 
 namespace MVCBlogApp.UI.Controllers
@@ -95,9 +96,11 @@ namespace MVCBlogApp.UI.Controllers
         #region MemberAppointment
 
         [HttpGet]
-        public async Task<IActionResult> MemberByIdAppointmentList()
+        public async Task<IActionResult> MemberByIdAppointmentList(GetByIdMemberAllAppointmentQueryRequest request)
         {
-            return View();
+            request.MemberId = _operationService.GetUser().Id;
+            GetByIdMemberAllAppointmentQueryResponse response = await _mediator.Send(request);
+            return View(response.D_Appointments);
         }
 
         [HttpGet]
