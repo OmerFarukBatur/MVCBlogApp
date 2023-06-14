@@ -556,7 +556,7 @@ namespace MVCBlogApp.Persistence.Services
                     vM_MemberAllDetail.FoodHabitsDinnerSnack = vM_FoodHabits.DinnerSnack;
                 }
 
-                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetAll()
+                List<VM_DiseasesFamilyMembers> vM_DiseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesFamilyMembers
                     {
@@ -569,11 +569,10 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesFamilyMembers)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetAll()
+                List<VM_DiseasesDigestiveDisorders> vM_DiseasesDigestiveDisorders = await _iseasesDigestiveDisordersReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesDigestiveDisorders
                     {
@@ -586,11 +585,10 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesDigestiveDisorders)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetAll()
+                List<VM_DiseasesCardiovascular> vM_DiseasesCardiovasculars = await _iseasesCardsReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesCardiovascular
                     {
@@ -603,11 +601,10 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesCardiovasculars)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
-                List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetAll()
+                List<VM_DiseasesDiabetes> vM_DiseasesDiabetes = await _diseasesDiabetesReadRepository.GetWhere(x => x.MembersInformationId == vM_MemberAllDetail.Id)
                     .Join(_iseasesReadRepository.GetAll(), fa => fa.DiseasesId, di => di.Id, (fa, di) => new { fa, di })
                     .Select(x => new VM_DiseasesDiabetes
                     {
@@ -620,8 +617,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 foreach (var item in vM_DiseasesDiabetes)
                 {
-                    string diseasesName = ((DiseasesTypes)item.DiseasesId).ToString();
-                    vM_MemberAllDetail.GetType().GetProperty(diseasesName).SetValue(vM_MemberAllDetail, true, null);
+                    vM_MemberAllDetail.GetType().GetProperty(item.DiseasesName).SetValue(vM_MemberAllDetail, true, null);
                 }
 
                 return new()
