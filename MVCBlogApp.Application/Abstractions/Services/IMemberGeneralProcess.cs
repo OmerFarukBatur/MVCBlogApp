@@ -1,6 +1,8 @@
-﻿using MVCBlogApp.Application.Features.Commands.Member.Contact.MemberContactCreate;
+﻿using MVCBlogApp.Application.Features.Commands.Member.Confession.MemberConfessionCreate;
+using MVCBlogApp.Application.Features.Commands.Member.Contact.MemberContactCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
@@ -29,6 +31,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetMemberContactCreateItemsQueryResponse> GetMemberContactCreateItemsAsync(int id);
         Task<MemberContactCreateCommandResponse> MemberContactCreateAsync(MemberContactCreateCommandRequest request);
+
+        #endregion
+
+        #region Confession
+
+        Task<GetMemberConfessionCreateItemsQueryResponse> GetMemberConfessionCreateItemsAsync(int id);
+        Task<MemberConfessionCreateCommandResponse> MemberConfessionCreateAsync(MemberConfessionCreateCommandRequest request);
 
         #endregion
     }

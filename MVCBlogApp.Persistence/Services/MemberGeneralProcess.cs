@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.Member.Confession.MemberConfessionCreate;
 using MVCBlogApp.Application.Features.Commands.Member.Contact.MemberContactCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
@@ -11,6 +13,7 @@ using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInf
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
+using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.Contact;
 using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.D_Appointment;
@@ -23,6 +26,7 @@ using MVCBlogApp.Application.Repositories.FemaleMentalState;
 using MVCBlogApp.Application.Repositories.FoodHabitMood;
 using MVCBlogApp.Application.Repositories.FoodHabits;
 using MVCBlogApp.Application.Repositories.FoodTime;
+using MVCBlogApp.Application.Repositories.Languages;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.MembersInformation;
 using MVCBlogApp.Application.Repositories.Status;
@@ -65,6 +69,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
         private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
         private readonly IContactWriteRepository _contactWriteRepository;
+        private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly IConfessionWriteRepository _confessionWriteRepository;
 
         public MemberGeneralProcess(
             IMembersReadRepository membersReadRepository,
@@ -96,7 +102,9 @@ namespace MVCBlogApp.Persistence.Services
             IUserReadRepository userReadRepository,
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
             IContactCategoryReadRepository contactCategoryReadRepository,
-            IContactWriteRepository contactWriteRepository)
+            IContactWriteRepository contactWriteRepository,
+            ILanguagesReadRepository languagesReadRepository,
+            IConfessionWriteRepository confessionWriteRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersInformationReadRepository = membersInformationReadRepository;
@@ -128,6 +136,8 @@ namespace MVCBlogApp.Persistence.Services
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
             _contactCategoryReadRepository = contactCategoryReadRepository;
             _contactWriteRepository = contactWriteRepository;
+            _languagesReadRepository = languagesReadRepository;
+            _confessionWriteRepository = confessionWriteRepository;
         }
 
 
@@ -141,7 +151,7 @@ namespace MVCBlogApp.Persistence.Services
                     Id = x.Id,
                     MembersId = x.MembersId,
                     Birthdate = x.Birthdate,
-                    ConsumedVegetables = x.ConsumedVegetables , //== null ? 2 : 2
+                    ConsumedVegetables = x.ConsumedVegetables, //== null ? 2 : 2
                     CpreviousDisease = x.CpreviousDisease == null ? false : x.CpreviousDisease,
                     DidYouGainWeightInTheArmy = x.DidYouGainWeightInTheArmy == null ? false : x.DidYouGainWeightInTheArmy,
                     DoYouHaveHormonalProblem = x.DoYouHaveHormonalProblem,
@@ -154,7 +164,7 @@ namespace MVCBlogApp.Persistence.Services
                     GetDrugged = x.GetDrugged,
                     HistoryOfWeigh = x.HistoryOfWeigh,
                     HowDoYouFeel = x.HowDoYouFeel, //  == null ? 1 : 1
-                    HowFrequencyOfActivity = x.HowFrequencyOfActivity , //== null ? 3 : 3
+                    HowFrequencyOfActivity = x.HowFrequencyOfActivity, //== null ? 3 : 3
                     HowIsYourEnergy = x.HowIsYourEnergy, // == null ? 1 : 1
                     IsBloodCoagulationDisorders = x.IsBloodCoagulationDisorders,
                     ManTheNeedForEatingVaries = x.ManTheNeedForEatingVaries,
@@ -633,7 +643,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<MemberInfoUpdateCommandResponse> MemberInfoUpdateAsync(MemberInfoUpdateCommandRequest request)
         {
-            MembersInformation? membersInformation = await _membersInformationReadRepository.GetWhere(x=> x.MembersId == request.MembersId).FirstOrDefaultAsync();
+            MembersInformation? membersInformation = await _membersInformationReadRepository.GetWhere(x => x.MembersId == request.MembersId).FirstOrDefaultAsync();
 
             if (membersInformation == null)
             {
@@ -836,8 +846,8 @@ namespace MVCBlogApp.Persistence.Services
                     await _foodHabitsWriteRepository.AddAsync(newFoodHabits);
                     await _foodHabitsWriteRepository.SaveAsync();
                 }
-                
-                
+
+
                 /// type 1
                 List<DiseasesFamilyMembers> diseasesFamilyMembers = await _iseasesFamilyMembersReadRepository.GetWhere(x => x.MembersInformationId == membersInformation.Id).ToListAsync();
 
@@ -847,8 +857,8 @@ namespace MVCBlogApp.Persistence.Services
                     await _diseasesFamilyMembersWriteRepository.SaveAsync();
                 }
 
-                
-                List <Diseases> diseasesFammily = await _iseasesReadRepository.GetWhere(x => x.Type == 1).ToListAsync();
+
+                List<Diseases> diseasesFammily = await _iseasesReadRepository.GetWhere(x => x.Type == 1).ToListAsync();
 
                 if (diseasesFammily != null)
                 {
@@ -882,7 +892,7 @@ namespace MVCBlogApp.Persistence.Services
                     await _diseasesDigestiveDisordersWriteRepository.SaveAsync();
                 }
 
-                List <Diseases> diseasesDigestion = await _iseasesReadRepository.GetWhere(x => x.Type == 2).ToListAsync();
+                List<Diseases> diseasesDigestion = await _iseasesReadRepository.GetWhere(x => x.Type == 2).ToListAsync();
 
                 if (diseasesDigestion != null)
                 {
@@ -916,7 +926,7 @@ namespace MVCBlogApp.Persistence.Services
                     await _diseasesCardiovascularWriteRepository.SaveAsync();
                 }
 
-                List <Diseases> diseasesCardiovascular = await _iseasesReadRepository.GetWhere(x => x.Type == 3).ToListAsync();
+                List<Diseases> diseasesCardiovascular = await _iseasesReadRepository.GetWhere(x => x.Type == 3).ToListAsync();
 
                 if (diseasesCardiovascular != null)
                 {
@@ -950,7 +960,7 @@ namespace MVCBlogApp.Persistence.Services
                     await _diseasesCardiovascularWriteRepository.SaveAsync();
                 }
 
-                List <Diseases> diseasesDiabetes = await _iseasesReadRepository.GetWhere(x => x.Type == 4).ToListAsync();
+                List<Diseases> diseasesDiabetes = await _iseasesReadRepository.GetWhere(x => x.Type == 4).ToListAsync();
 
                 if (diseasesCardiovascular != null)
                 {
@@ -989,7 +999,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByIdMemberAllAppointmentQueryResponse> GetByIdMemberAllAppointmentAsync(int id)
         {
-            List<VM_D_Appointment> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x=> x.MembersId == id)
+            List<VM_D_Appointment> vM_D_Appointments = await _d_AppointmentReadRepository.GetWhere(x => x.MembersId == id)
                 .Join(_userReadRepository.GetAll(), app => app.UserId, user => user.Id, (app, user) => new { app, user })
                 .Join(_statusReadRepository.GetAll(), appio => appio.app.StatusId, st => st.Id, (appio, st) => new { appio, st })
                 .Select(x => new VM_D_Appointment
@@ -999,7 +1009,7 @@ namespace MVCBlogApp.Persistence.Services
                     AppointmentDate = x.appio.app.AppointmentDate,
                     StatusName = x.st.StatusName,
                     UserName = x.appio.user.Username,
-                    CreateDate = x.appio.app.CreateDate                    
+                    CreateDate = x.appio.app.CreateDate
                 }).ToListAsync();
 
             return new()
@@ -1061,26 +1071,26 @@ namespace MVCBlogApp.Persistence.Services
                     Phone = x.Phone
                 }).FirstAsync();
 
-                List<AllStatus> allStatus = await _statusReadRepository.GetAll()
-                .Select(x => new AllStatus
-                {
-                    Id = x.Id,
-                    StatusName = x.StatusName
-                }).ToListAsync();
+            List<AllStatus> allStatus = await _statusReadRepository.GetAll()
+            .Select(x => new AllStatus
+            {
+                Id = x.Id,
+                StatusName = x.StatusName
+            }).ToListAsync();
 
-                List<VM_ContactCategory> vM_ContactCategories = await _contactCategoryReadRepository.GetAll()
-                .Select(x => new VM_ContactCategory
-                {
-                    Id = x.Id,
-                    ContactCategoryName = x.ContactCategoryName
-                }).ToListAsync();
+            List<VM_ContactCategory> vM_ContactCategories = await _contactCategoryReadRepository.GetAll()
+            .Select(x => new VM_ContactCategory
+            {
+                Id = x.Id,
+                ContactCategoryName = x.ContactCategoryName
+            }).ToListAsync();
 
-                return new()
-                {
-                    ContactCategories = vM_ContactCategories,
-                    Member = vM_Member,
-                    Statuses = allStatus
-                };
+            return new()
+            {
+                ContactCategories = vM_ContactCategories,
+                Member = vM_Member,
+                Statuses = allStatus
+            };
         }
 
         public async Task<MemberContactCreateCommandResponse> MemberContactCreateAsync(MemberContactCreateCommandRequest request)
@@ -1100,6 +1110,65 @@ namespace MVCBlogApp.Persistence.Services
 
             await _contactWriteRepository.AddAsync(contact);
             await _contactWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+        #endregion
+
+        #region Confession
+
+        public async Task<GetMemberConfessionCreateItemsQueryResponse> GetMemberConfessionCreateItemsAsync(int id)
+        {
+            VM_Member vM_Member = await _membersReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Member
+                {
+                    Id = x.Id,
+                    NameSurname = x.NameSurname
+                }).FirstAsync();
+
+            List<VM_Language> vM_Languages = await _languagesReadRepository.GetAll()
+                .Select(x => new VM_Language
+                {
+                    Id = x.Id,
+                    Language = x.Language
+                }).ToListAsync();
+
+            List<AllStatus> allStatuses = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+            return new()
+            {
+                Statuses = allStatuses,
+                Languages = vM_Languages,
+                Member = vM_Member
+            };
+        }
+
+        public async Task<MemberConfessionCreateCommandResponse> MemberConfessionCreateAsync(MemberConfessionCreateCommandRequest request)
+        {
+            Confession confession = new()
+            {
+                CreateDatetime = DateTime.Now,
+                IsAprove = request.IsAprove,
+                IsRead = request.IsRead,
+                IsVisible = request.IsVisible,
+                LangId = request.LangId,
+                MemberConfession = request.MemberConfession,
+                MemberName = request.MemberName,
+                StatusId = request.StatusId,
+            };
+
+            await _confessionWriteRepository.AddAsync(confession);
+            await _confessionWriteRepository.SaveAsync();
 
             return new()
             {
