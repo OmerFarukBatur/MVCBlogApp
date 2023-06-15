@@ -1,14 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.Member.Contact.MemberContactCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
 using MVCBlogApp.Application.Repositories.AllergyProducingFoods;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
+using MVCBlogApp.Application.Repositories.Contact;
+using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Diseases;
 using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
@@ -59,6 +63,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStatusReadRepository _statusReadRepository;
         private readonly IUserReadRepository _userReadRepository;
         private readonly IAppointmentDetailReadRepository _appointmentDetailReadRepository;
+        private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
+        private readonly IContactWriteRepository _contactWriteRepository;
 
         public MemberGeneralProcess(
             IMembersReadRepository membersReadRepository,
@@ -88,7 +94,9 @@ namespace MVCBlogApp.Persistence.Services
             ID_AppointmentReadRepository d_AppointmentReadRepository,
             IStatusReadRepository statusReadRepository,
             IUserReadRepository userReadRepository,
-            IAppointmentDetailReadRepository appointmentDetailReadRepository)
+            IAppointmentDetailReadRepository appointmentDetailReadRepository,
+            IContactCategoryReadRepository contactCategoryReadRepository,
+            IContactWriteRepository contactWriteRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersInformationReadRepository = membersInformationReadRepository;
@@ -118,6 +126,8 @@ namespace MVCBlogApp.Persistence.Services
             _statusReadRepository = statusReadRepository;
             _userReadRepository = userReadRepository;
             _appointmentDetailReadRepository = appointmentDetailReadRepository;
+            _contactCategoryReadRepository = contactCategoryReadRepository;
+            _contactWriteRepository = contactWriteRepository;
         }
 
 
@@ -1036,7 +1046,67 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
+        #endregion
 
+        #region Contact
+
+        public async Task<GetMemberContactCreateItemsQueryResponse> GetMemberContactCreateItemsAsync(int id)
+        {
+            VM_Member vM_Member = await _membersReadRepository.GetWhere(x => x.Id == id)
+                .Select(x => new VM_Member
+                {
+                    Id = x.Id,
+                    Email = x.Email,
+                    NameSurname = x.NameSurname,
+                    Phone = x.Phone
+                }).FirstAsync();
+
+                List<AllStatus> allStatus = await _statusReadRepository.GetAll()
+                .Select(x => new AllStatus
+                {
+                    Id = x.Id,
+                    StatusName = x.StatusName
+                }).ToListAsync();
+
+                List<VM_ContactCategory> vM_ContactCategories = await _contactCategoryReadRepository.GetAll()
+                .Select(x => new VM_ContactCategory
+                {
+                    Id = x.Id,
+                    ContactCategoryName = x.ContactCategoryName
+                }).ToListAsync();
+
+                return new()
+                {
+                    ContactCategories = vM_ContactCategories,
+                    Member = vM_Member,
+                    Statuses = allStatus
+                };
+        }
+
+        public async Task<MemberContactCreateCommandResponse> MemberContactCreateAsync(MemberContactCreateCommandRequest request)
+        {
+            Contact contact = new()
+            {
+                ContactCategoryId = request.ContactCategoryId,
+                Description = request.Description,
+                Email = request.Email,
+                NameSurname = request.NameSurname,
+                Phone = request.Phone,
+                StatusId = request.StatusId,
+                Subject = request.Subject,
+                CreateDate = DateTime.Now,
+                IsRead = false
+            };
+
+            await _contactWriteRepository.AddAsync(contact);
+            await _contactWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
 
         #endregion
     }

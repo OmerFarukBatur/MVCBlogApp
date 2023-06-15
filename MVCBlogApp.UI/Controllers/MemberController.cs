@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Member.Contact.MemberContactCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreate;
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
+using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
@@ -116,7 +118,73 @@ namespace MVCBlogApp.UI.Controllers
             {
                 return RedirectToAction("MemberByIdAppointmentList", "Member");
             }
-        }     
+        }
+
+        #endregion
+
+        #region Contact
+
+        [HttpGet]
+        public async Task<IActionResult> MemberContactCreate(GetMemberContactCreateItemsQueryRequest request)
+        {
+            request.MemberId = _operationService.GetUser().Id;
+            GetMemberContactCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MemberContactCreate(MemberContactCreateCommandRequest request)
+        {
+            MemberContactCreateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("Index", "Member");
+            }
+            else
+            {
+                return RedirectToAction("MemberContactCreate", "Member");
+            }
+            
+        }
+        
+        #endregion
+
+        #region Confession
+
+        [HttpGet]
+        public async Task<IActionResult> MemberConfessionList()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberConfessionCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MemberConfessionCreate(int id)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MemberConfessionUpdate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MemberConfessionUpdate(int id)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> MemberConfessionDelete(int id)
+        {
+            return View();
+        }
 
         #endregion
     }

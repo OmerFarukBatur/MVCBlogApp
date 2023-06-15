@@ -20,4 +20,9 @@
     <ProjectReference Include="..\MVCBlogApp.Domain\MVCBlogApp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Commands\Admin\Dashboard\" />
+    <Folder Include="Features\Queries\Admin\Dashboard\" />
+  </ItemGroup>
+
 </Project>
