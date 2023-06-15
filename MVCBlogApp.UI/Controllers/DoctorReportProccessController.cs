@@ -12,6 +12,9 @@ using MVCBlogApp.Application.Features.Commands.Doctor.AppointmentDetail.Appointm
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesCreate;
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesDelete;
 using MVCBlogApp.Application.Features.Commands.Doctor.Diseases.DiseasesUpdate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserCreate;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserDelete;
+using MVCBlogApp.Application.Features.Commands.UserIslemleri.User.UserUpdate;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetAppointmentCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetByIdAppointment;
@@ -24,6 +27,8 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MemberNutritionist.GetAllMemberNutritionist;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.MembersInformation.GetByIdMembersInformation;
 using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetAllUser;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetByIdUser;
+using MVCBlogApp.Application.Features.Queries.UserIslemleri.User.GetUserCreateItems;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -215,13 +220,6 @@ namespace MVCBlogApp.UI.Controllers
         #region MembersNutritionist
 
         [HttpGet]
-        public async Task<IActionResult> UserList(GetAllUserQueryRequest request)
-        {
-            GetAllUserQueryResponse response = await _mediator.Send(request);
-            return View(response.Members);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> AllMembersNutritionistList(GetAllMemberNutritionistQueryRequest request)
         {
             GetAllMemberNutritionistQueryResponse response = await _mediator.Send(request);
@@ -292,6 +290,76 @@ namespace MVCBlogApp.UI.Controllers
         {
             DiseasesDeleteCommandResponse response = await _mediator.Send(request);
             return RedirectToAction("DiseasesList", "DoctorReportProccess");
+        }
+
+        #endregion
+
+        #region Members
+
+        [HttpGet]
+        public async Task<IActionResult> UserList(GetAllUserQueryRequest request)
+        {
+            GetAllUserQueryResponse response = await _mediator.Send(request);
+            return View(response.Members);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserCreate(GetUserCreateItemsQueryRequest request)
+        {
+            GetUserCreateItemsQueryResponse response = await _mediator.Send(request);
+            return View(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserCreate(UserCreateCommandRequest request)
+        {
+            request.CreateUserId = _operationService.GetUser().Id;
+            UserCreateCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return RedirectToAction("UserList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("UserCreate", "DoctorReportProccess");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserUpdate(GetByIdUserQueryRequest request)
+        {
+            GetByIdUserQueryResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                return View(response);
+            }
+            else
+            {
+                return RedirectToAction("UserList", "DoctorReportProccess");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserUpdate(UserUpdateCommandRequest request)
+        {
+            UserUpdateCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                return RedirectToAction("UserList", "DoctorReportProccess");
+            }
+            else
+            {
+                return RedirectToAction("UserUpdate", "DoctorReportProccess");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserDelete(UserDeleteCommandRequest request)
+        {
+            UserDeleteCommandResponse response = await _mediator.Send(request);
+            return RedirectToAction("UserList", "DoctorReportProccess");
         }
 
         #endregion

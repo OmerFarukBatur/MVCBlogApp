@@ -9,7 +9,7 @@
                         <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a href="~/index.html">Home 1</a></li>
+                        <li><a asp-controller="Member" asp-action="Index">Home</a></li>
                     </ul>
                 </li>
                 <li><a asp-action="MemberInfoView" asp-controller="Member">Danışan Profil Bilgileri</a></li>
@@ -310,10 +310,11 @@
                         <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li><a asp-controller="Admin" asp-action="Index">Home</a></li>
+                        <li><a asp-controller="Doctor" asp-action="Index">Home</a></li>
                     </ul>
                 </li>
                 <li><a asp-controller="DoctorReportProccess" asp-action="UserList">Tüm Danışanlar</a></li>
+                <li><a asp-controller="DoctorReportProccess" asp-action="UserCreate">Danışan Kayıt</a></li>
                 <li><a asp-controller="DoctorReportProccess" asp-action="AllMembersNutritionistList">Tüm Danışan Kilo Geçmişi</a></li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">

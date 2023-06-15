@@ -26,6 +26,8 @@
                                         <th>Şehir</th>
                                         <th>Oluşturulma Tarihi</th>
                                         <th>Detay Gör</th>
+                                        <th>Güncelle</th>
+                                        <th>Sil</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,6 +49,8 @@
                                             <td>@item.Lacation</td>
                                             <td>@item.CreateDate</td>
                                             <td><a class="btn btn-outline-success" asp-action="GetByIdMembersInfo" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-eye" aria-hidden="true"> Detay Gör</i></a></td>
+                                            <td><a class="btn btn-outline-success" asp-action="UserUpdate" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-pencil" aria-hidden="true"> Güncelle</i></a></td>
+                                            <td><a class="btn btn-outline-danger" asp-action="UserDelete" asp-controller="DoctorReportProccess" asp-route-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"> Sil</i></a></td>
                                             </tr>
                                     }
                                 </tbody>
