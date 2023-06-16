@@ -12,10 +12,10 @@
                         <li><a asp-controller="Member" asp-action="Index">Home</a></li>
                     </ul>
                 </li>
-                <li><a asp-action="MemberInfoView" asp-controller="Member">Danışan Profil Bilgileri</a></li>
-                <li><a asp-action="MemberByIdAppointmentList" asp-controller="Member">Randevular</a></li>
-                <li><a asp-action="MemberContactCreate" asp-controller="Member">Mesaj Göder</a></li>
-                <li><a asp-action="MemberConfessionCreate" asp-controller="Member">İtiraf Göder</a></li>
+                <li><a asp-action="MemberInfoView" asp-controller="Member"><i class="icon-user menu-icon"></i><span class="nav-text">Danışan Profil Bilgileri</span></a></li>
+                <li><a asp-action="MemberByIdAppointmentList" asp-controller="Member"><i class="icon-user-follow menu-icon"></i><span class="nav-text">Randevular</span></a></li>
+                <li><a asp-action="MemberContactCreate" asp-controller="Member"><i class="icon-speech menu-icon"></i><span class="nav-text">Mesaj Göder</span></a></li>
+                <li><a asp-action="MemberConfessionCreate" asp-controller="Member"><i class="icon-note menu-icon"></i><span class="nav-text">İtiraf Göder</span></a></li>
             </ul>
         </div>
     </div>
@@ -68,7 +68,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Ana Sayfa İşlemleri</span>
+                        <i class="icon-home menu-icon"></i><span class="nav-text">Ana Sayfa İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="YoneticiIslemleri" asp-action="TKBiographyList">Tüm Biyografiler</a></li>
@@ -77,7 +77,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Genel İşlemler</span>
+                        <i class="icon-options menu-icon"></i><span class="nav-text">Genel İşlemler</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Status" asp-action="Index">Tüm Durumlar</a></li>
@@ -90,7 +90,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Blog İşlemleri</span>
+                        <i class="icon-pencil menu-icon"></i><span class="nav-text">Blog İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Blog" asp-action="BlogList">Tüm Bloglar</a></li>
@@ -103,7 +103,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Kitap İşlemleri</span>
+                        <i class="icon-book-open menu-icon"></i><span class="nav-text">Kitap İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Book" asp-action="BookList">Tüm Kitaplar</a></li>
@@ -114,7 +114,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Makale İşlemleri</span>
+                        <i class="icon-note menu-icon"></i><span class="nav-text">Makale İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Article" asp-action="ArticleList">Tüm Makaleler</a></li>
@@ -125,7 +125,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Result İşlemleri</span>
+                        <i class="icon-share-alt menu-icon"></i><span class="nav-text">Result İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Result" asp-action="ResultBMhsList">Tüm ResultBMh</a></li>
@@ -140,7 +140,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Dosya Yönetim İşlemleri</span>
+                        <i class="icon-folder-alt menu-icon"></i><span class="nav-text">Dosya Yönetim İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="File" asp-action="ImageList">Tüm Görseller</a></li>
@@ -153,7 +153,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Haber ve Gazete İşlemleri</span>
+                        <i class="icon-globe menu-icon"></i><span class="nav-text">Haber ve Gazete İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="News" asp-action="NewsBulletinList">Tüm Haber Bültenleri</a></li>
@@ -164,7 +164,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Kurumsal Referans İşlemleri</span>
+                        <i class="icon-user-follow menu-icon"></i><span class="nav-text">Kurumsal Referans İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Reference" asp-action="ReferenceList">Tüm Kurumsal Referanslar</a></li>
@@ -173,7 +173,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Seminer İşlemleri</span>
+                        <i class="icon-briefcase menu-icon"></i><span class="nav-text">Seminer İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Reference" asp-action="SeminarVisualsList">Tüm Seminerler</a></li>
@@ -183,7 +183,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Takım İşlemleri</span>
+                        <i class="icon-people menu-icon"></i><span class="nav-text">Takım İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Reference" asp-action="OurTeamList">Tüm Takımlar</a></li>
@@ -192,7 +192,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Yayın Yönetim İşlemleri</span>
+                        <i class="icon-share menu-icon"></i><span class="nav-text">Yayın Yönetim İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Reference" asp-action="PressList">Tüm Yayınlar</a></li>
@@ -203,7 +203,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Calc İşlemleri</span>
+                        <i class="icon-user-following menu-icon"></i><span class="nav-text">Calc İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Calc" asp-action="CalcBmhsList">Tüm CalcBmh</a></li>
@@ -214,7 +214,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Fix İşlemleri</span>
+                        <i class="icon-user-following menu-icon"></i><span class="nav-text">Fix İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Fix" asp-action="FixBmhList">Tüm FixBmh</a></li>
@@ -237,7 +237,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Form İşlemleri</span>
+                        <i class="icon-docs menu-icon"></i><span class="nav-text">Form İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="GeneralOptions" asp-action="FormList">Tüm Formlar</a></li>
@@ -246,7 +246,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Banner İşlemleri</span>
+                        <i class="icon-tag menu-icon"></i><span class="nav-text">Banner İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="File" asp-action="BannerList">Tüm Bannerler</a></li>
@@ -255,7 +255,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Slider İşlemleri</span>
+                        <i class="icon-picture menu-icon"></i><span class="nav-text">Slider İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="File" asp-action="CarouselList">Tüm Carousel'lar'</a></li>
@@ -264,7 +264,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Eğitim İşlemleri</span>
+                        <i class="icon-graduation menu-icon"></i><span class="nav-text">Eğitim İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Workshop" asp-action="WorkshopTypeList">Tüm Eğitim Tipleri</a></li>
@@ -279,7 +279,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Influencer İşlemleri</span>
+                        <i class="icon-social-youtube menu-icon"></i><span class="nav-text">Influencer İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="Reference" asp-action="InfluencerList">Tüm Influencer'lar'</a></li>
@@ -288,7 +288,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">İletişim İşlemleri</span>
+                        <i class="icon-bubbles menu-icon"></i><span class="nav-text">İletişim İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="GeneralOptions" asp-action="ContactList">Tüm İletişimler</a></li>
@@ -315,12 +315,12 @@
                         <li><a asp-controller="Doctor" asp-action="Index">Home</a></li>
                     </ul>
                 </li>
-                <li><a asp-controller="DoctorReportProccess" asp-action="UserList">Tüm Danışanlar</a></li>
-                <li><a asp-controller="DoctorReportProccess" asp-action="UserCreate">Danışan Kayıt</a></li>
-                <li><a asp-controller="DoctorReportProccess" asp-action="AllMembersNutritionistList">Tüm Danışan Kilo Geçmişi</a></li>
+                <li><a asp-controller="DoctorReportProccess" asp-action="UserList"><i class="icon-people menu-icon"></i><span class="nav-text">Tüm Danışanlar</span></a></li>
+                <li><a asp-controller="DoctorReportProccess" asp-action="UserCreate"><i class="icon-user-follow menu-icon"></i><span class="nav-text">Danışan Kayıt</span></a></li>
+                <li><a asp-controller="DoctorReportProccess" asp-action="AllMembersNutritionistList"><i class="icon-user menu-icon"></i><span class="nav-text">Tüm Danışan Kilo Geçmişi</span></a></li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Danışan Randevu İşlemleri</span>
+                        <i class="icon-user-follow menu-icon"></i><span class="nav-text">Danışan Randevu İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="DoctorReportProccess" asp-action="AppointmentList">Tüm Randevular</a></li>
@@ -330,7 +330,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Danışan Rapor İşlemleri</span>
+                        <i class="icon-docs menu-icon"></i><span class="nav-text">Danışan Rapor İşlemleri</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="DoctorReportProccess" asp-action="AppointmentDetailList">Tüm Raporlar</a></li>
@@ -339,7 +339,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Genel İşlemler</span>
+                        <i class="icon-options  menu-icon"></i><span class="nav-text">Genel İşlemler</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="DoctorGeneralOptions" asp-action="DayList">Tüm Günler</a></li>
@@ -352,7 +352,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Diet İşlemler</span>
+                        <i class="icon-magic-wand menu-icon"></i><span class="nav-text">Diet İşlemler</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="DoctorGeneralOptions" asp-action="DietList">Tüm Diet Listesi</a></li>
@@ -361,7 +361,7 @@
                 </li>
                 <li class="mega-menu mega-menu-sm">
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                        <i class="icon-user menu-icon"></i><span class="nav-text">Tetkik İşlemler</span>
+                        <i class="icon-docs menu-icon"></i><span class="nav-text">Tetkik İşlemler</span>
                     </a>
                     <ul aria-expanded="false">
                         <li><a asp-controller="DoctorGeneralOptions" asp-action="LabList">Tüm Tetkik Listesi</a></li>

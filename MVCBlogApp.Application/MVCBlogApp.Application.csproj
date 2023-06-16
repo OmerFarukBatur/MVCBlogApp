@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Commands\Admin\Dashboard\" />
     <Folder Include="Features\Queries\Admin\Dashboard\" />
   </ItemGroup>
 
