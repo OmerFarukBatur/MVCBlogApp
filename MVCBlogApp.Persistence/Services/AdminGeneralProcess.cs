@@ -15,11 +15,22 @@ using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
+using MVCBlogApp.Application.Repositories.Article;
+using MVCBlogApp.Application.Repositories.Blog;
+using MVCBlogApp.Application.Repositories.Confession;
+using MVCBlogApp.Application.Repositories.Contact;
+using MVCBlogApp.Application.Repositories.ContactCategory;
+using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Event;
 using MVCBlogApp.Application.Repositories.EventCategory;
+using MVCBlogApp.Application.Repositories.Languages;
+using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.D_Appointment;
+using System;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -30,19 +41,46 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IEventCategoryReadRepository _eventCategoryReadRepository;
         private readonly IEventCategoryWriteRepository _eventCategoryWriteRepository;
         private readonly IStatusReadRepository _statusReadRepository;
+        private readonly IMembersReadRepository _membersReadRepository;
+        private readonly IContactReadRepository _contactReadRepository;
+        private readonly IBlogReadRepository _blogReadRepository;
+        private readonly IConfessionReadRepository _confessionReadRepository;
+        private readonly IArticleReadRepository _articleReadRepository;
+        private readonly ID_AppointmentReadRepository _dateReadRepository;
+        private readonly ILanguagesReadRepository _languagesReadRepository;
+        private readonly IUserReadRepository _userReadRepository;
+        private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
 
         public AdminGeneralProcess(
             IEventReadRepository eventReadRepository,
             IEventWriteRepository eventWriteRepository,
             IEventCategoryReadRepository eventCategoryReadRepository,
             IEventCategoryWriteRepository eventCategoryWriteRepository,
-            IStatusReadRepository statusReadRepository)
+            IStatusReadRepository statusReadRepository,
+            IMembersReadRepository membersReadRepository,
+            IContactReadRepository contactReadRepository,
+            IBlogReadRepository blogReadRepository,
+            IConfessionReadRepository confessionReadRepository,
+            IArticleReadRepository articleReadRepository,
+            ID_AppointmentReadRepository dateReadRepository,
+            ILanguagesReadRepository languagesReadRepository,
+            IUserReadRepository userReadRepository,
+            IContactCategoryReadRepository contactCategoryReadRepository)
         {
             _eventReadRepository = eventReadRepository;
             _eventWriteRepository = eventWriteRepository;
             _eventCategoryReadRepository = eventCategoryReadRepository;
             _eventCategoryWriteRepository = eventCategoryWriteRepository;
             _statusReadRepository = statusReadRepository;
+            _membersReadRepository = membersReadRepository;
+            _contactReadRepository = contactReadRepository;
+            _blogReadRepository = blogReadRepository;
+            _confessionReadRepository = confessionReadRepository;
+            _articleReadRepository = articleReadRepository;
+            _dateReadRepository = dateReadRepository;
+            _languagesReadRepository = languagesReadRepository;
+            _userReadRepository = userReadRepository;
+            _contactCategoryReadRepository = contactCategoryReadRepository;
         }
 
 
@@ -446,9 +484,130 @@ namespace MVCBlogApp.Persistence.Services
 
         #region Dashboard
 
-        public Task<GetDashboardItemListQueryResponse> GetDashboardItemListAsync()
+        public async Task<GetDashboardItemListQueryResponse> GetDashboardItemListAsync()
         {
-            throw new NotImplementedException();
+            int statusActive = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+
+            ////// User
+            List<VM_Member> members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+                .Select(x => new VM_Member
+                {
+                    Id = x.Id,
+                    Address = x.Address,
+                    CreateDate = x.CreateDate,
+                    Email = x.Email,
+                    Lacation = x.Lacation,
+                    NameSurname = x.NameSurname,
+                    Phone = x.Phone,
+                    IsActive = x.IsActive
+                }).ToListAsync();
+            int allUser = members.Count();
+            List<VM_Member> oneMonthCreateUsers = members.Where(x=> x.CreateDate > DateTime.Now.AddMonths(-1)).ToList();
+
+
+            ////// Event
+            List<VM_Event> vM_Events = await _eventReadRepository.GetWhere(x=> x.StatusId == statusActive)
+                .Join(_statusReadRepository.GetAll(), ev => ev.StatusId, st => st.Id, (ev, st) => new { ev, st })
+                .Join(_eventCategoryReadRepository.GetAll(), eve => eve.ev.EventCategoryId, ca => ca.Id, (eve, ca) => new { eve, ca })
+                .Select(x => new VM_Event
+                {
+                    Id = x.eve.ev.Id,
+                    CreateDate = x.eve.ev.CreateDate,
+                    EventCategoryName = x.ca.EventCategoryName,
+                    FinishDatetime = x.eve.ev.FinishDatetime,
+                    StartDatetime = x.eve.ev.StartDatetime,
+                    StatusName = x.eve.st.StatusName,
+                    Title = x.eve.ev.Title,
+                    Description = x.eve.ev.Description
+                }).ToListAsync();
+
+            int allEventCount = vM_Events.Count();
+            List<VM_Event> oneWeekActivities = vM_Events.Where(x=> x.FinishDatetime > DateTime.Now.AddDays(-7) && x.FinishDatetime < DateTime.Now.AddDays(7)).ToList();
+
+            //// Message(Conatct)
+            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1, 0, 0, 0, 0);
+
+            int oneDayMessage = await _contactReadRepository
+                .GetWhere(x => x.CreateDate > startDate && x.CreateDate < endDate && x.IsRead == false).CountAsync();
+
+            //// Blog
+            List<VM_Blog> vM_Blogs = await _blogReadRepository
+                .GetWhere(x => x.StatusId == statusActive)
+                .Join(_languagesReadRepository.GetAll(), b => b.LangId, lg => lg.Id, (b, lg) => new { b, lg })
+                .Join(_statusReadRepository.GetAll(), bl => bl.b.StatusId, st => st.Id, (bl, st) => new { bl, st })
+                .Select(x => new VM_Blog
+                {
+                    Id = x.bl.b.Id,
+                    Title = x.bl.b.Title,
+                    UrlRoot = x.bl.b.UrlRoot,
+                    Language = x.bl.lg.Language,
+                    StatusName = x.st.StatusName,
+                    CreateDate = x.bl.b.CreateDate,
+                    UpdateDate = x.bl.b.UpdateDate
+                }).ToListAsync();
+
+            int allBlogCount = vM_Blogs.Count();
+            List<VM_Blog> oneWeekBlogs = vM_Blogs.Where(x=> x.CreateDate > DateTime.Now.AddDays(-7) && x.CreateDate < DateTime.Now.AddDays(7)).ToList();
+
+            /// Confession
+            List<VM_Confession> lastWeekConfession = await _confessionReadRepository
+                .GetWhere(x => x.CreateDatetime > DateTime.Now.AddDays(-7) && x.CreateDatetime < DateTime.Now.AddDays(7) && x.IsRead == false)
+                .Join(_languagesReadRepository.GetAll(), co => co.LangId, lg => lg.Id, (co, lg) => new { co, lg })
+                .Join(_statusReadRepository.GetAll(), con => con.co.StatusId, st => st.Id, (con, st) => new { con, st })
+                .Select(x => new VM_Confession
+                {
+                    Id = x.con.co.Id,
+                    MemberConfession = x.con.co.MemberConfession,
+                    MemberName = x.con.co.MemberName,
+                    CreateDatetime = x.con.co.CreateDatetime,
+                    Language = x.con.lg.Language,
+                    StatusName = x.st.StatusName
+                }).ToListAsync();
+
+            //// Article
+            int allArticle = await _articleReadRepository.GetWhere(x => x.StatusId == statusActive).CountAsync();
+            int lastMounthArticleCount = await _articleReadRepository
+                .GetWhere(x => x.CreateDate > DateTime.Now.AddMonths(-1) && x.StatusId == statusActive).CountAsync();
+
+            /// Appointment
+            List<VM_D_Appointment> allAppointment = await _dateReadRepository
+                .GetWhere(x=> x.StatusId == statusActive)
+                .Join(_membersReadRepository.GetAll(), ap => ap.MembersId, mem => mem.Id, (ap, mem) => new { ap, mem })
+                .Join(_userReadRepository.GetAll(), app => app.ap.UserId, us => us.Id, (app, us) => new { app, us })
+                .Join(_statusReadRepository.GetAll(), appo => appo.app.ap.StatusId, st => st.Id, (appo, st) => new { appo, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appo.app.ap.Id,
+                    AppointmentDate = x.appo.app.ap.AppointmentDate,
+                    Subject = x.appo.app.ap.Subject,
+                    Price = x.appo.app.ap.Price,
+                    Description = x.appo.app.ap.Description,
+                    UserName = x.appo.us.Username,
+                    MemeberName = x.appo.app.mem.NameSurname,
+                    StatusName = x.st.StatusName,
+                    CreateDate = x.appo.app.ap.CreateDate
+                }).ToListAsync();
+
+            List<VM_D_Appointment> lastWeekAppointment = allAppointment
+                .Where(x=> x.AppointmentDate > DateTime.Now.AddDays(-7) && x.AppointmentDate < DateTime.Now.AddDays(7)).ToList();
+
+            return new()
+            {
+                ActiveAllUserCount = allUser,
+                ActiveOneMonthCreateUsers = oneMonthCreateUsers,
+                ActiveAllActivityCount = allEventCount,
+                ActiveOneWeekActivities = oneWeekActivities,
+                DailyIncomingMessageCount = oneDayMessage,
+                ActiveAllBlogCount = allBlogCount,
+                ActiveOneWeekBlogs = oneWeekBlogs,
+                LastWeekConfession = lastWeekConfession,
+                ActiveAllArticleCount = allArticle,
+                LastMounthArticleCount = lastMounthArticleCount,
+                ActiveAllAppointment = allAppointment,
+                ActiveLastWeekAppointment = lastWeekAppointment
+            };
         }
 
         #endregion
