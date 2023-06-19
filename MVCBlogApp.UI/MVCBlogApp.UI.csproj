@@ -38,6 +38,7 @@
     <Folder Include="wwwroot\Upload\image-files\" />
     <Folder Include="wwwroot\Upload\ourteam-files\" />
     <Folder Include="wwwroot\Upload\press-files\" />
+    <Folder Include="wwwroot\Upload\profile-image-files\" />
     <Folder Include="wwwroot\Upload\reference-files\" />
     <Folder Include="wwwroot\Upload\seminarVisuals-files\" />
     <Folder Include="wwwroot\Upload\taylaK-logo-files\" />

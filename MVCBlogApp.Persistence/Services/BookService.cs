@@ -148,7 +148,7 @@ namespace MVCBlogApp.Persistence.Services
                     NavigationId = request.NavigationId,
                     StatusId = request.StatusId,
                     Orders = 1,
-                    ImageUrl = @"~\Upload\"+result[0].pathOrContainerName,
+                    ImageUrl = @"~/Upload/" +result[0].pathOrContainerName,
                     UrlRoot = NameOperation.GeneretaRootUrl(request.BookName),
                     PublicationYear = request.PublicationYear
                 };
@@ -385,7 +385,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {   
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("book-files", request.FormFile);
-                    book.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;                    
+                    book.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;                    
                 }
 
                 _bookWriteRepository.Update(book);

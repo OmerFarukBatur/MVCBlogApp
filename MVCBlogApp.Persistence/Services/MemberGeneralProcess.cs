@@ -8,6 +8,7 @@ using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdat
 using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Dashboard;
+using MVCBlogApp.Application.Features.Queries.Member.Header;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
@@ -461,7 +462,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("profile-image-files", request.FormFile);
-                    membersInformation.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    membersInformation.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
                 }
 
                 await _membersInformationWriteRepository.AddAsync(membersInformation);
@@ -698,7 +699,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("profile-image-files", request.FormFile);
-                    membersInformation.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    membersInformation.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
                 }
 
                 _membersInformationWriteRepository.Update(membersInformation);
@@ -1239,6 +1240,15 @@ namespace MVCBlogApp.Persistence.Services
                 ActiveAllAppointmentCount = activeAllAppointmentCount,
                 ActiveOneWeekActivities = oneWeekActivities,
                 ActiveLastWeekAppointment = lastWeekAppointment
+            };
+        }
+
+        public async Task<GetByUserImageQueryResponse> GetByUserImageAsync(int id)
+        {
+            string? imageUrl = await _membersInformationReadRepository.GetWhere(x=> x.MembersId == id).Select(x=> x.ImageUrl).FirstAsync();
+            return new()
+            {
+                ImageUrl = imageUrl
             };
         }
 

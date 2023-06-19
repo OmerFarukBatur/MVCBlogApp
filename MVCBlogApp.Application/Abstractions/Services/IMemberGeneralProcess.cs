@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdat
 using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Dashboard;
+using MVCBlogApp.Application.Features.Queries.Member.Header;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
@@ -45,6 +46,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region Dahboard
 
         Task<GetMemberDashboardItemListQueryResponse> GetMemberDashboardItemListAsync(int id);
+        Task<GetByUserImageQueryResponse> GetByUserImageAsync(int id);
 
         #endregion
     }

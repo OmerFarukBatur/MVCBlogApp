@@ -123,7 +123,7 @@ namespace MVCBlogApp.Persistence.Services
             {
                 CreateDate = DateTime.Now,
                 CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null,
-                ImageUrl = @"~\Upload\" + result[0].pathOrContainerName,
+                ImageUrl = @"~/Upload/" + result[0].pathOrContainerName,
                 IsCover = request.IsCover,
                 LangId = request.LangId,
                 StatusId = request.StatusId,
@@ -225,7 +225,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("image-files", request.FormFile);
-                    ımage.ImageUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    ımage.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
                 }
 
                 _imageWriteRepository.Update(ımage);
@@ -750,7 +750,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Type = 1,
-                    BannerUrl = @"~\Upload\" + result[0].pathOrContainerName
+                    BannerUrl = @"~/Upload/" + result[0].pathOrContainerName
                 };
 
                 await _bannerWriteRepository.AddAsync(banner);
@@ -828,7 +828,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("banner-files", request.FormFile);
-                    banner.BannerUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    banner.BannerUrl = @"~/Upload/" + result[0].pathOrContainerName;
                 }
 
                 _bannerWriteRepository.Update(banner);
@@ -958,7 +958,7 @@ namespace MVCBlogApp.Persistence.Services
                     Title = request.Title,
                     TitleClass = request.TitleClass,
                     UrlRoot = request.UrlRoot,
-                    ImgUrl = @"~\Upload\" + result[0].pathOrContainerName,
+                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName,
                     ImgName = result[0].fileName
                 };
 
@@ -1049,7 +1049,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("carousel-files", request.FormFile);
-                    carousel.ImgUrl = @"~\Upload\" + result[0].pathOrContainerName;
+                    carousel.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
                     carousel.ImgName = result[0].fileName;
                 }
 
