@@ -98,9 +98,15 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult LogOut()
-        {
-            return View();
+        public async Task<IActionResult> LogOut()
+        {            
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Home");
         }
 
         [HttpGet]
