@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreat
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
+using MVCBlogApp.Application.Features.Queries.Member.Dashboard;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
@@ -22,6 +23,8 @@ using MVCBlogApp.Application.Repositories.DiseasesCardiovascular;
 using MVCBlogApp.Application.Repositories.DiseasesDiabetes;
 using MVCBlogApp.Application.Repositories.DiseasesDigestiveDisorders;
 using MVCBlogApp.Application.Repositories.DiseasesFamilyMembers;
+using MVCBlogApp.Application.Repositories.Event;
+using MVCBlogApp.Application.Repositories.EventCategory;
 using MVCBlogApp.Application.Repositories.FemaleMentalState;
 using MVCBlogApp.Application.Repositories.FoodHabitMood;
 using MVCBlogApp.Application.Repositories.FoodHabits;
@@ -71,6 +74,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IContactWriteRepository _contactWriteRepository;
         private readonly ILanguagesReadRepository _languagesReadRepository;
         private readonly IConfessionWriteRepository _confessionWriteRepository;
+        private readonly IEventReadRepository _eventReadRepository;
+        private readonly IEventCategoryReadRepository _eventCategoryReadRepository;
 
         public MemberGeneralProcess(
             IMembersReadRepository membersReadRepository,
@@ -104,7 +109,9 @@ namespace MVCBlogApp.Persistence.Services
             IContactCategoryReadRepository contactCategoryReadRepository,
             IContactWriteRepository contactWriteRepository,
             ILanguagesReadRepository languagesReadRepository,
-            IConfessionWriteRepository confessionWriteRepository)
+            IConfessionWriteRepository confessionWriteRepository,
+            IEventReadRepository eventReadRepository,
+            IEventCategoryReadRepository eventCategoryReadRepository)
         {
             _membersReadRepository = membersReadRepository;
             _membersInformationReadRepository = membersInformationReadRepository;
@@ -138,6 +145,8 @@ namespace MVCBlogApp.Persistence.Services
             _contactWriteRepository = contactWriteRepository;
             _languagesReadRepository = languagesReadRepository;
             _confessionWriteRepository = confessionWriteRepository;
+            _eventReadRepository = eventReadRepository;
+            _eventCategoryReadRepository = eventCategoryReadRepository;
         }
 
 
@@ -1174,6 +1183,62 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Message = "Kayıt işlemi başarıyla yapılmıştır.",
                 State = true
+            };
+        }
+
+        #endregion
+
+        #region Dahboard
+
+        public async Task<GetMemberDashboardItemListQueryResponse> GetMemberDashboardItemListAsync(int id)
+        {
+            int statusActive = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            ////// Event
+            List<VM_Event> vM_Events = await _eventReadRepository.GetWhere(x => x.StatusId == statusActive)
+                .Join(_statusReadRepository.GetAll(), ev => ev.StatusId, st => st.Id, (ev, st) => new { ev, st })
+                .Join(_eventCategoryReadRepository.GetAll(), eve => eve.ev.EventCategoryId, ca => ca.Id, (eve, ca) => new { eve, ca })
+                .Select(x => new VM_Event
+                {
+                    Id = x.eve.ev.Id,
+                    CreateDate = x.eve.ev.CreateDate,
+                    EventCategoryName = x.ca.EventCategoryName,
+                    FinishDatetime = x.eve.ev.FinishDatetime,
+                    StartDatetime = x.eve.ev.StartDatetime,
+                    StatusName = x.eve.st.StatusName,
+                    Title = x.eve.ev.Title,
+                    Description = x.eve.ev.Description
+                }).ToListAsync();
+
+            List<VM_Event> oneWeekActivities = vM_Events.Where(x => x.FinishDatetime > DateTime.Now.AddDays(-7) && x.FinishDatetime < DateTime.Now.AddDays(7)).ToList();
+
+            /// Appointment
+            List<VM_D_Appointment> allAppointment = await _d_AppointmentReadRepository
+                .GetWhere(x => x.StatusId == statusActive && x.MembersId == id)
+                .Join(_membersReadRepository.GetAll(), ap => ap.MembersId, mem => mem.Id, (ap, mem) => new { ap, mem })
+                .Join(_userReadRepository.GetAll(), app => app.ap.UserId, us => us.Id, (app, us) => new { app, us })
+                .Join(_statusReadRepository.GetAll(), appo => appo.app.ap.StatusId, st => st.Id, (appo, st) => new { appo, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appo.app.ap.Id,
+                    AppointmentDate = x.appo.app.ap.AppointmentDate,
+                    Subject = x.appo.app.ap.Subject,
+                    Price = x.appo.app.ap.Price,
+                    Description = x.appo.app.ap.Description,
+                    UserName = x.appo.us.Username,
+                    MemeberName = x.appo.app.mem.NameSurname,
+                    StatusName = x.st.StatusName,
+                    CreateDate = x.appo.app.ap.CreateDate
+                }).ToListAsync();
+            int activeAllAppointmentCount = allAppointment.Count();
+            List<VM_D_Appointment> lastWeekAppointment = allAppointment
+                .Where(x => x.AppointmentDate > DateTime.Now.AddDays(-7) && x.AppointmentDate < DateTime.Now.AddDays(7)).ToList();
+
+            return new()
+            {
+                ActiveAllAppointmentCount = activeAllAppointmentCount,
+                ActiveOneWeekActivities = oneWeekActivities,
+                ActiveLastWeekAppointment = lastWeekAppointment
             };
         }
 

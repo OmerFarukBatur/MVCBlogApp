@@ -753,7 +753,6 @@ namespace MVCBlogApp.Persistence.Services
                     Description = x.eve.ev.Description
                 }).ToListAsync();
 
-            int allEventCount = vM_Events.Count();
             List<VM_Event> oneWeekActivities = vM_Events.Where(x => x.FinishDatetime > DateTime.Now.AddDays(-7) && x.FinishDatetime < DateTime.Now.AddDays(7)).ToList();
 
             /// Appointment
@@ -775,20 +774,19 @@ namespace MVCBlogApp.Persistence.Services
                     CreateDate = x.appo.app.ap.CreateDate
                 }).ToListAsync();
 
+            int activeAllAppointmentCount = allAppointment.Count();
             List<VM_D_Appointment> lastWeekAppointment = allAppointment
                 .Where(x => x.AppointmentDate > DateTime.Now.AddDays(-7) && x.AppointmentDate < DateTime.Now.AddDays(7)).ToList();
 
             return new()
             {
                 ActiveAllUserCount = allUser,
-                ActiveAllActivityCount = allEventCount,
+                ActiveAllAppointmentCount = activeAllAppointmentCount,
                 ActiveOneWeekActivities = oneWeekActivities,
                 ActiveLastWeekAppointment = lastWeekAppointment
             };
 
         }
-
-
 
         #endregion
     }

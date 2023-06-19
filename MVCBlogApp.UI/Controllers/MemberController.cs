@@ -8,6 +8,7 @@ using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoCreat
 using MVCBlogApp.Application.Features.Commands.Member.MemberInfo.MemberInfoUpdate;
 using MVCBlogApp.Application.Features.Queries.Member.Confession.GetMemberConfessionCreateItems;
 using MVCBlogApp.Application.Features.Queries.Member.Contact.GetMemberContactCreateItems;
+using MVCBlogApp.Application.Features.Queries.Member.Dashboard;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberAllAppointment;
 using MVCBlogApp.Application.Features.Queries.Member.MemberAppointment.GetByIdMemberByIdAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Member.MemberInfo.GetByIdMemberInfo;
@@ -34,7 +35,10 @@ namespace MVCBlogApp.UI.Controllers
 
             if (response.State)
             {
-                return View();
+                GetMemberDashboardItemListQueryRequest getMemberDashboard = new();
+                getMemberDashboard.Id = _operationService.GetUser().Id;
+                GetMemberDashboardItemListQueryResponse ıtemListQueryResponse = await _mediator.Send(getMemberDashboard);
+                return View(ıtemListQueryResponse);
             }
             else
             {

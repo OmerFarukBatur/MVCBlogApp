@@ -1,11 +1,11 @@
 ﻿using MVCBlogApp.Application.ViewModels;
 
-namespace MVCBlogApp.Application.Features.Queries.Doctor.Dashboard
+namespace MVCBlogApp.Application.Features.Queries.Member.Dashboard
 {
-    public class GetDoctorDashboardItemListQueryResponse
+    public class GetMemberDashboardItemListQueryResponse
     {
-        public int ActiveAllUserCount { get; set; } 
         public int ActiveAllAppointmentCount { get; set; }
+        public int ActiveAllActivityCount { get; set; }
         public List<VM_Event> ActiveOneWeekActivities { get; set; }
         public List<VM_D_Appointment> ActiveLastWeekAppointment { get; set; }
     }
