@@ -28,14 +28,6 @@ namespace MVCBlogApp.UI.Models.ViewComponents
                 GetAdminHeaderDataQueryResponse response = await _mediator.Send(request);
                 messageCount = response.DailyIncomingMessageCount;
             }
-            else if (user.AuthRole == "Admin")
-            {
-                
-            }
-            else if (user.AuthRole == "Diyetisyen")
-            {
-
-            }
 
             return View(new{ user.AuthRole,messageCount});
         }

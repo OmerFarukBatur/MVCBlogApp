@@ -17,12 +17,15 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEven
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.Doctor.Dashboard;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 using MVCBlogApp.Application.Repositories.AppointmentDetail;
 using MVCBlogApp.Application.Repositories.Auth;
 using MVCBlogApp.Application.Repositories.D_Appointment;
 using MVCBlogApp.Application.Repositories.Diseases;
+using MVCBlogApp.Application.Repositories.Event;
+using MVCBlogApp.Application.Repositories.EventCategory;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.User;
@@ -43,6 +46,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IAppointmentDetailWriteRepository _appointmentDetailWriteRepository;
         private readonly IDiseasesReadRepository _iseasesReadRepository;
         private readonly IDiseasesWriteRepository _iseasesWriteRepository;
+        private readonly IEventReadRepository _eventReadRepository;
+        private readonly IEventCategoryReadRepository _eventCategoryReadRepository;
 
         public DoctorReportProccessService(
             ID_AppointmentReadRepository d_AppointmentReadRepository,
@@ -54,7 +59,9 @@ namespace MVCBlogApp.Persistence.Services
             IAppointmentDetailReadRepository appointmentDetailReadRepository,
             IAppointmentDetailWriteRepository appointmentDetailWriteRepository,
             IDiseasesReadRepository iseasesReadRepository,
-            IDiseasesWriteRepository iseasesWriteRepository)
+            IDiseasesWriteRepository iseasesWriteRepository,
+            IEventReadRepository eventReadRepository,
+            IEventCategoryReadRepository eventCategoryReadRepository)
         {
             _d_AppointmentReadRepository = d_AppointmentReadRepository;
             _d_AppointmentWriteRepository = d_AppointmentWriteRepository;
@@ -66,6 +73,8 @@ namespace MVCBlogApp.Persistence.Services
             _appointmentDetailWriteRepository = appointmentDetailWriteRepository;
             _iseasesReadRepository = iseasesReadRepository;
             _iseasesWriteRepository = iseasesWriteRepository;
+            _eventReadRepository = eventReadRepository;
+            _eventCategoryReadRepository = eventCategoryReadRepository;
         }
 
 
@@ -706,6 +715,79 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        #endregion
+
+        #region Dashboard
+
+        public async Task<GetDoctorDashboardItemListQueryResponse> GetDoctorDashboardItemListAsync(int id)
+        {
+            int statusActive = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+            ////// User
+            List<VM_Member> members = await _membersReadRepository.GetWhere(x => x.IsActive == true)
+                .Select(x => new VM_Member
+                {
+                    Id = x.Id,
+                    NameSurname = x.NameSurname,
+                    Email = x.Email,
+                    Phone = x.Phone,
+                    IsActive = x.IsActive,
+                    Lacation = x.Lacation,
+                    CreateDate = x.CreateDate
+                }).ToListAsync();
+            int allUser = members.Count();
+
+            ////// Event
+            List<VM_Event> vM_Events = await _eventReadRepository.GetWhere(x => x.StatusId == statusActive)
+                .Join(_statusReadRepository.GetAll(), ev => ev.StatusId, st => st.Id, (ev, st) => new { ev, st })
+                .Join(_eventCategoryReadRepository.GetAll(), eve => eve.ev.EventCategoryId, ca => ca.Id, (eve, ca) => new { eve, ca })
+                .Select(x => new VM_Event
+                {
+                    Id = x.eve.ev.Id,
+                    CreateDate = x.eve.ev.CreateDate,
+                    EventCategoryName = x.ca.EventCategoryName,
+                    FinishDatetime = x.eve.ev.FinishDatetime,
+                    StartDatetime = x.eve.ev.StartDatetime,
+                    StatusName = x.eve.st.StatusName,
+                    Title = x.eve.ev.Title,
+                    Description = x.eve.ev.Description
+                }).ToListAsync();
+
+            int allEventCount = vM_Events.Count();
+            List<VM_Event> oneWeekActivities = vM_Events.Where(x => x.FinishDatetime > DateTime.Now.AddDays(-7) && x.FinishDatetime < DateTime.Now.AddDays(7)).ToList();
+
+            /// Appointment
+            List<VM_D_Appointment> allAppointment = await _d_AppointmentReadRepository
+                .GetWhere(x => x.StatusId == statusActive && x.UserId == id)
+                .Join(_membersReadRepository.GetAll(), ap => ap.MembersId, mem => mem.Id, (ap, mem) => new { ap, mem })
+                .Join(_userReadRepository.GetAll(), app => app.ap.UserId, us => us.Id, (app, us) => new { app, us })
+                .Join(_statusReadRepository.GetAll(), appo => appo.app.ap.StatusId, st => st.Id, (appo, st) => new { appo, st })
+                .Select(x => new VM_D_Appointment
+                {
+                    Id = x.appo.app.ap.Id,
+                    AppointmentDate = x.appo.app.ap.AppointmentDate,
+                    Subject = x.appo.app.ap.Subject,
+                    Price = x.appo.app.ap.Price,
+                    Description = x.appo.app.ap.Description,
+                    UserName = x.appo.us.Username,
+                    MemeberName = x.appo.app.mem.NameSurname,
+                    StatusName = x.st.StatusName,
+                    CreateDate = x.appo.app.ap.CreateDate
+                }).ToListAsync();
+
+            List<VM_D_Appointment> lastWeekAppointment = allAppointment
+                .Where(x => x.AppointmentDate > DateTime.Now.AddDays(-7) && x.AppointmentDate < DateTime.Now.AddDays(7)).ToList();
+
+            return new()
+            {
+                ActiveAllUserCount = allUser,
+                ActiveAllActivityCount = allEventCount,
+                ActiveOneWeekActivities = oneWeekActivities,
+                ActiveLastWeekAppointment = lastWeekAppointment
+            };
+
+        }
+
 
 
         #endregion

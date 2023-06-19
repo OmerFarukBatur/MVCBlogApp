@@ -15,6 +15,7 @@ using MVCBlogApp.Application.Features.Queries.Doctor.Appointment.GetCalenderEven
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAllAppointmentDetail;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetAppointmentDetailCreateItems;
 using MVCBlogApp.Application.Features.Queries.Doctor.AppointmentDetail.GetByIdAppointmentDetail;
+using MVCBlogApp.Application.Features.Queries.Doctor.Dashboard;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetAllDiseases;
 using MVCBlogApp.Application.Features.Queries.Doctor.Diseases.GetByIdDiseases;
 
@@ -53,6 +54,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetByIdDiseasesQueryResponse> GetByIdDiseasesAsync(int id);
         Task<DiseasesUpdateCommandResponse> DiseasesUpdateAsync(DiseasesUpdateCommandRequest request);
         Task<DiseasesDeleteCommandResponse> DiseasesDeleteAsync(int id);
+
+        #endregion
+
+        #region Dashboard
+
+        Task<GetDoctorDashboardItemListQueryResponse> GetDoctorDashboardItemListAsync(int id);
 
         #endregion
     }

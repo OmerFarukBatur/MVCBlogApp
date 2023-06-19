@@ -40,5 +40,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<MemberConfessionCreateCommandResponse> MemberConfessionCreateAsync(MemberConfessionCreateCommandRequest request);
 
         #endregion
+
+
     }
 }
