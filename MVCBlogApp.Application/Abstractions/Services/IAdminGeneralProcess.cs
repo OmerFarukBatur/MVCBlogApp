@@ -12,6 +12,7 @@ using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
+using MVCBlogApp.Application.Features.Queries.Admin.Header;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -52,6 +53,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region Dashboard
 
         Task<GetDashboardItemListQueryResponse> GetDashboardItemListAsync();
+        Task<GetAdminHeaderDataQueryResponse> GetAdminHeaderDataAsync();
 
         #endregion
     }

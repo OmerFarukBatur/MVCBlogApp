@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using MVCBlogApp.Application.Abstractions.Services;
 
 namespace MVCBlogApp.Application.Features.Queries.Admin.Header
 {
-    internal class GetAdminHeaderDataQueryHandler
+    public class GetAdminHeaderDataQueryHandler : IRequestHandler<GetAdminHeaderDataQueryRequest, GetAdminHeaderDataQueryResponse>
     {
+        private readonly IAdminGeneralProcess _adminGeneralProcess;
+
+        public GetAdminHeaderDataQueryHandler(IAdminGeneralProcess adminGeneralProcess)
+        {
+            _adminGeneralProcess = adminGeneralProcess;
+        }
+
+        public async Task<GetAdminHeaderDataQueryResponse> Handle(GetAdminHeaderDataQueryRequest request, CancellationToken cancellationToken)
+        {
+            return await _adminGeneralProcess.GetAdminHeaderDataAsync();
+        }
     }
 }

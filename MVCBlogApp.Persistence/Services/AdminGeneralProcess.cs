@@ -15,6 +15,7 @@ using MVCBlogApp.Application.Features.Queries.Admin.Event.GetByIdEvent;
 using MVCBlogApp.Application.Features.Queries.Admin.Event.GetEventCreateItems;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetAllEventCategory;
 using MVCBlogApp.Application.Features.Queries.Admin.EventCategory.GetByIdEventCategory;
+using MVCBlogApp.Application.Features.Queries.Admin.Header;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.Confession;
@@ -524,12 +525,12 @@ namespace MVCBlogApp.Persistence.Services
             int allEventCount = vM_Events.Count();
             List<VM_Event> oneWeekActivities = vM_Events.Where(x=> x.FinishDatetime > DateTime.Now.AddDays(-7) && x.FinishDatetime < DateTime.Now.AddDays(7)).ToList();
 
-            //// Message(Conatct)
-            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
-            DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1, 0, 0, 0, 0);
+            ////// Message(Conatct)
+            //DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
+            //DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1, 0, 0, 0, 0);
 
-            int oneDayMessage = await _contactReadRepository
-                .GetWhere(x => x.CreateDate > startDate && x.CreateDate < endDate && x.IsRead == false).CountAsync();
+            //int oneDayMessage = await _contactReadRepository
+            //    .GetWhere(x => x.CreateDate > startDate && x.CreateDate < endDate && x.IsRead == false).CountAsync();
 
             //// Blog
             List<VM_Blog> vM_Blogs = await _blogReadRepository
@@ -598,7 +599,7 @@ namespace MVCBlogApp.Persistence.Services
                 ActiveOneMonthCreateUsers = oneMonthCreateUsers,
                 ActiveAllActivityCount = allEventCount,
                 ActiveOneWeekActivities = oneWeekActivities,
-                DailyIncomingMessageCount = oneDayMessage,
+                //DailyIncomingMessageCount = oneDayMessage,
                 ActiveAllBlogCount = allBlogCount,
                 ActiveOneWeekBlogs = oneWeekBlogs,
                 LastWeekConfession = lastWeekConfession,
@@ -606,6 +607,21 @@ namespace MVCBlogApp.Persistence.Services
                 LastMounthArticleCount = lastMounthArticleCount,
                 //ActiveAllAppointment = allAppointment,
                 ActiveLastWeekAppointment = lastWeekAppointment
+            };
+        }
+
+        public async Task<GetAdminHeaderDataQueryResponse> GetAdminHeaderDataAsync()
+        {
+            //// Message(Conatct)
+            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1, 0, 0, 0, 0);
+
+            int oneDayMessage = await _contactReadRepository
+                .GetWhere(x => x.CreateDate > startDate && x.CreateDate < endDate && x.IsRead == false).CountAsync();
+
+            return new()
+            {
+                DailyIncomingMessageCount = oneDayMessage
             };
         }
 

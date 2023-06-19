@@ -9,7 +9,7 @@ namespace MVCBlogApp.Application.Features.Queries.Admin.Dashboard
         public List<VM_Member> ActiveOneMonthCreateUsers { get; set; }
         public int ActiveAllActivityCount { get; set; }
         public List<VM_Event> ActiveOneWeekActivities { get; set; }
-        public int DailyIncomingMessageCount { get; set; }
+        //public int DailyIncomingMessageCount { get; set; }
         public int ActiveAllBlogCount { get; set; }
         public List<VM_Blog> ActiveOneWeekBlogs { get; set; }
         public List<VM_Confession> LastWeekConfession { get; set; }

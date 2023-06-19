@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
-using MVCBlogApp.Application.Features.Queries.Admin.Dashboard;
+using MVCBlogApp.Application.Features.Queries.Admin.Header;
 using MVCBlogApp.Application.ViewModels;
 
 namespace MVCBlogApp.UI.Models.ViewComponents
@@ -24,8 +24,8 @@ namespace MVCBlogApp.UI.Models.ViewComponents
 
             if (user.AuthRole == "Danışan")
             {
-                GetDashboardItemListQueryRequest request = new();
-                GetDashboardItemListQueryResponse response = await _mediator.Send(request);
+                GetAdminHeaderDataQueryRequest request = new();
+                GetAdminHeaderDataQueryResponse response = await _mediator.Send(request);
                 messageCount = response.DailyIncomingMessageCount;
             }
             else if (user.AuthRole == "Admin")

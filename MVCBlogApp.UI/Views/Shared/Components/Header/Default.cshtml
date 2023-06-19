@@ -107,7 +107,7 @@
                             </div>
                         </div>
                     </li>*@
-                    <li class="icons dropdown">
+                    @*<li class="icons dropdown">
                         <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                             <span class="activity active"></span>
                             <img src="images/user/1.png" height="40" width="40" alt="">
@@ -119,7 +119,12 @@
                                 </ul>
                             </div>
                         </div>
-                    </li>
+                    </li>*@
+                    <li class="icons">
+                        <a asp-action="LogOut" asp-controller="Home">
+                            <i class="icon-key"></i> <span>Logout</span>
+                            </a>
+                        </li>
                 </ul>
             </div>
         </div>
