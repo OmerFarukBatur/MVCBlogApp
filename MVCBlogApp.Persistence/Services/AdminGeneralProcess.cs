@@ -494,13 +494,12 @@ namespace MVCBlogApp.Persistence.Services
                 .Select(x => new VM_Member
                 {
                     Id = x.Id,
-                    Address = x.Address,
-                    CreateDate = x.CreateDate,
-                    Email = x.Email,
-                    Lacation = x.Lacation,
                     NameSurname = x.NameSurname,
+                    Email = x.Email,
                     Phone = x.Phone,
-                    IsActive = x.IsActive
+                    IsActive = x.IsActive,
+                    Lacation = x.Lacation,
+                    CreateDate = x.CreateDate
                 }).ToListAsync();
             int allUser = members.Count();
             List<VM_Member> oneMonthCreateUsers = members.Where(x=> x.CreateDate > DateTime.Now.AddMonths(-1)).ToList();
@@ -605,7 +604,7 @@ namespace MVCBlogApp.Persistence.Services
                 LastWeekConfession = lastWeekConfession,
                 ActiveAllArticleCount = allArticle,
                 LastMounthArticleCount = lastMounthArticleCount,
-                ActiveAllAppointment = allAppointment,
+                //ActiveAllAppointment = allAppointment,
                 ActiveLastWeekAppointment = lastWeekAppointment
             };
         }

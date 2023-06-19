@@ -15,7 +15,7 @@ namespace MVCBlogApp.Application.Features.Queries.Admin.Dashboard
         public List<VM_Confession> LastWeekConfession { get; set; }
         public int ActiveAllArticleCount { get; set; }
         public int LastMounthArticleCount { get; set; }
-        public List<VM_D_Appointment> ActiveAllAppointment { get; set; }
+        //public List<VM_D_Appointment> ActiveAllAppointment { get; set; }
         public List<VM_D_Appointment> ActiveLastWeekAppointment { get; set; }
     }
 }

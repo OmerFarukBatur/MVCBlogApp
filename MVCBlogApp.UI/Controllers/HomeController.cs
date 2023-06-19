@@ -98,6 +98,12 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
+        public IActionResult LogOut()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult PasswordReset()
         {
             return View();
