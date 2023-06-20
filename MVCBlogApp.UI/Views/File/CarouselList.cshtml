@@ -39,7 +39,7 @@
                                             <td>@item.Orders</td>
                                             <td>@item.Language</td>
                                             <td>@item.StatusName</td>
-                                            <td><img width="50" height="50" src="@item.ImgUrl"></td>
+                                            <td><img width="50" height="50" src="@Url.Content(@item.ImgUrl)"></td>
                                             <td><a class="btn btn-outline-success" asp-action="CarouselUpdate" asp-controller="File" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
                                             <td><a class="btn btn-outline-danger" asp-action="CarouselDelete" asp-controller="File" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
                                         </tr>

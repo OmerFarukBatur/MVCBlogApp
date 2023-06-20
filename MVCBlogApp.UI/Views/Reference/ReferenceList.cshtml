@@ -33,7 +33,7 @@
                                         <tr>
                                             <td>@item.Id</td>
                                             <td>@item.Title</td>
-                                            <td><img width="100" height="100" src="@item.ImgUrl"></td>
+                                            <td><img width="100" height="100" src="@Url.Content(@item.ImgUrl)"></td>
                                             <td>@item.StatusName</td>
                                             <td>@item.CreateDate</td>
                                             <td><a class="btn btn-outline-success" asp-action="ReferenceUpdate" asp-controller="Reference" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>

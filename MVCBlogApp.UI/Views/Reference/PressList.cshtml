@@ -43,7 +43,7 @@
                                             <td>@item.Language</td>
                                             <td>@item.StatusName</td>
                                             <td>@item.CreateDate</td>
-                                            <td><img width="50" height="50" src="@item.ImageUrl"></td>
+                                            <td><img width="50" height="50" src="@Url.Content(@item.ImageUrl)"></td>
                                             <td><a class="btn btn-outline-success" asp-action="PressUpdate" asp-controller="Reference" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
                                             <td><a class="btn btn-outline-danger" asp-action="PressDelete" asp-controller="Reference" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
                                         </tr>

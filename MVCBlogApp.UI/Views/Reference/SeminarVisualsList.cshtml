@@ -41,7 +41,7 @@
                                             <td>@item.Language</td>
                                             <td>@item.StatusName</td>
                                             <td>@item.CreateDate</td>
-                                            <td><img width="60" height="60" src="@item.ImgUrl"></td>
+                                            <td><img width="60" height="60" src="@Url.Content(@item.ImgUrl)"></td>
                                             <td><a class="btn btn-outline-success" asp-action="SeminarVisualsUpdate" asp-controller="Reference" asp-route-id="@item.Id"><i class="fa fa-pencil"> Güncelle</i></a></td>
                                             <td><a class="btn btn-outline-danger" asp-action="SeminarVisualsDelete" asp-controller="Reference" asp-route-id="@item.Id"><i class="fa fa-trash"> Sil</i></a></td>
                                         </tr>
