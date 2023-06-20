@@ -1245,7 +1245,12 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<GetByUserImageQueryResponse> GetByUserImageAsync(int id)
         {
-            string? imageUrl = await _membersInformationReadRepository.GetWhere(x=> x.MembersId == id).Select(x=> x.ImageUrl).FirstAsync();
+            MembersInformation? membersInformation = await _membersInformationReadRepository.GetWhere(x => x.MembersId == id).FirstOrDefaultAsync();
+            string imageUrl = "";
+            if (membersInformation != null)
+            {
+                imageUrl = membersInformation.ImageUrl != null ? membersInformation.ImageUrl : "";
+            }
             return new()
             {
                 ImageUrl = imageUrl
