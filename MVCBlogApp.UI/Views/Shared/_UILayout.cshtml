@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html dir="ltr" lang="tr-TR">
+<head>
+
+
+
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Ayse Karahasan" />
+
+    <meta name="title" content="@TempData["MetaTitle"]" />
+    <meta name="keywords" content="@TempData["MetaKey"]" />
+    <meta name="description" content="@TempData["MetaDescription"]" />
+    <link rel="canonical" href="https://taylankumeli.com" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9V0BZJXDH8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9V0BZJXDH8');
+    </script>
+
+
+    @*<meta property="og: type" content="Taylan Kümeli Web Sitesi" />
+    <meta property="og: title" content="Sağlıklı Beslenme ve Diyet Uzmanı Taylan Kümeli" />
+    <meta property="og: description" content="Sağlıklı Beslenme ve Diyet Uzmanı Taylan Kümeli ile Bireysel ve Kurumsal Beslenme, Kilo Verme, Kilo Alma, Sağlıklı Yaşam Danışmanlığı" />
+    <meta property="og: image" content="https://taylankumeli.com~/UI/images/_taylan/logo.png" />
+    <meta property="og: url" content="https://taylankumeli.com" />
+    <meta property="og: site_name" content="taylankumeli.com" />
+
+    <meta name="application-name" content="Taylan Kümeli" />
+    <meta name="msapplication-tooltip" content="Taylan Kümeli" />
+    <meta name="msapplication-starturl" content="https://taylankumeli.com" />*@
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,700;0,800;0,900;1,500;1,600&display=swap" rel="stylesheet" type="text/css" />
+
+
+    <link rel="stylesheet" href="~/UI/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/style.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/dark.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/font-icons.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="~/UI/css/components/pricing-table.css" type="text/css" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="~~/UI/images\_taylan/favicon/apple-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="~~/UI/images\_taylan/favicon/apple-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~~/UI/images\_taylan/favicon/apple-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="~~/UI/images\_taylan/favicon/apple-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~~/UI/images\_taylan/favicon/apple-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="~~/UI/images\_taylan/favicon/apple-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="~~/UI/images\_taylan/favicon/apple-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="~~/UI/images\_taylan/favicon/apple-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="~~/UI/images\_taylan/favicon/apple-icon-180x180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="~~/UI/images\_taylan/favicon/android-icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~~/UI/images/_taylan/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="~~/UI/images\_taylan/favicon/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~~/UI/images\_taylan/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="~~/UI/images\_taylan/favicon/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="~~/UI/images\_taylan/favicon/ms-icon-144x144.png" />
+    <meta name="theme-color" content="#ffffff" />
+    <script src="~~/UI/js/jquery.js"></script>
+    <title>@TempData["Title"]</title>
+
+</head>
+
+<body class="stretched">
+
+
+    <div id="wrapper" class="clearfix">
+
+        <div id="top-bar">
+            <div class="container clearfix">
+
+                @*@await Component.InvokeAsync("HeaderTopMenu")*@
+
+            </div>
+        </div><!-- #top-bar end -->
+       @* @await Component.InvokeAsync("HeaderMenu")*@
+
+
+
+        @RenderBody()
+
+
+
+        <footer id="footer" class="dark">
+
+           @* @await Component.InvokeAsync("Footer")*@
+
+        </footer>
+    </div>
+
+    <div id="gotoTop" class="icon-angle-up"></div>
+
+    <script src="~~/UI/js/plugins.min.js"></script>
+    <script src="~~/UI/js/functions.js"></script>
+</body>
+</html>

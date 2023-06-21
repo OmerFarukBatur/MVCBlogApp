@@ -479,6 +479,7 @@ namespace MVCBlogApp.Persistence
             services.AddScoped<IDoctorGeneralOptionsService,DoctorGeneralOptionsService>();
             services.AddScoped<IAdminGeneralProcess,AdminGeneralProcess>();
             services.AddScoped<IMemberGeneralProcess,MemberGeneralProcess>();
+            services.AddScoped<IUIHomeService, UIHomeService>();
             #endregion      
             
         }

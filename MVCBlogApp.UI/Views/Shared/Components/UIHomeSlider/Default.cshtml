@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_Carousel>
+<div class="col-12">
+    <div class="fslider flex-thumb-grid grid-6" data-animation="fade" data-arrows="true" data-thumbs="true">
+        <div id="slider" class="flexslider">
+            <div class="slider-wrap">
+
+                @foreach (var item in Model.OrderBy(s => s.Orders))
+                {
+                    <div class="slide" data-thumb="@Url.Content(@item.ImgUrl)">
+                        <a href="/@item.UrlRoot">
+                            <img loading="lazy" src="@Url.Content(@item.ImgUrl)" width="854" height="480" alt="@item.ImgName">
+                            <div class="bg-overlay">
+                                <div class="bg-overlay-content justify-content-start align-items-end">
+                                    @if (item.Title != null)
+                                    {
+                                        <a href="/@item.UrlRoot" class="@item.TitleClass">
+
+                                            @item.Title
+
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>

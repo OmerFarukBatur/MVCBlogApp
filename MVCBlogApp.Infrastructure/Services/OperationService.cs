@@ -24,11 +24,19 @@ namespace MVCBlogApp.Infrastructure.Services
 
             return new SessionUser() 
             {
-                AuthRole = AuthRole != null ? AuthRole : null,
+                AuthRole = AuthRole != null ? AuthRole : "Danışan",
                 Email = Email,
                 Id = int.Parse(Id),
                 Role = bool.Parse(Role)
             };
+        }
+
+        public int SessionLangId()
+        {
+            int id = Convert.ToInt32(_accessor.HttpContext.Session.GetInt32("LangID"));
+            if (id == 0 ) { id = 1; }
+
+            return id;
         }
     }
 }

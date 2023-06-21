@@ -28,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\UI\images\_taylan\form\" />
+    <Folder Include="wwwroot\UI\images\_taylan\icons\" />
     <Folder Include="wwwroot\Upload\article-files\" />
     <Folder Include="wwwroot\Upload\banner-files\" />
     <Folder Include="wwwroot\Upload\blog-files\" />
