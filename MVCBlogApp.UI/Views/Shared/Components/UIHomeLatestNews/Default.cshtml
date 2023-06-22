@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_LatestNew>
+
+<div class="col-12">
+
+    <div class="fancy-title title-border">
+        <h3>@ViewBag.Title</h3>
+    </div>
+
+    <div id="oc-images" class="owl-carousel image-carousel carousel-widget posts-md" data-margin="30" data-nav="false" data-items-xs="1" data-items-sm="2" data-items-md="3" data-items-xl="4">
+
+        @foreach (var item in Model)
+        {
+            if (item.Id == 75)
+            {
+                
+            
+            <div class="oc-item">
+                <div class="entry">
+                    <div class="entry-image">
+                        <a href="/@item.UrlRoot"><img src="@item.CoveCoverImgUrl" alt="@item.Title"></a>
+                    </div>
+                    <div class="entry-title title-xs nott">
+                        <h4><a href="/@item.UrlRoot">@item.Title - @item.Id</a></h4>
+                    </div>
+                </div>
+            </div>
+            }
+        }
+
+
+    </div>
+
+
+</div>

@@ -31,6 +31,27 @@ namespace MVCBlogApp.Infrastructure.Services
             };
         }
 
+        public string? MakeShorter(string? value, int valueLength)
+        {
+            if (value != null)
+            {
+                if (value.Length <= valueLength)
+                {
+                    return value;
+                }
+                else
+                {
+                    string newValue = value.Substring(0, valueLength);
+                    newValue += "...";
+                    return newValue;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public int SessionLangId()
         {
             int id = Convert.ToInt32(_accessor.HttpContext.Session.GetInt32("LangID"));

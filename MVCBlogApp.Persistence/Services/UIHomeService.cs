@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
+using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
@@ -121,7 +122,7 @@ namespace MVCBlogApp.Persistence.Services
                     ArticlePreviewTitle = x.na.NavigationName
                 }).ToListAsync());
 
-            articles.OrderByDescending(s => s.CreateDate);
+            //articles.OrderByDescending(s => s.CreateDate);
 
             return new()
             {
@@ -157,6 +158,46 @@ namespace MVCBlogApp.Persistence.Services
             {
                 LangId = langId,
                 Video = vM_Video
+            };
+        }
+
+        public async Task<UIHomeLatestNewsQueryResponse> UIHomeLatestNewsAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_LatestNew> vM_LatestNews = new();
+
+            vM_LatestNews.AddRange(await _articleReadRepository
+                .GetWhere(x => x.StatusId == statusActiveId && x.LangId == langId && x.IsNewsComponent == true)
+                .Select(x => new VM_LatestNew
+                {
+                    Id = x.Id,
+                    CoveCoverImgUrl = x.CoverImgUrl,
+                    CreateDate = x.CreateDate.Value,
+                    SubTitle = _operationService.MakeShorter(x.SubTitle, 100),
+                    Title = _operationService.MakeShorter(x.Title, 100),
+                    UrlRoot = x.UrlRoot
+                }).ToListAsync());
+
+            vM_LatestNews.AddRange(await _blogReadRepository
+                .GetWhere(x => x.StatusId == statusActiveId && x.LangId == langId && x.IsNewsComponent == true)
+                .Select(x => new VM_LatestNew
+                {
+                    Id = x.Id,
+                    CoveCoverImgUrl = x.CoverImgUrl,
+                    CreateDate = x.CreateDate.Value,
+                    SubTitle = _operationService.MakeShorter(x.SubTitle, 100),
+                    Title = _operationService.MakeShorter(x.Title, 100),
+                    UrlRoot = x.UrlRoot
+                }).ToListAsync());
+
+            //vM_LatestNews.OrderByDescending(x => x.CreateDate);
+
+            return new()
+            {
+                LangId = langId,
+                LatestNews = vM_LatestNews,
             };
         }
 

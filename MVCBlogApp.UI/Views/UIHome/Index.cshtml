@@ -1,13 +1,12 @@
-﻿@using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor HttpContextAccessor
+﻿@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http;
+@inject IOperationService OperationService
 
 @{
     Layout = "~/Views/Shared/_UILayout.cshtml";
     ViewData["Title"] = "Ana Sayfa";
 
-    //int? LangID = HttpContextAccessor.HttpContext.Session.GetInt32("LangID");
-
-    //if (LangID == 0) { LangID = 1; }
+    int LangID = OperationService.SessionLangId();
 }
 
 
@@ -50,7 +49,7 @@
 
             <div class="row">
                 @*Güncel Haberler*@
-               @* @await Component.InvokeAsync("LatestNews")*@
+                @await Component.InvokeAsync("UIHomeLatestNews")
 
             </div>
 

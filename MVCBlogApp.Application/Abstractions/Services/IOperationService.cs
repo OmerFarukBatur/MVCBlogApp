@@ -7,5 +7,6 @@ namespace MVCBlogApp.Application.Abstractions.Services
     {
         SessionUser GetUser();
         int SessionLangId();
+        string? MakeShorter(string? value, int valueLength);
     }
 }
