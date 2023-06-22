@@ -1,0 +1,264 @@
+﻿@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http
+@inject IOperationService OperationService
+@{
+
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+    //ingilizce dil desteği
+    <div class="tabs mb-0 clearfix" id="sidebar-tabs">
+
+        <ul class="tab-nav clearfix">
+
+            <li><a href="#bilgi">Useful Information</a></li>
+        </ul>
+
+        <div class="tab-container">
+
+            <div class="tab-content clearfix" id="test">
+                <div class="posts-sm row col-mb-30" id="popular-post-list-sidebar">
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/bmi-calc"><img src="~/UI/images/_taylan/thumb/bmi_hesaplama.jpg" alt="Body Mass Index Calculator"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/bmi-calc"> BMI (Body Mass Index) Calculation </a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Find out how close you are to your ideal weight, calculate your Body Mass Index.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/ideal-weight-calc"><img src="~/UI/images/_taylan/thumb/kilo_hesaplama.jpg" alt="İdeal Kilo Hesaplama"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/ideal-weight-calc">Ideal Weight Calculator</a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Calculate your ideal weight that should be.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/nutrition-pyramid"><img src="~/UI/images/_taylan/thumb/besin_piramidi.jpg" alt="Nutrition Pyramid"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/nutrition-pyramid">Nutrition Pyramid </a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> The use of the food pyramid and nutritional recommendations</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/calorie-book"><img src="~/UI/images/_taylan/thumb/kalori_aktivite_dengesi.jpg" alt="Activity and Calorie Calculation"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/calorie-book">Activity / Calorie Book </a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> The balance between calories taken and calories burned for a healthy life.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/meal-size"><img src="~/UI/images/_taylan/thumb/yemek_olculeri.jpg" alt="Yemek Ölçüleri"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/meal-size">Meal Sizes</a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> What should be the food size you will use in your diet?</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="tabs mb-0 clearfix" id="sidebar-tabs">
+
+        <ul class="tab-nav clearfix">
+
+            <li><a href="#bilgi">Faydalı Bilgiler</a></li>
+        </ul>
+
+        <div class="tab-container">
+
+            <div class="tab-content clearfix" id="test">
+                <div class="posts-sm row col-mb-30" id="popular-post-list-sidebar">
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/bmi-hesapla"><img src="~/UI/images/_taylan/thumb/bmi_hesaplama.jpg" alt="Vücut Kitle Endeksi Hesaplama"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/bmi-hesapla">BMI (Body Mass Index) Hesaplama </a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> İdeal kilonuza ne kadar yakınsınız, Vücut Kitle İndeksinizi hesaplayın, öğrenin.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="/ideal-kilo-hesapla"><img src="~/UI/images/_taylan/thumb/kilo_hesaplama.jpg" alt="İdeal Kilo Hesaplama"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/ideal-kilo-hesapla">İdeal Kilo Hesaplama</a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Olması gereken ideal kilonuzu hesaplayın.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="#"><img src="~/UI/images/_taylan/thumb/besin_piramidi.jpg" alt="Beslenme Piramidi"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/besin-piramidi">Beslenme Piramidi </a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Beslenme piramidinin kullanımı ve beslenme önerileri</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="#"><img src="~/UI/images/_taylan/thumb/kalori_aktivite_dengesi.jpg" alt="Aktivite ve Kalori Hesaplama"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/kalori-cetveli">Aktivite / Kalori Cetveli</a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Sağlıklı bir yaşam için alınan kalori ile yakılan kalori arasındaki denge.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="entry col-12">
+                        <div class="grid-inner row no-gutters">
+                            <div class="col-auto">
+                                <div class="entry-image">
+                                    <a href="#"><img src="~/UI/images/_taylan/thumb/yemek_olculeri.jpg" alt="Yemek Ölçüleri"></a>
+                                </div>
+                            </div>
+                            <div class="col pl-3">
+                                <div class="entry-title">
+                                    <h4><a href="/yemek-olculeri">Yemek Ölçüleri</a></h4>
+                                </div>
+                                <div class="entry-meta no-separator">
+                                    <ul>
+                                        <li><i class="icon-line-arrow-right-circle"></i> Beslenmenizde kullanacağınız yemek ölçüleri nasıl olmalı?</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+}
