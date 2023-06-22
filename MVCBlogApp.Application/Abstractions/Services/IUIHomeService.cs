@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
+﻿using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
+using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -7,6 +8,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region UIHomeSlider
 
         Task<UIHomeSliderQueryResponse> UIHomeSliderAsync();
+        Task<UIHomeArticlePreviewsQueryResponse> UIHomeArticlePreviewsAsync();
 
         #endregion
     }

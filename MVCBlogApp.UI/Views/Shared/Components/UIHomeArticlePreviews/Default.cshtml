@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_Navigation>
+@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http
+@inject IOperationService OperationService
+
+@{
+
+    int LangID = OperationService.SessionLangId();
+}
+
+
+@foreach (var item in Model)
+{
+    <div class="col-12">
+
+        <div class="fancy-title title-border">
+            <h3>@item.ArticlePreviewTitle</h3>
+        </div>
+
+        <div class="posts-md">
+            <div class="entry row mb-5">
+                <div class="col-md-6">
+                    <div class="entry-image">
+                        <a href="@item.UrlRoot"><img src="@Url.Content(@item.ImageUrl)" alt="@item.MetaTitle"></a>
+                    </div>
+                </div>
+                <div class="col-md-6 mt-3 mt-md-0">
+                    <div class="entry-title title-sm nott">
+                        <h3><a href="/@item.UrlRoot">@item.NavigationName</a></h3>
+                    </div>
+
+                    <div class="entry-content">
+                        <p class="mb-0">@item.Description</p>
+                        <br />
+
+                        @if (LangID == 2)
+                        {
+                            <a href="/@item.UrlRoot" class="btn btn-outline-dark">Read Now</a>
+                        }
+                        else
+
+                        {
+                            <a href="/@item.UrlRoot" class="btn btn-outline-dark">Hemen İncele</a>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
