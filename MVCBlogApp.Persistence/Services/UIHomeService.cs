@@ -135,7 +135,7 @@ namespace MVCBlogApp.Persistence.Services
             int langId = _operationService.SessionLangId();
             int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
 
-            List<VM_Video> vM_Video = await _videoReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.LangId == langId)
+            VM_Video? vM_Video = await _videoReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.LangId == langId)
                 .Join(_videoCategoryReadRepository.GetWhere(x => x.VideoCategoryName == "Sol Menu Video"), vi => vi.VideoCategoryId, vc => vc.Id, (vi, vc) => new { vi, vc })
                 .Select(x => new VM_Video
                 {
@@ -149,14 +149,14 @@ namespace MVCBlogApp.Persistence.Services
                     VideoCategoryId = x.vi.VideoCategoryId,
                     VideoEmbedCode = x.vi.VideoEmbedCode,
                     VideoUrl = x.vi.VideoUrl
-                }).ToListAsync();
+                }).OrderByDescending(x=> x.Id).LastOrDefaultAsync();
 
-            VM_Video? video = vM_Video.LastOrDefault();
+            
 
             return new()
             {
                 LangId = langId,
-                Video = video
+                Video = vM_Video
             };
         }
 
