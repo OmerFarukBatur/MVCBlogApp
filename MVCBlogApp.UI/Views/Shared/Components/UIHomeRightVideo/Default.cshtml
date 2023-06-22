@@ -1,0 +1,23 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Video
+
+<div class="widget clearfix">
+    <div class="fancy-title title-bottom-border">
+        <h3><i class="icon-video"></i> @ViewBag.VTitle</h3>
+    </div>
+    <h4 class="highlight-me">@Model.Title</h4>
+    <iframe loading="lazy" width="500" height="281" src="@Model.VideoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+
+<div class="promo promo-light promo-border p-4 p-md-5 mb-5">
+    <div class="row align-items-center">
+        @Html.Raw(Model.Description)
+        @*<div class="col-12">
+        <h3><span class="text-danger">Taylan Kümeli</span> ile <span class="text-danger">Sağlıklı Beslenme</span></h3>
+        <span>"Beslenme doğduğumuz andan itibaren vazgeçilmezimizdir ama aynı zamanda bizim tamamlayıcımız, şekillendiricimiz, aklımız, ışıltımız ve yaşama tutunma biçimimizdir."</span>
+        </div>
+        <div class="col-12 mt-4">
+        <a href="#" class="btn btn-lg btn-danger">Hemen İncele</a>
+        </div>*@
+    </div>
+</div>
