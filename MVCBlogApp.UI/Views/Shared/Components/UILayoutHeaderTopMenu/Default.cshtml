@@ -1,0 +1,143 @@
+﻿@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http
+@using System.Security.Claims;
+@inject IOperationService OperationService
+@{
+    string nameSurname = Model;
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+
+    <div class="row justify-content-between">
+        <div class="col-12 col-md-auto">
+
+            <!-- Top Links
+            ============================================= -->
+            <div class="top-links on-click">
+                <ul class="top-links-container">
+
+                    <li class="top-links-item">
+                        <a href="#"><i class="icon-globe"></i> ENG</a>
+                        <ul class="top-links-sub-menu">
+
+
+                            <li class="top-links-item"><a href="/Home/Lang?LangID=1" new { ReturnUrl=Request.QueryString["ReturnUrl"] })><img src="/Tk_FrontEnd/images/_taylan/flags/turkey.png" alt="Türkçe"> TR</a></li>
+                            <li class="top-links-item"><a href="/Home/Lang?LangID=2" new { ReturnUrl=Request.QueryString["ReturnUrl"] })><img src="/Tk_FrontEnd/images\_taylan\flags/united-states.png" alt="English"> EN</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="top-links-item"><a href="/Contact">CONTACT US</a></li>
+                    <li class="top-links-item"><a href="/seminer-etkinlik-takvimi">CALENDAR</a></li>
+                    @*<li class="top-links-item"><a href="/Danisan/uye-ol">Sıgn up</a></li>
+                <li class="top-links-item"><a href="/Danisan/uye-giris">Member logın</a></li>*@
+                    @if (nameSurname != null)
+                    {
+                        <li class="top-links-item"><a href="/Members/Home">My page</a></li>
+                    }
+
+                </ul>
+            </div><!-- .top-links end -->
+
+        </div>
+
+        <div class="col-12 col-md-auto">
+
+            <!-- Top Social
+            ============================================= -->
+            <ul id="top-social">
+                <li><a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="si-instagram"><span class="ts-icon"><i class="icon-instagram2"></i></span><span class="ts-text">Instagram</span></a></li>
+                <li><a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="si-youtube"><span class="ts-icon"><i class="icon-youtube"></i></span><span class="ts-text">Youtube</span></a></li>
+                <li><a href="#" target="_blank" class="si-spotify"><span class="ts-icon"><i class="icon-spotify"></i></span><span class="ts-text">Spotify</span></a></li>
+                <li><a href="https://www.facebook.com/groups/taylankumeli" target="_blank" class="si-facebook"><span class="ts-icon"><i class="icon-facebook"></i></span><span class="ts-text">Facebook</span></a></li>
+                <li><a href="https://twitter.com/taylankumelii" target="_blank" class="si-twitter"><span class="ts-icon"><i class="icon-twitter"></i></span><span class="ts-text">Twitter</span></a></li>
+                <li class="d-none d-sm-flex"><a href="#" class="si-linkedin"><span class="ts-icon"><i class="icon-linkedin"></i></span><span class="ts-text">LinkedIn</span></a></li>
+                <li><a href="tel:+902122917515" class="si-call"><span class="ts-icon"><i class="icon-call"></i></span><span class="ts-text">+90 212 291 75 15</span></a></li>
+                <li><a href="mailto:info@taylankumeli.com" class="si-email3"><span class="ts-icon"><i class="icon-email3"></i></span><span class="ts-text">info@taylankumeli.com</span></a></li>
+                @if (nameSurname != null)
+                {
+                    <li><p class="font-weight-bolder ml-1 mb-0">Merhaba,<br />@nameSurname</p></li>
+                }
+
+            </ul><!-- #top-social end -->
+
+        </div>
+        @*@if (nameSurname != null)
+    {
+    <div class="col-12 col-md-auto">
+    <p>Merhaba, @nameSurname</p>
+    </div>
+    }*@
+
+    </div>
+
+}
+else
+{
+    <div class="row justify-content-between">
+        <div class="col-12 col-md-auto">
+
+            <!-- Top Links
+            ============================================= -->
+            <div class="top-links on-click">
+                <ul class="top-links-container">
+
+                    <li class="top-links-item">
+                        <a href="#"><i class="icon-globe"></i> TR</a>
+                        <ul class="top-links-sub-menu">
+
+
+                            @*<li class="top-links-item"><a href="/Home/Lang?LangID=1" new { ReturnUrl=Request.QueryString["ReturnUrl"] })><img src="/Tk_FrontEnd/images/_taylan/flags/turkey.png" alt="Türkçe"> TR</a></li>
+                        <li class="top-links-item"><a href="/Home/Lang?LangID=2" new { ReturnUrl=Request.QueryString["ReturnUrl"] })><img src="/Tk_FrontEnd/images\_taylan\flags/united-states.png" alt="English"> EN</a></li>*@
+
+                        </ul>
+                    </li>
+
+
+                    <li class="top-links-item"><a href="/iletisim">BİZE ULAŞIN</a></li>
+                    <li class="top-links-item"><a href="/seminer-etkinlik-takvimi">TAKVİM</a></li>
+                    <li class="top-links-item"><a href="/Danisan/uye-ol">Üye Ol</a></li>
+                    <li class="top-links-item"><a href="/Danisan/uye-giris">Üye Girişi</a></li>
+                    @if (nameSurname != null)
+                    {
+                        <li class="top-links-item"><a href="/Members/Home">Benim Sayfam</a></li>
+                    }
+
+
+                </ul>
+            </div><!-- .top-links end -->
+
+        </div>
+
+        <div class="col-12 col-md-auto">
+
+            <!-- Top Social
+            ============================================= -->
+            <ul id="top-social">
+                <li><a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="si-instagram"><span class="ts-icon"><i class="icon-instagram2"></i></span><span class="ts-text">Instagram</span></a></li>
+                <li><a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="si-youtube"><span class="ts-icon"><i class="icon-youtube"></i></span><span class="ts-text">Youtube</span></a></li>
+                <li><a href="#" target="_blank" class="si-spotify"><span class="ts-icon"><i class="icon-spotify"></i></span><span class="ts-text">Spotify</span></a></li>
+                <li><a href="https://www.facebook.com/groups/taylankumeli" target="_blank" class="si-facebook"><span class="ts-icon"><i class="icon-facebook"></i></span><span class="ts-text">Facebook</span></a></li>
+                <li><a href="https://twitter.com/taylankumelii" target="_blank" class="si-twitter"><span class="ts-icon"><i class="icon-twitter"></i></span><span class="ts-text">Twitter</span></a></li>
+                <li class="d-none d-sm-flex"><a href="#" class="si-linkedin"><span class="ts-icon"><i class="icon-linkedin"></i></span><span class="ts-text">LinkedIn</span></a></li>
+                <li><a href="tel:+902122917515" class="si-call"><span class="ts-icon"><i class="icon-call"></i></span><span class="ts-text">+90 212 291 75 15</span></a></li>
+                <li><a href="mailto:info@taylankumeli.com" class="si-email3"><span class="ts-icon"><i class="icon-email3"></i></span><span class="ts-text">info@taylankumeli.com</span></a></li>
+                @if (nameSurname != null)
+                {
+                    <li><p class="font-weight-bolder ml-1 mb-0">Merhaba,<br />@nameSurname</p></li>
+                }
+
+            </ul><!-- #top-social end -->
+
+        </div>
+        @*@if (nameSurname != null)
+    {
+    <div class="col-12 col-md-auto">
+    <p>Merhaba, @nameSurname</p>
+    </div>
+    }*@
+
+    </div>
+}

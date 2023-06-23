@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Domain.Entities;
 using Newtonsoft.Json.Linq;
+using System.Data;
 
 namespace MVCBlogApp.Infrastructure.Services
 {
@@ -16,19 +18,34 @@ namespace MVCBlogApp.Infrastructure.Services
 
         public SessionUser GetUser()
         {
-            JObject user = JObject.Parse(_accessor.HttpContext.Session.GetString("users"));
-            string Role = user.GetValue("Role").ToString();
-            string AuthRole = user.GetValue("AuthRole").ToString();
-            string Email = user.GetValue("Email").ToString();
-            string Id = user.GetValue("Id").ToString();
+            var checkUser = _accessor.HttpContext.Session.GetString("users");
 
-            return new SessionUser() 
+            if (checkUser != null)
             {
-                AuthRole = AuthRole != null ? AuthRole : "Danışan",
-                Email = Email,
-                Id = int.Parse(Id),
-                Role = bool.Parse(Role)
-            };
+                JObject user = JObject.Parse(checkUser);
+                string Role = user.GetValue("Role").ToString();
+                string AuthRole = user.GetValue("AuthRole").ToString();
+                string Email = user.GetValue("Email").ToString();
+                string Id = user.GetValue("Id").ToString();
+
+                return new SessionUser()
+                {
+                    AuthRole = AuthRole != null ? AuthRole : "Danışan",
+                    Email = Email,
+                    Id = int.Parse(Id),
+                    Role = bool.Parse(Role)
+                };
+            }
+            else
+            {
+                return new SessionUser()
+                {
+                    AuthRole = null,
+                    Email = null,
+                    Id = 0,
+                    Role = false
+                };
+            }
         }
 
         public string? MakeShorter(string? value, int valueLength)

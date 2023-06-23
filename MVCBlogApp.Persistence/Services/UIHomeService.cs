@@ -1,17 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
+using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.Carousel;
+using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.TaylanK;
+using MVCBlogApp.Application.Repositories.User;
 using MVCBlogApp.Application.Repositories.Video;
 using MVCBlogApp.Application.Repositories.VideoCategory;
 using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -25,6 +31,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INavigationReadRepository _navigationReadRepository;
         private readonly IVideoReadRepository _videoReadRepository;
         private readonly IVideoCategoryReadRepository _videoCategoryReadRepository;
+        private readonly IMembersReadRepository _membersReadRepository;
+        private readonly IUserReadRepository _userReadRepository;
+        private readonly ITaylanKReadRepository _waylanKReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -34,7 +43,10 @@ namespace MVCBlogApp.Persistence.Services
             IBlogReadRepository blogReadRepository,
             INavigationReadRepository navigationReadRepository,
             IVideoReadRepository videoReadRepository,
-            IVideoCategoryReadRepository videoCategoryReadRepository)
+            IVideoCategoryReadRepository videoCategoryReadRepository,
+            IMembersReadRepository membersReadRepository,
+            IUserReadRepository userReadRepository,
+            ITaylanKReadRepository waylanKReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -44,6 +56,9 @@ namespace MVCBlogApp.Persistence.Services
             _navigationReadRepository = navigationReadRepository;
             _videoReadRepository = videoReadRepository;
             _videoCategoryReadRepository = videoCategoryReadRepository;
+            _membersReadRepository = membersReadRepository;
+            _userReadRepository = userReadRepository;
+            _waylanKReadRepository = waylanKReadRepository;
         }
 
 
@@ -55,8 +70,8 @@ namespace MVCBlogApp.Persistence.Services
         {
             int langId = _operationService.SessionLangId();
             int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
-            List<VM_Carousel> vM_Carousels = await _carouselReadRepository.GetWhere(x=> x.LangId == langId && x.StatusId == statusActiveId)
-                .Select(x=> new VM_Carousel
+            List<VM_Carousel> vM_Carousels = await _carouselReadRepository.GetWhere(x => x.LangId == langId && x.StatusId == statusActiveId)
+                .Select(x => new VM_Carousel
                 {
                     Action = x.Action,
                     Controller = x.Controller,
@@ -150,9 +165,9 @@ namespace MVCBlogApp.Persistence.Services
                     VideoCategoryId = x.vi.VideoCategoryId,
                     VideoEmbedCode = x.vi.VideoEmbedCode,
                     VideoUrl = x.vi.VideoUrl
-                }).OrderByDescending(x=> x.Id).LastOrDefaultAsync();
+                }).OrderByDescending(x => x.Id).LastOrDefaultAsync();
 
-            
+
 
             return new()
             {
@@ -200,6 +215,62 @@ namespace MVCBlogApp.Persistence.Services
                 LatestNews = vM_LatestNews,
             };
         }
+
+        public async Task<UIHomeIndexQueryResponse> UIHomeIndexAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            VM_TaylanK? vM_TaylanK = await _waylanKReadRepository.GetWhere(x=> x.LangId ==  langId)
+                .Select(x=> new VM_TaylanK 
+                { 
+                    Id = x.Id,
+                    Metadescription = x.Metadescription,
+                    Metakey = x.Metakey,
+                    Metatitle = x.Metatitle
+                }).FirstOrDefaultAsync();
+
+            return new()
+            {
+                LangId = langId,
+                TaylanK = vM_TaylanK
+            };
+
+        }
+
+        #endregion
+
+        #region UILayout
+
+        public async Task<UILayoutHeaderTopMenuQueryResponse> UILayoutHeaderTopMenuAsync()
+        {
+            int userId = _operationService.GetUser().Id;
+            string email = _operationService.GetUser().Email;
+
+            User? user = await _userReadRepository.GetWhere(x => x.Id == userId && x.Email == email).FirstOrDefaultAsync();
+            Members? member = await _membersReadRepository.GetWhere(x => x.Id == userId && x.Email == email).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                return new()
+                {
+                    NameSurname = user.Username
+                };
+            }
+            else if(member != null)
+            {
+                return new()
+                {
+                    NameSurname = member.NameSurname
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    NameSurname = null
+                };
+            }
+        }
+
 
         #endregion
     }
