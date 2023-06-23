@@ -1,5 +1,4 @@
 ﻿using MVCBlogApp.Application.ViewModels;
-using Newtonsoft.Json.Linq;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
