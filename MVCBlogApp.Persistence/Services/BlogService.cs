@@ -487,7 +487,7 @@ namespace MVCBlogApp.Persistence.Services
                     BlogTypeId = request.BlogTypeId,
                     Title = request.Title,
                     Contents = request.Contents,
-                    CoverImgUrl = @"~/Upload/" + result[0].pathOrContainerName,
+                    CoverImgUrl = result[0].pathOrContainerName,
                     CreateDate = DateTime.Now,
                     CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : 0,
                     IsComponent = request.IsComponent,
@@ -809,7 +809,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("blog-files", request.FormFile);
-                    blog.CoverImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    blog.CoverImgUrl = result[0].pathOrContainerName;
                 }
 
 

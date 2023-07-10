@@ -212,7 +212,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixBmhWriteRepository.AddAsync(fixBmh);
@@ -300,7 +300,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBmh-files", request.FormFile);
-                    fixBmh.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixBmh.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixBmhWriteRepository.Update(fixBmh);
@@ -427,7 +427,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixBMIWriteRepository.AddAsync(fixBMI);
@@ -515,7 +515,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBMI-files", request.FormFile);
-                    fixBMI.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixBMI.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixBMIWriteRepository.Update(fixBMI);
@@ -642,7 +642,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixCalorieSchWriteRepository.AddAsync(fixCalorieSch);
@@ -730,7 +730,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixBMI-files", request.FormFile);
-                    fixCalorieSch.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixCalorieSch.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixCalorieSchWriteRepository.Update(fixCalorieSch);
@@ -856,7 +856,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixFeedPyramidWriteRepository.AddAsync(fixFeedPyramid);
@@ -944,7 +944,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixFeedPyramid-files", request.FormFile);
-                    fixFeedPyramid.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixFeedPyramid.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixFeedPyramidWriteRepository.Update(fixFeedPyramid);
@@ -1071,7 +1071,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixHeartDiseasesWriteRepository.AddAsync(fixHeartDiseases);
@@ -1159,7 +1159,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixHeartDiseases-files", request.FormFile);
-                    fixHeartDiseases.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixHeartDiseases.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixHeartDiseasesWriteRepository.Update(fixHeartDiseases);
@@ -1286,7 +1286,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixMealSizeWriteRepository.AddAsync(fixMealSize);
@@ -1374,7 +1374,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixMealSize-files", request.FormFile);
-                    fixMealSize.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixMealSize.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixMealSizeWriteRepository.Update(fixMealSize);
@@ -1501,7 +1501,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixOptimumWriteRepository.AddAsync(fixOptimum);
@@ -1589,7 +1589,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixOptimum-files", request.FormFile);
-                    fixOptimum.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixOptimum.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixOptimumWriteRepository.Update(fixOptimum);
@@ -1716,7 +1716,7 @@ namespace MVCBlogApp.Persistence.Services
                     LangId = request.LangId,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _fixPulseWriteRepository.AddAsync(fixPulse);
@@ -1804,7 +1804,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("fixPulse-files", request.FormFile);
-                    fixPulse.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    fixPulse.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _fixPulseWriteRepository.Update(fixPulse);

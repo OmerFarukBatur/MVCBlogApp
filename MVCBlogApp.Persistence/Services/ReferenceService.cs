@@ -215,7 +215,7 @@ namespace MVCBlogApp.Persistence.Services
                     StatusId = request.StatusId,
                     Title = request.Title,
                     UrlLink = request.UrlLink,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _referencesWriteRepository.AddAsync(references);
@@ -268,7 +268,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("reference-files", request.FormFile);
-                    references.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    references.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _referencesWriteRepository.Update(references);
@@ -349,7 +349,7 @@ namespace MVCBlogApp.Persistence.Services
                     Location = request.Location,
                     StatusId = request.StatusId,
                     Title = request.Title,
-                    ImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImgUrl = result[0].pathOrContainerName
                 };
 
                 await _seminarVisualsWriteRepository.AddAsync(seminarVisuals);
@@ -453,7 +453,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("seminarVisuals-files", request.FormFile);
-                    seminarVisuals.ImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    seminarVisuals.ImgUrl = result[0].pathOrContainerName;
                 }
 
                 _seminarVisualsWriteRepository.Update(seminarVisuals);
@@ -557,7 +557,7 @@ namespace MVCBlogApp.Persistence.Services
                     StatusId = request.StatusId,
                     Title = request.Title,
                     CreateDate = DateTime.Now,
-                    ImageUrl = @"~/Upload/" + result[0].pathOrContainerName,
+                    ImageUrl = result[0].pathOrContainerName,
                     CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null
                 };
 
@@ -659,7 +659,7 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("ourteam-files", request.FormFile);
 
-                    ourTeam.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    ourTeam.ImageUrl = result[0].pathOrContainerName;
                 }
 
                 _ourTeamWriteRepository.Update(ourTeam);
@@ -781,7 +781,7 @@ namespace MVCBlogApp.Persistence.Services
                     UrlLink = request.UrlLink,
                     UrlRoot = request.UrlRoot,
                     CreateDate = DateTime.Now,
-                    ImageUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    ImageUrl = result[0].pathOrContainerName
                 };
 
                 await _pressWriteRepository.AddAsync(press);
@@ -939,7 +939,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("press-files", request.FormFile);
-                    press.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    press.ImageUrl = result[0].pathOrContainerName;
                 }
 
                 _pressWriteRepository.Update(press);

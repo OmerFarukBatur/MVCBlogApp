@@ -6,9 +6,9 @@
 
                 @foreach (var item in Model.OrderBy(s => s.Orders))
                 {
-                    <div class="slide" data-thumb="@Url.Content(@item.ImgUrl)">
+                    <div class="slide" data-thumb="@Url.Content("~/Upload/"+@item.ImgUrl)">
                         <a href="/@item.UrlRoot">
-                            <img loading="lazy" src="@Url.Content(@item.ImgUrl)" width="854" height="480" alt="@item.ImgName">
+                            <img loading="lazy" src="@Url.Content("~/Upload/"+@item.ImgUrl)" width="854" height="480" alt="@item.ImgName">
                             <div class="bg-overlay">
                                 <div class="bg-overlay-content justify-content-start align-items-end">
                                     @if (item.Title != null)

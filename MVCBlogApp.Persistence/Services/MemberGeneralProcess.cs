@@ -462,7 +462,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("profile-image-files", request.FormFile);
-                    membersInformation.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    membersInformation.ImageUrl = result[0].pathOrContainerName;
                 }
 
                 await _membersInformationWriteRepository.AddAsync(membersInformation);
@@ -699,7 +699,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("profile-image-files", request.FormFile);
-                    membersInformation.ImageUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    membersInformation.ImageUrl = result[0].pathOrContainerName;
                 }
 
                 _membersInformationWriteRepository.Update(membersInformation);

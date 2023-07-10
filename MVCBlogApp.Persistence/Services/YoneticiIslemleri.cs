@@ -317,7 +317,7 @@ namespace MVCBlogApp.Persistence.Services
                 StatusId = 1,
                 Twitter = request.Twitter,
                 UserId = request.UserId > 0 ? request.UserId : null,
-                Logo = @"~/Upload/" + result[0].pathOrContainerName
+                Logo = result[0].pathOrContainerName
             };
 
             await _waylanKWriteRepository.AddAsync(taylanK);
@@ -426,7 +426,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("taylaK-logo-files", request.FormFile);
-                    taylanK.Logo = @"~/Upload/" + result[0].pathOrContainerName;
+                    taylanK.Logo = result[0].pathOrContainerName;
                 }
 
                 var check = await _waylanKReadRepository.GetWhere(x => x.StatusId == 1).ToListAsync();

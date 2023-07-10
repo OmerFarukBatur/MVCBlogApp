@@ -17,7 +17,7 @@
             <div class="oc-item">
                 <div class="entry">
                     <div class="entry-image">
-                        <a href="/@item.UrlRoot"><img src="@Url.Content(@item.CoveCoverImgUrl)" alt="@item.Title"></a>
+                            <a href="/@item.UrlRoot"><img src="@Url.Content("~/Upload/"+@item.CoveCoverImgUrl)" alt="@item.Title"></a>
                     </div>
                     <div class="entry-title title-xs nott">
                         <h4><a href="/@item.UrlRoot">@item.Title - @item.Id</a></h4>

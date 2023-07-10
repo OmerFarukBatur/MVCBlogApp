@@ -42,15 +42,23 @@
     <Folder Include="wwwroot\Upload\blog-files\" />
     <Folder Include="wwwroot\Upload\book-files\" />
     <Folder Include="wwwroot\Upload\carousel-files\" />
+    <Folder Include="wwwroot\Upload\egitmenler\" />
     <Folder Include="wwwroot\Upload\fixBmh-files\" />
     <Folder Include="wwwroot\Upload\fixPulse-files\" />
+    <Folder Include="wwwroot\Upload\haber\" />
+    <Folder Include="wwwroot\Upload\home\" />
     <Folder Include="wwwroot\Upload\image-files\" />
+    <Folder Include="wwwroot\Upload\kitap\" />
+    <Folder Include="wwwroot\Upload\kurumsal_wellbeing\" />
+    <Folder Include="wwwroot\Upload\nefes\" />
     <Folder Include="wwwroot\Upload\ourteam-files\" />
     <Folder Include="wwwroot\Upload\press-files\" />
     <Folder Include="wwwroot\Upload\profile-image-files\" />
     <Folder Include="wwwroot\Upload\reference-files\" />
     <Folder Include="wwwroot\Upload\seminarVisuals-files\" />
     <Folder Include="wwwroot\Upload\taylaK-logo-files\" />
+    <Folder Include="wwwroot\Upload\wellaging\" />
+    <Folder Include="wwwroot\Upload\wellbeing\" />
   </ItemGroup>
 
 </Project>

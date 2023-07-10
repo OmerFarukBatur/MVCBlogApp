@@ -168,7 +168,7 @@ namespace MVCBlogApp.Persistence.Services
                     Title = request.Title,
                     UrlRoot = request.UrlRoot,
                     CreateUserId = request.CreateUserId > 0 ? request.CreateUserId : null,
-                    CoverImgUrl = @"~/Upload/" + result[0].pathOrContainerName
+                    CoverImgUrl = result[0].pathOrContainerName
                 };
 
                 await _articleWriteRepository.AddAsync(article);
@@ -300,7 +300,7 @@ namespace MVCBlogApp.Persistence.Services
                 if (request.FormFile != null)
                 {
                     List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("article-files", request.FormFile);
-                    article.CoverImgUrl = @"~/Upload/" + result[0].pathOrContainerName;
+                    article.CoverImgUrl = result[0].pathOrContainerName;
                 }
 
                 article.Title = request.Title;
