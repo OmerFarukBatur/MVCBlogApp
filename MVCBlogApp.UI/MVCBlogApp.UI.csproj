@@ -45,8 +45,8 @@
     <Folder Include="wwwroot\Upload\egitmenler\" />
     <Folder Include="wwwroot\Upload\fixBmh-files\" />
     <Folder Include="wwwroot\Upload\fixPulse-files\" />
+    <Folder Include="wwwroot\Upload\form\" />
     <Folder Include="wwwroot\Upload\haber\" />
-    <Folder Include="wwwroot\Upload\home\" />
     <Folder Include="wwwroot\Upload\image-files\" />
     <Folder Include="wwwroot\Upload\kitap\" />
     <Folder Include="wwwroot\Upload\kurumsal_wellbeing\" />
@@ -59,6 +59,10 @@
     <Folder Include="wwwroot\Upload\taylaK-logo-files\" />
     <Folder Include="wwwroot\Upload\wellaging\" />
     <Folder Include="wwwroot\Upload\wellbeing\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Upload\icons\iconalt.svg" />
   </ItemGroup>
 
 </Project>

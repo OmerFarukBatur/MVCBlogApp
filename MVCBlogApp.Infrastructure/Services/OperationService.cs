@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.ViewModels;
-using MVCBlogApp.Domain.Entities;
 using Newtonsoft.Json.Linq;
 using System.Data;
 

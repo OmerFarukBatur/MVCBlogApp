@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
@@ -16,6 +17,7 @@ using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.SLeftNavigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.TaylanK;
 using MVCBlogApp.Application.Repositories.User;
@@ -42,6 +44,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBookReadRepository _bookReadRepository;
         private readonly IBannerReadRepository _bannerReadRepository;
         private readonly IBannerWriteRepository _bannerWriteRepository;
+        private readonly ITaylanKReadRepository _taylanKReadRepository;
+        private readonly ISLeftNavigationReadRepository _sLeftNavigationReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -57,7 +61,9 @@ namespace MVCBlogApp.Persistence.Services
             ITaylanKReadRepository waylanKReadRepository,
             IBookReadRepository bookReadRepository,
             IBannerReadRepository bannerReadRepository,
-            IBannerWriteRepository bannerWriteRepository)
+            IBannerWriteRepository bannerWriteRepository,
+            ITaylanKReadRepository taylanKReadRepository,
+            ISLeftNavigationReadRepository sLeftNavigationReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -73,6 +79,8 @@ namespace MVCBlogApp.Persistence.Services
             _bookReadRepository = bookReadRepository;
             _bannerReadRepository = bannerReadRepository;
             _bannerWriteRepository = bannerWriteRepository;
+            _taylanKReadRepository = taylanKReadRepository;
+            _sLeftNavigationReadRepository = sLeftNavigationReadRepository;
         }
 
 
@@ -233,9 +241,9 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<UIHomeIndexQueryResponse> UIHomeIndexAsync()
         {
             int langId = _operationService.SessionLangId();
-            VM_TaylanK? vM_TaylanK = await _waylanKReadRepository.GetWhere(x=> x.LangId ==  langId)
-                .Select(x=> new VM_TaylanK 
-                { 
+            VM_TaylanK? vM_TaylanK = await _waylanKReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_TaylanK
+                {
                     Id = x.Id,
                     Metadescription = x.Metadescription,
                     Metakey = x.Metakey,
@@ -269,7 +277,7 @@ namespace MVCBlogApp.Persistence.Services
                     NameSurname = user.Username
                 };
             }
-            else if(member != null)
+            else if (member != null)
             {
                 return new()
                 {
@@ -288,11 +296,12 @@ namespace MVCBlogApp.Persistence.Services
         public async Task<UILayoutHeaderMenuQueryResponse> UILayoutHeaderMenuAsync()
         {
             int langId = _operationService.SessionLangId();
+            int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
 
             List<VM_Navigation> navigations = new();
 
             //Article
-            List<VM_Article> articles = await _articleReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != false && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Article
+            List<VM_Article> articles = await _articleReadRepository.GetWhere(x => x.NavigationId != null && x.StatusId == statusActiveId && x.IsMenu != false && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Article
             {
                 Action = y.Action,
                 NavigationId = y.NavigationId,
@@ -323,7 +332,7 @@ namespace MVCBlogApp.Persistence.Services
                 UrlRoot = y.UrlRoot
             }).ToListAsync();
 
-            
+
             navigations.AddRange(articles.OrderBy(x => x.Orders).Select(y => new VM_Navigation
             {
                 Action = y.Action,
@@ -342,7 +351,7 @@ namespace MVCBlogApp.Persistence.Services
 
             //Blog
 
-            List<VM_Blog> blogs = await _blogReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == 1 && x.BlogTypeId == 2 && x.LangId == langId).Select(y => new VM_Blog
+            List<VM_Blog> blogs = await _blogReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == statusActiveId && x.BlogTypeId == 2 && x.LangId == langId).Select(y => new VM_Blog
             {
                 Id = y.Id,
                 Action = y.Action,
@@ -385,7 +394,7 @@ namespace MVCBlogApp.Persistence.Services
             }));
 
             //Book
-            List<VM_Book> books = await _bookReadRepository.GetWhere(x => x.StatusId == 1 && x.NavigationId != null && x.Orders != null && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Book
+            List<VM_Book> books = await _bookReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.NavigationId != null && x.Orders != null && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Book
             {
                 Action = y.Action,
                 BookName = y.BookName,
@@ -475,20 +484,21 @@ namespace MVCBlogApp.Persistence.Services
         {
             string bannerURL = "";
             int langId = _operationService.SessionLangId();
+            int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
 
             string dateString = DateTime.Now.ToString("ddMMyyyy");
 
-            var banner = await _bannerReadRepository.GetWhere(s => s.DateString == dateString && s.StatusId == 1 && s.LangId == langId).FirstOrDefaultAsync();
+            var banner = await _bannerReadRepository.GetWhere(s => s.DateString == dateString && s.StatusId == statusActiveId && s.LangId == langId).FirstOrDefaultAsync();
             if (banner != null)
             {
                 bannerURL = banner.BannerUrl;
             }
 
             string dateStringYesterday = DateTime.Now.AddDays(-1).ToString("ddMMyyyy");
-            var bannerYesterday = await _bannerReadRepository.GetWhere(s => s.DateString == dateStringYesterday && s.StatusId == 1 && s.LangId == langId).FirstOrDefaultAsync();
+            var bannerYesterday = await _bannerReadRepository.GetWhere(s => s.DateString == dateStringYesterday && s.StatusId == statusActiveId && s.LangId == langId).FirstOrDefaultAsync();
             if (bannerYesterday != null)
             {
-                var bannerToday = await _bannerReadRepository.GetWhere(s => s.BannerOrder > bannerYesterday.BannerOrder && s.StatusId == 1 && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
+                var bannerToday = await _bannerReadRepository.GetWhere(s => s.BannerOrder > bannerYesterday.BannerOrder && s.StatusId == statusActiveId && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
 
                 if (bannerToday != null)
                 {
@@ -500,7 +510,7 @@ namespace MVCBlogApp.Persistence.Services
                 }
             }
 
-            var bannerFirst = await _bannerReadRepository.GetWhere(s => s.StatusId == 1 && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
+            var bannerFirst = await _bannerReadRepository.GetWhere(s => s.StatusId == statusActiveId && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
             if (bannerFirst != null)
             {
                 bannerFirst.DateString = dateString;
@@ -513,6 +523,87 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 BannerUrl = bannerURL
+            };
+        }
+
+        public async Task<UILayoutFooterQueryResponse> UILayoutFooterAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            VM_TaylanK? taylanK = await _taylanKReadRepository.GetWhere(s => s.LangId == langId && s.StatusId == statusActiveId)
+                .Select(x => new VM_TaylanK
+                {
+                    About = x.About,
+                    Adress = x.Adress,
+                    Bio = x.Bio,
+                    CompanyName = x.CompanyName,
+                    CreateDate = x.CreateDate,
+                    Email1 = x.Email1,
+                    Email2 = x.Email2,
+                    Facebook = x.Facebook,
+                    GoogleMap = x.GoogleMap,
+                    Id = x.Id,
+                    Instagram = x.Instagram,
+                    LangId = x.LangId,
+                    Logo = x.Logo,
+                    Metadescription = x.Metadescription,
+                    Metakey = x.Metakey,
+                    Metatitle = x.Metatitle,
+                    Fax = x.Fax,
+                    Phone1 = x.Phone1,
+                    Phone2 = x.Phone2,
+                    Pinterest = x.Pinterest,
+                    StatusId = x.StatusId,
+                    Twitter = x.Twitter,
+                    UserId = x.UserId
+                }).FirstOrDefaultAsync();
+
+            List<VM_SLeftNavigation> sLeftNavigations = await _sLeftNavigationReadRepository.GetWhere(s => s.Type == 2 && s.LangId == langId)
+                .Select(x => new VM_SLeftNavigation
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    Title = x.Title,
+                    Type = x.Type,
+                    Url = x.Url
+                }).ToListAsync();
+
+            List<VM_Blog> blogs = await _blogReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.IsComponent == true && x.LangId == langId).OrderByDescending(x => x.Id).Take(5).Select(y => new VM_Blog
+            {
+                Id = y.Id,
+                Action = y.Action,
+                BlogCategoryId = y.BlogCategoryId,
+                BlogType = y.BlogType,
+                BlogTypeId = y.BlogTypeId,
+                Contents = y.Contents,
+                Controller = y.Controller,
+                CoverImgUrl = y.CoverImgUrl,
+                CreateDate = y.CreateDate,
+                CreateUserId = y.CreateUserId,
+                IsComponent = y.IsComponent,
+                IsMainPage = y.IsMainPage,
+                IsMenu = y.IsMenu,
+                IsNewsComponent = y.IsNewsComponent,
+                LangId = y.LangId,
+                MetaDescription = y.MetaDescription,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationId = y.NavigationId,
+                Orders = y.Orders,
+                StatusId = y.StatusId,
+                SubTitle = y.SubTitle,
+                Title = y.Title,
+                UpdateDate = y.UpdateDate,
+                UpdateUserId = y.UpdateUserId,
+                UrlRoot = y.UrlRoot
+            }).ToListAsync();
+
+            return new()
+            {
+                Blogs = blogs,
+                SLeftNavigations = sLeftNavigations,
+                TaylanK = taylanK
             };
         }
         #endregion

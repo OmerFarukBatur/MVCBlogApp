@@ -1,0 +1,468 @@
+﻿@*@model MVCBlogApp.Application.ViewModels.VM_TaylanK*@
+@inject IOperationService OperationService
+
+@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http
+@{
+    int LangID = OperationService.SessionLangId();
+
+    string subscribeMessage = TempData["subscribeSuccess"] != null ? (string)TempData["subscribeSuccess"] : TempData["subscribeFail"] != null ? (string)TempData["subscribeFail"] : null;
+
+}
+
+@if (LangID == 2)
+{
+
+    <footer id="footer" class="dark">
+        <div class="container">
+
+            <!-- Footer Widgets
+            ============================================= -->
+            <div class="footer-widgets-wrap">
+
+                <div class="row col-mb-50">
+                    <div class="col-lg-8">
+
+                        <div class="row col-mb-50">
+                            <div class="col-md-4">
+
+                                <div class="widget clearfix">
+
+                                    <img src=@Url.Content("~/Upload/"+@Model.TaylanK.Logo) alt="Image" class="footer-logo">
+
+                                    <p><strong>Forget the word diet, lose weight by eating healthy</strong> </p>
+
+                                    <div style="background: url('~/UI/images/world-map.png') no-repeat center center; background-size: 100%;">
+                                        <address>
+                                            <strong>TK Taylight  Address:</strong><br />
+                                            @Model.TaylanK.Adress<br />
+                                        </address>
+                                        <abbr title="Telefon Numarası"><strong>Phone:</strong></abbr> @Model.TaylanK.Phone1<br />
+                                        <abbr title="Telefon Numarası"><strong>Phone:</strong></abbr> @Model.TaylanK.Phone2<br />
+                                        <abbr title="Fax"><strong>Fax:</strong></abbr> @Model.TaylanK.Fax<br />
+                                        <abbr title="E Mail"><strong>E Mail:</strong></abbr> @Model.TaylanK.Email1
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="widget widget_links clearfix">
+
+                                    <h4>EASY ACCESS</h4>
+
+                                    <ul>
+
+                                        @foreach (var item in Model.SLeftNavigations)
+                                        {
+                                            <li><a href="/@item.Url">@item.Title</a></li>
+                                        }
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="widget clearfix">
+                                    <h4>TK TAYLIGHT BLOG</h4>
+
+                                    <div class="posts-sm row col-mb-30" id="post-list-footer">
+                                        @foreach (var item in Model.Blogs)
+                                        {
+                                            <div class="entry col-12">
+                                                <div class="grid-inner row">
+                                                    <div class="col">
+                                                        <div class="entry-title">
+                                                            <h4><a href="@item.UrlRoot"><i class="icon-newspaper"></i> @item.Title </a></h4>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="row col-mb-50">
+                            <div class="col-md-4 col-lg-12">
+                                <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                                    <div class="row">
+                                        <div class="col-lg-6 bottommargin-sm">
+                                        </div>
+
+                                        <div class="col-lg-6 bottommargin-sm">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 col-lg-12">
+                                <div class="widget clearfix">
+                                    <h5>You can be informed with our current seminar, online education, workshops and events by subscribing our bulletin</h5>
+                                    <div class="widget-subscribe-form-result"></div>
+                                    <form asp-action="NewsBulletin" asp-controller="Home" method="post" class="mb-0">
+                                        <div class="input-group mx-auto">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="icon-email2"></i></div>
+                                            </div>
+                                            <input id="email" type="email" name="email" class="form-control" placeholder="E Mail Address">
+                                            <div class="input-group-append">
+                                                <button id="subscribe" class="btn btn-danger" type="button">Subscribe </button>
+                                            </div>
+                                        </div>
+                                        <span id="subscribe_result" class="text-danger d-none"></span>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-12">
+                                <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                                    <div class="row">
+                                        <div class="col-6 col-md-12 col-lg-6 clearfix bottommargin-sm">
+                                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="social-icon si-dark si-colored si-youtube mb-0" style="margin-right: 10px;">
+                                                <i class="icon-youtube"></i>
+                                                <i class="icon-youtube"></i>
+                                            </a>
+                                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank"><small style="display: block; margin-top: 3px;"><strong>Subscribe</strong> to our youtube channel</small></a>
+                                        </div>
+                                        <div class="col-6 col-md-12 col-lg-6 clearfix bottommargin-sm">
+                                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="social-icon si-dark si-colored si-instagram mb-0" style="margin-right: 10px;">
+                                                <i class="icon-instagram"></i>
+                                                <i class="icon-instagram"></i>
+                                            </a>
+                                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank"><small style="display: block; margin-top: 3px;">Follow Us<br /><strong>Instagram</strong></small></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- .footer-widgets-wrap end -->
+
+        </div>
+
+        <!-- Copyrights
+        ============================================= -->
+        <div id="copyrights">
+            <div class="container">
+
+                <div class="row col-mb-30">
+
+                    <div class="col-md-6 text-center text-md-left">
+                        Copyrights &copy; 2020 All Rights Reserved by TK Taylight.<br />
+                        <div class="copyright-links">Created by <a href="#" target="_blank">Kaden Yazılım</a></div>
+                    </div>
+
+                    <div class="col-md-6 text-center text-md-right">
+                        <div class="d-flex justify-content-center justify-content-md-end">
+
+
+                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="social-icon si-small si-borderless si-instagram">
+                                <i class="icon-instagram"></i>
+                                <i class="icon-instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="social-icon si-small si-borderless si-youtube">
+                                <i class="icon-youtube"></i>
+                                <i class="icon-youtube"></i>
+                            </a>
+                            <a href="#" target="_blank" class="social-icon si-small si-borderless si-spotify">
+                                <i class="icon-spotify"></i>
+                                <i class="icon-spotify"></i>
+                            </a>
+                            <a href="https://www.facebook.com/groups/taylankumeli" target="_blank" class="social-icon si-small si-borderless si-facebook">
+                                <i class="icon-facebook"></i>
+                                <i class="icon-facebook"></i>
+                            </a>
+
+
+                            <a href="https://twitter.com/taylankumelii" target="_blank" class="social-icon si-small si-borderless si-twitter">
+                                <i class="icon-twitter"></i>
+                                <i class="icon-twitter"></i>
+                            </a>
+
+
+
+                            <a href="https://tr.pinterest.com/taylankmeli/" target="_blank" class="social-icon si-small si-borderless si-pinterest">
+                                <i class="icon-pinterest"></i>
+                                <i class="icon-pinterest"></i>
+                            </a>
+
+                            <a href="#" class="social-icon si-small si-borderless si-linkedin">
+                                <i class="icon-linkedin"></i>
+                                <i class="icon-linkedin"></i>
+                            </a>
+
+                        </div>
+
+                        <div class="clear"></div>
+
+                        <i class="icon-envelope2"></i> @Model.TaylanK.Email1 <span class="middot">&middot;</span> <i class="icon-phone"></i> @Model.TaylanK.Phone1 <span class="middot">&middot;</span> <i class="icon-whatsapp"></i> @Model.TaylanK.Phone1
+                    </div>
+
+                </div>
+
+            </div>
+        </div><!-- #copyrights end -->
+    </footer>
+
+}
+else
+{
+
+    <footer id="footer" class="dark">
+        <div class="container">
+
+            <!-- Footer Widgets
+            ============================================= -->
+            <div class="footer-widgets-wrap">
+
+                <div class="row col-mb-50">
+                    <div class="col-lg-8">
+
+                        <div class="row col-mb-50">
+                            <div class="col-md-4">
+
+                                <div class="widget clearfix">
+
+                                    <img src=@Url.Content("~/Upload/"+@Model.TaylanK.Logo) alt="Image" class="footer-logo">
+
+                                    <p><strong>Diyet</strong> sözcüğünü unutun, <strong>sağlıklı</strong> beslenerek zayıflayın.</p>
+
+                                    <div style="background: url('~/UI/images/world-map.png') no-repeat center center; background-size: 100%;">
+                                        <address>
+                                            <strong>TK Taylight Posta Adresi:</strong><br />
+                                            @Model.TaylanK.Adress<br />
+                                        </address>
+                                        <abbr title="Telefon Numarası"><strong>Tel:</strong></abbr> @Model.TaylanK.Phone1<br />
+                                        <abbr title="Telefon Numarası"><strong>Tel:</strong></abbr> @Model.TaylanK.Phone2<br />
+                                        <abbr title="Fax"><strong>Fax:</strong></abbr> @Model.TaylanK.Fax<br />
+                                        <abbr title="Eposta Adresi"><strong>Eposta:</strong></abbr> @Model.TaylanK.Email1
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="widget widget_links clearfix">
+
+                                    <h4>KOLAY ERİŞİM</h4>
+
+                                    <ul>
+                                        @foreach (var item in Model.SLeftNavigations)
+                                        {
+                                            <li><a href="/@item.Url">@item.Title</a></li>
+                                        }
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="widget clearfix">
+                                    <h4>TK TAYLIGHT BLOG</h4>
+
+                                    <div class="posts-sm row col-mb-30" id="post-list-footer">
+                                        @foreach (var item in Model.Blogs)
+                                        {
+                                            <div class="entry col-12">
+                                                <div class="grid-inner row">
+                                                    <div class="col">
+                                                        <div class="entry-title">
+                                                            <h4><a href="@item.UrlRoot"><i class="icon-newspaper"></i> @item.Title </a></h4>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="row col-mb-50">
+                            <div class="col-md-4 col-lg-12">
+                                <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                                    <div class="row">
+                                        <div class="col-lg-6 bottommargin-sm">
+                                        </div>
+
+                                        <div class="col-lg-6 bottommargin-sm">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 col-lg-12">
+                                <div class="widget clearfix">
+                                    <h5>Bültenimize <strong>Üye</strong> olarak, güncel seminer, online eğitim, atölyelerimiz ve etkinliklerimiz hakkında bilgi sahibi olabilirsiniz.</h5>
+                                    <div class="widget-subscribe-form-result"></div>
+                                    <form asp-action="NewsBulletin" asp-controller="Home" method="post" class="mb-0">
+                                        <div class="input-group mx-auto">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"><i class="icon-email2"></i></div>
+                                            </div>
+                                            <input id="email" type="email" name="email" class="form-control" placeholder="E-Posta Adresiniz">
+                                            <div class="input-group-append">
+                                                <button id="subscribe" class="btn btn-danger" type="button">Üye Ol</button>
+                                            </div>
+                                        </div>
+                                        <span id="subscribe_result" class="text-danger d-none"></span>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-12">
+                                <div class="widget clearfix" style="margin-bottom: -20px;">
+
+                                    <div class="row">
+                                        <div class="col-6 col-md-12 col-lg-6 clearfix bottommargin-sm">
+                                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="social-icon si-dark si-colored si-youtube mb-0" style="margin-right: 10px;">
+                                                <i class="icon-youtube"></i>
+                                                <i class="icon-youtube"></i>
+                                            </a>
+                                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank"><small style="display: block; margin-top: 3px;">Youtube Kanalımıza<br /><strong>Üye Olun</strong></small></a>
+                                        </div>
+                                        <div class="col-6 col-md-12 col-lg-6 clearfix bottommargin-sm">
+                                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="social-icon si-dark si-colored si-instagram mb-0" style="margin-right: 10px;">
+                                                <i class="icon-instagram"></i>
+                                                <i class="icon-instagram"></i>
+                                            </a>
+                                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank"><small style="display: block; margin-top: 3px;">Instagram'da<br /><strong>Takip Edin</strong></small></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- .footer-widgets-wrap end -->
+
+        </div>
+
+        <!-- Copyrights
+        ============================================= -->
+        <div id="copyrights">
+            <div class="container">
+
+                <div class="row col-mb-30">
+
+                    <div class="col-md-6 text-center text-md-left">
+                        Copyrights &copy; 2020 All Rights Reserved by TK Taylight.<br />
+                        <div class="copyright-links">Created by <a href="#" target="_blank">Kaden Yazılım</a></div>
+                    </div>
+
+                    <div class="col-md-6 text-center text-md-right">
+                        <div class="d-flex justify-content-center justify-content-md-end">
+
+
+                            <a href="https://www.instagram.com/taylankumelitk/" target="_blank" class="social-icon si-small si-borderless si-instagram">
+                                <i class="icon-instagram"></i>
+                                <i class="icon-instagram"></i>
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCAhlFRgMkaa6TTQ95wDooMQ" target="_blank" class="social-icon si-small si-borderless si-youtube">
+                                <i class="icon-youtube"></i>
+                                <i class="icon-youtube"></i>
+                            </a>
+                            <a href="#" target="_blank" class="social-icon si-small si-borderless si-spotify">
+                                <i class="icon-spotify"></i>
+                                <i class="icon-spotify"></i>
+                            </a>
+                            <a href="https://www.facebook.com/groups/taylankumeli" target="_blank" class="social-icon si-small si-borderless si-facebook">
+                                <i class="icon-facebook"></i>
+                                <i class="icon-facebook"></i>
+                            </a>
+
+
+                            <a href="https://twitter.com/taylankumelii" target="_blank" class="social-icon si-small si-borderless si-twitter">
+                                <i class="icon-twitter"></i>
+                                <i class="icon-twitter"></i>
+                            </a>
+
+
+
+                            <a href="https://tr.pinterest.com/taylankmeli/" target="_blank" class="social-icon si-small si-borderless si-pinterest">
+                                <i class="icon-pinterest"></i>
+                                <i class="icon-pinterest"></i>
+                            </a>
+
+                            <a href="#" class="social-icon si-small si-borderless si-linkedin">
+                                <i class="icon-linkedin"></i>
+                                <i class="icon-linkedin"></i>
+                            </a>
+
+                        </div>
+
+                        <div class="clear"></div>
+
+                        <i class="icon-envelope2"></i> @Model.TaylanK.Email1 <span class="middot">&middot;</span> <i class="icon-phone"></i> @Model.TaylanK.Phone1 <span class="middot">&middot;</span> <i class="icon-whatsapp"></i> @Model.TaylanK.Phone1
+                    </div>
+
+                </div>
+
+            </div>
+        </div><!-- #copyrights end -->
+    </footer>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#subscribe').click(function (e) {
+            e.preventDefault();
+            if ($('#email').val()) {
+                $.ajax({
+                    data: { email: $('#email').val() },
+                    type: 'POST',
+                    url: '/Home/NewsBulletin',
+                    success: function (result) {
+                        $('#subscribe_result').text(result.result);
+                        $('#subscribe_result').removeClass('d-none');
+                    }
+                });
+            }
+            else {
+                $('#subscribe_result').text('Email boş geçilemez');
+                $('#subscribe_result').removeClass('d-none');
+            }
+
+        });
+    });
+
+</script>

@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
@@ -26,6 +27,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<UILayoutHeaderTopMenuQueryResponse> UILayoutHeaderTopMenuAsync();
         Task<UILayoutHeaderMenuQueryResponse> UILayoutHeaderMenuAsync();
         Task<UILayoutBannerQueryResponse> UILayoutBannerAsync();
+        Task<UILayoutFooterQueryResponse> UILayoutFooterAsync();
 
         #endregion
     }
