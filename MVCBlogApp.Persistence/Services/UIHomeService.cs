@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
@@ -8,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
+using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
@@ -34,6 +37,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IMembersReadRepository _membersReadRepository;
         private readonly IUserReadRepository _userReadRepository;
         private readonly ITaylanKReadRepository _waylanKReadRepository;
+        private readonly IBookReadRepository _bookReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -46,7 +50,8 @@ namespace MVCBlogApp.Persistence.Services
             IVideoCategoryReadRepository videoCategoryReadRepository,
             IMembersReadRepository membersReadRepository,
             IUserReadRepository userReadRepository,
-            ITaylanKReadRepository waylanKReadRepository)
+            ITaylanKReadRepository waylanKReadRepository,
+            IBookReadRepository bookReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -59,6 +64,7 @@ namespace MVCBlogApp.Persistence.Services
             _membersReadRepository = membersReadRepository;
             _userReadRepository = userReadRepository;
             _waylanKReadRepository = waylanKReadRepository;
+            _bookReadRepository = bookReadRepository;
         }
 
 
@@ -269,6 +275,192 @@ namespace MVCBlogApp.Persistence.Services
                     NameSurname = null
                 };
             }
+        }
+
+        public async Task<UILayoutHeaderMenuQueryResponse> UILayoutHeaderMenuAsync()
+        {
+            int langId = _operationService.SessionLangId();
+
+            List<VM_Navigation> navigations = new();
+
+            //Article
+            List<VM_Article> articles = await _articleReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != false && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Article
+            {
+                Action = y.Action,
+                NavigationId = y.NavigationId,
+                Id = y.Id,
+                ArticleCategoryId = y.ArticleCategoryId,
+                ArticleDate = y.ArticleDate,
+                AuthorUserId = y.AuthorUserId,
+                Controller = y.Controller,
+                CoverImgUrl = y.CoverImgUrl,
+                CreateDate = y.CreateDate,
+                CreateUserId = y.CreateUserId,
+                Description = y.Description,
+                FontAwesomeIcon = y.FontAwesomeIcon,
+                IsComponent = y.IsComponent,
+                IsMainPage = y.IsMainPage,
+                IsMenu = y.IsMenu,
+                IsNewsComponent = y.IsNewsComponent,
+                LangId = y.LangId,
+                MetaDescription = y.MetaDescription,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                Orders = y.Orders,
+                StatusId = y.StatusId,
+                SubTitle = y.SubTitle,
+                Title = y.Title,
+                UpdateDate = y.UpdateDate,
+                UpdateUserId = y.UpdateUserId,
+                UrlRoot = y.UrlRoot
+            }).ToListAsync();
+
+            
+            navigations.AddRange(articles.OrderBy(x => x.Orders).Select(y => new VM_Navigation
+            {
+                Action = y.Action,
+                Controller = y.Controller,
+                CreateDate = y.CreateDate,
+                FontAwesomeIcon = y.FontAwesomeIcon,
+                Id = (int)y.Id,
+                IsAdmin = false,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationName = y.Title,
+                ParentId = y.NavigationId,
+                UrlRoot = y.UrlRoot,
+                OrderNo = y.Orders.ToString()
+            }));
+
+            //Blog
+
+            List<VM_Blog> blogs = await _blogReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == 1 && x.BlogTypeId == 2 && x.LangId == langId).Select(y => new VM_Blog
+            {
+                Id = y.Id,
+                Action = y.Action,
+                BlogCategoryId = y.BlogCategoryId,
+                BlogType = y.BlogType,
+                BlogTypeId = y.BlogTypeId,
+                Contents = y.Contents,
+                Controller = y.Controller,
+                CoverImgUrl = y.CoverImgUrl,
+                CreateDate = y.CreateDate,
+                CreateUserId = y.CreateUserId,
+                IsComponent = y.IsComponent,
+                IsMainPage = y.IsMainPage,
+                IsMenu = y.IsMenu,
+                IsNewsComponent = y.IsNewsComponent,
+                LangId = y.LangId,
+                MetaDescription = y.MetaDescription,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationId = y.NavigationId,
+                Orders = y.Orders,
+                StatusId = y.StatusId,
+                SubTitle = y.SubTitle,
+                Title = y.Title,
+                UpdateDate = y.UpdateDate,
+                UpdateUserId = y.UpdateUserId,
+                UrlRoot = y.UrlRoot
+            }).ToListAsync();
+
+            navigations.AddRange(blogs.Select(y => new VM_Navigation
+            {
+                CreateDate = y.CreateDate,
+                Id = (int)y.Id,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationName = y.Title,
+                ParentId = y.NavigationId,
+                UrlRoot = y.UrlRoot,
+                OrderNo = y.Orders.ToString()
+            }));
+
+            //Book
+            List<VM_Book> books = await _bookReadRepository.GetWhere(x => x.StatusId == 1 && x.NavigationId != null && x.Orders != null && x.LangId == langId).OrderBy(x => x.Orders).Select(y => new VM_Book
+            {
+                Action = y.Action,
+                BookName = y.BookName,
+                Content = y.Content,
+                Controller = y.Controller,
+                CreateDate = y.CreateDate,
+                CreateUserId = y.CreateUserId,
+                Id = (int)y.Id,
+                ImageUrl = y.ImageUrl,
+                IsMainPage = y.IsMainPage,
+                LangId = langId,
+                MetaDescription = y.MetaDescription,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationId = y.NavigationId,
+                Orders = y.Orders,
+                PublicationYear = y.PublicationYear,
+                StatusId = y.StatusId,
+                UrlRoot = y.UrlRoot
+            }).ToListAsync();
+
+            navigations.AddRange(books.Select(y => new VM_Navigation
+            {
+                CreateDate = y.CreateDate,
+                Id = (int)y.Id,
+                NavigationName = y.BookName,
+                ParentId = y.NavigationId,
+                UrlRoot = y.UrlRoot,
+                Action = y.Action,
+                Controller = y.Controller,
+                OrderNo = y.Orders.ToString()
+            }));
+
+
+            // Navigation
+
+            List<VM_Navigation> newNavigation = await _navigationReadRepository.GetWhere(x => x.IsActive == true && x.IsAdmin == false && x.LangId == langId).OrderBy(x => x.ParentId).ThenBy(x => x.OrderNo).ThenBy(x => x.Id)
+                .Select(y => new VM_Navigation
+                {
+                    Id = y.Id,
+                    ParentId = y.ParentId,
+                    Action = y.Action,
+                    Controller = y.Controller,
+                    CreateDate = y.CreateDate,
+                    FontAwesomeIcon = y.FontAwesomeIcon,
+                    IsActive = y.IsActive,
+                    IsAdmin = y.IsAdmin,
+                    IsHeader = y.IsHeader,
+                    IsSubHeader = y.IsSubHeader,
+                    LangId = y.LangId,
+                    MetaKey = y.MetaKey,
+                    MetaTitle = y.MetaTitle,
+                    OrderNo = y.OrderNo,
+                    Type = y.Type,
+                    UrlRoot = y.UrlRoot
+                }).ToListAsync();
+
+            navigations.AddRange(newNavigation.Select(y => new VM_Navigation
+            {
+                Action = y.Action,
+                Controller = y.Controller,
+                FontAwesomeIcon = y.FontAwesomeIcon,
+                Id = y.Id,
+                IsActive = y.IsActive,
+                IsHeader = y.IsHeader,
+                IsSubHeader = y.IsSubHeader,
+                LangId = y.LangId,
+                MetaKey = y.MetaKey,
+                MetaTitle = y.MetaTitle,
+                NavigationName = y.NavigationName,
+                OrderNo = y.OrderNo,
+                ParentId = y.ParentId,
+                UrlRoot = y.UrlRoot,
+                CreateDate = y.CreateDate,
+                MenuCount = articles.Where(x => x.NavigationId == y.Id).Count() + blogs.Where(x => x.NavigationId == y.Id).Count() + books.Where(x => x.NavigationId == y.Id).Count() + newNavigation.Where(x => x.ParentId == y.Id).Count(),
+                HeaderCount = newNavigation.Where(x => x.ParentId == y.Id && x.IsHeader == true).Count(),
+                SubHeaderCount = newNavigation.Where(x => x.ParentId == y.Id && x.IsSubHeader == true).Count()
+            }));
+
+            return new()
+            {
+                Navigations = navigations
+            };
         }
 
 

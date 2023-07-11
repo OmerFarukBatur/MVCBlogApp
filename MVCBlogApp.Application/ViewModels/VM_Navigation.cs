@@ -26,5 +26,9 @@
         public string? ImageUrl { get; set; }
         public string? Description { get; set; }
         public string? ArticlePreviewTitle { get; set; }
+
+        public int? MenuCount { get; set; }
+        public int? HeaderCount { get; set; }
+        public int? SubHeaderCount { get; set; }
     }
 }

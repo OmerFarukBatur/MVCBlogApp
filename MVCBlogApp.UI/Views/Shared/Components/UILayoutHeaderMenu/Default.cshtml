@@ -1,0 +1,227 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_Navigation>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http;
+@inject IOperationService OperationService
+@{
+    int LangID = OperationService.SessionLangId();
+}
+
+<style>
+    .menu-container > .mega-menu:not(.mega-menu-small) .mega-menu-content .mega-menu-div {
+        top: calc( 100% - 20px ) !important;
+    }
+</style>
+
+<header id="header" class="header-size-sm" data-sticky-shrink="false">
+    <div class="container">
+        <div class="header-row flex-column flex-lg-row justify-content-center justify-content-lg-start">
+
+
+            <div id="logo" class="mr-0 mr-lg-auto">
+
+                <a href="/" class="standard-logo" data-dark-logo="~/UI/images/_taylan/logo-dark.png"><img src="~/UI/images/_taylan/logo.png" alt="Taylan Kümeli Logo"></a>
+            </div>
+
+            <div class="header-misc mb-4 mb-lg-0 d-none d-lg-flex">
+
+                @*@await Component.InvokeAsync("Banner")*@
+
+            </div>
+
+        </div>
+    </div>
+
+    <div id="header-wrap" class="border-top border-f5">
+        <div class="container">
+            <div class="header-row justify-content-between">
+
+                <div class="header-misc">
+
+
+                    <div id="top-search" class="header-misc-icon">
+                        <a href="#" id="top-search-trigger"><i class="icon-line-search"></i><i class="icon-line-cross"></i></a>
+                    </div><!-- #top-search end -->
+
+                </div>
+
+                <div id="primary-menu-trigger">
+                    <svg class="svg-trigger" viewBox="0 0 100 100"><path d="m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20"></path><path d="m 30,50 h 40"></path><path d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20"></path></svg>
+                </div>
+
+
+
+
+                <nav id="navigation" class="primary-menu">
+                    <ul class="menu-container">
+                        @foreach (var item in Model)
+                        {
+
+
+
+                            if (item.ParentId == 0 && item.OrderNo == "1")
+                            {
+                                <li class="menu-item">
+                                    <a class="menu-link" href="/@item.UrlRoot"><div>@item.NavigationName</div></a>
+                                </li>
+                            }
+
+
+
+
+                            else if (item.ParentId == 0 && item.HeaderCount == 0)
+                            {
+                                <li class="menu-item">
+                                    @* Altında tek sayfada açılabilir menu olanlar *@
+
+                                    <a href="/@item.UrlRoot" class="menu-link"><div>@item.NavigationName</div></a>
+
+                                    @*<a class="menu-link" asp-route-id="/@item.UrlRoot"><div>@item.NavigationName</div></a>*@
+                                    @if (item.MenuCount > 0)
+                                    {
+                                        <ul class="sub-menu-container">
+                                            @foreach (var menu in Model.Where(x => x.ParentId == item.Id))
+                                            {
+                                                <li class="menu-item">
+                                                    <a href="/@menu.UrlRoot" class="menu-link"><div>@menu.NavigationName</div></a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                            else if (item.ParentId == 0 && item.HeaderCount >= 3)
+                            {
+                                <li Id="order1" class="menu-item mega-menu">
+                                    <a href="/beslenme-danismanligi" class="menu-link"><div>@item.NavigationName</div></a>
+                                    <div class="mega-menu-div mega-menu-content mega-menu-style-2 ">
+                                        <div class="container">
+                                            <div class="row">
+                                                @foreach (var header in Model.Where(x => x.ParentId == item.Id && x.IsHeader == true))
+                                                {
+                                                    @if (!header.OrderNo.Contains(','))
+                                                    {
+                                                        <ul class="sub-menu-container mega-menu-column col-lg-4">
+                                                            <li class="menu-item mega-menu-title">
+                                                                <a class="menu-link" href="/@header.UrlRoot">
+                                                                    <div>
+                                                                        @header.NavigationName
+                                                                        @if (Model.Any(x => x.ParentId == item.Id && x.IsSubHeader == true && x.OrderNo == header.OrderNo))
+                                                                        {
+                                                                            <hr />
+                                                                            <small>@Model.First(x => x.ParentId == item.Id && x.IsSubHeader == true && x.OrderNo == header.OrderNo).NavigationName</small>
+                                                                            <hr />
+                                                                        }
+                                                                    </div>
+                                                                </a>
+                                                                <ul class="sub-menu-container">
+
+                                                                    @foreach (var menu in Model.Where(x => x.ParentId == header.Id && x.IsHeader == null && x.IsSubHeader == null))
+                                                                    {
+                                                                        <li class="menu-item">
+                                                                            <a class="menu-link" href="/@menu.UrlRoot"><div><i class="@menu.FontAwesomeIcon"></i>@menu.NavigationName</div></a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    }
+                                                    else if (header.OrderNo.First() != header.OrderNo.Last())
+                                                    {
+                                                        <ul class="sub-menu-container mega-menu-column col-lg-4">
+                                                            @foreach (var header2 in Model.Where(x => x.ParentId == item.Id && x.IsHeader == true && x.OrderNo.Contains(',')))
+                                                            {
+                                                                <li class="menu-item mega-menu-title">
+                                                                    <a class="menu-link" href="/@header2.UrlRoot">
+                                                                        <div>
+                                                                            @header2.NavigationName
+                                                                            @if (Model.Any(x => x.ParentId == item.Id && x.IsSubHeader == true && header2.OrderNo.StartsWith(x.OrderNo) && !header2.OrderNo.EndsWith(x.OrderNo)))
+                                                                            {
+                                                                                <hr />
+                                                                                <small>@Model.First(x => x.ParentId == item.Id && x.IsSubHeader == true && header2.OrderNo.StartsWith(x.OrderNo) && !header2.OrderNo.EndsWith(x.OrderNo)).NavigationName</small>
+                                                                                <hr />
+                                                                            }
+                                                                        </div>
+                                                                    </a>
+                                                                    <ul class="sub-menu-container">
+
+                                                                        @foreach (var menu in Model.Where(x => x.ParentId == header2.Id && x.IsHeader == null && x.IsSubHeader == null))
+                                                                        {
+                                                                            <li class="menu-item">
+                                                                                <a class="menu-link" href="/@menu.UrlRoot"><div><i class="@menu.FontAwesomeIcon"></i>@menu.NavigationName</div></a>
+                                                                            </li>
+                                                                        }
+                                                                    </ul>
+                                                                </li>
+                                                            }
+
+                                                        </ul>
+                                                    }
+
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            else if (item.ParentId == 0 && item.HeaderCount >= 2)
+                            {
+                                <li class="menu-item mega-menu mega-menu-small">
+                                    <a class="menu-link" href="@item.UrlRoot"><div>@item.NavigationName</div></a>
+                                    <div class="mega-menu-content mega-menu-style-2">
+                                        <div class="container">
+                                            <div class="row">
+                                                @foreach (var header in Model.Where(x => x.ParentId == item.Id && x.IsHeader == true))
+                                                {
+                                                    <ul class="sub-menu-container mega-menu-column col-lg-6">
+                                                        <li class="menu-item mega-menu-title">
+                                                            <a class="menu-link" href="/@header.UrlRoot"><div>@header.NavigationName</div></a>
+                                                            <ul class="sub-menu-container">
+
+                                                                @foreach (var menu in Model.Where(x => x.ParentId == header.Id && x.IsHeader == null && x.IsSubHeader == null))
+                                                                {
+                                                                    <li class="menu-item">
+                                                                        <a class="menu-link" href="/@menu.UrlRoot"><div><i class="@menu.FontAwesomeIcon"></i>@menu.NavigationName</div></a>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+
+
+                    </ul>
+
+                </nav>
+
+                <form class="top-search-form" asp-action="search" asp-controller="Home" method="get">
+                    @if (LangID == 2)
+                    {
+                        <input type="text" name="q" class="form-control" value="" placeholder="Write a word ..." autocomplete="off">
+
+                    }
+                    else
+                    {
+                        <input type="text" name="q" class="form-control" value="" placeholder="Bir kelime yazınız..." autocomplete="off">
+                    }
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="header-wrap-clone"></div>
+</header><!-- #header end -->
+@*<form>
+        <input Id="orderNo" type="text" />
+        <input Id="ParentId" type="number" />
+    </form>*@
