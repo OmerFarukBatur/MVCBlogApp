@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
@@ -9,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
+using MVCBlogApp.Application.Repositories.Banner;
 using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
@@ -38,6 +40,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IUserReadRepository _userReadRepository;
         private readonly ITaylanKReadRepository _waylanKReadRepository;
         private readonly IBookReadRepository _bookReadRepository;
+        private readonly IBannerReadRepository _bannerReadRepository;
+        private readonly IBannerWriteRepository _bannerWriteRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -51,7 +55,9 @@ namespace MVCBlogApp.Persistence.Services
             IMembersReadRepository membersReadRepository,
             IUserReadRepository userReadRepository,
             ITaylanKReadRepository waylanKReadRepository,
-            IBookReadRepository bookReadRepository)
+            IBookReadRepository bookReadRepository,
+            IBannerReadRepository bannerReadRepository,
+            IBannerWriteRepository bannerWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -65,6 +71,8 @@ namespace MVCBlogApp.Persistence.Services
             _userReadRepository = userReadRepository;
             _waylanKReadRepository = waylanKReadRepository;
             _bookReadRepository = bookReadRepository;
+            _bannerReadRepository = bannerReadRepository;
+            _bannerWriteRepository = bannerWriteRepository;
         }
 
 
@@ -463,7 +471,50 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<UILayoutBannerQueryResponse> UILayoutBannerAsync()
+        {
+            string bannerURL = "";
+            int langId = _operationService.SessionLangId();
 
+            string dateString = DateTime.Now.ToString("ddMMyyyy");
+
+            var banner = await _bannerReadRepository.GetWhere(s => s.DateString == dateString && s.StatusId == 1 && s.LangId == langId).FirstOrDefaultAsync();
+            if (banner != null)
+            {
+                bannerURL = banner.BannerUrl;
+            }
+
+            string dateStringYesterday = DateTime.Now.AddDays(-1).ToString("ddMMyyyy");
+            var bannerYesterday = await _bannerReadRepository.GetWhere(s => s.DateString == dateStringYesterday && s.StatusId == 1 && s.LangId == langId).FirstOrDefaultAsync();
+            if (bannerYesterday != null)
+            {
+                var bannerToday = await _bannerReadRepository.GetWhere(s => s.BannerOrder > bannerYesterday.BannerOrder && s.StatusId == 1 && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
+
+                if (bannerToday != null)
+                {
+                    bannerToday.DateString = dateString;
+                    _bannerWriteRepository.Update(bannerToday);
+                    await _bannerWriteRepository.SaveAsync();
+
+                    bannerURL = bannerToday?.BannerUrl;
+                }
+            }
+
+            var bannerFirst = await _bannerReadRepository.GetWhere(s => s.StatusId == 1 && s.LangId == langId).OrderBy(s => s.BannerOrder).FirstOrDefaultAsync();
+            if (bannerFirst != null)
+            {
+                bannerFirst.DateString = dateString;
+                _bannerWriteRepository.Update(bannerFirst);
+                await _bannerWriteRepository.SaveAsync();
+
+                bannerURL = bannerFirst?.BannerUrl;
+            }
+
+            return new()
+            {
+                BannerUrl = bannerURL
+            };
+        }
         #endregion
     }
 }
