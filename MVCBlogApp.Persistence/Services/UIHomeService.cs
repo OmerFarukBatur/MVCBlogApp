@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
@@ -46,6 +48,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBannerWriteRepository _bannerWriteRepository;
         private readonly ITaylanKReadRepository _taylanKReadRepository;
         private readonly ISLeftNavigationReadRepository _sLeftNavigationReadRepository;
+        private readonly IStorageService _storageService;
 
         public UIHomeService(
             IOperationService operationService,
@@ -63,7 +66,8 @@ namespace MVCBlogApp.Persistence.Services
             IBannerReadRepository bannerReadRepository,
             IBannerWriteRepository bannerWriteRepository,
             ITaylanKReadRepository taylanKReadRepository,
-            ISLeftNavigationReadRepository sLeftNavigationReadRepository)
+            ISLeftNavigationReadRepository sLeftNavigationReadRepository,
+            IStorageService storageService)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -81,6 +85,7 @@ namespace MVCBlogApp.Persistence.Services
             _bannerWriteRepository = bannerWriteRepository;
             _taylanKReadRepository = taylanKReadRepository;
             _sLeftNavigationReadRepository = sLeftNavigationReadRepository;
+            _storageService = storageService;
         }
 
 
@@ -256,6 +261,32 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = vM_TaylanK
             };
 
+        }
+
+        public async Task<UploadImageCommandResponse> UploadImageAsync(UploadImageCommandRequest request)
+        {
+            if (request.FormFile != null)
+            {
+                List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("other-image", request.FormFile);
+                    VM_LocalUploadFile localUploadFile = new()
+                    {
+                        uploaded = 1,
+                        fileName = result[0].fileName,
+                        ErrorMessage =  "Resim başarıyla yüklendi."
+                    };
+
+                return new() 
+                { 
+                    LocalUploadFile = localUploadFile
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    LocalUploadFile = null
+                };
+            }
         }
 
         #endregion
@@ -606,6 +637,7 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = taylanK
             };
         }
+
         #endregion
     }
 }

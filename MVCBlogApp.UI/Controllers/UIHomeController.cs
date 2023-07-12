@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 
 namespace MVCBlogApp.UI.Controllers
@@ -43,6 +44,14 @@ namespace MVCBlogApp.UI.Controllers
                 TempData["MetaTitle"] = response.TaylanK.Metatitle;                
             }
             return View();
+        }
+
+        [Route("upload-image")]
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(UploadImageCommandRequest request)
+        {
+            UploadImageCommandResponse response = await _mediator.Send(request);
+            return Json(response.LocalUploadFile);
         }
     }
 }

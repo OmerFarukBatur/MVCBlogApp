@@ -47,11 +47,15 @@ namespace MVCBlogApp.UI.Controllers
         }
 
         [HttpGet]
+        [Route("Danisan/uye-giris")]
+        [Route("Members/Login")]
         public IActionResult Login()
         {
             return View();
         }
         [HttpPost]
+        [Route("Danisan/uye-giris")]
+        [Route("Members/Login")]
         public async Task<IActionResult> Login(LoginQueryRequest request)
         {
             LoginQueryResponse response = await _mediator.Send(request);

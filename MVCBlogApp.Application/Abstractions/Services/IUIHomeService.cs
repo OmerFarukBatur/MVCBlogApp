@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
+﻿using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
+using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
@@ -19,6 +20,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<UIHomeRightVideoQueryResponse> UIHomeRightVideoAsync();
         Task<UIHomeLatestNewsQueryResponse> UIHomeLatestNewsAsync();
         Task<UIHomeIndexQueryResponse> UIHomeIndexAsync();
+        Task<UploadImageCommandResponse> UploadImageAsync(UploadImageCommandRequest request);
 
         #endregion
 
