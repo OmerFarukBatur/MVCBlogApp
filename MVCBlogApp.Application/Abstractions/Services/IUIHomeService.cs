@@ -3,6 +3,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
@@ -21,6 +22,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<UIHomeLatestNewsQueryResponse> UIHomeLatestNewsAsync();
         Task<UIHomeIndexQueryResponse> UIHomeIndexAsync();
         Task<UploadImageCommandResponse> UploadImageAsync(UploadImageCommandRequest request);
+        Task<GetPageQueryResponse> GetPageAsync(GetPageQueryRequest request);
 
         #endregion
 

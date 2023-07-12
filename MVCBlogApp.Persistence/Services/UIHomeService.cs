@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
@@ -17,8 +18,10 @@ using MVCBlogApp.Application.Repositories.Banner;
 using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
+using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.Press;
 using MVCBlogApp.Application.Repositories.SLeftNavigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.TaylanK;
@@ -49,6 +52,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly ITaylanKReadRepository _taylanKReadRepository;
         private readonly ISLeftNavigationReadRepository _sLeftNavigationReadRepository;
         private readonly IStorageService _storageService;
+        private readonly IPressReadRepository _pressReadRepository;
+        private readonly IMasterRootReadRepository _masterRootReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -67,7 +72,9 @@ namespace MVCBlogApp.Persistence.Services
             IBannerWriteRepository bannerWriteRepository,
             ITaylanKReadRepository taylanKReadRepository,
             ISLeftNavigationReadRepository sLeftNavigationReadRepository,
-            IStorageService storageService)
+            IStorageService storageService,
+            IPressReadRepository pressReadRepository,
+            IMasterRootReadRepository masterRootReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -86,6 +93,8 @@ namespace MVCBlogApp.Persistence.Services
             _taylanKReadRepository = taylanKReadRepository;
             _sLeftNavigationReadRepository = sLeftNavigationReadRepository;
             _storageService = storageService;
+            _pressReadRepository = pressReadRepository;
+            _masterRootReadRepository = masterRootReadRepository;
         }
 
 
@@ -288,6 +297,12 @@ namespace MVCBlogApp.Persistence.Services
                 };
             }
         }
+
+        public Task<GetPageQueryResponse> GetPageAsync(GetPageQueryRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 

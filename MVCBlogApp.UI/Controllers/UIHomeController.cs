@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 
 namespace MVCBlogApp.UI.Controllers
@@ -41,7 +42,7 @@ namespace MVCBlogApp.UI.Controllers
             {
                 TempData["MetaKey"] = response.TaylanK.Metakey;
                 TempData["MetaDescription"] = response.TaylanK.Metadescription;
-                TempData["MetaTitle"] = response.TaylanK.Metatitle;                
+                TempData["MetaTitle"] = response.TaylanK.Metatitle;
             }
             return View();
         }
@@ -60,6 +61,19 @@ namespace MVCBlogApp.UI.Controllers
         {
             UploadImageCommandResponse response = await _mediator.Send(request);
             return Json(response.LocalUploadFile);
+        }
+
+        [Route("ckeditor-test")]
+        public IActionResult CkEditorTest()
+        {
+            return View();
+        }
+
+        [Route("{id}")]
+        public async Task<IActionResult> GetPage(GetPageQueryRequest request)
+        {
+            GetPageQueryResponse response = await _mediator.Send(request);
+            return View(response);
         }
     }
 }

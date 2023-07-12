@@ -35,6 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\UI\assets\js\pages\NewFolder\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\branches\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\info\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\pack\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\refs\heads\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\refs\tags\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\commands\testa\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\commands\test\" />
+    <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\upload\" />
     <Folder Include="wwwroot\UI\images\_taylan\form\" />
     <Folder Include="wwwroot\UI\images\_taylan\icons\" />
     <Folder Include="wwwroot\Upload\article-files\" />
@@ -62,6 +71,82 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\config" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\description" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\HEAD" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\applypatch-msg.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\commit-msg.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\post-update.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\pre-applypatch.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\pre-commit.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\pre-push.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\pre-rebase.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\prepare-commit-msg.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\hooks\update.sample" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\index" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\info\exclude" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\05\7cb58a8575a4390e8b31ff5b115e6dcaf7502b" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\07\706829477ba50051cef233232023adec461e07" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\0c\76bd1297751b66230f74719504b2adb02b1615" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\12\1ce6fc2d13747aeb784e320c11fae10010f54a" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\1c\b145277a5ec6d957e20f9529636071e4cd8927" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\1d\ee9e366094e87db68c606d0522d72d4b939818" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\20\9ffabb3b3699e519c8c3bfbea309c66f1500cf" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\24\825f61f471a6be9b82477ac4f6fcbfc5a56726" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\28\5dca7b224710c772083b2a38f18e3b46a159d1" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\38\ca0f6e7782d5f21a1b97ffd93c2882cd15ce6a" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\3b\8d125de792aecca7c6323540069a288df6d6fd" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\44\33650ee37b48e8697632cc4f0ba3a3d0f53916" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\49\4f8ed28b7525d1c2caf6c7bf680bc7ffd0d168" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\4a\158fef7e0da8fd19525f574f2c4966443866cf" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\4b\825dc642cb6eb9a060e54bf8d69288fbee4904" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\4e\3548352fc4a82e91ebc7e79907565e40aae457" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\4f\ae198a94460867d8ee4046fb6541c0213a0bc1" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\52\699bfee0ce434356c6a9576f32fb6633b01866" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\54\bc8c867e8ba62f2cf0501d3a59bc70f09fe2da" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\57\69120b1b6d38019b505c9167498ea199212cc1" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\59\07e8228c8ef480c67629f88b7c22cef8b69376" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\63\fe6ceff5bfcedb9670279d4bb8d25807f6ecee" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\67\2f5662b4ae29c4d06c47d0a7960d4713f0cfe7" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\6e\d2490ed1432d5d667a76235360824a1088e928" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\72\0b4db4280b990954e708667a6a921038953df8" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\73\c5b3f243d98d089dd9e025edc81b939c1a9320" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\75\3b58ff2733d4524f5ed474c828b788a7a2a65c" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\78\4e8fa48234f4f64b6922a6758f254ee0ca08ec" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\78\68a25945cd5e5cb7daaca9591927511ca65c0f" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\7b\5d5cb76f23771f4bd78665917907a6d6847b5a" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\81\3f712f726c935f9adf8d2f2dd0d7683791ef11" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\85\b99d46b9911ba53a792d716d9f688f3bb3c784" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\86\aad3585ab5093bb341a4005efed0f3bebfadd7" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\86\e403c5ba9de8f5e029b9cc14ee1441f13ee982" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\8b\8b1ca0000bc8fa8d0379926736029f8fabe364" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\8f\8095e46fa4965700afe1f9d065d8a37b101676" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\92\3a9a90597864dffcafb0edb2e4ac1be556bf58" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\95\d38db01713fb5097b2dcc30e12c4e8b963716f" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\98\37e8e938ecc46b4d958d32857a55b47427d440" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\99\e0115aa8e22aee3f9af758629c74deaceff569" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\9e\4c736ef9dc0f00d0ce0c53c506fbaa6c007d1e" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\a8\b3ede3df956f8d505543b190bc8d1b5b4dce75" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\ab\34b09a618a98816d3af4112865cf2727365e7a" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\ae\8ecbf47672a874c0958d0d113a56162c2bd364" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\b0\ce7bb198a3b268bd634d2b26e9b710f3797d37" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\b2\5865e0fea7edf178c96806dac3ae559c0859f6" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\b6\8d699da8de27075171b1fb80177a91f960be9d" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\b7\bfcd15fb2f7ce658185bd7ef4729815e2f18b9" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\b9\77d7e52e2446ea01201c5c7209ac3a05f12c9f" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\bd\dba1f98ca56f8cffa39d768f80a06361d8d218" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\c4\475d4014a7ffbb6cbca86d5359d05b97e49785" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\c4\ae6f304bbe8ca143802f55bce8158cd7ba9d7c" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\c4\eff0387d5888c638ba09473ba6d2369f7b56f0" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\c5\c648255c1574dcc95c506b82c25044f0972dfd" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\d4\f0508e53cae6ce3eb535df7ef23a5d8f33ea39" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\e1\8edcc267beca9ce0dd830d8e4c3b41c15d9011" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\e4\d7f9c24b3648b25ed6144b4229c080629caf29" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\e7\2815191b181753bb04e682d87c2bc0b381f3a6" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\f5\9b7c4365fa1720af1aa04eb47167ddaa6eeed4" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\f9\07e44b3330e3ed1763e42746a2943234adb94d" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\fd\4bbccdf1643f4ff5022fbc59b82546e259317e" />
+    <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\fd\572489fd9d0a61d98bfcd5a4be15b0f0fa652d" />
     <None Include="wwwroot\Upload\icons\iconalt.svg" />
   </ItemGroup>
 
