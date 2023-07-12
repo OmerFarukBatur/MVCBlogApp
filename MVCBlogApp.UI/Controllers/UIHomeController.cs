@@ -53,5 +53,13 @@ namespace MVCBlogApp.UI.Controllers
             UploadImageCommandResponse response = await _mediator.Send(request);
             return Json(response.LocalUploadFile);
         }
+
+        [Route("upload-image&responseType=json")]
+        [HttpPost]
+        public async Task<IActionResult> UploadImageWithType(UploadImageCommandRequest request)
+        {
+            UploadImageCommandResponse response = await _mediator.Send(request);
+            return Json(response.LocalUploadFile);
+        }
     }
 }
