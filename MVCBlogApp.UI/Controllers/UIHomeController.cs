@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Domain.Entities;
@@ -161,6 +162,24 @@ namespace MVCBlogApp.UI.Controllers
             }
 
             return NotFound();
+        }
+
+        [Route("taylan-kumeli-kimdir")]
+        public async Task<IActionResult> TaylanKumeliKimdir()
+        {
+            GetBiographyQueryRequest request = new();
+            GetBiographyQueryResponse response = await _mediator.Send(request);
+
+            if (response.TaylanK == null)
+            {
+                return NotFound();
+            }
+            
+            TempData["MetaKey"] = response.TaylanK.Metakey;
+            TempData["MetaDescription"] = response.TaylanK.Metadescription;
+            TempData["MetaTitle"] = response.TaylanK.Metatitle;
+
+            return View();
         }
     }
 }

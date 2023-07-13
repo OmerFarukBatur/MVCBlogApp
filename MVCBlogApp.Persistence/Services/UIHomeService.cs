@@ -7,6 +7,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
@@ -507,6 +508,25 @@ namespace MVCBlogApp.Persistence.Services
 
         }
 
+        public async Task<GetBiographyQueryResponse> GetBiographyAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusActiveId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            VM_TaylanK? vM_TaylanK = await _taylanKReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.LangId == langId)
+                .Select(x => new VM_TaylanK
+                {
+                    Id = x.Id,
+                    Metadescription = x.Metadescription,
+                    Metakey = x.Metakey,
+                    Metatitle = x.Metatitle
+                }).FirstOrDefaultAsync();
+
+            return new()
+            {
+                TaylanK = vM_TaylanK
+            };
+        }
 
         #endregion
 
@@ -856,7 +876,7 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = taylanK
             };
         }
-
+        
         #endregion
     }
 }
