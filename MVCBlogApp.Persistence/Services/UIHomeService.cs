@@ -16,12 +16,15 @@ using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Banner;
 using MVCBlogApp.Application.Repositories.Blog;
+using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Press;
+using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.SLeftNavigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.TaylanK;
@@ -30,6 +33,7 @@ using MVCBlogApp.Application.Repositories.Video;
 using MVCBlogApp.Application.Repositories.VideoCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using System.Reflection.Metadata;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -54,6 +58,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IStorageService _storageService;
         private readonly IPressReadRepository _pressReadRepository;
         private readonly IMasterRootReadRepository _masterRootReadRepository;
+        private readonly IBlogTypeReadRepository _blogTypeReadRepository;
+        private readonly IPressTypeReadRepository _pressTypeReadRepository;
+        private readonly INewsPaperReadRepository _newsPaperReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -74,7 +81,10 @@ namespace MVCBlogApp.Persistence.Services
             ISLeftNavigationReadRepository sLeftNavigationReadRepository,
             IStorageService storageService,
             IPressReadRepository pressReadRepository,
-            IMasterRootReadRepository masterRootReadRepository)
+            IMasterRootReadRepository masterRootReadRepository,
+            IBlogTypeReadRepository blogTypeReadRepository,
+            IPressTypeReadRepository pressTypeReadRepository,
+            INewsPaperReadRepository newsPaperReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -95,6 +105,9 @@ namespace MVCBlogApp.Persistence.Services
             _storageService = storageService;
             _pressReadRepository = pressReadRepository;
             _masterRootReadRepository = masterRootReadRepository;
+            _blogTypeReadRepository = blogTypeReadRepository;
+            _pressTypeReadRepository = pressTypeReadRepository;
+            _newsPaperReadRepository = newsPaperReadRepository;
         }
 
 
@@ -277,15 +290,15 @@ namespace MVCBlogApp.Persistence.Services
             if (request.FormFile != null)
             {
                 List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("other-image", request.FormFile);
-                    VM_LocalUploadFile localUploadFile = new()
-                    {
-                        uploaded = 1,
-                        fileName = result[0].fileName,
-                        ErrorMessage =  "Resim başarıyla yüklendi."
-                    };
+                VM_LocalUploadFile localUploadFile = new()
+                {
+                    uploaded = 1,
+                    fileName = result[0].fileName,
+                    ErrorMessage = "Resim başarıyla yüklendi."
+                };
 
-                return new() 
-                { 
+                return new()
+                {
                     LocalUploadFile = localUploadFile
                 };
             }
@@ -298,9 +311,200 @@ namespace MVCBlogApp.Persistence.Services
             }
         }
 
-        public Task<GetPageQueryResponse> GetPageAsync(GetPageQueryRequest request)
+        public async Task<GetPageQueryResponse> GetPageAsync(GetPageQueryRequest request)
         {
-            throw new NotImplementedException();
+            VM_MasterRoot? masterRoot = await _masterRootReadRepository.GetWhere(x => x.UrlRoot == request.id)
+                .Select(x => new VM_MasterRoot
+                {
+                    Id = x.Id,
+                    UrlRoot = x.UrlRoot,
+                    Action = x.Action,
+                    Controller = x.Controller,
+                    CreateDate = x.CreateDate
+                }).FirstOrDefaultAsync();
+
+            if (masterRoot != null)
+            {
+                int langId = _operationService.SessionLangId();
+                string? orderId = null;
+
+                if (masterRoot.Controller == "Blog")
+                {
+                    VM_Blog? blog = await _blogReadRepository.GetWhere(x => x.UrlRoot == request.id && x.LangId == langId)
+                        .Join(_blogTypeReadRepository.GetAll(), blog => blog.BlogTypeId, bType => bType.Id, (blog, bType) => new { blog, bType })
+                        .Select(x => new VM_Blog
+                        {
+                            Id = x.blog.Id,
+                            MetaTitle = x.blog.MetaTitle,
+                            MetaKey = x.blog.MetaKey,
+                            MetaDescription = x.blog.MetaDescription,
+                            UrlRoot = x.blog.UrlRoot,
+                            Title = x.blog.Title,
+                            SubTitle = x.blog.SubTitle,
+                            Contents = x.blog.Contents,
+                            CreateDate = x.blog.CreateDate,
+                            CreateUserId = x.blog.CreateUserId,
+                            UpdateDate = x.blog.UpdateDate,
+                            StatusId = x.blog.StatusId,
+                            BlogCategoryId = x.blog.BlogCategoryId,
+                            CoverImgUrl = x.blog.CoverImgUrl,
+                            BlogTypeId = x.blog.BlogTypeId,
+                            IsMainPage = x.blog.IsMainPage,
+                            Orders = x.blog.Orders,
+                            NavigationId = x.blog.NavigationId,
+                            IsMenu = x.blog.IsMenu,
+                            IsComponent = x.blog.IsComponent,
+                            IsNewsComponent = x.blog.IsNewsComponent ?? false,
+                            BlogTypeName = x.bType.TypeName
+                        }).FirstOrDefaultAsync(); 
+
+                    return new()
+                    {
+                        Blog = blog,
+                        Article = null,
+                        Book = null,
+                        MasterRoot = masterRoot,
+                        Press = null,
+                        NavigationOrderId = orderId
+                    };
+                }
+
+                else if (masterRoot.Controller == "Article")
+                {
+                    VM_Article? article = await _articleReadRepository.GetWhere(x => x.LangId == langId && x.UrlRoot == request.id)
+                        .Select(x => new VM_Article
+                        {
+                            Id = x.Id,
+                            MetaTitle = x.MetaTitle,
+                            MetaKey = x.MetaKey,
+                            MetaDescription = x.MetaDescription,
+                            ArticleCategoryId = x.ArticleCategoryId,
+                            UrlRoot = x.UrlRoot,
+                            Controller = x.Controller,
+                            Action = x.Action,
+                            Title = x.Title,
+                            SubTitle = x.SubTitle,
+                            Description = x.Description,
+                            AuthorUserId = x.AuthorUserId,
+                            Orders = x.Orders,
+                            CoverImgUrl = x.CoverImgUrl,
+                            ArticleDate = x.ArticleDate,
+                            CreateDate = x.CreateDate,
+                            CreateUserId = x.CreateUserId,
+                            UpdateDate = x.UpdateDate,
+                            UpdateUserId = x.UpdateUserId,
+                            NavigationId = x.NavigationId,
+                            StatusId = x.StatusId,
+                            LangId = x.LangId,
+                            IsMainPage = x.IsMainPage ?? false,
+                            IsMenu = x.IsMenu ?? false,
+                            IsComponent = x.IsComponent ?? false,
+                            IsNewsComponent = x.IsNewsComponent ?? false
+                        }).FirstOrDefaultAsync();
+
+                    if (article != null)
+                    {
+                        orderId = await _navigationReadRepository.GetWhere(x=> x.Id == article.NavigationId && x.LangId == langId).Select(x=> x.OrderNo).FirstOrDefaultAsync();
+                    }
+
+                    return new()
+                    {
+                        Blog = null,
+                        Article = article,
+                        Book = null,
+                        MasterRoot = masterRoot,
+                        Press = null,
+                        NavigationOrderId = orderId
+                    };
+                }
+
+                else if (masterRoot.Controller == "Book")
+                {
+                    VM_Book? book = await _bookReadRepository.GetWhere(x => x.UrlRoot == request.id && x.LangId == langId)
+                        .Select(x => new VM_Book
+                        {
+                            Id = x.Id,
+                            BookName = x.BookName,
+                            Content = x.Content,
+                            ImageUrl = x.ImageUrl,
+                            LangId = x.LangId,
+                            NavigationId = x.NavigationId,
+                            PublicationYear = x.PublicationYear,
+                            StatusId = x.StatusId,
+                            UrlRoot = x.UrlRoot
+                        }).FirstOrDefaultAsync();
+
+                    if (book != null)
+                    {
+                        orderId = await _navigationReadRepository.GetWhere(x => x.Id == book.NavigationId && x.LangId == langId).Select(x => x.OrderNo).FirstOrDefaultAsync();
+                    }
+
+                    return new()
+                    {
+                        Blog = null,
+                        Article = null,
+                        Book = book,
+                        MasterRoot = masterRoot,
+                        Press = null,
+                        NavigationOrderId = orderId
+                    };
+                }
+
+                else if (masterRoot.Controller == "Press")
+                {
+                    VM_Press? press = await _pressReadRepository.GetWhere(x => x.UrlRoot == request.id && x.LangId == langId)
+                        .Join(_pressTypeReadRepository.GetAll(), pres => pres.PressTypeId, pType => pType.Id, (pres, pType) => new { pres, pType })
+                        .Join(_newsPaperReadRepository.GetAll(), presss => presss.pres.NewsPaperId, paper => paper.Id, (presss, paper) => new { presss, paper })
+                        .Select(x => new VM_Press
+                        {
+                            Id = x.presss.pres.Id,
+                            Title = x.presss.pres.Title,
+                            MetaTitle = x.presss.pres.MetaTitle,
+                            MetaKey = x.presss.pres.MetaKey,
+                            MetaDescription = x.presss.pres.MetaDescription,
+                            SubTitle = x.presss.pres.SubTitle,
+                            Description = x.presss.pres.Description,
+                            UrlLink = x.presss.pres.UrlLink,
+                            ImageUrl = x.presss.pres.ImageUrl,
+                            PressTypeName = x.presss.pType.PressTypeName,
+                            NewsPaperName = x.paper.NewsPaperName,
+                            CreateDate = x.presss.pres.CreateDate
+                        }).FirstOrDefaultAsync();
+
+                    return new()
+                    {
+                        Blog = null,
+                        Article = null,
+                        Book = null,
+                        MasterRoot = masterRoot,
+                        Press = press,
+                        NavigationOrderId = orderId
+                    };
+                }
+
+                return new()
+                {
+                    Article = null,
+                    Blog = null,
+                    Book = null,
+                    MasterRoot = null,
+                    Press = null,
+                    NavigationOrderId = null
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Article = null,
+                    Blog = null,
+                    Book = null,
+                    MasterRoot = null,
+                    Press = null,
+                    NavigationOrderId = null
+                };
+            }
+
         }
 
 

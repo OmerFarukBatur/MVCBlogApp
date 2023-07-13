@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -11,6 +12,10 @@ namespace MVCBlogApp.UI.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IOperationService _operationService;
+
+        public const string SessionOrderNo = "_OrderNo";
+        public const string SessionParentID = "_ParentID";
+        public const string SessionInternalID = "_InternalID";
 
         public UIHomeController(IMediator mediator, IOperationService operationService)
         {
@@ -73,7 +78,89 @@ namespace MVCBlogApp.UI.Controllers
         public async Task<IActionResult> GetPage(GetPageQueryRequest request)
         {
             GetPageQueryResponse response = await _mediator.Send(request);
-            return View(response);
+
+            if (response.Blog != null)
+            {
+                TempData["MetaKey"] = response.Blog.MetaKey;
+                TempData["MetaDescription"] = response.Blog.MetaDescription;
+                TempData["MetaTitle"] = response.Blog.MetaTitle;
+                TempData["Title"] = response.Blog.Title;
+
+                ViewBag.tip = response.Blog.BlogTypeName;
+
+                return View("~/Views/Blog/Detail.cshtml", response.Blog);
+            }
+
+            else if (response.Article != null)
+            {
+
+                TempData["MetaKey"] = response.Article.MetaKey;
+                TempData["MetaDescription"] = response.Article.MetaDescription;
+                TempData["MetaTitle"] = response.Article.MetaTitle;
+                TempData["Title"] = response.Article.Title;
+
+
+                if (TempData["orderNo"] is string && TempData["parentID"] is int)
+                {
+                    HttpContext.Session.SetString(SessionOrderNo, (string)TempData["orderNo"]);
+                    HttpContext.Session.SetInt32(SessionParentID, (int)TempData["parentID"]);
+                    HttpContext.Session.SetInt32(SessionInternalID, (int)TempData["internalID"]);
+                }
+                else
+                {
+                    TempData["orderNo"] = response.NavigationOrderId;
+                    TempData["parentID"] = response.Article.NavigationId;
+                    TempData["internalID"] = response.Article.Id;
+                }
+
+                return View("~/Views/Article/Index.cshtml", response.Article);
+            }
+
+            else if (response.Book != null)
+            {
+
+
+                TempData["MetaKey"] = response.Book.Action;
+                TempData["MetaDescription"] = response.Book.BookName;
+                TempData["MetaTitle"] = response.Book.BookName;
+                TempData["Title"] = response.Book.BookName;
+
+                if (TempData["orderNo"] is string && TempData["parentID"] is int && TempData["internalID"] is int)
+                {
+                    HttpContext.Session.SetString(SessionOrderNo, (string)TempData["orderNo"]);
+                    HttpContext.Session.SetInt32(SessionParentID, (int)TempData["parentID"]);
+                    HttpContext.Session.SetInt32(SessionInternalID, (int)TempData["internalID"]);
+                }
+                else
+                {
+                    TempData["orderNo"] = response.NavigationOrderId;
+                    TempData["parentID"] = response.Book.NavigationId;
+                    TempData["internalID"] = response.Book.Id;
+                }
+
+                return View("~/Views/Book/Edit.cshtml", response.Book);
+            }
+
+            else if (response.Press != null)
+            {
+                TempData["MetaKey"] = response.Press.MetaKey;
+                TempData["MetaDescription"] = response.Press.MetaDescription;
+                TempData["MetaTitle"] = response.Press.MetaTitle;
+                TempData["Title"] = response.Press.Title;
+
+                return View("~/Views/Press/Detail.cshtml", response.Press);
+            }
+
+            else if (response.MasterRoot != null)
+            {
+                if (response.MasterRoot.Controller == "Form")
+                {
+
+                    return View("~/Views/ConsultancyForms/ConsultancyForms.cshtml");
+                }
+            }
+
+            return NotFound();
         }
     }
 }
