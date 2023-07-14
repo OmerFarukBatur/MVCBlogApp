@@ -1,0 +1,159 @@
+﻿@model IList<MVCBlogApp.Application.ViewModels.VM_Search>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>This is what you are looking for:   @ViewBag.search</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main page</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">Search</li>
+            </ol>
+        </div>
+
+    </section>
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="sidebar col-lg-3">
+
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+
+                        <div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+                            @foreach (var item in Model.OrderByDescending(a => a.ID))
+                            {
+                                <div class="entry col-sm-6 col-12">
+                                    <div class="grid-inner">
+                                        <div class="entry-image">
+                                            <a href="@item.UrlRoot"><img loading="lazy" src="@Url.Content("~/Upload/"+@item.CoverImgUrl)" alt=@item.MetaTitle></a>
+                                        </div>
+                                        <div class="entry-title">
+                                            <h2><a href="@item.UrlRoot">@item.Title</a></h2>
+                                        </div>
+                                        <div class="entry-content">
+                                            <p>@Html.Raw(@item.SubTitle)</p>
+
+
+                                            <a href="/@item.UrlRoot" class="more-link">Read more</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.Count == 0)
+                            {
+                                <span>
+                                    No results were found for the word you searched..
+                                </span>
+                            }
+
+
+                        </div><!-- #posts end -->
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- #content end -->
+}
+
+else
+{
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>Aradığınız Kelime:   @ViewBag.search</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">Arama</li>
+            </ol>
+        </div>
+
+    </section>
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="sidebar col-lg-3">
+
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+
+                        <div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+                            @foreach (var item in Model.OrderByDescending(a => a.ID))
+                            {
+                                <div class="entry col-sm-6 col-12">
+                                    <div class="grid-inner">
+                                        <div class="entry-image">
+                                            <a href="@item.UrlRoot"><img loading="lazy" src="@Url.Content("~/Upload/"+@item.CoverImgUrl)" alt=@item.MetaTitle></a>
+                                        </div>
+                                        <div class="entry-title">
+                                            <h2><a href="@item.UrlRoot">@item.Title</a></h2>
+                                        </div>
+                                        <div class="entry-content">
+                                            <p>@Html.Raw(@item.SubTitle)</p>
+
+
+                                            <a href="/@item.UrlRoot" class="more-link">Devamını Oku</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.Count == 0)
+                            {
+                                <span>
+                                    Aradığınız kelime ile ilgili hiç bir sonuç bulunamadı.
+                                </span>
+                            }
+
+
+                        </div><!-- #posts end -->
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- #content end -->
+}
+
+

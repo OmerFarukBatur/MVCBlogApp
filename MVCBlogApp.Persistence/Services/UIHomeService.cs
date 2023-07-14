@@ -9,10 +9,12 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
+using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSLeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Banner;
@@ -34,7 +36,6 @@ using MVCBlogApp.Application.Repositories.Video;
 using MVCBlogApp.Application.Repositories.VideoCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
-using System.Reflection.Metadata;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -357,7 +358,7 @@ namespace MVCBlogApp.Persistence.Services
                             IsComponent = x.blog.IsComponent,
                             IsNewsComponent = x.blog.IsNewsComponent ?? false,
                             BlogTypeName = x.bType.TypeName
-                        }).FirstOrDefaultAsync(); 
+                        }).FirstOrDefaultAsync();
 
                     return new()
                     {
@@ -405,7 +406,7 @@ namespace MVCBlogApp.Persistence.Services
 
                     if (article != null)
                     {
-                        orderId = await _navigationReadRepository.GetWhere(x=> x.Id == article.NavigationId && x.LangId == langId).Select(x=> x.OrderNo).FirstOrDefaultAsync();
+                        orderId = await _navigationReadRepository.GetWhere(x => x.Id == article.NavigationId && x.LangId == langId).Select(x => x.OrderNo).FirstOrDefaultAsync();
                     }
 
                     return new()
@@ -525,6 +526,88 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 TaylanK = vM_TaylanK
+            };
+        }
+
+        public async Task<GetSearchDataQueryResponse> GetSearchDataAsync(GetSearchDataQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_Search> vM_Searches = new();
+
+            var articles = await _articleReadRepository.GetWhere(s => s.StatusId == statusId && s.LangId == langId && (s.Title.Contains(request.QueryKeyword) || s.Description.Contains(request.QueryKeyword)))
+                .Select(s => new VM_Search
+                {
+                    ID = s.Id,
+                    CoverImgUrl = s.CoverImgUrl,
+                    MetaTitle = s.MetaTitle,
+                    SubTitle = s.SubTitle,
+                    Title = s.Title,
+                    UrlRoot = s.UrlRoot
+                }).ToListAsync();
+
+            var books = await _bookReadRepository.GetWhere(s => s.StatusId == statusId && s.LangId == langId && (s.BookName.Contains(request.QueryKeyword) || s.Content.Contains(request.QueryKeyword)))
+                .Select(s => new VM_Search
+                {
+                    ID = s.Id,
+                    CoverImgUrl = s.ImageUrl,
+                    MetaTitle = s.BookName,
+                    SubTitle = s.BookName,
+                    Title = s.BookName,
+                    UrlRoot = s.UrlRoot
+                }).ToListAsync();
+
+            var blogs = await _blogReadRepository.GetWhere(s => s.StatusId == statusId && s.LangId == langId && (s.Title.Contains(request.QueryKeyword) || s.Contents.Contains(request.QueryKeyword)))
+                .Select(s => new VM_Search
+                {
+                    ID = s.Id,
+                    CoverImgUrl = s.CoverImgUrl,
+                    MetaTitle = s.MetaTitle,
+                    SubTitle = s.SubTitle,
+                    Title = s.Title,
+                    UrlRoot = s.UrlRoot
+                }).ToListAsync();
+
+            var press = await _pressReadRepository.GetWhere(s => s.StatusId == statusId && s.LangId == langId && (s.Title.Contains(request.QueryKeyword) || s.Description.Contains(request.QueryKeyword)))
+               .Select(s => new VM_Search
+               {
+                   ID = s.Id,
+                   CoverImgUrl = s.ImageUrl,
+                   MetaTitle = s.MetaTitle,
+                   SubTitle = s.SubTitle,
+                   Title = s.Title,
+                   UrlRoot = s.UrlRoot
+               }).ToListAsync();
+
+            vM_Searches.AddRange(articles);
+            vM_Searches.AddRange(books);
+            vM_Searches.AddRange(blogs);
+            vM_Searches.AddRange(press);
+
+            return new()
+            {
+                Searches = vM_Searches
+            };
+        }
+
+        public async Task<UIHomeSLeftNavigationQueryResponse> UIHomeSLeftNavigationAsync()
+        {
+            int langId = _operationService.SessionLangId();
+
+            List<VM_SLeftNavigation> vM_SLeftNavigations = await _sLeftNavigationReadRepository.GetWhere(s => s.Type == 1 && s.LangId == langId)
+                .Select(x => new VM_SLeftNavigation
+                {
+                    Id = x.Id,
+                    LangId = langId,
+                    Title = x.Title,
+                    Type = x.Type,
+                    Url = x.Url
+                }).ToListAsync();
+
+            return new()
+            {
+                SLeftNavigations = vM_SLeftNavigations
             };
         }
 
@@ -876,7 +959,7 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = taylanK
             };
         }
-        
+
         #endregion
     }
 }

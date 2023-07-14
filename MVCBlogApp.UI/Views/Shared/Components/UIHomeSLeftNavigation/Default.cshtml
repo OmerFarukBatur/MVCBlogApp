@@ -1,0 +1,11 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_SLeftNavigation>
+
+<ul class="sidenav">
+
+    @foreach (var item in Model)
+    {
+
+        <li><a href="/@item.Url">@item.Title<i class="icon-chevron-right"></i></a></li>
+    }
+
+</ul>

@@ -4,7 +4,9 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
+using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.UI.Controllers
@@ -174,12 +176,22 @@ namespace MVCBlogApp.UI.Controllers
             {
                 return NotFound();
             }
-            
+
             TempData["MetaKey"] = response.TaylanK.Metakey;
             TempData["MetaDescription"] = response.TaylanK.Metadescription;
             TempData["MetaTitle"] = response.TaylanK.Metatitle;
 
             return View();
+        }
+
+        [Route("Home/search")]
+        public async Task<IActionResult> Search(GetSearchDataQueryRequest request)
+        {
+            GetSearchDataQueryResponse response = await _mediator.Send(request);
+
+            ViewBag.search = request.QueryKeyword.ToString();
+
+            return View(response.Searches);
         }
     }
 }

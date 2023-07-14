@@ -3,7 +3,7 @@
 @using System.Security.Claims;
 @inject IOperationService OperationService
 @{
-    string nameSurname = Model;
+    string nameSurname = @Model.NameSurname;
     int LangID = OperationService.SessionLangId();
 }
 

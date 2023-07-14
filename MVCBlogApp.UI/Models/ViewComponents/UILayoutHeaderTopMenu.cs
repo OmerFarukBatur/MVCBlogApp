@@ -20,7 +20,7 @@ namespace MVCBlogApp.UI.Models.ViewComponents
         {
             UILayoutHeaderTopMenuQueryRequest request = new();
             UILayoutHeaderTopMenuQueryResponse response = await _mediator.Send(request);
-            return View(response.NameSurname);
+            return View(response);
         }
     }
 }

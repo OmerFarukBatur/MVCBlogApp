@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_Navigation>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using MVCBlogApp.Application.Abstractions.Services;
-@using Microsoft.AspNetCore.Http;
 @inject IOperationService OperationService
 @{
     int LangID = OperationService.SessionLangId();
@@ -205,12 +204,12 @@
                 <form class="top-search-form" asp-action="search" asp-controller="Home" method="get">
                     @if (LangID == 2)
                     {
-                        <input type="text" name="q" class="form-control" value="" placeholder="Write a word ..." autocomplete="off">
+                        <input type="text" name="QueryKeyword" class="form-control" value="" placeholder="Write a word ..." autocomplete="off">
 
                     }
                     else
                     {
-                        <input type="text" name="q" class="form-control" value="" placeholder="Bir kelime yazınız..." autocomplete="off">
+                        <input type="text" name="QueryKeyword" class="form-control" value="" placeholder="Bir kelime yazınız..." autocomplete="off">
                     }
 
                 </form>
