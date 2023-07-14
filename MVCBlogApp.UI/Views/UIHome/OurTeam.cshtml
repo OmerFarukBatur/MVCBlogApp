@@ -1,0 +1,160 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_OurTeam>
+@{
+    ViewData["Title"] = "OurTeam";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<section id="page-title" class="page-title-mini">
+
+    <div class="container clearfix">
+        <h1>TK TAYLIGHT EKİBİ</h1>
+        <span>TK Taylight Beslenme ve Danışmanlık Hizmetleri eKİBİ</span>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="#">Hakkımızda</a></li>
+            <li class="breadcrumb-item active" aria-current="page">EKİBİMİZ</li>
+        </ol>
+    </div>
+
+</section>
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+            <div class="row gutter-40 col-mb-80">
+
+                <div class="postcontent col-lg-9 order-lg-last">
+                    <div class="fancy-title title-bottom-border"><h1>EKİBİMİZ</h1></div>
+
+                    <div class="row col-mb-50 mb-0">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-lg-6">
+                                <div class="team team-list row align-items-center">
+                                    <div class="team-image col-sm-6">
+                                        <img src="@Url.Content("~/Upload/"+@item.ImageUrl)" alt="Diyetisyen Taylan Kümeli" />
+                                    </div>
+                                    <div class="team-desc col-sm-6">
+                                        <div class="team-title"><h4>@item.NameSurname</h4><span>@item.Title</span></div>
+                                        <a href="#" class="social-icon si-rounded si-small si-facebook">
+                                            <i class="icon-facebook"></i>
+                                            <i class="icon-facebook"></i>
+                                        </a>
+                                        <a href="#" class="social-icon si-rounded si-small si-twitter">
+                                            <i class="icon-instagram"></i>
+                                            <i class="icon-instagram"></i>
+                                        </a>
+                                        <a href="#" class="social-icon si-rounded si-small si-gplus">
+                                            <i class="icon-mail"></i>
+                                            <i class="icon-mail"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @*<div class="col-lg-6">
+                        <div class="team team-list row align-items-center">
+                        <div class="team-image col-sm-6">
+                        <img src="/Tk_FrontEnd/images/_taylan/page/taylan_kumeli_yazisi.jpg" alt="Diyetisyen Taylan Kümeli" />
+                        </div>
+                        <div class="team-desc col-sm-6">
+                        <div class="team-title"><h4>Taylan Kümeli</h4><span>Sağlıklı Beslenme ve Diyet Uzmanı</span></div>
+                        <a href="#" class="social-icon si-rounded si-small si-facebook">
+                        <i class="icon-facebook"></i>
+                        <i class="icon-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-twitter">
+                        <i class="icon-instagram"></i>
+                        <i class="icon-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-gplus">
+                        <i class="icon-mail"></i>
+                        <i class="icon-mail"></i>
+                        </a>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-6">
+                        <div class="team team-list row align-items-center">
+                        <div class="team-image col-sm-6">
+                        <img src="/Tk_FrontEnd/images/_taylan/page/taylan_kumeli_yazisi.jpg" alt="Diyetisyen Taylan Kümeli" />
+                        </div>
+                        <div class="team-desc col-sm-6">
+                        <div class="team-title"><h4>Taylan Kümeli</h4><span>Sağlıklı Beslenme ve Diyet Uzmanı</span></div>
+                        <a href="#" class="social-icon si-rounded si-small si-facebook">
+                        <i class="icon-facebook"></i>
+                        <i class="icon-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-twitter">
+                        <i class="icon-instagram"></i>
+                        <i class="icon-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-gplus">
+                        <i class="icon-mail"></i>
+                        <i class="icon-mail"></i>
+                        </a>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-6">
+                        <div class="team team-list row align-items-center">
+                        <div class="team-image col-sm-6">
+                        <img src="/Tk_FrontEnd/images/_taylan/page/taylan_kumeli_yazisi.jpg" alt="Diyetisyen Taylan Kümeli" />
+                        </div>
+                        <div class="team-desc col-sm-6">
+                        <div class="team-title"><h4>Taylan Kümeli</h4><span>Sağlıklı Beslenme ve Diyet Uzmanı</span></div>
+                        <a href="#" class="social-icon si-rounded si-small si-facebook">
+                        <i class="icon-facebook"></i>
+                        <i class="icon-facebook"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-twitter">
+                        <i class="icon-instagram"></i>
+                        <i class="icon-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon si-rounded si-small si-gplus">
+                        <i class="icon-mail"></i>
+                        <i class="icon-mail"></i>
+                        </a>
+                        </div>
+                        </div>
+                        </div>*@
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                </div>
+
+                <div class="sidebar col-lg-3">
+
+                    <ul class="sidenav">
+                        <li><a href="#">Taylan Kümeli Kimdir?<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">TK Taylight Hakkında<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">TK Taylight Blog<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Taylan Kümeli Metodu<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Kurumsal Eğitimler<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Kurumsal Referanslar<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Seminer Görselleri<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Medya Yansımaları<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Mutfakta Çocuklar<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Taylan Kümeli Youtube Kanalı<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Ekibimiz<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">Sosyal Medyada Biz<i class="icon-chevron-right"></i></a></li>
+                        <li><a href="#">İletişim<i class="icon-chevron-right"></i></a></li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -22,7 +22,7 @@ Logger log = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/log.txt")
     .Enrich.FromLogContext()
-    .MinimumLevel.Information()
+    .MinimumLevel.Error()
     .CreateLogger();
 
 builder.Host.UseSerilog(log);

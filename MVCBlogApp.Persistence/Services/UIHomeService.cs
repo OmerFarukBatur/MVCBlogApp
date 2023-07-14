@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
+using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeLatestNews;
@@ -26,6 +27,7 @@ using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsPaper;
+using MVCBlogApp.Application.Repositories.OurTeam;
 using MVCBlogApp.Application.Repositories.Press;
 using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.SLeftNavigation;
@@ -63,6 +65,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBlogTypeReadRepository _blogTypeReadRepository;
         private readonly IPressTypeReadRepository _pressTypeReadRepository;
         private readonly INewsPaperReadRepository _newsPaperReadRepository;
+        private readonly IOurTeamReadRepository _oceTeamReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -86,7 +89,8 @@ namespace MVCBlogApp.Persistence.Services
             IMasterRootReadRepository masterRootReadRepository,
             IBlogTypeReadRepository blogTypeReadRepository,
             IPressTypeReadRepository pressTypeReadRepository,
-            INewsPaperReadRepository newsPaperReadRepository)
+            INewsPaperReadRepository newsPaperReadRepository,
+            IOurTeamReadRepository oceTeamReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -110,6 +114,7 @@ namespace MVCBlogApp.Persistence.Services
             _blogTypeReadRepository = blogTypeReadRepository;
             _pressTypeReadRepository = pressTypeReadRepository;
             _newsPaperReadRepository = newsPaperReadRepository;
+            _oceTeamReadRepository = oceTeamReadRepository;
         }
 
 
@@ -608,6 +613,30 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 SLeftNavigations = vM_SLeftNavigations
+            };
+        }
+
+        public async Task<OurTeamQueryResponse> OurTeamAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_OurTeam> vM_OurTeams = await _oceTeamReadRepository.GetWhere(x => x.LangId == langId && x.StatusId == statusId)
+                .Select(x => new VM_OurTeam
+                {
+                    Id = x.Id,
+                    CreateDate = x.CreateDate,
+                    Bio = x.Bio,
+                    ImageUrl = x.ImageUrl,
+                    LangId = langId,
+                    CreateUserId = x.CreateUserId,
+                    StatusId = statusId,
+                    Title = x.Title
+                }).ToListAsync();
+
+            return new()
+            {
+                OurTeam = vM_OurTeams
             };
         }
 

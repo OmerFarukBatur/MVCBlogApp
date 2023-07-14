@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="logs\" />
     <Folder Include="wwwroot\UI\assets\js\pages\NewFolder\" />
     <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\branches\" />
     <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\info\" />

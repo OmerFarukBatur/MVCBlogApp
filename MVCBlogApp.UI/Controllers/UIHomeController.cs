@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
+using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -193,5 +194,22 @@ namespace MVCBlogApp.UI.Controllers
 
             return View(response.Searches);
         }
+
+        ////////////////////////////   Search,SearchPartialView, Video ve VideoPartialView paged(sayfalama) işlemi uygulanacaktır.
+        ///
+
+
+        [Route("Ekibimiz")]
+        public async Task<IActionResult> OurTeam()
+        {
+            OurTeamQueryRequest request = new();
+            OurTeamQueryResponse response = await _mediator.Send(request);
+
+            if (response.OurTeam == null)
+                return NotFound();
+
+            return View(response.OurTeam);
+        }
+
     }
 }
