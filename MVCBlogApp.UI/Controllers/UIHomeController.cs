@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
@@ -9,8 +10,6 @@ using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
-using MVCBlogApp.Application.ViewModels;
-using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -264,6 +263,30 @@ namespace MVCBlogApp.UI.Controllers
             return View(response.References);
         }
 
+        [Route("/Home/NewsBulletin")]
+        public async Task<JsonResult> NewsBulletin(NewsBulletinCommandRequest request)
+        {
+            NewsBulletinCommandResponse response = await _mediator.Send(request);
 
+            int LangID = _operationService.SessionLangId();
+
+            if (response.State)
+            {
+                if (LangID == 2)
+                {
+                    return Json(new { result = "Your registration has been taken" });
+
+                }
+                else
+                {
+                    return Json(new { result = "Kaydınız Alınmıştır." });
+
+                }
+            }
+            else
+            {
+                return Json(new { result = "E-Postanızı kontrol ediniz" });
+            }
+        }
     }
 }

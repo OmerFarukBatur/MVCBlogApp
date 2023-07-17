@@ -104,7 +104,7 @@ namespace MVCBlogApp.Persistence.Services
                 await _membersWriteRepository.AddAsync(newmember);
                 await _membersWriteRepository.SaveAsync();
 
-                //await _mailService.SendMailAsync(newmember.EMail, newmember.NameSurname, request.Password);
+                await _mailService.SendMailAsync(newmember.Email, newmember.NameSurname, request.Password);
 
                 return new CreateUserCommandResponse()
                 {
@@ -224,7 +224,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 _membersWriteRepository.Update(member);
                 await _membersWriteRepository.SaveAsync();
-                //await _mailService.SendMailAsync(request.Email,member.NameSurname,password.ToString());
+                await _mailService.SendMailAsync(request.Email,member.NameSurname,password.ToString());
 
                 return new()
                 {
@@ -240,7 +240,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 _userWriteRepository.Update(user);
                 await _userWriteRepository.SaveAsync();
-                //await _mailService.SendMailAsync(request.Email, user.UserName, password.ToString());
+                await _mailService.SendMailAsync(request.Email, user.Username, password.ToString());
 
                 return new()
                 {

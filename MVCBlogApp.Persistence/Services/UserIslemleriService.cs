@@ -299,7 +299,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 if (request.IsActive)
                 {
-                    // await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
+                    await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
                 }
 
                 return new()
@@ -334,7 +334,7 @@ namespace MVCBlogApp.Persistence.Services
 
                 if (request.IsActive)
                 {
-                    // await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
+                    await _mailService.SendMailAsync(request.Email, request.NameSurname, request.Password);
                 }
 
                 _membersWriteRepository.Update(members);

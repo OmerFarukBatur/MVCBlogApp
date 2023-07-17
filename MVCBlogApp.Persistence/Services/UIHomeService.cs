@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
@@ -28,6 +29,7 @@ using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.NewsBulletin;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.OurTeam;
 using MVCBlogApp.Application.Repositories.Press;
@@ -72,6 +74,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IOurTeamReadRepository _oceTeamReadRepository;
         private readonly ISeminarVisualsReadRepository _seminarVisualsReadRepository;
         private readonly IReferencesReadRepository _referencesReadRepository;
+        private readonly INewsBulletinWriteRepository _newsBulletinWriteRepository;
+        private readonly IMailService _mailService;
+        private readonly INewsBulletinReadRepository _newsBulletinReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -98,7 +103,10 @@ namespace MVCBlogApp.Persistence.Services
             INewsPaperReadRepository newsPaperReadRepository,
             IOurTeamReadRepository oceTeamReadRepository,
             ISeminarVisualsReadRepository seminarVisualsReadRepository,
-            IReferencesReadRepository referencesReadRepository)
+            IReferencesReadRepository referencesReadRepository,
+            INewsBulletinWriteRepository newsBulletinWriteRepository,
+            IMailService mailService,
+            INewsBulletinReadRepository newsBulletinReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -125,6 +133,9 @@ namespace MVCBlogApp.Persistence.Services
             _oceTeamReadRepository = oceTeamReadRepository;
             _seminarVisualsReadRepository = seminarVisualsReadRepository;
             _referencesReadRepository = referencesReadRepository;
+            _newsBulletinWriteRepository = newsBulletinWriteRepository;
+            _mailService = mailService;
+            _newsBulletinReadRepository = newsBulletinReadRepository;
         }
 
 
@@ -696,6 +707,42 @@ namespace MVCBlogApp.Persistence.Services
             {
                 References = vM_References
             };
+        }
+
+        public async Task<NewsBulletinCommandResponse> NewsBulletinAsync(NewsBulletinCommandRequest request)
+        {
+            VM_NewsBulletin? vM_NewsBulletin = await _newsBulletinReadRepository.GetWhere(x=> x.Email == request.email).Select(x=> new VM_NewsBulletin { Id = x.Id }).FirstOrDefaultAsync();
+
+            if (vM_NewsBulletin == null)
+            {
+                int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+                NewsBulletin newsBulletin = new()
+                {
+                    Email = request.email,
+                    CreateDate = DateTime.Now,
+                    StatusId = statusId
+                };
+
+                await _newsBulletinWriteRepository.AddAsync(newsBulletin);
+                await _newsBulletinWriteRepository.SaveAsync();
+
+                await _mailService.SendMailAsync(request.email,"Taylan Kümeli Bülten Kayıt","Bültene kayıt işlem başarıyla yapılmıştır.");
+
+                return new()
+                {
+                    Message = "Kaydınız Alınmıştır.",
+                    State = true
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Message = "Mail adresine ait kayıt bulunmaktadır.",
+                    State = false
+                };
+            }            
         }
 
 

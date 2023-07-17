@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
+﻿using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
+using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
@@ -35,6 +36,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<OurTeamQueryResponse> OurTeamAsync();
         Task<GetSeminarVisualsQueryResponse> GetSeminarVisualsAsync();
         Task<GetReferencesQueryResponse> GetReferencesAsync();
+        Task<NewsBulletinCommandResponse> NewsBulletinAsync(NewsBulletinCommandRequest request);
 
         #endregion
 

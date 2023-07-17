@@ -149,7 +149,7 @@ namespace MVCBlogApp.Persistence.Services
                 await _userWriteRepository.AddAsync(user);
                 await _userWriteRepository.SaveAsync();
 
-                //await _mailService.SendMailAsync(user.Email,user.Username,request.Password);
+                await _mailService.SendMailAsync(user.Email,user.Username,request.Password);
 
                 return new AdminCreateCommandResponse()
                 {
