@@ -1,0 +1,112 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_SeminarVisuals>
+@using MVCBlogApp.Application.Abstractions.Services;
+
+@inject IOperationService OperationService
+@{
+
+    ViewData["Title"] = "SeminerGorselleri";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+    var culture = new System.Globalization.CultureInfo("tr-TR");
+
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TAYLAN KÜMELİ seminar visuals </h1>
+            <span>seminar visuals</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="Seminar-Visuals">Seminar Visuals</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+
+}
+else
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TAYLAN KÜMELİ SEMİNER GÖRSELLERİ</h1>
+            <span>Taylan Kümeli Etkinlik, Seminer, Eğitim Görselleri</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">Seminer Görselleri</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+
+}
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+                <div class="postcontent col-lg-9 order-lg-last">
+
+                    <!-- Posts
+                    ============================================= -->
+                    <div id="seminer_gorselleri" class="post-grid row grid-container gutter-40" data-layout="fitRows">
+
+                        @foreach (var item in Model)
+                        {
+                            <div class="entry col-md-4 col-sm-6 col-12">
+                                <div class="grid-inner">
+                                    <div class="entry-image">
+                                        <a href="#">
+                                            <img loading="lazy" src="@Url.Content("~/Upload/"+@item.ImgUrl)" alt="@item.Title">
+                                        </a>
+                                        <div class="bg-overlay">
+                                            <div class="bg-overlay-content dark" data-hover-animate="fadeIn">
+                                                <a href="@Url.Content("~/Upload/"+@item.ImgUrl)" class="overlay-trigger-icon bg-light text-dark" data-hover-animate="fadeInDownSmall" data-hover-animate-out="fadeOutUpSmall" data-hover-speed="350" data-lightbox="image" title="@item.Title"><i class="icon-search"></i></a>
+                                            </div>
+                                            <div class="bg-overlay-bg dark" data-hover-animate="fadeIn"></div>
+                                        </div>
+                                    </div>
+                                    <div class="entry-title">
+                                        <h2>@item.Title</h2>
+                                    </div>
+                                    <div class="entry-meta">
+                                        <ul>
+                                            <li> @culture.DateTimeFormat.MonthNames[item.Date.Value.Month - 1] , @item.Date.Value.Year | @item.Location</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+
+
+
+
+
+
+
+
+                    </div><!-- #posts end -->
+                </div>
+
+                <div class="sidebar col-lg-3">
+
+                    @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section><!-- #content end -->

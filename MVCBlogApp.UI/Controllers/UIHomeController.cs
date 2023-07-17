@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.ViewModels;
@@ -209,6 +210,31 @@ namespace MVCBlogApp.UI.Controllers
                 return NotFound();
 
             return View(response.OurTeam);
+        }
+
+        [Route("seminer-gorselleri")]
+        [Route("seminar-visuals")]
+        public async Task<IActionResult> SeminerGorselleri()
+        {
+            GetSeminarVisualsQueryRequest request = new();
+            GetSeminarVisualsQueryResponse response = await _mediator.Send(request);
+
+            int LangID = _operationService.SessionLangId();
+
+            if (LangID == 2)
+            {
+                TempData["Title"] = "Seminar Visuals";
+            }
+            else
+            {
+                TempData["Title"] = "Seminer Görselleri";
+            }
+
+
+            if (response.SeminarVisuals == null)
+                return NotFound();
+
+            return View(response.SeminarVisuals);
         }
 
     }

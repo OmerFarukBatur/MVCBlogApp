@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
@@ -31,6 +32,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetSearchDataQueryResponse> GetSearchDataAsync(GetSearchDataQueryRequest request);
         Task<UIHomeSLeftNavigationQueryResponse> UIHomeSLeftNavigationAsync();
         Task<OurTeamQueryResponse> OurTeamAsync();
+        Task<GetSeminarVisualsQueryResponse> GetSeminarVisualsAsync();
 
         #endregion
 

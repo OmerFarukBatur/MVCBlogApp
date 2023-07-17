@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeArticlePreviews;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
@@ -30,6 +31,7 @@ using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.OurTeam;
 using MVCBlogApp.Application.Repositories.Press;
 using MVCBlogApp.Application.Repositories.PressType;
+using MVCBlogApp.Application.Repositories.SeminarVisuals;
 using MVCBlogApp.Application.Repositories.SLeftNavigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.TaylanK;
@@ -66,6 +68,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IPressTypeReadRepository _pressTypeReadRepository;
         private readonly INewsPaperReadRepository _newsPaperReadRepository;
         private readonly IOurTeamReadRepository _oceTeamReadRepository;
+        private readonly ISeminarVisualsReadRepository _seminarVisualsReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -90,7 +93,8 @@ namespace MVCBlogApp.Persistence.Services
             IBlogTypeReadRepository blogTypeReadRepository,
             IPressTypeReadRepository pressTypeReadRepository,
             INewsPaperReadRepository newsPaperReadRepository,
-            IOurTeamReadRepository oceTeamReadRepository)
+            IOurTeamReadRepository oceTeamReadRepository,
+            ISeminarVisualsReadRepository seminarVisualsReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -115,6 +119,7 @@ namespace MVCBlogApp.Persistence.Services
             _pressTypeReadRepository = pressTypeReadRepository;
             _newsPaperReadRepository = newsPaperReadRepository;
             _oceTeamReadRepository = oceTeamReadRepository;
+            _seminarVisualsReadRepository = seminarVisualsReadRepository;
         }
 
 
@@ -637,6 +642,31 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 OurTeam = vM_OurTeams
+            };
+        }
+
+        public async Task<GetSeminarVisualsQueryResponse> GetSeminarVisualsAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_SeminarVisuals> vM_SeminarVisuals = await _seminarVisualsReadRepository.GetWhere(x => x.LangId == langId && x.StatusId == statusId)
+                .Select(x => new VM_SeminarVisuals
+                {
+                    Id = x.Id,
+                    Date = x.Date,
+                    CreateDate = x.CreateDate,
+                    Description = x.Description,
+                    ImgUrl = x.ImgUrl,
+                    LangId = x.LangId,
+                    Location = x.Location,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).ToListAsync();
+
+            return new()
+            {
+                SeminarVisuals = vM_SeminarVisuals
             };
         }
 
