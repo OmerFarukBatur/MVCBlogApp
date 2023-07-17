@@ -1,0 +1,148 @@
+﻿@model List<MVCBlogApp.Application.ViewModels.VM_References>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    ViewData["Title"] = "CORPORATE REFERENCES";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TAYLAN KÜMELİ CORPORATE REFERENCES</h1>
+            <span>Corporate References given by Taylan Kümeli to Training and Seminars</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="#">Corporate References</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+
+                        <div class="fancy-title title-border">
+                            <h1>TK Taylight CORPORATE REFERENCES</h1>
+                        </div>
+
+                        <!-- Posts
+                        ============================================= -->
+                        <div id="kurumsal_referanslar" class="post-grid row grid-container gutter-40" data-layout="fitRows">
+                            <ul class="clients-grid grid-3 mb-3">
+
+                                @foreach (var item in Model)
+                                {
+                                    <li class="grid-item"><a href="@item.UrlLink" target="_blank"><img loading="lazy" src="@Url.Content("~/Upload/"+@item.ImgUrl)" alt="@item.Title"></a></li>
+                                }
+
+                            </ul>
+
+
+                        </div><!-- #posts end -->
+
+
+                    </div>
+
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <a href="#" class="button button-full center text-right">
+            <div class="container clearfix">
+                For Detailed Information About Taylan Kümeli Corporate Training <strong>Please Click</strong> <i class="icon-caret-right"></i>
+            </div>
+        </a>
+
+    </section>
+
+    <!-- #content end -->
+}
+else
+{
+    {
+
+        <section id="page-title" class="page-title-mini">
+
+            <div class="container clearfix">
+                <h1>TAYLAN KÜMELİ KURUMSAL REFERANSLARI</h1>
+                <span>Taylan Kümeli'nin Eğitim, Seminer Verdiği Kurumsal Referanslar</span>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                    <li class="breadcrumb-item"><a href="#">Kurumsal Referanslar</a></li>
+
+                </ol>
+            </div>
+
+        </section>
+
+        <section id="content">
+            <div class="content-wrap">
+                <div class="container clearfix">
+
+                    <div class="row gutter-40 col-mb-80">
+
+                        <div class="postcontent col-lg-9 order-lg-last">
+
+                            <div class="fancy-title title-border">
+                                <h1>TK Taylight Kurumsal Referansları</h1>
+                            </div>
+
+                            <!-- Posts
+                            ============================================= -->
+                            <div id="kurumsal_referanslar" class="post-grid row grid-container gutter-40" data-layout="fitRows">
+                                <ul class="clients-grid grid-3 mb-3">
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <li class="grid-item"><a href="@item.UrlLink" target="_blank"><img loading="lazy" src="@Url.Content("~/Upload/"+ @item.ImgUrl)" alt="@item.Title"></a></li>
+                                    }
+
+                                </ul>
+
+
+                            </div><!-- #posts end -->
+
+
+                        </div>
+
+                        <div class="sidebar col-lg-3">
+
+                            @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="button button-full center text-right">
+                <div class="container clearfix">
+                    Taylan Kümeli Kurumsal Eğitimleri Hakkında Detaylı Bilgi İçin Lütfen <strong>Tıklayınız</strong> <i class="icon-caret-right"></i>
+                </div>
+            </a>
+
+        </section>
+
+        <!-- #content end -->
+    }
+
+}

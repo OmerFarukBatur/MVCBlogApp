@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
+using MVCBlogApp.Application.Features.Queries.UIHome.GetReferences;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
@@ -236,6 +237,33 @@ namespace MVCBlogApp.UI.Controllers
 
             return View(response.SeminarVisuals);
         }
+
+        [Route("kurumsal-referanslar")]
+        [Route("corporate-references")]
+        public async Task<IActionResult> KurumsalReferanslar()
+        {
+            GetReferencesQueryRequest request = new();
+            GetReferencesQueryResponse response = await _mediator.Send(request);
+
+            int LangID = _operationService.SessionLangId();
+
+            if (LangID == 2)
+            {
+                TempData["Title"] = "Corporate References";
+
+            }
+            else
+            {
+                TempData["Title"] = "Kurumsal Referanslar";
+
+            }
+
+            if (response.References == null)
+                return NotFound();
+
+            return View(response.References);
+        }
+
 
     }
 }
