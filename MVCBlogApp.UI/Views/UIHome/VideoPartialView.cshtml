@@ -1,0 +1,61 @@
+﻿@*@model TK_WebProject.Business.Model.PagedResult<TK_WebProject.Entities.Entities.Video>
+
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    int? LangID = HttpContextAccessor.HttpContext.Session.GetInt32("LangID");
+    if (LangID == 0) { LangID = 1; }
+}
+<div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+    @foreach (var item in Model.Results)
+    {
+        <div class="row">
+            <div class="entry event col-12">
+                <div class="grid-inner row align-items-center no-gutters p-4">
+                    <div class="entry-image col-md-4 mb-md-0">
+                        <div class="fluid-width-video-wrapper"><iframe src="@item.VideoEmbedCode"></iframe></div>
+                    </div>
+                    <div class="col-md-8 pl-md-4">
+                        <div class="entry-title title-xs">
+                            <h2><a loading="lazy" href="@item.VideoUrl" target="_blank">@item.Title</a></h2>
+                        </div>
+                        <div class="entry-meta">
+                            <ul>
+                                <li><a href="@item.VideoUrl" target="_blank"><i class="icon-youtube"></i>@Html.Raw(item.Description)</a></li>
+                            </ul>
+                        </div>
+                        <div class="entry-content">
+                            @if (LangID == 2)
+                            {
+                                <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Watch Now</a>
+                            }
+                            else
+                            {
+                                <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Hemen İzle</a>
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 500) {
+            $(window).unbind('scroll');
+
+            if (@Model.CurrentPage < @Model.PageCount) {
+                getViewVideo(@Model.NextPage.ToString());
+            }
+
+        }
+    });
+
+
+</script>
+*@

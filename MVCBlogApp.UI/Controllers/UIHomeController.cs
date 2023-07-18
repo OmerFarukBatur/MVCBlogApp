@@ -10,6 +10,8 @@ using MVCBlogApp.Application.Features.Queries.UIHome.GetSearchData;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetSeminarVisuals;
 using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
+using MVCBlogApp.Application.Features.Queries.UIHome.Video;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -198,6 +200,56 @@ namespace MVCBlogApp.UI.Controllers
 
         ////////////////////////////   Search,SearchPartialView, Video ve VideoPartialView paged(sayfalama) işlemi uygulanacaktır.
         ///
+
+        [Route("video")]
+        public async Task<IActionResult> Video()
+        {
+            VideoQueryRequest request = new();
+            VideoQueryResponse response = await _mediator.Send(request);
+
+            if (response.Videos == null)
+                return NotFound();
+
+            TempData["Title"] = "Video";
+            return View(response.Videos);
+        }
+
+        [Route("video-partial-view")]
+        [HttpPost]
+        public JsonResult VideoPartialView(int page = 1)
+        {
+            //int LangID = Convert.ToInt32(HttpContext.Session.GetInt32("LangID"));
+            //if (LangID == 0) { LangID = 1; }
+
+            //var videos = _dataContext.Video.Where(x => x.VideoCategoryID != 3 && x.LangID == LangID).OrderByDescending(x => x.ID).GetPaged(page, 4);
+
+            //PagedResult<Video> result = new PagedResult<Video>()
+            //{
+            //    CurrentPage = videos.CurrentPage,
+            //    PageCount = videos.PageCount,
+            //    PageSize = videos.PageSize,
+            //    RowCount = videos.RowCount,
+            //    Results = videos.Results.Select(x => new Video()
+            //    {
+            //        CreateDate = x.CreateDate,
+            //        CreateUserID = x.CreateUserID,
+            //        Description = x.Description,
+            //        ID = x.ID,
+            //        Title = x.Title,
+            //        StatusID = x.StatusID,
+            //        VideoCategoryID = x.VideoCategoryID,
+            //        VideoEmbedCode = x.VideoEmbedCode,
+            //        VideoUrl = x.VideoUrl
+            //    }).ToList()
+            //};
+
+            //ReturnViewString r = new ReturnViewString();
+            //r.Status = 200;
+            //r.ViewString = this.RenderViewAsync("VideoPartialView", result, true).Result;
+            //return Json(r);
+
+            return Json("");
+        }
 
 
         [Route("Ekibimiz")]
