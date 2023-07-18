@@ -35,7 +35,44 @@
                     <div class="postcontent col-lg-9 order-lg-last">
                         <div class="fancy-title title-bottom-border"><h1>Taylan Kümeli Videos</h1></div>
 
-                        <div id="divVideoPartialView"></div>
+                        <div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+                            @foreach (var item in Model)
+                            {
+                                <div class="row">
+                                    <div class="entry event col-12">
+                                        <div class="grid-inner row align-items-center no-gutters p-4">
+                                            <div class="entry-image col-md-4 mb-md-0">
+                                                <div class="fluid-width-video-wrapper"><iframe src="@item.VideoEmbedCode"></iframe></div>
+                                            </div>
+                                            <div class="col-md-8 pl-md-4">
+                                                <div class="entry-title title-xs">
+                                                    <h2><a loading="lazy" href="@item.VideoUrl" target="_blank">@item.Title</a></h2>
+                                                </div>
+                                                <div class="entry-meta">
+                                                    <ul>
+                                                        <li><a href="@item.VideoUrl" target="_blank"><i class="icon-youtube"></i>@Html.Raw(item.Description)</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="entry-content">
+                                                    @if (LangID == 2)
+                                                    {
+                                                        <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Watch Now</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Hemen İzle</a>
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @*<div id="divVideoPartialView"></div>
 
                         <div id="divVideoPartialViewSpinner">
                             <div class="spinner-border text-primary"></div>
@@ -43,7 +80,7 @@
 
 
 
-                        <div class="divider"><i class="icon-circle"></i></div>
+                        <div class="divider"><i class="icon-circle"></i></div>*@
 
 
                     </div>
@@ -90,7 +127,44 @@ else
                     <div class="postcontent col-lg-9 order-lg-last">
                         <div class="fancy-title title-bottom-border"><h1>Taylan Kümeli Videoları</h1></div>
 
-                        <div id="divVideoPartialView"></div>
+                        <div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+                            @foreach (var item in Model)
+                            {
+                                <div class="row">
+                                    <div class="entry event col-12">
+                                        <div class="grid-inner row align-items-center no-gutters p-4">
+                                            <div class="entry-image col-md-4 mb-md-0">
+                                                <div class="fluid-width-video-wrapper"><iframe src="@item.VideoEmbedCode"></iframe></div>
+                                            </div>
+                                            <div class="col-md-8 pl-md-4">
+                                                <div class="entry-title title-xs">
+                                                    <h2><a loading="lazy" href="@item.VideoUrl" target="_blank">@item.Title</a></h2>
+                                                </div>
+                                                <div class="entry-meta">
+                                                    <ul>
+                                                        <li><a href="@item.VideoUrl" target="_blank"><i class="icon-youtube"></i>@Html.Raw(item.Description)</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="entry-content">
+                                                    @if (LangID == 2)
+                                                    {
+                                                        <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Watch Now</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@item.VideoUrl" target="_blank" class="btn btn-danger float-right">Hemen İzle</a>
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        @*<div id="divVideoPartialView"></div>
 
                         <div id="divVideoPartialViewSpinner">
                             <div class="spinner-border text-primary"></div>
@@ -98,7 +172,7 @@ else
 
 
 
-                        <div class="divider"><i class="icon-circle"></i></div>
+                        <div class="divider"><i class="icon-circle"></i></div>*@
 
 
                     </div>
@@ -120,7 +194,7 @@ else
 }
 
 
-<script>
+@*<script>
     $(document).ready(function () {
 
         getViewVideo();
@@ -157,4 +231,4 @@ else
         });
     }
 
-</script>
+</script>*@

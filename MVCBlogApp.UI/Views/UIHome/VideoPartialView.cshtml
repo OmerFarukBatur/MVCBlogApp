@@ -1,11 +1,9 @@
-﻿@*@model TK_WebProject.Business.Model.PagedResult<TK_WebProject.Entities.Entities.Video>
-
-@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor
+﻿@model MVCBlogApp.Application.ViewModels.PagedResult<MVCBlogApp.Application.ViewModels.VM_Video>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
 
 @{
-    int? LangID = HttpContextAccessor.HttpContext.Session.GetInt32("LangID");
-    if (LangID == 0) { LangID = 1; }
+    int LangID = OperationService.SessionLangId();
 }
 <div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
     @foreach (var item in Model.Results)
@@ -58,4 +56,3 @@
 
 
 </script>
-*@

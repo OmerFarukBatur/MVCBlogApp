@@ -21,6 +21,8 @@ using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSLeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Features.Queries.UIHome.Video;
+using MVCBlogApp.Application.Features.Queries.UIHome.VideoPartialView;
+using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Banner;
 using MVCBlogApp.Application.Repositories.Blog;
@@ -772,6 +774,40 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<VideoPartialViewQueryResponse> VideoPartialViewAsync(VideoPartialViewQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            var videos = _videoReadRepository.GetWhere(x => x.VideoCategoryId != 3 && x.LangId == langId && x.StatusId == statusId).OrderByDescending(x => x.Id).GetPaged(request.page, 4);
+
+            PagedResult <VM_Video> result = new()
+            {
+                CurrentPage = videos.CurrentPage,
+                PageCount = videos.PageCount,
+                PageSize = videos.PageSize,
+                RowCount = videos.RowCount,
+                Results = videos.Results.Select(x => new VM_Video()
+                {
+                    CreateDate = x.CreateDate,
+                    StatusId = x.StatusId,
+                    LangId = x.LangId,
+                    VideoCategoryId = x.VideoCategoryId,
+                    CreateUserId = x.CreateUserId,
+                    Description = x.Description,
+                    Id = x.Id,
+                    Title = x.Title,
+                    VideoEmbedCode = x.VideoEmbedCode,
+                    VideoUrl = x.VideoUrl
+                }).ToList()
+            };
+
+            return new()
+            {
+                Result = result
+            };
+        }
+
         #endregion
 
         #region UILayout
@@ -1120,7 +1156,7 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = taylanK
             };
         }
-
+               
         #endregion
     }
 }

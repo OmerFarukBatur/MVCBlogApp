@@ -17,6 +17,7 @@ using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeRightVideo;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSLeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeSlider;
 using MVCBlogApp.Application.Features.Queries.UIHome.Video;
+using MVCBlogApp.Application.Features.Queries.UIHome.VideoPartialView;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -39,6 +40,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<GetReferencesQueryResponse> GetReferencesAsync();
         Task<NewsBulletinCommandResponse> NewsBulletinAsync(NewsBulletinCommandRequest request);
         Task<VideoQueryResponse> VideoAsync();
+        Task<VideoPartialViewQueryResponse> VideoPartialViewAsync(VideoPartialViewQueryRequest request);
 
         #endregion
 
