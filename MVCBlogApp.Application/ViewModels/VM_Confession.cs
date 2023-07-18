@@ -5,7 +5,7 @@
         public int? Id { get; set; }
         public string? MemberConfession { get; set; }
         public string? MemberName { get; set; }
-        public bool? IsVisible { get; set; }
+        public bool? IsVisible { get; set; } = false;
         public bool? IsAprove { get; set; }
         public bool? IsRead { get; set; }
         public DateTime? CreateDatetime { get; set; }

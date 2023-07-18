@@ -1,0 +1,292 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Confession
+@using MVCBlogApp.Application.Abstractions.Services;
+
+@inject IOperationService OperationService
+@{
+    ViewData["Title"] = "Danisan";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    int LangID = OperationService.SessionLangId();
+}
+
+
+@if (LangID == 2)
+{
+
+
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>Members Of Confession</h1>
+            <span>Members Of Confession</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="#">Confessionr</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+                    <div class="postcontent col-lg-9 order-lg-last">
+
+                        <div class="fancy-title title-bottom-border">
+                            <h2><i class="icon-apple"></i> Members Of Confession</h2>
+                        </div>
+                        <div class="row">
+                            <form class="mb-0" asp-action="Danisan" asp-controller="Home" method="post">
+
+                                @if (ViewBag.Result == "Success")
+                                {
+                                    <div class="col-12 alert-success">
+                                        <p class="ql-color-yellow">Successfully</p>
+                                    </div>
+                                }
+                                else if (ViewBag.Result == "Error")
+                                {
+
+                                    <div class="col-12 alert-warning">
+                                        <p class="ql-color-yellow">@ViewBag.Message</p>
+                                    </div>
+                                }
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img alt="Taylan Kümeli Web Sitesine Yapılan Diyet İtirafları" src="~/Upload/page/diyet_nedir.png" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="row checkout-form-shipping">
+                                            <div class="col-12">
+                                                <h3>Confess it ;)</h3>
+                                            </div>
+                                            <div class="col-12 form-group">
+                                                <label>Confess it</label>
+                                                <textarea class="form-control" asp-for="MemberConfession" required="" rows="3" placeholder="Please Confess it"></textarea>
+                                            </div>
+
+
+
+                                            <div class="col-12 form-group">
+                                                <label for="itiraf-form-isim">Name <small>*</small></label>
+                                                <input type="text" placeholder="Name" asp-for="MemberName" required="" class="sm-form-control required" />
+                                            </div>
+
+
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input class="itiraf-form-anonim" type="checkbox" >
+                                                    <label class="form-check-label" for="IsVisible">
+                                                        I don't want anybody to know about it
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <br />
+
+
+                                            <div class="col-12">
+
+                                                <div class="d-none">
+                                                    <input type="text" id="itiraf-form-botcheck" name="itiraf-form-botcheck" value="" />
+                                                </div>
+                                                <div class="form-group center">
+                                                    <button type="submit" name="itiraf-form-submit" class="button">Send </button>
+                                                </div>
+                                                <input type="hidden" name="prefix" value="itiraf-form-">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+
+                        <div id="divConfessionsPartialView"></div>
+
+
+
+
+
+
+                    </div>
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+}
+
+
+else
+
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>DANIŞAN İTİRAFLARI</h1>
+            <span>Taylan Kümeli Danışan İtirafları</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">İtiraflar</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+                    <div class="postcontent col-lg-9 order-lg-last">
+
+                        <div class="fancy-title title-bottom-border">
+                            <h2><i class="icon-apple"></i> Danışan İtirafları</h2>
+                        </div>
+                        <div class="row">
+                            <form class="mb-0" asp-action="Danisan" asp-controller="Home" method="post">
+
+                                @if (ViewBag.Result == "Success")
+                                {
+                                    <div class="col-12 alert-success">
+                                        <p class="ql-color-yellow">Form başarıyla gönderildi.</p>
+                                    </div>
+                                }
+                                else if (ViewBag.Result == "Error")
+                                {
+
+                                    <div class="col-12 alert-warning">
+                                        <p class="ql-color-yellow">@ViewBag.Message</p>
+                                    </div>
+                                }
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img alt="Taylan Kümeli Web Sitesine Yapılan Diyet İtirafları" src="~/Upload/page/diyet_nedir.png" />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="row checkout-form-shipping">
+                                            <div class="col-12">
+                                                <h3>İtiraf Et ;)</h3>
+                                            </div>
+                                            <div class="col-12 form-group">
+                                                <label>İtirafınız</label>
+                                                <textarea class="form-control" asp-for="MemberConfession" required="" rows="3" placeholder="Lütfen itirafınızı buraya yazınız."></textarea>
+                                            </div>
+
+
+
+                                            <div class="col-12 form-group">
+                                                <label for="itiraf-form-isim">Adınız <small>*</small></label>
+                                                <input type="text" placeholder="İsim" asp-for="MemberName" required="" class="sm-form-control required" />
+                                            </div>
+
+
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input class="itiraf-form-anonim" type="checkbox" >
+                                                    <label class="form-check-label" for="IsVisible">
+                                                        İsmimin görünmesini istemiyorum.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <br />
+
+
+                                            <div class="col-12">
+
+                                                <div class="d-none">
+                                                    <input type="text" id="itiraf-form-botcheck" name="itiraf-form-botcheck" value="" />
+                                                </div>
+                                                <div class="form-group center">
+                                                    <button type="submit" name="itiraf-form-submit" class="button">İTİRAFINI GÖNDER </button>
+                                                </div>
+                                                <input type="hidden" name="prefix" value="itiraf-form-">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+
+                        <div id="divConfessionsPartialView"></div>
+
+
+
+
+
+
+                    </div>
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+
+
+
+
+<script src="~/js/site.js"></script>
+<script>
+    $(document).ready(function () {
+
+        getView();
+
+    });
+
+    function getView(page) {
+
+        var requestDto = new Object();
+        requestDto.page = page;
+
+        if (page == undefined || page == null)
+            requestDto.page = 1;
+
+        $.ajax({
+            type: "POST",
+            url: "danisan-itiraflari-partial-view",
+            data: requestDto,
+            success: function (jsReturnArgs) {
+
+                $("#divConfessionsPartialView").html(jsReturnArgs.ViewString); //the HTML I returned from the controller
+
+            },
+            error: function (xhr, status, error) {
+                $("#divConfessionsPartialView").html("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            }
+            //error: function (errorData) { onError(errorData); }
+        });
+    }
+
+</script>
+<!-- #content end -->

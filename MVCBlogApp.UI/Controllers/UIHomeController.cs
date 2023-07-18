@@ -14,6 +14,7 @@ using MVCBlogApp.Application.Features.Queries.UIHome.Video;
 using MVCBlogApp.Application.Features.Queries.UIHome.VideoPartialView;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Application.Helpers;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -227,6 +228,101 @@ namespace MVCBlogApp.UI.Controllers
         //    r.ViewString = this.RenderViewAsync("VideoPartialView", response.Result, true).Result;
         //    return Json(r);
         //}
+
+
+        //[Route("danisan-itiraflari-partial-view")]
+        //[HttpPost]
+        //public JsonResult ConfessionsPartialView(int page = 1)
+        //{
+        //    var model = _dataContext.Confession.Where(s => s.StatusID == 1 && s.IsAprove == true).OrderByDescending(s => s.ID).GetPaged(page, 5);
+
+        //    ReturnViewString r = new ReturnViewString();
+        //    r.Status = 200;
+        //    r.ViewString = this.RenderViewAsync("ConfessionsPartialView", model, true).Result;
+        //    return Json(r);
+        //}
+
+        [Route("danisan-itiraflari")]
+        [Route("members-of-confession")]
+        public IActionResult Danisan()
+        {
+            int LangID = _operationService.SessionLangId();
+
+            if (LangID == 2)
+            {
+                TempData["Title"] = "Members of confession";
+
+            }
+            else
+            {
+                TempData["Title"] = "Danışan İtirafları";
+
+            }
+
+            return View();
+        }
+
+        //[HttpPost]
+        //[Route("danisan-itiraflari")]
+        //[Route("members-of-confession")]
+        //public IActionResult Danisan(ConfessionModel model)
+        //{
+        //    try
+        //    {
+        //        Confession confession = new Confession()
+        //        {
+        //            MemberName = model.MemberName,
+        //            MemberConfession = model.MemberConfession,
+        //            IsVisible = !model.IsVisible,
+        //            IsAprove = false,
+        //            IsRead = false,
+        //            StatusID = 1,
+        //            CreateDatetime = DateTime.Now
+        //        };
+
+        //        _dataContext.Confession.Add(confession);
+        //        _dataContext.SaveChanges();
+
+        //        try
+        //        {
+        //            string isVisibleString = model.IsVisible ? "Hayır" : "Evet";
+
+        //            string body = $@"
+        //            {model.MemberName} İsimli Danışan yeni bir Danışan İtiraf formu gönderdi. 
+        //            <br>
+        //            <br>
+        //            <b>Danışan Adı Soyadı:</b> {model.MemberName}
+        //            <br>
+        //            <b>İsim Görünsün Mü :</b> {isVisibleString}
+        //            <br>
+        //            <b>Danışan İtirafı:</b>  <br> {model.MemberConfession}
+        //            ";
+
+        //            MailHelper.SendMail(
+        //                "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com",
+        //                "Tarafınıza Yeni Bir Danışan Formu Gönderildi",
+        //                body,
+        //                null,
+        //                "karahasan.ayse@gmail.com,udavutoglu@yahoo.com"
+        //                );
+
+        //            //MailHelper.SendMail("cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com ", "Tarafınıza Yeni Bir İletişim Formu Gönderildi",contactModel.NameSurname +" İsimli Danışan yeni bir iletişim formu gönderdi");
+        //        }
+        //        catch (Exception e)
+        //        {
+
+        //        }
+
+        //        ViewBag.Result = "Success";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewBag.Result = "Error";
+        //        ViewBag.Message = ex.Message;
+        //    }
+        //    return View(model);
+        //}
+
 
 
         [Route("Ekibimiz")]
