@@ -40,7 +40,7 @@
                             <h2><i class="icon-apple"></i> Members Of Confession</h2>
                         </div>
                         <div class="row">
-                            <form class="mb-0" asp-action="Danisan" asp-controller="Home" method="post">
+                            <form class="mb-0" asp-action="Danisan" asp-controller="UIHome" method="post">
 
                                 @if (ViewBag.Result == "Success")
                                 {
@@ -80,9 +80,9 @@
 
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="itiraf-form-anonim" type="checkbox" id="isVisible" name="isVisible">
+                                                    <input class="itiraf-form-anonim" type="checkbox" id="isVisible" name="isVisible" data-val="true" value="true">
                                                     <label class="form-check-label" for="IsVisible">
-                                                        I don't want anybody to know about it
+                                                        I want everyone to know that
                                                     </label>
                                                 </div>
                                             </div>
@@ -161,7 +161,7 @@ else
                             <h2><i class="icon-apple"></i> Danışan İtirafları</h2>
                         </div>
                         <div class="row">
-                            <form class="mb-0" asp-action="Danisan" asp-controller="Home" method="post">
+                            <form class="mb-0" asp-action="Danisan" asp-controller="UIHome" method="post">
 
                                 @if (ViewBag.Result == "Success")
                                 {
@@ -201,9 +201,9 @@ else
 
                                             <div class="col-12">
                                                 <div class="form-check">
-                                                    <input class="itiraf-form-anonim" type="checkbox" id="isVisible" name="isVisible">
+                                                    <input class="itiraf-form-anonim" type="checkbox" id="isVisible" name="isVisible" data-val="true" value="true">
                                                     <label class="form-check-label" for="IsVisible">
-                                                        İsmimin görünmesini istemiyorum.
+                                                        İsmimin görünmesini istiyorum.
                                                     </label>
                                                 </div>
                                             </div>

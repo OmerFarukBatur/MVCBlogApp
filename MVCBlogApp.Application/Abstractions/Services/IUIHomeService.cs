@@ -1,9 +1,11 @@
-﻿using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
+﻿using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
+using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
+using MVCBlogApp.Application.Features.Queries.UIHome.ConfessionsPartialView;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetReferences;
@@ -41,6 +43,8 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<NewsBulletinCommandResponse> NewsBulletinAsync(NewsBulletinCommandRequest request);
         Task<VideoQueryResponse> VideoAsync();
         Task<VideoPartialViewQueryResponse> VideoPartialViewAsync(VideoPartialViewQueryRequest request);
+        Task<DanisanConfessionCreateCommandResponse> DanisanConfessionCreateAsync(DanisanConfessionCreateCommandRequest request);
+        Task<ConfessionsPartialViewQueryResponse> ConfessionsPartialViewAsync(ConfessionsPartialViewQueryRequest request);
 
         #endregion
 

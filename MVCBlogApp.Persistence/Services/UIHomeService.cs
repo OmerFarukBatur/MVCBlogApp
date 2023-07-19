@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
+using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
 using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutFooter;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderMenu;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutHeaderTopMenu;
+using MVCBlogApp.Application.Features.Queries.UIHome.ConfessionsPartialView;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetReferences;
@@ -29,6 +32,7 @@ using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
+using MVCBlogApp.Application.Repositories.Confession;
 using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
@@ -80,6 +84,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INewsBulletinWriteRepository _newsBulletinWriteRepository;
         private readonly IMailService _mailService;
         private readonly INewsBulletinReadRepository _newsBulletinReadRepository;
+        private readonly IConfessionWriteRepository _confessionWriteRepository;
+        private readonly IConfessionReadRepository _confessionReadRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -109,7 +115,9 @@ namespace MVCBlogApp.Persistence.Services
             IReferencesReadRepository referencesReadRepository,
             INewsBulletinWriteRepository newsBulletinWriteRepository,
             IMailService mailService,
-            INewsBulletinReadRepository newsBulletinReadRepository)
+            INewsBulletinReadRepository newsBulletinReadRepository,
+            IConfessionWriteRepository confessionWriteRepository,
+            IConfessionReadRepository confessionReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -139,6 +147,8 @@ namespace MVCBlogApp.Persistence.Services
             _newsBulletinWriteRepository = newsBulletinWriteRepository;
             _mailService = mailService;
             _newsBulletinReadRepository = newsBulletinReadRepository;
+            _confessionWriteRepository = confessionWriteRepository;
+            _confessionReadRepository = confessionReadRepository;
         }
 
 
@@ -808,6 +818,75 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        public async Task<DanisanConfessionCreateCommandResponse> DanisanConfessionCreateAsync(DanisanConfessionCreateCommandRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            Confession confession = new()
+            {
+                CreateDatetime = DateTime.Now,
+                IsAprove = false,
+                IsRead = false,
+                IsVisible = request.IsVisible,
+                LangId = langId,
+                MemberConfession = request.MemberConfession,
+                MemberName = request.MemberName,
+                StatusId = statusId
+            };
+
+            await _confessionWriteRepository.AddAsync(confession);
+            await _confessionWriteRepository.SaveAsync();
+
+            string isVisibleString = request.IsVisible ? "Hayır" : "Evet";
+
+            string body = $@"
+                    {request.MemberName} İsimli Danışan yeni bir Danışan İtiraf formu gönderdi. 
+                    <br>
+                    <br>
+                    <b>Danışan Adı Soyadı:</b> {request.MemberName}
+                    <br>
+                    <b>İsim Görünsün Mü :</b> {isVisibleString}
+                    <br>
+                    <b>Danışan İtirafı:</b>  <br> {request.MemberConfession}
+                    ";
+
+            await _mailService.SendMailAsync(
+                "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com,karahasan.ayse@gmail.com,udavutoglu@yahoo.com",
+                "Tarafınıza Yeni Bir Danışan Formu Gönderildi",
+                body,
+                true);
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+        }
+
+        public async Task<ConfessionsPartialViewQueryResponse> ConfessionsPartialViewAsync(ConfessionsPartialViewQueryRequest request)
+        {
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            var confession = _confessionReadRepository.GetWhere(x => x.StatusId == statusId && x.IsAprove == true).Select(x=> new VM_Confession
+            {
+                Id = x.Id,
+                CreateDatetime = x.CreateDatetime,
+                IsAprove = x.IsAprove,
+                IsRead = x.IsRead,
+                IsVisible = x.IsVisible,
+                LangId = x.LangId,
+                MemberConfession = x.MemberConfession,
+                StatusId = x.StatusId,
+                MemberName = x.MemberName
+            }).OrderByDescending(s => s.Id).GetPaged(request.page, 5);
+
+            return new()
+            {
+                Result = confession
+            };
+        }
+
         #endregion
 
         #region UILayout
@@ -1156,7 +1235,7 @@ namespace MVCBlogApp.Persistence.Services
                 TaylanK = taylanK
             };
         }
-               
+
         #endregion
     }
 }

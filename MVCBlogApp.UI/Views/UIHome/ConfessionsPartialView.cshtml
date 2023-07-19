@@ -1,0 +1,217 @@
+﻿@model MVCBlogApp.Application.ViewModels.PagedResult<MVCBlogApp.Application.ViewModels.VM_Confession>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+
+@{
+    int LangID = OperationService.SessionLangId();
+}
+
+<div class="divider divider-center"><i class="i-circled icon-apple-alt" style="background-color: #a1c41e"></i></div>
+@if (LangID == 2)
+{
+
+    <div class="row">
+        <div class="fancy-title title-bottom-border">
+            <h2><i class="icon-apple"></i> Members Of Confession</h2>
+        </div>
+
+        @foreach (var item in Model.Results.ToList())
+        {
+
+
+            <div class="entry event col-12">
+                <div class="feature-box fbox-lg fbox-outline fbox-dark fbox-effect">
+                    <div class="fbox-icon">
+                        <a href="#"><i class="icon-line-edit-3"></i></a>
+                    </div>
+                    <div class="fbox-content">
+                        <h3>
+                            @{
+                                if (item.IsVisible == true)
+                                {
+                                    @: @item.MemberName
+                                }
+                                else
+                                {
+                                    @: Anonim
+                                }
+                            }
+                        </h3>
+                        <p>@item.MemberConfession</p>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        @{
+            var urlTemplate = Url.Action() + "?page={0}";
+            var request = ViewContext.HttpContext.Request;
+            foreach (var key in request.Query.Keys)
+            {
+                if (key == "page")
+                {
+                    continue;
+                }
+
+                urlTemplate += "&" + key + "=" + request.Query[key];
+            }
+
+            var startIndex = Math.Max(Model.CurrentPage - 5, 1);
+            var finishIndex = Math.Min(Model.CurrentPage + 5, Model.PageCount);
+        }
+
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+            <div class="d-flex flex-wrap py-2 mr-3">
+                @if (Model.PageCount > 1)
+                {
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging btn-paging" data-page="1">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-double-left.svg" />
+                    </span>
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.PreviousPage.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-left.svg" />
+                    </span>
+
+                    @for (var i = startIndex; i <= finishIndex; i++)
+                    {
+                        @if (i == Model.CurrentPage)
+                        {
+                            <span class="btn btn-icon btn-sm border-0 btn-light btn-hover-primary active mr-2 my-1">@i</span>
+                        }
+                        else
+                        {
+                            <span href="#" class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1 btn-paging" data-page="@i.ToString()">@i</span>
+                        }
+                    }
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.NextPage.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-right.svg" />
+                    </span>
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.PageCount.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-double-right.svg" />
+                    </span>
+                }
+
+            </div>
+
+            <div class="d-flex align-items-center py-3">
+                <span class="text-muted">Sum @Model.RowCount Records @Model.FirstRowOnPage - @Model.LastRowOnPage views</span>
+            </div>
+
+        </div>
+    </div>
+
+}
+else
+
+{
+
+    <div class="row">
+        <div class="fancy-title title-bottom-border">
+            <h2><i class="icon-apple"></i> Danışan Diyet İtirafları</h2>
+        </div>
+
+        @foreach (var item in Model.Results.ToList())
+        {
+
+
+            <div class="entry event col-12">
+                <div class="feature-box fbox-lg fbox-outline fbox-dark fbox-effect">
+                    <div class="fbox-icon">
+                        <a href="#"><i class="icon-line-edit-3"></i></a>
+                    </div>
+                    <div class="fbox-content">
+                        <h3>
+                            @{
+                                if (item.IsVisible == true)
+                                {
+                                    @: @item.MemberName
+                                }
+                                else
+                                {
+                                    @: Anonim
+                                }
+                            }
+                        </h3>
+                        <p>@item.MemberConfession</p>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        @{
+            var urlTemplate = Url.Action() + "?page={0}";
+            var request = ViewContext.HttpContext.Request;
+            foreach (var key in request.Query.Keys)
+            {
+                if (key == "page")
+                {
+                    continue;
+                }
+
+                urlTemplate += "&" + key + "=" + request.Query[key];
+            }
+
+            var startIndex = Math.Max(Model.CurrentPage - 5, 1);
+            var finishIndex = Math.Min(Model.CurrentPage + 5, Model.PageCount);
+        }
+
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+            <div class="d-flex flex-wrap py-2 mr-3">
+                @if (Model.PageCount > 1)
+                {
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging btn-paging" data-page="1">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-double-left.svg" />
+                    </span>
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.PreviousPage.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-left.svg" />
+                    </span>
+
+                    @for (var i = startIndex; i <= finishIndex; i++)
+                    {
+                        @if (i == Model.CurrentPage)
+                        {
+                            <span class="btn btn-icon btn-sm border-0 btn-light btn-hover-primary active mr-2 my-1">@i</span>
+                        }
+                        else
+                        {
+                            <span href="#" class="btn btn-icon btn-sm border-0 btn-light mr-2 my-1 btn-paging" data-page="@i.ToString()">@i</span>
+                        }
+                    }
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.NextPage.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-right.svg" />
+                    </span>
+
+                    <span class="btn btn-icon btn-sm btn-light mr-2 my-1 btn-paging" data-page="@Model.PageCount.ToString()">
+                        <img src="~/UI/assets/media/svg/icons/Navigation/Angle-double-right.svg" />
+                    </span>
+                }
+
+            </div>
+
+            <div class="d-flex align-items-center py-3">
+                <span class="text-muted">Toplam @Model.RowCount kayıttan @Model.FirstRowOnPage ile @Model.LastRowOnPage arası gösteriliyor</span>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script>
+    $(".btn-paging").click(function (e) {
+
+        var page = $(this).attr("data-page");
+
+        getView(page);
+
+    });
+</script>
