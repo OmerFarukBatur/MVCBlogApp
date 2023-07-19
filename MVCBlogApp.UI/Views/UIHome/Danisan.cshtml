@@ -264,7 +264,7 @@ else
 
     });
 
-    function getView(page) {
+    async function getView(page) {
 
         var requestDto = new Object();
         requestDto.page = page;
@@ -272,13 +272,12 @@ else
         if (page == undefined || page == null)
             requestDto.page = 1;
 
-        $.ajax({
+        await $.ajax({
             type: "POST",
             url: "danisan-itiraflari-partial-view",
             data: requestDto,
             success: function (jsReturnArgs) {
-
-                $("#divConfessionsPartialView").html(jsReturnArgs.ViewString); //the HTML I returned from the controller
+                $("#divConfessionsPartialView").html(jsReturnArgs.viewString); //the HTML I returned from the controller
 
             },
             error: function (xhr, status, error) {

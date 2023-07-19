@@ -35,7 +35,7 @@
                     <div class="postcontent col-lg-9 order-lg-last">
                         <div class="fancy-title title-bottom-border"><h1>Taylan Kümeli Videos</h1></div>
 
-                        <div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+                        @*<div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
                             @foreach (var item in Model)
                             {
                                 <div class="row">
@@ -70,9 +70,9 @@
                                     </div>
                                 </div>
                             }
-                        </div>
+                        </div>*@
 
-                        @*<div id="divVideoPartialView"></div>
+                        <div id="divVideoPartialView"></div>
 
                         <div id="divVideoPartialViewSpinner">
                             <div class="spinner-border text-primary"></div>
@@ -80,7 +80,7 @@
 
 
 
-                        <div class="divider"><i class="icon-circle"></i></div>*@
+                        <div class="divider"><i class="icon-circle"></i></div>
 
 
                     </div>
@@ -127,7 +127,7 @@ else
                     <div class="postcontent col-lg-9 order-lg-last">
                         <div class="fancy-title title-bottom-border"><h1>Taylan Kümeli Videoları</h1></div>
 
-                        <div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+                        @*<div loading="lazy" id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
                             @foreach (var item in Model)
                             {
                                 <div class="row">
@@ -162,9 +162,9 @@ else
                                     </div>
                                 </div>
                             }
-                        </div>
+                        </div>*@
 
-                        @*<div id="divVideoPartialView"></div>
+                        <div id="divVideoPartialView"></div>
 
                         <div id="divVideoPartialViewSpinner">
                             <div class="spinner-border text-primary"></div>
@@ -172,7 +172,7 @@ else
 
 
 
-                        <div class="divider"><i class="icon-circle"></i></div>*@
+                        <div class="divider"><i class="icon-circle"></i></div>
 
 
                     </div>
@@ -194,7 +194,7 @@ else
 }
 
 
-@*<script>
+<script>
     $(document).ready(function () {
 
         getViewVideo();
@@ -217,7 +217,7 @@ else
             data: requestDto,
             success: function (jsReturnArgs) {
 
-                $("#divVideoPartialView").append(jsReturnArgs.ViewString); //the HTML I returned from the controller
+                $("#divVideoPartialView").append(jsReturnArgs.viewString); //the HTML I returned from the controller
                 $("#divVideoPartialViewSpinner").hide();
 
             },
@@ -231,4 +231,4 @@ else
         });
     }
 
-</script>*@
+</script>

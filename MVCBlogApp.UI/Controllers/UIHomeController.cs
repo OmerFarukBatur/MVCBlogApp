@@ -219,18 +219,17 @@ namespace MVCBlogApp.UI.Controllers
             return View(response.Videos);
         }
 
-        //[Route("video-partial-view")]
-        //[HttpPost]
-        //public async Task<JsonResult> VideoPartialView(VideoPartialViewQueryRequest request)
-        //{
-        //    VideoPartialViewQueryResponse response = await _mediator.Send(request);
+        [Route("video-partial-view")]
+        [HttpPost]
+        public async Task<JsonResult> VideoPartialView(VideoPartialViewQueryRequest request)
+        {
+            VideoPartialViewQueryResponse response = await _mediator.Send(request);
 
-        //    VM_ReturnViewString r = new();
-        //    r.Status = 200;
-        //    r.ViewString = this.RenderViewAsync("VideoPartialView", response.Result, true).Result;
-        //    return Json(r);
-        //}
-
+            VM_ReturnViewString r = new();
+            r.Status = 200;
+            r.ViewString = this.RenderViewAsync("VideoPartialView", response.Result, true).Result;
+            return Json(r);
+        }
 
         [Route("danisan-itiraflari-partial-view")]
         [HttpPost]
@@ -282,8 +281,6 @@ namespace MVCBlogApp.UI.Controllers
             }
             return View();
         }
-
-
 
         [Route("Ekibimiz")]
         public async Task<IActionResult> OurTeam()
