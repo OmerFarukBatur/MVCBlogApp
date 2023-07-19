@@ -1,0 +1,279 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Influencer
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    int LangID = OperationService.SessionLangId();
+    if (LangID == 1) { ViewData["Title"] = "İnfluencer formu"; } else if (LangID == 2) { ViewData["Title"] = "Influencer Form"; }
+    
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT IFLUENCER FORM</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="#">About</a></li>
+                <li class="breadcrumb-item active">Ifluencer Form</li>
+
+
+            </ol>
+        </div>
+    </section>
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <h3>Influencer Application Form</h3>
+
+                        <form class="mb-0" asp-action="Influencer" asp-controller="UIHome" method="post">
+                            <div class="form-widget">
+
+                                <div class="form-result"></div>
+
+
+                                <div class="form-process">
+                                    <div class="css3-spinner">
+                                        <div class="css3-spinner-scaler"></div>
+                                    </div>
+                                </div>
+
+                                @if (ViewBag.Result == "Success")
+                                {
+                                    <div class="col-12 alert-success">
+                                        <p class="ql-color-yellow">Send is Successful.</p>
+                                    </div>
+                                }
+                                else if (ViewBag.Result == "Error")
+                                {
+
+                                    <div class="col-12 alert-warning">
+                                        <p class="ql-color-yellow">@ViewBag.Message</p>
+                                    </div>
+                                }
+
+
+                                <div class="row">
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-isim">Name SurName <small>*</small></label>
+                                        <input type="text" id="genel-basvuru-form-posta-adresi-tr" placeholder="Name SurName" asp-for="NameSurname" class="sm-form-control " required="" />
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-eposta">E-Mail <small>*</small></label>
+                                        <input type="email" placeholder="E-Mail" asp-for="Email" class=" email sm-form-control" required="" />
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-gsmtel">Phone</label>
+                                        <input type="text" placeholder="Mobile Phone" asp-for="Phone" class="sm-form-control" required="" />
+                                    </div>
+
+                                    <div class="w-100"></div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="reklam-formu-firma">Customer Name <small>*</small></label>
+                                        <input type="text" placeholder="Customer Name" asp-for="CompanyName" class="sm-form-control " required="" />
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="reklam-formu-sektor">Customer Sector <small>*</small></label>
+                                        <input type="text" placeholder="Customer Sector" asp-for="CompanySector" class="sm-form-control " required="" />
+                                    </div>
+
+                                    <div class="w-100"></div>
+
+
+
+                                    <div class="col-12 form-group">
+                                        <label for="reklam-formu-konu">Ad Subject Product / Explanation About Service <small>*</small></label>
+                                        <textarea class="required sm-form-control" asp-for="Message" rows="6" cols="30" required=""></textarea>
+                                    </div>
+
+                                    <div class="col-12 form-group d-none">
+                                        <input type="text" id="reklam-formu-botcheck" name="reklam-formu-botcheck" value="" class="sm-form-control" />
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <button class="button button-3d m-0" type="submit" value="submit">Send</button>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="prefix" value="template-contactform-">
+
+
+                            </div>
+
+                        </form>
+                        <div class="line"></div>
+
+                        <div class="row col-mb-50">
+                            <div class="col-sm-6">
+                                <address>
+                                    <strong>TK Taylight Address:</strong><br />
+                                    Akkavak Sokak Halil Bey Apt. No 31 Daire 30 Kat 3 Nişantaşı İstanbul<br />
+                                    [Tatbak Lokantası Karşısı]<br />
+                                </address>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <abbr title="Telefon Numarası"><strong>Phone:</strong></abbr> +90 (212) 291 75 15 - 16<br />
+                                <abbr title="Fax"><strong>Fax:</strong></abbr> +90 (212) 291 75 17<br />
+                                <abbr title="Eposta Adresi"><strong>E Mail:</strong></abbr> bilgi@taylankumeli.com
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+
+    <section id="page-title" class="page-title-mini">
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT INFLUENCER HİZMETLERİ</h1>
+            <span>TK Taylight Beslenme ve Danışmanlık Hizmetleri Ltd. Şti.</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">Hakkımızda</a></li>
+                <li class="breadcrumb-item active">Ifluencer Formu</li>
+            </ol>
+        </div>
+    </section>
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <h3>Influencer Başvuru Formu</h3>
+
+                        <form class="mb-0" asp-action="Influencer" asp-controller="UIHome" method="post">
+                            <div class="form-widget">
+
+                                <div class="form-result"></div>
+
+
+                                <div class="form-process">
+                                    <div class="css3-spinner">
+                                        <div class="css3-spinner-scaler"></div>
+                                    </div>
+                                </div>
+
+                                @if (ViewBag.Result == "Success")
+                                {
+                                    <div class="col-12 alert-success">
+                                        <p class="ql-color-yellow">Form başarıyla gönderildi.</p>
+                                    </div>
+                                }
+                                else if (ViewBag.Result == "Error")
+                                {
+
+                                    <div class="col-12 alert-warning">
+                                        <p class="ql-color-yellow">@ViewBag.Message</p>
+                                    </div>
+                                }
+
+
+                                <div class="row">
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-isim">Ad Soyad <small>*</small></label>
+                                        <input type="text" id="genel-basvuru-form-posta-adresi-tr" placeholder="İsim Soyisim" asp-for="NameSurname" class="sm-form-control " required="" />
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-eposta">E-Posta <small>*</small></label>
+                                        <input type="email" placeholder="E-Posta" asp-for="Email" class=" email sm-form-control" required="" />
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label for="reklam-formu-gsmtel">Telefon No</label>
+                                        <input type="text" placeholder="Mobil Tel No" asp-for="Phone" class="sm-form-control" required="" />
+                                    </div>
+
+                                    <div class="w-100"></div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="reklam-formu-firma">Firma İsmi <small>*</small></label>
+                                        <input type="text" placeholder="Firma İsmi" asp-for="CompanyName" class="sm-form-control " required="" />
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <label for="reklam-formu-sektor">Firma Sektörü <small>*</small></label>
+                                        <input type="text" placeholder="Firma Sektörü" asp-for="CompanySector" class="sm-form-control " required="" />
+                                    </div>
+
+                                    <div class="w-100"></div>
+
+
+
+                                    <div class="col-12 form-group">
+                                        <label for="reklam-formu-konu">Reklam Konusu Ürün / Hizmet Hakkında Açıklama <small>*</small></label>
+                                        <textarea class="required sm-form-control" asp-for="Message" rows="6" cols="30" required=""></textarea>
+                                    </div>
+
+                                    <div class="col-12 form-group d-none">
+                                        <input type="text" id="reklam-formu-botcheck" name="reklam-formu-botcheck" value="" class="sm-form-control" />
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <button class="button button-3d m-0" type="submit" value="submit">Gönder</button>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="prefix" value="template-contactform-">
+
+
+                            </div>
+
+                        </form>
+                        <div class="line"></div>
+
+                        <div class="row col-mb-50">
+                            <div class="col-sm-6">
+                                <address>
+                                    <strong>TK Taylight Posta Adresi:</strong><br />
+                                    Akkavak Sokak Halil Bey Apt. No 31 Daire 30 Kat 3 Nişantaşı İstanbul<br />
+                                    [Tatbak Lokantası Karşısı]<br />
+                                </address>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <abbr title="Telefon Numarası"><strong>Tel:</strong></abbr> +90 (212) 291 75 15 - 16<br />
+                                <abbr title="Fax"><strong>Fax:</strong></abbr> +90 (212) 291 75 17<br />
+                                <abbr title="Eposta Adresi"><strong>Eposta:</strong></abbr> bilgi@taylankumeli.com
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+                        <div class="sidebar-widgets-wrap">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+}

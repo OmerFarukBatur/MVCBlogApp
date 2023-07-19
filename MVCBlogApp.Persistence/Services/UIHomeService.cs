@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Abstractions.Storage;
 using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
+using MVCBlogApp.Application.Features.Commands.IUHome.Influencer;
 using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
@@ -33,6 +34,7 @@ using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Carousel;
 using MVCBlogApp.Application.Repositories.Confession;
+using MVCBlogApp.Application.Repositories.Influencer;
 using MVCBlogApp.Application.Repositories.MasterRoot;
 using MVCBlogApp.Application.Repositories.Members;
 using MVCBlogApp.Application.Repositories.Navigation;
@@ -51,6 +53,7 @@ using MVCBlogApp.Application.Repositories.Video;
 using MVCBlogApp.Application.Repositories.VideoCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.Influencer;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -86,6 +89,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INewsBulletinReadRepository _newsBulletinReadRepository;
         private readonly IConfessionWriteRepository _confessionWriteRepository;
         private readonly IConfessionReadRepository _confessionReadRepository;
+        private readonly IInfluencerWriteRepository _ınfluencerWriteRepository;
 
         public UIHomeService(
             IOperationService operationService,
@@ -117,7 +121,8 @@ namespace MVCBlogApp.Persistence.Services
             IMailService mailService,
             INewsBulletinReadRepository newsBulletinReadRepository,
             IConfessionWriteRepository confessionWriteRepository,
-            IConfessionReadRepository confessionReadRepository)
+            IConfessionReadRepository confessionReadRepository,
+            IInfluencerWriteRepository ınfluencerWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -149,6 +154,7 @@ namespace MVCBlogApp.Persistence.Services
             _newsBulletinReadRepository = newsBulletinReadRepository;
             _confessionWriteRepository = confessionWriteRepository;
             _confessionReadRepository = confessionReadRepository;
+            _ınfluencerWriteRepository = ınfluencerWriteRepository;
         }
 
 
@@ -724,7 +730,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<NewsBulletinCommandResponse> NewsBulletinAsync(NewsBulletinCommandRequest request)
         {
-            VM_NewsBulletin? vM_NewsBulletin = await _newsBulletinReadRepository.GetWhere(x=> x.Email == request.email).Select(x=> new VM_NewsBulletin { Id = x.Id }).FirstOrDefaultAsync();
+            VM_NewsBulletin? vM_NewsBulletin = await _newsBulletinReadRepository.GetWhere(x => x.Email == request.email).Select(x => new VM_NewsBulletin { Id = x.Id }).FirstOrDefaultAsync();
 
             if (vM_NewsBulletin == null)
             {
@@ -740,7 +746,7 @@ namespace MVCBlogApp.Persistence.Services
                 await _newsBulletinWriteRepository.AddAsync(newsBulletin);
                 await _newsBulletinWriteRepository.SaveAsync();
 
-                await _mailService.SendMailAsync(request.email,"Taylan Kümeli Bülten Kayıt","Bültene kayıt işlem başarıyla yapılmıştır.");
+                await _mailService.SendMailAsync(request.email, "Taylan Kümeli Bülten Kayıt", "Bültene kayıt işlem başarıyla yapılmıştır.");
 
                 return new()
                 {
@@ -755,7 +761,7 @@ namespace MVCBlogApp.Persistence.Services
                     Message = "Mail adresine ait kayıt bulunmaktadır.",
                     State = false
                 };
-            }            
+            }
         }
 
         public async Task<VideoQueryResponse> VideoAsync()
@@ -791,7 +797,7 @@ namespace MVCBlogApp.Persistence.Services
 
             var videos = _videoReadRepository.GetWhere(x => x.VideoCategoryId != 3 && x.LangId == langId && x.StatusId == statusId).OrderByDescending(x => x.Id).GetPaged(request.page, 4);
 
-            PagedResult <VM_Video> result = new()
+            PagedResult<VM_Video> result = new()
             {
                 CurrentPage = videos.CurrentPage,
                 PageCount = videos.PageCount,
@@ -868,7 +874,7 @@ namespace MVCBlogApp.Persistence.Services
         {
             int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
 
-            var confession = _confessionReadRepository.GetWhere(x => x.StatusId == statusId && x.IsAprove == true).Select(x=> new VM_Confession
+            var confession = _confessionReadRepository.GetWhere(x => x.StatusId == statusId && x.IsAprove == true).Select(x => new VM_Confession
             {
                 Id = x.Id,
                 CreateDatetime = x.CreateDatetime,
@@ -884,6 +890,56 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 Result = confession
+            };
+        }
+
+        public async Task<InfluencerCommandResponse> InfluencerAsync(InfluencerCommandRequest request)
+        {
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            Influencer ınfluencer = new()
+            {
+                NameSurname = request.NameSurname,
+                CompanyName = request.CompanyName,
+                CompanySector = request.CompanySector,
+                Email = request.Email,
+                Message = request.Message,
+                Phone = request.Phone,
+                StatusId = statusId,
+                CreateDatetime = DateTime.Now
+            };
+
+            await _ınfluencerWriteRepository.AddAsync(ınfluencer);
+            await _ınfluencerWriteRepository.SaveAsync();
+
+            string body = $@"
+                    {request.NameSurname} İsimli Danışan yeni bir Influencer formu gönderdi. 
+                    <br>
+                    <br>
+                    <b>Adı Soyadı:</b> {request.NameSurname}
+                    <br>
+                    <b>Mail Adresi:</b> {request.Email}
+                    <br>
+                    <b>Telefon Numarası:</b> {request.Phone}
+                    <br>
+                    <b>Firma Adı:</b> {request.CompanyName}
+                    <br>
+                    <b>Firma Sektörü:</b> {request.CompanySector}
+                    <br>
+                    <b>İçerik:</b>  <br> {request.Message}
+                    ";
+
+            await _mailService.SendMailAsync(
+                "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com,karahasan.ayse@gmail.com,udavutoglu@yahoo.com",
+                "Tarafınıza Yeni Bir Influencer Formu Gönderildi",
+                body,
+                true
+                );
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
             };
         }
 

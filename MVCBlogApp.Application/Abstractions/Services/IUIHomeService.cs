@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
+using MVCBlogApp.Application.Features.Commands.IUHome.Influencer;
 using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
 using MVCBlogApp.Application.Features.Queries.IULayout.UILayoutBanner;
@@ -45,6 +46,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<VideoPartialViewQueryResponse> VideoPartialViewAsync(VideoPartialViewQueryRequest request);
         Task<DanisanConfessionCreateCommandResponse> DanisanConfessionCreateAsync(DanisanConfessionCreateCommandRequest request);
         Task<ConfessionsPartialViewQueryResponse> ConfessionsPartialViewAsync(ConfessionsPartialViewQueryRequest request);
+        Task<InfluencerCommandResponse> InfluencerAsync(InfluencerCommandRequest request);
 
         #endregion
 

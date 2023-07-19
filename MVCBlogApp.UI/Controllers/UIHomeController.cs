@@ -17,6 +17,7 @@ using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Domain.Entities;
 using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
 using MVCBlogApp.Application.Features.Queries.UIHome.ConfessionsPartialView;
+using MVCBlogApp.Application.Features.Commands.IUHome.Influencer;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -203,8 +204,7 @@ namespace MVCBlogApp.UI.Controllers
             return View(response.Searches);
         }
 
-        ////////////////////////////   Search,SearchPartialView, Video ve VideoPartialView paged(sayfalama) işlemi uygulanacaktır.
-        ///
+        //   SearchPartialView
 
         [Route("taylan-kumeli-videolari")]
         public async Task<IActionResult> Video()
@@ -231,11 +231,38 @@ namespace MVCBlogApp.UI.Controllers
             return Json(r);
         }
 
+        [Route("influencer-formu")]
+        [Route("influencer-form")]
+        public IActionResult Influencer()
+        {
+            TempData["Title"] = "influencer Form";
+            return View();
+        }
+
+        [HttpPost]
+        [Route("influencer-formu")]
+        [Route("influencer-form")]
+        public async Task<IActionResult> Influencer(InfluencerCommandRequest request)
+        {
+            InfluencerCommandResponse response = await _mediator.Send(request);
+            if (response.State)
+            {
+                ViewBag.Result = "Success";
+            }
+            else
+            {
+                ViewBag.Result = "Error";
+                ViewBag.Message = response.Message;
+            }
+
+            return View();
+        }
+
         [Route("danisan-itiraflari-partial-view")]
         [HttpPost]
         public async Task<JsonResult> ConfessionsPartialView(ConfessionsPartialViewQueryRequest request)
         {
-            ConfessionsPartialViewQueryResponse response = await _mediator.Send(request);            
+            ConfessionsPartialViewQueryResponse response = await _mediator.Send(request);
 
             VM_ReturnViewString r = new();
             r.Status = 200;
