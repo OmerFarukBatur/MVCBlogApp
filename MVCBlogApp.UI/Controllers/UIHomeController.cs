@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
+using MVCBlogApp.Application.Features.Commands.IUHome.Influencer;
 using MVCBlogApp.Application.Features.Commands.IUHome.NewsBulletin;
 using MVCBlogApp.Application.Features.Commands.IUHome.UploadImage;
+using MVCBlogApp.Application.Features.Queries.UIHome.ConfessionsPartialView;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetBiography;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetPage;
 using MVCBlogApp.Application.Features.Queries.UIHome.GetReferences;
@@ -12,12 +15,8 @@ using MVCBlogApp.Application.Features.Queries.UIHome.OurTeam;
 using MVCBlogApp.Application.Features.Queries.UIHome.UIHomeIndex;
 using MVCBlogApp.Application.Features.Queries.UIHome.Video;
 using MVCBlogApp.Application.Features.Queries.UIHome.VideoPartialView;
-using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Application.Helpers;
-using MVCBlogApp.Domain.Entities;
-using MVCBlogApp.Application.Features.Commands.IUHome.Danisan;
-using MVCBlogApp.Application.Features.Queries.UIHome.ConfessionsPartialView;
-using MVCBlogApp.Application.Features.Commands.IUHome.Influencer;
+using MVCBlogApp.Application.ViewModels;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -38,6 +37,9 @@ namespace MVCBlogApp.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
+            int id = Convert.ToInt32(HttpContext.Session.GetInt32("LangID"));
+            if (id <= 0 || id > 2) { HttpContext.Session.SetInt32("LangID", 1); }
+
             UIHomeIndexQueryRequest request = new();
             UIHomeIndexQueryResponse response = await _mediator.Send(request);
 
@@ -85,6 +87,22 @@ namespace MVCBlogApp.UI.Controllers
         public IActionResult CkEditorTest()
         {
             return View();
+        }
+
+        [Route("/Home/{id}")]
+        public IActionResult Lang()
+        {
+            int LangID = Convert.ToInt32(HttpContext.Request.Query["LangID"]);
+            if (LangID <= 0 || LangID > 2 || LangID == 1)
+            {
+                HttpContext.Session.SetInt32("LangID", 1);
+            }
+            else
+            {
+                HttpContext.Session.SetInt32("LangID", LangID);
+            }
+
+            return RedirectToAction("Index","UIHome");
         }
 
         [Route("{id}")]
@@ -204,7 +222,7 @@ namespace MVCBlogApp.UI.Controllers
             return View(response.Searches);
         }
 
-        //   SearchPartialView
+        //   SearchPartialView yapılmadı çünkü hiçbir yerde kullanılmamış.
 
         [Route("taylan-kumeli-videolari")]
         public async Task<IActionResult> Video()
