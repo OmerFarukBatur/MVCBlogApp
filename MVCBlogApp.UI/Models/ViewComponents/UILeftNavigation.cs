@@ -17,8 +17,13 @@ namespace MVCBlogApp.UI.Models.ViewComponents
             _mediator = mediator;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(UILeftNavigationQueryRequest request)
+        public async Task<IViewComponentResult> InvokeAsync(string orderNo, int? parentID)
         {
+            UILeftNavigationQueryRequest request = new()
+            {
+                orderNo = orderNo,
+                parentID = parentID
+            };
             UILeftNavigationQueryResponse response = await _mediator.Send(request);
 
             if (response.LeftNavigations != null)

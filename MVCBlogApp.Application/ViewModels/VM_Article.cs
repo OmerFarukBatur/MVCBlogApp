@@ -33,5 +33,6 @@
         public string? Language { get; set; }
         public string? StatusName { get; set; }
         public string? CategoryName { get; set; }
+        public string? OrderNo { get; set; }
     }
 }

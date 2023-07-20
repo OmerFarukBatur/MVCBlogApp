@@ -14,7 +14,17 @@ namespace MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation
 
         public async Task<UILeftNavigationQueryResponse> Handle(UILeftNavigationQueryRequest request, CancellationToken cancellationToken)
         {
-            return await _service.UILeftNavigationAsync(request);
+            if (request.orderNo != null && request.parentID != null)
+            {
+                return await _service.UILeftNavigationAsync(request);
+            }
+            else
+            {
+                return new()
+                {
+                    LeftNavigations = null
+                };
+            }
         }
     }
 }
