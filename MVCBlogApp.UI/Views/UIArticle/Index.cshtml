@@ -1,0 +1,71 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Article
+@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http;
+@inject IOperationService OperationService
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    string orderNo = (string)TempData["orderNo"];
+    int? parentID = (int)TempData["parentID"];
+    int? internalID = (int)TempData["internalID"];
+
+    //string orderNo = HttpContextAccessor.HttpContext.Session.GetString(BookController.SessionOrderNo);
+    //int? parentID = HttpContextAccessor.HttpContext.Session.GetInt32(BookController.SessionParentID);
+    //int? internalID = HttpContextAccessor.HttpContext.Session.GetInt32(BookController.SessionInternalID);
+}
+
+@*@await Component.InvokeAsync("BreadCrumbs", new { orderNo, parentID, internalID})*@
+<section id="page-title" class="page-title-mini">
+
+    <div class="container clearfix">
+        <h1>@Model.Title</h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </div>
+</section>
+
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+                <div class="postcontent col-lg-9 order-lg-last">
+                    <div class="fancy-title title-bottom-border"><h1>@Model.Title</h1></div>
+
+                    <div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+
+                        @Html.Raw(Model.Description)
+
+                    </div>
+
+
+                </div>
+
+                @await Component.InvokeAsync("UILeftNavigation", new { orderNo, parentID})
+                @*<div class="sidebar col-lg-3">
+                <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active">
+                SAĞLIKLI BESLENME
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">Beslenme & Bağışıklık</a>
+                <a href="#" class="list-group-item list-group-item-action">Tat Duyusuna Göre Kilo</a>
+                <a href="#" class="list-group-item list-group-item-action">Bedensel Yenilenme</a>
+                <a href="#" class="list-group-item list-group-item-action">Kendinizi Test Edin</a>
+                </div>
+
+
+                </div>*@
+            </div>
+
+
+
+        </div>
+    </div>
+</section>

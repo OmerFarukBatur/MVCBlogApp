@@ -1,0 +1,28 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_Navigation>
+
+<div class="sidebar col-lg-3">
+    <div class="list-group">
+        <ul class="sidenav">
+            @if (Model.Count() > 0)
+            {
+
+                @foreach (var item in Model)
+                {
+                    <li><a href="/@item.UrlRoot">@item.NavigationName<i class="icon-chevron-right"></i></a></li>
+                }
+
+            }
+        </ul>
+
+        @*<a href="#" class="list-group-item list-group-item-action active">
+        BESLENME DANIŞMANLIĞI
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">Beslenme & Bağışıklık</a>
+        <a href="#" class="list-group-item list-group-item-action">Tat Duyusuna Göre Kilo</a>
+        <a href="#" class="list-group-item list-group-item-action">Bedensel Yenilenme</a>
+        <a href="#" class="list-group-item list-group-item-action">Kendinizi Test Edin</a>*@
+    </div>
+
+
+</div>
+
