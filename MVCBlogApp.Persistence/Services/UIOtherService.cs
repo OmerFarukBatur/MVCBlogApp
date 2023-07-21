@@ -53,7 +53,8 @@ namespace MVCBlogApp.Persistence.Services
             if (request.orderNo != null && request.parentID != null)
             {
                 //Articles
-                var navigations = await _articleReadRepository.GetWhere(x => x.IsMenu == true && x.StatusId == statusActiveId && x.IsComponent == true && x.NavigationId == request.parentID).OrderBy(x => x.Orders)
+                var navigations = await _articleReadRepository
+                    .GetWhere(x => x.IsMenu == true && x.StatusId == statusActiveId && x.IsComponent == true && x.NavigationId == request.parentID).OrderBy(x => x.Orders)
                     .Select(y => new VM_Navigation
                     {
                         Id = y.Id,
@@ -65,36 +66,40 @@ namespace MVCBlogApp.Persistence.Services
                         FontAwesomeIcon = y.FontAwesomeIcon,
                         MetaKey = y.MetaKey,
                         MetaTitle = y.MetaTitle,
-                        ParentId = (int)y.NavigationId
+                        ParentId = y.NavigationId
                     }).ToListAsync();
 
-                ////Blog
-                //navigations.AddRange(await _blogReadRepository.GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == statusActiveId && x.BlogTypeId == 2 && x.IsComponent == true)
-                //    .Select(y => new VM_Navigation
-                //    {
-                //        Id = y.Id,
-                //        NavigationName = y.Title,
-                //        CreateDate = y.CreateDate,
-                //        MetaKey = y.MetaKey,
-                //        MetaTitle = y.MetaTitle,
-                //        ParentId = (int)y.NavigationId,
-                //        UrlRoot = y.UrlRoot,
-                //        OrderNo = navigationsDB.Find(x => x.Id == y.NavigationId).OrderNo
-                //    }).ToListAsync());
+                //Blog
+                navigations.AddRange(await _blogReadRepository
+                    .GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == statusActiveId && x.BlogTypeId == 2 && x.IsComponent == true)
+                    .Join(_navigationReadRepository.GetAll(),blog=> blog.NavigationId, nav=> nav.Id,(blog,nav)=> new {blog,nav})
+                    .Select(y => new VM_Navigation
+                    {
+                        Id = y.blog.Id,
+                        NavigationName = y.blog.Title,
+                        CreateDate = y.blog.CreateDate,
+                        MetaKey = y.blog.MetaKey,
+                        MetaTitle = y.blog.MetaTitle,
+                        ParentId = y.blog.NavigationId,
+                        UrlRoot = y.blog.UrlRoot,
+                        OrderNo = y.nav.OrderNo
+                    }).ToListAsync());
 
-                ////Book
-                //navigations.AddRange(await _bookReadRepository.GetWhere(x => x.StatusId == statusActiveId && x.NavigationId != null && x.Orders != null).OrderBy(x => x.Orders)
-                //    .Select(y => new VM_Navigation
-                //    {
-                //        CreateDate = y.CreateDate,
-                //        Id = y.Id,
-                //        NavigationName = y.BookName,
-                //        ParentId = (int)y.NavigationId,
-                //        UrlRoot = y.UrlRoot,
-                //        Action = y.Action,
-                //        Controller = y.Controller,
-                //        OrderNo = navigationsDB.Find(x => x.Id == y.NavigationId).OrderNo
-                //    }).ToListAsync());
+                //Book
+                navigations.AddRange(await _bookReadRepository
+                    .GetWhere(x => x.StatusId == statusActiveId && x.NavigationId != null && x.Orders != null).OrderBy(x => x.Orders)
+                    .Join(_navigationReadRepository.GetAll(), book => book.NavigationId, nav => nav.Id, (book, nav) => new { book, nav })
+                    .Select(y => new VM_Navigation
+                    {
+                        CreateDate = y.book.CreateDate,
+                        Id = y.book.Id,
+                        NavigationName = y.book.BookName,
+                        ParentId = y.book.NavigationId,
+                        UrlRoot = y.book.UrlRoot,
+                        Action = y.book.Action,
+                        Controller = y.book.Controller,
+                        OrderNo = y.nav.OrderNo
+                    }).ToListAsync());
 
                 var mainMenu = navigationsDB.Find(x => x.Id == request.parentID && x.OrderNo == request.orderNo);
                 var model = new List<VM_Navigation>();
@@ -135,7 +140,7 @@ namespace MVCBlogApp.Persistence.Services
                 else if (request.orderNo.StartsWith('2') == true)
                 {
                     navigationsDB = await _navigationReadRepository
-                        .GetWhere(x => x.IsAdmin == false && x.IsActive == true && x.OrderNo.StartsWith(request.orderNo[0]) && x.ParentId == request.parentID && x.IsHeader == null && x.IsSubHeader == null)
+                        .GetWhere(x => x.IsAdmin == false && x.IsActive == true && x.ParentId == request.parentID && x.IsHeader == null && x.IsSubHeader == null)
                         .OrderBy(x => x.ParentId)
                         .ThenBy(x => x.OrderNo)
                         .ThenBy(x => x.Id)
@@ -188,7 +193,9 @@ namespace MVCBlogApp.Persistence.Services
                     MetaKey = x.art.MetaKey,
                     MetaTitle = x.art.MetaTitle,
                     NavigationId = x.art.NavigationId,
-                    OrderNo = x.nav.OrderNo
+                    OrderNo = x.nav.OrderNo,
+                    Title = x.art.Title,
+                    Description = x.art.Description
                 }).FirstOrDefaultAsync();
 
             return new()

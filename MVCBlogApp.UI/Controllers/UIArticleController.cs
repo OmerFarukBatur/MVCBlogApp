@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 
 namespace MVCBlogApp.UI.Controllers
@@ -18,7 +17,7 @@ namespace MVCBlogApp.UI.Controllers
             _mediator = mediator;
         }
 
-        [Route("Article/{id}")]
+        [Route("/{id}")]
         public async Task<IActionResult> Index(UIArticleIndexQueryRequest request)
         {
             UIArticleIndexQueryResponse response = await _mediator.Send(request);

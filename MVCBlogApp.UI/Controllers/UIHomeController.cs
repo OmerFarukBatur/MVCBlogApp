@@ -105,7 +105,7 @@ namespace MVCBlogApp.UI.Controllers
             return RedirectToAction("Index","UIHome");
         }
 
-        [Route("{id}")]
+        [Route("tr/{id}")]
         public async Task<IActionResult> GetPage(GetPageQueryRequest request)
         {
             GetPageQueryResponse response = await _mediator.Send(request);
