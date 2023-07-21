@@ -105,7 +105,7 @@ namespace MVCBlogApp.UI.Controllers
             return RedirectToAction("Index","UIHome");
         }
 
-        [Route("tr/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> GetPage(GetPageQueryRequest request)
         {
             GetPageQueryResponse response = await _mediator.Send(request);
@@ -119,7 +119,7 @@ namespace MVCBlogApp.UI.Controllers
 
                 ViewBag.tip = response.Blog.BlogTypeName;
 
-                return View("~/Views/Blog/Detail.cshtml", response.Blog);
+                return View("~/Views/UIBlog/Index.cshtml", response.Blog);
             }
 
             else if (response.Article != null)
@@ -144,7 +144,7 @@ namespace MVCBlogApp.UI.Controllers
                     TempData["internalID"] = response.Article.Id;
                 }
 
-                return View("~/Views/Article/Index.cshtml", response.Article);
+                return View("~/Views/UIArticle/Index.cshtml", response.Article);
             }
 
             else if (response.Book != null)

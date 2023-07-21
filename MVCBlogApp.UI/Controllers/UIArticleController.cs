@@ -17,7 +17,7 @@ namespace MVCBlogApp.UI.Controllers
             _mediator = mediator;
         }
 
-        [Route("/{id}")]
+        [Route("tr/{id}")]
         public async Task<IActionResult> Index(UIArticleIndexQueryRequest request)
         {
             UIArticleIndexQueryResponse response = await _mediator.Send(request);

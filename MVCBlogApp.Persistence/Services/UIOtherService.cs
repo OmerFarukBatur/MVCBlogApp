@@ -1,13 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
+using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
+using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
+using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -19,6 +24,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBlogReadRepository _blogReadRepository;
         private readonly INavigationReadRepository _navigationReadRepository;
         private readonly IBookReadRepository _bookReadRepository;
+        private readonly IBlogTypeReadRepository _blogTypeReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -26,8 +32,8 @@ namespace MVCBlogApp.Persistence.Services
             IArticleReadRepository articleReadRepository,
             IBlogReadRepository blogReadRepository,
             INavigationReadRepository navigationReadRepository,
-            IBookReadRepository bookReadRepository
-            )
+            IBookReadRepository bookReadRepository,
+            IBlogTypeReadRepository blogTypeReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -35,9 +41,10 @@ namespace MVCBlogApp.Persistence.Services
             _blogReadRepository = blogReadRepository;
             _navigationReadRepository = navigationReadRepository;
             _bookReadRepository = bookReadRepository;
+            _blogTypeReadRepository = blogTypeReadRepository;
         }
 
-        
+
         #region Article
 
         public async Task<UILeftNavigationQueryResponse> UILeftNavigationAsync(UILeftNavigationQueryRequest request)
@@ -204,7 +211,61 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        #endregion
 
+        #region Blog
+
+        public async Task<UIBlogPartialViewQueryResponse> UIBlogPartialViewAsync(UIBlogPartialViewQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            var blog = _blogReadRepository.GetWhere(x => x.BlogTypeId == 1 && x.LangId == langId && x.StatusId == statusId)
+                .Join(_blogTypeReadRepository.GetAll(), bl => bl.BlogTypeId, bType => bType.Id, (bl, bType) => new { bl, bType })
+                .OrderByDescending(s => s.bl.Id)
+                .GetPaged(request.page, 4);
+
+            PagedResult<VM_Blog> result = new()
+            {
+                CurrentPage = blog.CurrentPage,
+                PageCount = blog.PageCount,
+                PageSize = blog.PageSize,
+                RowCount = blog.RowCount,
+                Results = blog.Results.Select(s => new VM_Blog()
+                {
+                    Id = s.bl.Id,
+                    MetaTitle = s.bl.MetaTitle,
+                    MetaKey = s.bl.MetaKey,
+                    MetaDescription = s.bl.MetaDescription,
+                    UrlRoot = s.bl.UrlRoot,
+                    Title = s.bl.Title,
+                    SubTitle = s.bl.SubTitle,
+                    Contents = s.bl.Contents,
+                    CoverImgUrl = s.bl.CoverImgUrl,
+                    BlogTypeId = s.bl.BlogTypeId,
+                    BlogTypeName = s.bType.TypeName,
+                    IsMainPage = s.bl.IsMainPage,
+                    Orders = s.bl.Orders,
+                    NavigationId = s.bl.NavigationId,
+                    IsMenu = s.bl.IsMenu,
+                    IsComponent = s.bl.IsComponent,
+                    Action = s.bl.Action,
+                    Controller = s.bl.Controller,
+                    BlogCategoryId = s.bl.BlogCategoryId,
+                    CreateDate = s.bl.CreateDate,
+                    CreateUserId = s.bl.CreateUserId,
+                    LangId = s.bl.LangId,
+                    StatusId = s.bl.StatusId,
+                    UpdateDate = s.bl.UpdateDate,
+                    UpdateUserId = s.bl.UpdateUserId
+                }).ToList()
+            };
+
+            return new()
+            {
+                Result = result
+            };
+        }
 
         #endregion
     }
