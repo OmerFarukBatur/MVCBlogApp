@@ -20,7 +20,7 @@ namespace MVCBlogApp.UI.Controllers
         [Route("tr/{id}")]
         public async Task<IActionResult> Index(UIArticleIndexQueryRequest request)
         {
-            UIArticleIndexQueryResponse response = await _mediator.Send(request);
+             UIArticleIndexQueryResponse response = await _mediator.Send(request);
             if (response.Article != null)
             {
 

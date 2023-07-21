@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.ViewModels;
+using System;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -18,7 +19,7 @@ namespace MVCBlogApp.UI.Controllers
             _operationService = operationService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index()   // Hatalı çalışıyor yönlendirilen içeriğin detayı olması lazım ama o şekil çalışmıyor yeniden yapılacak
         {
             int LangID = _operationService.SessionLangId();
 
