@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
+using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -24,6 +25,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<SimilarSubjectsQueryResponse> SimilarSubjectsAsync(SimilarSubjectsQueryRequest request);
         Task<BlogCategoryIndexQueryResponse> BlogCategoryIndexAsync(BlogCategoryIndexQueryRequest request);
         Task<BasariHikayeleriPartialViewQueryResponse> BasariHikayeleriPartialViewAsync(BasariHikayeleriPartialViewQueryRequest request);
+        Task<YemekTarifleriPartialViewQueryResponse> YemekTarifleriPartialViewAsync(YemekTarifleriPartialViewQueryRequest request);
 
         #endregion
     }

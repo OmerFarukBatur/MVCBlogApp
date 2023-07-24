@@ -14,7 +14,7 @@
         <div class="entry col-12">
             <div class="grid-inner row no-gutters">
                 <div class="entry-image col-md-3">
-                    <a href="/@item.UrlRoot"><img loading="lazy" src="@Url.Action("GetImage", "Home", new { fileName = item.CoverImgUrl })" alt="@item.MetaTitle"></a>
+                    <a href="/@item.UrlRoot"><img loading="lazy" src="@Url.Content("~/Upload/"+ item.CoverImgUrl)" alt="@item.MetaTitle"></a>
                 </div>
                 <div class="col-md-9 pl-md-4">
                     <div class="entry-title title-sm">

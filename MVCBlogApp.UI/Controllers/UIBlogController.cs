@@ -4,6 +4,7 @@ using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
+using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.ViewModels;
 
@@ -85,6 +86,39 @@ namespace MVCBlogApp.UI.Controllers
             VM_ReturnViewString r = new();
             r.Status = 200;
             r.ViewString = this.RenderViewAsync("BasariHikayeleriPartialView", response.Result, true).Result;
+            return Json(r);
+        }
+
+        [Route("yemek-tarifleri")]
+        [Route("recipes")]
+        public IActionResult Yemek()
+        {
+            int LangID = _operationService.SessionLangId();
+
+            if (LangID == 2)
+            {
+                TempData["Title"] = "Recipes";
+
+            }
+            else
+            {
+                TempData["Title"] = "Yemek Tarifleri";
+
+            }
+
+            return View();
+        }
+
+
+        [Route("yemek-tarifleri-partial-view")]
+        [HttpPost]
+        public async Task<JsonResult> YemekTarifleriPartialView(YemekTarifleriPartialViewQueryRequest request)
+        {
+            YemekTarifleriPartialViewQueryResponse response = await _mediator.Send(request);            
+
+            VM_ReturnViewString r = new();
+            r.Status = 200;
+            r.ViewString = this.RenderViewAsync("YemekTarifleriPartialView", response.Result, true).Result;
             return Json(r);
         }
     }
