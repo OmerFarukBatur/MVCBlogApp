@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.ViewModels;
-using System;
 
 namespace MVCBlogApp.UI.Controllers
 {
@@ -18,7 +18,7 @@ namespace MVCBlogApp.UI.Controllers
             _mediator = mediator;
             _operationService = operationService;
         }
-
+        [Route("/Blog/")]
         public IActionResult Index()
         {
             int LangID = _operationService.SessionLangId();
@@ -46,6 +46,13 @@ namespace MVCBlogApp.UI.Controllers
             r.Status = 200;
             r.ViewString = this.RenderViewAsync("BlogPartialView", response.Result, true).Result;
             return Json(r);
+        }
+
+        public async Task<IActionResult> BlogCategoryIndex(BlogCategoryIndexQueryRequest request)
+        {
+            BlogCategoryIndexQueryResponse response = await _mediator.Send(request);
+
+            return View("Index", response.Blogs);
         }
     }
 }

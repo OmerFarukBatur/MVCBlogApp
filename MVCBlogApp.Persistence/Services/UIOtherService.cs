@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
+using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
@@ -366,6 +367,56 @@ namespace MVCBlogApp.Persistence.Services
                     Blogs = null
                 };
             }
+        }
+
+        public async Task<BlogCategoryIndexQueryResponse> BlogCategoryIndexAsync(BlogCategoryIndexQueryRequest request)
+        {
+            int catId = await _blogCategoryReadRepository.GetWhere(x=> x.CategoryName.Trim() == request.catName.Replace("-", " ")).Select(x=> x.Id).FirstOrDefaultAsync();
+
+            List<int?> blogIDs = await _x_BlogCategoryReadRepository.GetWhere(x => x.BlogCategoryId == catId).Select(x => x.BlogId).ToListAsync();
+
+            if (blogIDs != null)
+            {
+                List<VM_Blog> blogs = await _blogReadRepository.GetWhere(x => blogIDs.Contains(x.Id)).Select(y => new VM_Blog
+                {
+                    Action = y.Action,
+                    BlogCategoryId = y.BlogCategoryId,
+                    BlogTypeId = y.BlogTypeId,
+                    Contents = y.Contents,
+                    Controller = y.Controller,
+                    CoverImgUrl = y.CoverImgUrl,
+                    CreateDate = y.CreateDate,
+                    CreateUserId = y.CreateUserId,
+                    Id = y.Id,
+                    IsComponent = y.IsComponent,
+                    IsMainPage = y.IsMainPage,
+                    IsMenu = y.IsMenu,
+                    LangId = y.LangId,
+                    MetaDescription = y.MetaDescription,
+                    MetaKey = y.MetaKey,
+                    MetaTitle = y.MetaTitle,
+                    NavigationId = y.NavigationId,
+                    Orders = y.Orders,
+                    StatusId = y.StatusId,
+                    SubTitle = y.SubTitle,
+                    Title = y.Title,
+                    UpdateDate = y.UpdateDate,
+                    UpdateUserId = y.UpdateUserId,
+                    UrlRoot = y.UrlRoot
+                }).ToListAsync();
+
+                return new()
+                {
+                    Blogs = blogs
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Blogs = null
+                };
+            }            
         }
 
         #endregion

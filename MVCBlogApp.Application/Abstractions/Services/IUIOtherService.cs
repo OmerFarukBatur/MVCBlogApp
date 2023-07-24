@@ -1,5 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
+using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
@@ -20,6 +21,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<UIBlogPartialViewQueryResponse> UIBlogPartialViewAsync(UIBlogPartialViewQueryRequest request);
         Task<TagCloudAndSocialMediaQueryResponse> TagCloudAndSocialMediaAsync(TagCloudAndSocialMediaQueryRequest request);
         Task<SimilarSubjectsQueryResponse> SimilarSubjectsAsync(SimilarSubjectsQueryRequest request);
+        Task<BlogCategoryIndexQueryResponse> BlogCategoryIndexAsync(BlogCategoryIndexQueryRequest request);
 
         #endregion
     }
