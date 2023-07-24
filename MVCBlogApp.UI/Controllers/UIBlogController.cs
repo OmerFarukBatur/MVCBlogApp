@@ -19,7 +19,7 @@ namespace MVCBlogApp.UI.Controllers
             _operationService = operationService;
         }
 
-        public IActionResult Index()   // Hatalı çalışıyor yönlendirilen içeriğin detayı olması lazım ama o şekil çalışmıyor yeniden yapılacak
+        public IActionResult Index()
         {
             int LangID = _operationService.SessionLangId();
 

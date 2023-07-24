@@ -1,16 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
+using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
+using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
+using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
 
@@ -25,6 +30,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly INavigationReadRepository _navigationReadRepository;
         private readonly IBookReadRepository _bookReadRepository;
         private readonly IBlogTypeReadRepository _blogTypeReadRepository;
+        private readonly IBlogCategoryReadRepository _blogCategoryReadRepository;
+        private readonly IX_BlogCategoryReadRepository _x_BlogCategoryReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -33,7 +40,9 @@ namespace MVCBlogApp.Persistence.Services
             IBlogReadRepository blogReadRepository,
             INavigationReadRepository navigationReadRepository,
             IBookReadRepository bookReadRepository,
-            IBlogTypeReadRepository blogTypeReadRepository)
+            IBlogTypeReadRepository blogTypeReadRepository,
+            IBlogCategoryReadRepository blogCategoryReadRepository,
+            IX_BlogCategoryReadRepository x_BlogCategoryReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -42,6 +51,8 @@ namespace MVCBlogApp.Persistence.Services
             _navigationReadRepository = navigationReadRepository;
             _bookReadRepository = bookReadRepository;
             _blogTypeReadRepository = blogTypeReadRepository;
+            _blogCategoryReadRepository = blogCategoryReadRepository;
+            _x_BlogCategoryReadRepository = x_BlogCategoryReadRepository;
         }
 
 
@@ -79,7 +90,7 @@ namespace MVCBlogApp.Persistence.Services
                 //Blog
                 navigations.AddRange(await _blogReadRepository
                     .GetWhere(x => x.NavigationId != null && x.IsMenu != null && x.StatusId == statusActiveId && x.BlogTypeId == 2 && x.IsComponent == true)
-                    .Join(_navigationReadRepository.GetAll(),blog=> blog.NavigationId, nav=> nav.Id,(blog,nav)=> new {blog,nav})
+                    .Join(_navigationReadRepository.GetAll(), blog => blog.NavigationId, nav => nav.Id, (blog, nav) => new { blog, nav })
                     .Select(y => new VM_Navigation
                     {
                         Id = y.blog.Id,
@@ -265,6 +276,96 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Result = result
             };
+        }
+
+        public async Task<TagCloudAndSocialMediaQueryResponse> TagCloudAndSocialMediaAsync(TagCloudAndSocialMediaQueryRequest request)
+        {
+            List<int?> catIDs = await _x_BlogCategoryReadRepository.GetWhere(x => x.BlogId == request.id).Select(x => x.BlogCategoryId).ToListAsync();
+
+            if (catIDs != null)
+            {
+                List<VM_BlogCategory> tags = await _blogCategoryReadRepository.GetWhere(x => catIDs.Contains(x.Id))
+                    .Select(x => new VM_BlogCategory
+                    {
+                        ID = x.Id,
+                        CategoryDescription = x.CategoryDescription,
+                        CategoryName = x.CategoryName,
+                        LangID = (int)x.LangId,
+                        StatusID = (int)x.StatusId
+                    }).ToListAsync();
+
+                return new()
+                {
+                    BlogCategories = tags
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    BlogCategories = null
+                };
+            }
+        }
+
+        public async Task<SimilarSubjectsQueryResponse> SimilarSubjectsAsync(SimilarSubjectsQueryRequest request)
+        {
+            int LangID = _operationService.SessionLangId();
+            int activeStatusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstOrDefaultAsync();
+
+            List<int?> similarBlogIDs = null;
+
+            List<int?> catIDs = await _x_BlogCategoryReadRepository.GetWhere(x => x.BlogId == request.blogID).Select(x => x.BlogCategoryId).ToListAsync();
+
+            if (catIDs != null)
+            {
+                similarBlogIDs = await _x_BlogCategoryReadRepository.GetWhere(x => catIDs.Contains(x.BlogCategoryId) && x.BlogId != request.blogID)
+                                .Select(x => x.BlogId).ToListAsync();
+            }
+
+            if (similarBlogIDs != null)
+            {
+                List<VM_Blog> vM_blogs = await _blogReadRepository.GetWhere(x => similarBlogIDs.Contains(x.Id) && x.LangId == LangID && x.StatusId == activeStatusId)
+                    .Take(4).Select(y => new VM_Blog
+                    {
+                        Id = y.Id,
+                        BlogCategoryId = y.BlogCategoryId,
+                        Contents = y.Contents,
+                        CoverImgUrl = y.CoverImgUrl,
+                        CreateDate = y.CreateDate,
+                        CreateUserId = y.CreateUserId,
+                        LangId = y.LangId,
+                        MetaDescription = y.MetaDescription,
+                        MetaKey = y.MetaKey,
+                        MetaTitle = y.MetaTitle,
+                        UrlRoot = y.UrlRoot,
+                        StatusId = y.StatusId,
+                        SubTitle = y.SubTitle.Length > 50 ? y.SubTitle.Substring(0, 50) : y.SubTitle,
+                        Title = y.Title,
+                        UpdateDate = y.UpdateDate,
+                        UpdateUserId = y.UpdateUserId,
+                        Action = y.Action,
+                        BlogTypeId = y.BlogTypeId,
+                        Controller = y.Controller,
+                        IsComponent = y.IsComponent,
+                        IsMainPage = y.IsMainPage,
+                        IsMenu = y.IsMenu,
+                        NavigationId = y.NavigationId,
+                        Orders = y.Orders
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Blogs = vM_blogs
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Blogs = null
+                };
+            }
         }
 
         #endregion

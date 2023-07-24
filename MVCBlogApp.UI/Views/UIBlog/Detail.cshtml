@@ -1,0 +1,105 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Blog
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+
+@{
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+    int LangID = OperationService.SessionLangId();
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT BLOG</h1>
+            <span>TK Taylight Blog by Taylan Kümeli</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                @if (ViewBag.tip == "Recipes")
+                {
+                    <li class="breadcrumb-item"><a href="/Recipes">@ViewBag.tip</a></li>
+                }
+                @if (ViewBag.tip == "Success History")
+                {
+
+                    <li class="breadcrumb-item"><a href="/success-history">@ViewBag.tip</a></li>
+                }
+                @if (ViewBag.tip == "Blog")
+                {
+
+                    <li class="breadcrumb-item"><a href="/Blog">@ViewBag.tip</a></li>
+                }
+
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </div>
+
+    </section>
+}
+else
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT BLOG</h1>
+            <span>Taylan Kümeli'nin kaleminden TK Taylight Blog</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                @if (ViewBag.tip == "Yemek Tarifleri")
+                {
+                    <li class="breadcrumb-item"><a href="/yemek-tarifleri">@ViewBag.tip</a></li>
+                }
+                @if (ViewBag.tip == "Başarı Hikayeleri")
+                {
+
+                    <li class="breadcrumb-item"><a href="/Basari-hikayeleri">@ViewBag.tip</a></li>
+                }
+                @if (ViewBag.tip == "Blog")
+                {
+
+                    <li class="breadcrumb-item"><a href="/Blog">@ViewBag.tip</a></li>
+                }
+
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </div>
+
+    </section>
+}
+
+
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+
+            <div class="row gutter-40 col-mb-80">
+
+                <div class="postcontent col-lg-9 order-lg-last">
+                    <div class="fancy-title title-bottom-border"><h1>@Model.Title</h1></div>
+
+
+                    @Html.Raw(Model.Contents)
+
+                    @await Component.InvokeAsync("TagCloudAndSocialMedia", Model.Id)
+
+                    @await Component.InvokeAsync("SimilarSubjects", new { blogID = Model.Id })
+                </div>
+
+
+
+                <div class="sidebar col-lg-3">
+
+                    @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</section>

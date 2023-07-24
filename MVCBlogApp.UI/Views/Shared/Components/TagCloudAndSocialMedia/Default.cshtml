@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MVCBlogApp.Application.ViewModels.VM_BlogCategory>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+
+@{
+    int LangID = OperationService.SessionLangId();
+}
+
+<!-- Tag Cloud
+                                        ============================================= -->
+<div class="tagcloud clearfix bottommargin">
+    @foreach (var item in Model)
+    {
+        <a asp-action="Search" asp-controller="UIHome" asp-route-q="@item.CategoryName.Trim()">@item.CategoryName</a>
+
+    }
+    @*<a href="#">zayıflama</a>
+    <a href="#">diyet</a>
+    <a href="#">kilo verme</a>
+    <a href="#">bireysel beslenme danışmanlığı</a>
+    <a href="#">taylan kümeli</a>*@
+</div><!-- .tagcloud end -->
+
+<div class="clear"></div>
+
+
+
+<!-- Post Single - Share
+============================================= -->
+<div class="si-share border-0 d-flex justify-content-between align-items-center">
+    @if (LangID == 2)
+    {
+        <span>Share this post:</span>
+    }
+    else
+    {
+        <span>Bu yazıyı paylaş:</span>
+    }
+    <div>
+        <a href="#" class="social-icon si-borderless si-whatsapp">
+            <i class="icon-whatsapp"></i>
+            <i class="icon-whatsapp"></i>
+        </a>
+        <a href="#" class="social-icon si-borderless si-facebook">
+            <i class="icon-facebook"></i>
+            <i class="icon-facebook"></i>
+        </a>
+        <a href="#" class="social-icon si-borderless si-twitter">
+            <i class="icon-twitter"></i>
+            <i class="icon-twitter"></i>
+        </a>
+        <a href="#" class="social-icon si-borderless si-pinterest">
+            <i class="icon-pinterest"></i>
+            <i class="icon-pinterest"></i>
+        </a>
+        <a href="#" class="social-icon si-borderless si-email3">
+            <i class="icon-email3"></i>
+            <i class="icon-email3"></i>
+        </a>
+    </div>
+</div><!-- Post Single - Share End -->

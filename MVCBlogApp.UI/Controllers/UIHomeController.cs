@@ -119,7 +119,7 @@ namespace MVCBlogApp.UI.Controllers
 
                 ViewBag.tip = response.Blog.BlogTypeName;
 
-                return View("~/Views/UIBlog/Index.cshtml", response.Blog);
+                return View("~/Views/UIBlog/Detail.cshtml", response.Blog);
             }
 
             else if (response.Article != null)
