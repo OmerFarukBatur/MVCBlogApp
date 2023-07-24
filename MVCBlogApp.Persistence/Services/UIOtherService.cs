@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
+using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
@@ -417,6 +418,58 @@ namespace MVCBlogApp.Persistence.Services
                     Blogs = null
                 };
             }            
+        }
+
+        public async Task<BasariHikayeleriPartialViewQueryResponse> BasariHikayeleriPartialViewAsync(BasariHikayeleriPartialViewQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            var blog = _blogReadRepository.GetWhere(x => x.BlogTypeId == 2 && x.LangId == langId && x.StatusId == statusId)
+                .Join(_blogTypeReadRepository.GetAll(), bl => bl.BlogTypeId, bType => bType.Id, (bl, bType) => new { bl, bType })
+                .OrderByDescending(s => s.bl.Id)
+                .GetPaged(request.page, 4);
+
+            PagedResult<VM_Blog> result = new()
+            {
+                CurrentPage = blog.CurrentPage,
+                PageCount = blog.PageCount,
+                PageSize = blog.PageSize,
+                RowCount = blog.RowCount,
+                Results = blog.Results.Select(s => new VM_Blog()
+                {
+                    Id = s.bl.Id,
+                    MetaTitle = s.bl.MetaTitle,
+                    MetaKey = s.bl.MetaKey,
+                    MetaDescription = s.bl.MetaDescription,
+                    UrlRoot = s.bl.UrlRoot,
+                    Title = s.bl.Title,
+                    SubTitle = s.bl.SubTitle,
+                    Contents = s.bl.Contents,
+                    CoverImgUrl = s.bl.CoverImgUrl,
+                    BlogTypeId = s.bl.BlogTypeId,
+                    BlogTypeName = s.bType.TypeName,
+                    IsMainPage = s.bl.IsMainPage,
+                    Orders = s.bl.Orders,
+                    NavigationId = s.bl.NavigationId,
+                    IsMenu = s.bl.IsMenu,
+                    IsComponent = s.bl.IsComponent,
+                    Action = s.bl.Action,
+                    Controller = s.bl.Controller,
+                    BlogCategoryId = s.bl.BlogCategoryId,
+                    CreateDate = s.bl.CreateDate,
+                    CreateUserId = s.bl.CreateUserId,
+                    LangId = s.bl.LangId,
+                    StatusId = s.bl.StatusId,
+                    UpdateDate = s.bl.UpdateDate,
+                    UpdateUserId = s.bl.UpdateUserId
+                }).ToList()
+            };
+
+            return new()
+            {
+                Result = result
+            };
         }
 
         #endregion

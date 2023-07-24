@@ -1,0 +1,59 @@
+﻿@model MVCBlogApp.Application.ViewModels.PagedResult<MVCBlogApp.Application.ViewModels.VM_Blog>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    int LangID = OperationService.SessionLangId(); 
+}
+
+<div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+
+    @foreach (var item in Model.Results.OrderByDescending(a => a.Id))
+    {
+
+        <div class="entry col-12">
+            <div class="grid-inner row no-gutters">
+                <div class="entry-image col-md-3">
+                    <a href="/@item.UrlRoot"><img loading="lazy" src="@Url.Action("GetImage", "Home", new { fileName = item.CoverImgUrl })" alt="@item.MetaTitle"></a>
+                </div>
+                <div class="col-md-9 pl-md-4">
+                    <div class="entry-title title-sm">
+                        <h2><a href="/@item.UrlRoot">@item.Title</a></h2>
+                    </div>
+                    <div class="entry-content">
+                        <p>@item.SubTitle</p>
+                        @if (LangID == 2)
+                        {
+                            <a href="/@item.UrlRoot" class="more-link">Read More</a>
+                        }
+                        else
+                        {
+                            <a href="/@item.UrlRoot" class="more-link">Devamını Oku</a>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+</div>
+
+
+<script>
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+            $(window).unbind('scroll');
+
+            if (@Model.CurrentPage < @Model.PageCount) {
+                getViewBasariHikayeleri(@Model.NextPage.ToString());
+            }
+
+        }
+    });
+
+
+</script>

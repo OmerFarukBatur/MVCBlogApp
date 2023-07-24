@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Helpers;
@@ -53,6 +54,38 @@ namespace MVCBlogApp.UI.Controllers
             BlogCategoryIndexQueryResponse response = await _mediator.Send(request);
 
             return View("Index", response.Blogs);
+        }
+
+        [Route("basari-hikayeleri")]
+        [Route("success-history")]
+        public IActionResult Basari()
+        {
+            int LangID = _operationService.SessionLangId();
+
+            if (LangID == 2)
+            {
+                TempData["Title"] = "Success History";
+
+            }
+            else
+            {
+                TempData["Title"] = "Başarı Hikayeleri";
+
+            }
+
+            return View();
+        }
+
+        [Route("basari-hikayeleri-partial-view")]
+        [HttpPost]
+        public async Task<JsonResult> BasariHikayeleriPartialView(BasariHikayeleriPartialViewQueryRequest request)
+        {
+            BasariHikayeleriPartialViewQueryResponse response = await _mediator.Send(request);
+
+            VM_ReturnViewString r = new();
+            r.Status = 200;
+            r.ViewString = this.RenderViewAsync("BasariHikayeleriPartialView", response.Result, true).Result;
+            return Json(r);
         }
     }
 }
