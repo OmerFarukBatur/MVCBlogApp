@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -16,10 +17,13 @@ using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
+using MVCBlogApp.Application.Repositories.ConsultancyForm;
+using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
+using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -34,6 +38,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IBlogTypeReadRepository _blogTypeReadRepository;
         private readonly IBlogCategoryReadRepository _blogCategoryReadRepository;
         private readonly IX_BlogCategoryReadRepository _x_BlogCategoryReadRepository;
+        private readonly IConsultancyFormWriteRepository _consultancyFormWriteRepository;
+        private readonly IMailService _mailService;
+        private readonly IConsultancyFormTypeReadRepository _consultancyFormTypeReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -44,7 +51,10 @@ namespace MVCBlogApp.Persistence.Services
             IBookReadRepository bookReadRepository,
             IBlogTypeReadRepository blogTypeReadRepository,
             IBlogCategoryReadRepository blogCategoryReadRepository,
-            IX_BlogCategoryReadRepository x_BlogCategoryReadRepository)
+            IX_BlogCategoryReadRepository x_BlogCategoryReadRepository,
+            IConsultancyFormWriteRepository consultancyFormWriteRepository,
+            IMailService mailService,
+            IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -55,6 +65,9 @@ namespace MVCBlogApp.Persistence.Services
             _blogTypeReadRepository = blogTypeReadRepository;
             _blogCategoryReadRepository = blogCategoryReadRepository;
             _x_BlogCategoryReadRepository = x_BlogCategoryReadRepository;
+            _consultancyFormWriteRepository = consultancyFormWriteRepository;
+            _mailService = mailService;
+            _consultancyFormTypeReadRepository = consultancyFormTypeReadRepository;
         }
 
 
@@ -600,6 +613,84 @@ namespace MVCBlogApp.Persistence.Services
                     Book = null
                 };
             }
+        }
+
+        #endregion
+
+        #region ConsultancyForms
+
+        public async Task<ConsultancyFormsCreateCommandResponse> ConsultancyFormsCreateAsync(ConsultancyFormsCreateCommandRequest request)
+        {
+            int typeId = 0;
+
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            if (request.id == "bireysel-beslenme-danismanligi-formu" || request.id == "individual-nutrition-counseling-form")
+            {
+                typeId = 1;
+
+
+            }
+            else if (request.id == "kurumsal-beslenme-danismanligi-formu" || request.id == "corporate-nutrition-consultancy-form")
+            {
+                typeId = 2;
+
+            }
+
+            else if (request.id == "cocuklar-icin-beslenme-danismanligi-formu" || request.id == "nutrition-counseling-for-children-form")
+            {
+                typeId = 3;
+
+            }
+
+
+            ConsultancyForm consultancyForm = new()
+            {
+                ConsultancyFormTypeId = typeId,
+                CreateDate = DateTime.Now,
+                Email = request.Email,
+                Message = request.Message,
+                NameSurname = request.NameSurname,
+                Phone = request.Phone,
+                StatusId = statusId,
+                Subject = request.Subject
+            };
+
+            await _consultancyFormWriteRepository.AddAsync(consultancyForm);
+            await _consultancyFormWriteRepository.SaveAsync();
+
+            string? typeName = await _consultancyFormTypeReadRepository.GetWhere(x => x.Id == typeId).Select(x => x.ConsultancyFormTypeName).FirstAsync();
+
+            string body = $@"
+                    {request.NameSurname} İsimli Danışan yeni bir {request.id.ToLower().Replace("-", " ")} gönderdi. 
+                    <br>
+                    <br>
+                    <b>Yapılan Başvuru:</b> {typeName}
+                    <br>
+                    <b>Adı Soyadı:</b> {request.NameSurname}
+                    <br>
+                    <b>Mail Adresi:</b> {request.Email}
+                    <br>
+                    <b>Telefon Numarası:</b> {request.Phone}
+                    <br>
+                    <b>Başlık:</b> {request.Subject}
+                    <br>
+                    <b>İçerik:</b>  <br> {request.Message}
+                    ";
+
+            await _mailService.SendMailAsync(
+                 "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com,karahasan.ayse@gmail.com,udavutoglu@yahoo.com",
+                 $"Tarafınıza Yeni Bir {request.id.ToLower().Replace("-", " ")} Gönderildi",
+                 body,
+                 true
+                 );
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
         }
 
 

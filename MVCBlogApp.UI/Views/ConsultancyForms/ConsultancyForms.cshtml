@@ -1,0 +1,268 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_ConsultancyForm
+
+@using MVCBlogApp.Application.Abstractions.Services;
+@using Microsoft.AspNetCore.Http;
+@inject IOperationService OperationService
+@{
+
+    ViewData["Title"] = "ConsultancyForms";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    int LangID = OperationService.SessionLangId();
+    if (LangID == 1) { ViewData["Title"] = "Danışan Formları"; } else if (LangID == 2) { ViewData["Title"] = "Forms"; }
+}
+
+
+@if (LangID == 2)
+{
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>@ViewBag.TypeName</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">@ViewBag.TypeName</li>
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <h3>@ViewBag.TypeName</h3>
+
+                        <form asp-action="ConsultancyForm" asp-controller="ConsultancyForms" method="post">
+
+
+
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label>Name Surname</label><span class="text-danger">*</span>
+                                    <input asp-for="NameSurname" placeholder="Name Surname" class="sm-form-control required" />
+                                    <span asp-validation-for="NameSurname" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label>E Mail</label><span class="text-danger">*</span>
+                                    <input asp-for="Email" placeholder="E-Mail" class="required email sm-form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label>Mobile Phone</label>
+                                    <input asp-for="Phone" placeholder="Mobile Phone" class="sm-form-control" />
+                                </div>
+
+                                <div class="w-100"></div>
+
+                                <div class="col-md-8 form-group">
+                                    <label>Subject</label><span class="text-danger">*</span>
+                                    <input asp-for="Subject" placeholder="Subject" class="required sm-form-control" />
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="w-100"></div>
+
+                                <div class="col-12 form-group">
+                                    <label>Descrıptıon</label><span class="text-danger">*</span>
+                                    <textarea asp-for="Message" class="required sm-form-control" rows="6" cols="30"></textarea>
+                                    <span asp-validation-for="Message" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="col-12 form-group">
+                                    <button class="button button-3d m-0" type="submit">Send</button>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="prefix" value="template-contactform-">
+
+                        </form>
+
+                        @if (TempData["Message"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["Message"]
+                            </div>
+
+                        }
+
+
+                        <div class="line"></div>
+
+                        <div class="row col-mb-50">
+                            <div class="col-sm-6">
+                                <address>
+                                    <strong>TK Taylight Address:</strong><br />
+                                    Akkavak Sokak Halil Bey Apt. No 31 Daire 30 Kat 3 Nişantaşı İstanbul<br />
+                                    [Tatbak Lokantası Karşısı]<br />
+                                </address>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <abbr title="Telefon Numarası"><strong>Phone:</strong></abbr> +90 (212) 291 75 15 - 16<br />
+                                <abbr title="Fax"><strong>Fax:</strong></abbr> +90 (212) 291 75 17<br />
+                                <abbr title="Eposta Adresi"><strong>E Mail:</strong></abbr> bilgi@taylankumeli.com
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="sidebar col-lg-3">
+
+                        <div class="sidebar-widgets-wrap">
+
+                            @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- #content end -->
+}
+else
+{
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>@ViewBag.TypeName</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">@ViewBag.TypeName</li>
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <h3>@ViewBag.TypeName</h3>
+
+                        <form asp-action="ConsultancyForms" asp-controller="ConsultancyForms" method="post">
+
+
+
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="NameSurname"></label><span class="text-danger">*</span>
+                                    <input asp-for="NameSurname" placeholder="İsim Soyisim" class="sm-form-control required" />
+                                    <span asp-validation-for="NameSurname" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="Email"></label><span class="text-danger">*</span>
+                                    <input asp-for="Email" placeholder="E-Posta" class="required email sm-form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                    <label asp-for="Phone"></label>
+                                    <input asp-for="Phone" placeholder="Mobil Tel No" class="sm-form-control" />
+                                </div>
+
+                                <div class="w-100"></div>
+
+                                <div class="col-md-8 form-group">
+                                    <label asp-for="Subject"></label><span class="text-danger">*</span>
+                                    <input asp-for="Subject" placeholder="Konu Başlığı" class="required sm-form-control" />
+                                    <span asp-validation-for="Subject" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="w-100"></div>
+
+                                <div class="col-12 form-group">
+                                    <label asp-for="Message"></label><span class="text-danger">*</span>
+                                    <textarea asp-for="Message" class="required sm-form-control" rows="6" cols="30"></textarea>
+                                    <span asp-validation-for="Message" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="col-12 form-group">
+                                    <button class="button button-3d m-0" type="submit">Mesajınızı Gönderin</button>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="prefix" value="template-contactform-">
+
+                        </form>
+
+                        @if (TempData["Message"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                @TempData["Message"]
+                            </div>
+
+                        }
+
+
+                        <div class="line"></div>
+
+                        <div class="row col-mb-50">
+                            <div class="col-sm-6">
+                                <address>
+                                    <strong>TK Taylight Posta Adresi:</strong><br />
+                                    Akkavak Sokak Halil Bey Apt. No 31 Daire 30 Kat 3 Nişantaşı İstanbul<br />
+                                    [Tatbak Lokantası Karşısı]<br />
+                                </address>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <abbr title="Telefon Numarası"><strong>Tel:</strong></abbr> +90 (212) 291 75 15 - 16<br />
+                                <abbr title="Fax"><strong>Fax:</strong></abbr> +90 (212) 291 75 17<br />
+                                <abbr title="Eposta Adresi"><strong>Eposta:</strong></abbr> bilgi@taylankumeli.com
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="sidebar col-lg-3">
+
+                        <div class="sidebar-widgets-wrap">
+
+                            @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+}

@@ -1,4 +1,5 @@
-﻿using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
+﻿using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
+using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BlogCategoryIndex;
@@ -35,6 +36,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
 
         Task<GetAllActiveBlogQueryResponse> GetAllActiveBooksAsync();
         Task<GetBookDetailQueryResponse> GetBookDetailAsync(GetBookDetailQueryRequest request);
+
+        #endregion
+
+        #region ConsultancyForms
+
+        Task<ConsultancyFormsCreateCommandResponse> ConsultancyFormsCreateAsync(ConsultancyFormsCreateCommandRequest request);
 
         #endregion
     }
