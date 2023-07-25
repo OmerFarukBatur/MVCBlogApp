@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
@@ -10,6 +8,8 @@ using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
+using MVCBlogApp.Application.Features.Queries.UIBook.GetAllActiveBooks;
+using MVCBlogApp.Application.Features.Queries.UIBook.GetBookDetail;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
@@ -20,7 +20,6 @@ using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
-using MVCBlogApp.Domain.Entities;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -373,7 +372,7 @@ namespace MVCBlogApp.Persistence.Services
 
         public async Task<BlogCategoryIndexQueryResponse> BlogCategoryIndexAsync(BlogCategoryIndexQueryRequest request)
         {
-            int catId = await _blogCategoryReadRepository.GetWhere(x=> x.CategoryName.Trim() == request.catName.Replace("-", " ")).Select(x=> x.Id).FirstOrDefaultAsync();
+            int catId = await _blogCategoryReadRepository.GetWhere(x => x.CategoryName.Trim() == request.catName.Replace("-", " ")).Select(x => x.Id).FirstOrDefaultAsync();
 
             List<int?> blogIDs = await _x_BlogCategoryReadRepository.GetWhere(x => x.BlogCategoryId == catId).Select(x => x.BlogId).ToListAsync();
 
@@ -418,7 +417,7 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Blogs = null
                 };
-            }            
+            }
         }
 
         public async Task<BasariHikayeleriPartialViewQueryResponse> BasariHikayeleriPartialViewAsync(BasariHikayeleriPartialViewQueryRequest request)
@@ -524,6 +523,85 @@ namespace MVCBlogApp.Persistence.Services
                 Result = result
             };
         }
+
+        #endregion
+
+        #region Book
+
+        public async Task<GetAllActiveBlogQueryResponse> GetAllActiveBooksAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_Book> vM_Books = await _bookReadRepository.GetWhere(x => x.LangId == langId && x.StatusId == statusId)
+                .Select(s => new VM_Book
+                {
+                    Id = s.Id,
+                    BookName = s.BookName,
+                    PublicationYear = s.PublicationYear,
+                    UrlRoot = s.UrlRoot,
+                    Content = s.Content,
+                    ImageUrl = s.ImageUrl,
+                    CreateUserId = s.CreateUserId,
+                    CreateDate = s.CreateDate,
+                    StatusId = s.StatusId,
+                    IsMainPage = s.IsMainPage,
+                    Action = s.Action,
+                    Controller = s.Controller
+                }).ToListAsync();
+
+            return new()
+            {
+                Books = vM_Books
+            };
+        }
+
+        public async Task<GetBookDetailQueryResponse> GetBookDetailAsync(GetBookDetailQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            VM_Book? vM_Book = await _bookReadRepository.GetWhere(x => x.LangId == langId && x.UrlRoot == request.id)
+                .Join(_navigationReadRepository.GetAll(), book => book.NavigationId, nav => nav.Id, (book, nav) => new { book, nav })
+                .Select(x => new VM_Book
+                {
+                    Id = x.book.Id,
+                    Action = x.book.Action,
+                    NavigationId = x.book.NavigationId,
+                    BookName = x.book.BookName,
+                    Content = x.book.Content,
+                    Controller = x.book.Controller,
+                    CreateDate = x.book.CreateDate,
+                    CreateUserId = x.book.CreateUserId,
+                    ImageUrl = x.book.ImageUrl,
+                    IsMainPage = x.book.IsMainPage,
+                    LangId = x.book.LangId,
+                    MetaDescription = x.book.MetaDescription,
+                    MetaKey = x.book.MetaKey,
+                    MetaTitle = x.book.MetaTitle,
+                    Orders = x.book.Orders,
+                    PublicationYear = x.book.PublicationYear,
+                    StatusId = x.book.StatusId,
+                    UrlRoot = x.book.UrlRoot,
+                    NavigationOrderNo = x.nav.OrderNo
+                }).FirstOrDefaultAsync();
+
+            if (vM_Book != null)
+            {
+                return new()
+                {
+                    Book = vM_Book
+                };
+            }
+            else
+            {
+                return new()
+                {
+                    Book = null
+                };
+            }
+        }
+
 
         #endregion
     }

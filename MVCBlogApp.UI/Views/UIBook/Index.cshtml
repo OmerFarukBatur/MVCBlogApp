@@ -1,0 +1,77 @@
+﻿@model IList<MVCBlogApp.Application.ViewModels.VM_Book>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+}
+
+<section id="page-title" class="page-title-mini">
+
+    <div class="container clearfix">
+        <h1>Kitaplar</h1>
+        <span>Diyetisyen Taylan Kümeli Kitapları</span>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+            <li class="breadcrumb-item"><a href="#">Kitaplar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Taylan Kümeli Kitapları</li>
+        </ol>
+    </div>
+
+</section>
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+            <div class="row gutter-40 col-mb-80">
+
+
+
+                <div class="postcontent col-lg-9 order-lg-last">
+                    <div class="fancy-title title-border">
+                        <h1>Taylan Kümeli Kitapları</h1>
+                    </div>
+
+                    <!-- Posts
+                    ============================================= -->
+                    <div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+
+                        @foreach (var item in Model)
+                        {
+                            <div class="entry col-lg-3 col-md-6">
+                                <div class="grid-inner center">
+                                    <div class="entry-image">
+                                        <a href="#"><img loading="lazy" src="@Url.Content("~/Upload/"+item.ImageUrl)" title="@item.BookName" alt="@item.BookName"></a>
+                                    </div>
+                                    <div class="entry-title">
+                                        <h2><a href="#">@item.BookName</a></h2>
+                                        <span>İlk Baskı Yılı: @item.PublicationYear</span>
+                                    </div>
+                                    <a href="/@item.UrlRoot" class="button button-rounded button-reveal button-border text-right"><i class="icon-arrow-circle-right"></i><span>Kitabı İncele</span></a>
+                                </div>
+                            </div>
+
+                        }
+
+
+
+
+
+
+                    </div><!-- #posts end -->
+                </div>
+
+
+                <div class="sidebar col-lg-3">
+
+
+                    @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+                    <div class="sidebar-widgets-wrap">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</section><!-- #content end -->

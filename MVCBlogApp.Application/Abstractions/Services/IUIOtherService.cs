@@ -6,6 +6,8 @@ using MVCBlogApp.Application.Features.Queries.UIBlog.SimilarSubjects;
 using MVCBlogApp.Application.Features.Queries.UIBlog.TagCloudAndSocialMedia;
 using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
+using MVCBlogApp.Application.Features.Queries.UIBook.GetAllActiveBooks;
+using MVCBlogApp.Application.Features.Queries.UIBook.GetBookDetail;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -26,6 +28,13 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<BlogCategoryIndexQueryResponse> BlogCategoryIndexAsync(BlogCategoryIndexQueryRequest request);
         Task<BasariHikayeleriPartialViewQueryResponse> BasariHikayeleriPartialViewAsync(BasariHikayeleriPartialViewQueryRequest request);
         Task<YemekTarifleriPartialViewQueryResponse> YemekTarifleriPartialViewAsync(YemekTarifleriPartialViewQueryRequest request);
+
+        #endregion
+
+        #region Book
+
+        Task<GetAllActiveBlogQueryResponse> GetAllActiveBooksAsync();
+        Task<GetBookDetailQueryResponse> GetBookDetailAsync(GetBookDetailQueryRequest request);
 
         #endregion
     }

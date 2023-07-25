@@ -24,6 +24,7 @@
         public string? Language { get; set; }
         public string? NavigationName { get; set; }
         public string? StatusName { get; set; }
+        public string? NavigationOrderNo { get; set; }
 
         public List<VM_Language>? Languages { get; set; }
         public List<AllStatus>? Statuses { get; set; }

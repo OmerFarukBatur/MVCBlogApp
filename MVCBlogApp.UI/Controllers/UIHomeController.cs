@@ -169,7 +169,7 @@ namespace MVCBlogApp.UI.Controllers
                     TempData["internalID"] = response.Book.Id;
                 }
 
-                return View("~/Views/Book/Edit.cshtml", response.Book);
+                return View("~/Views/UIBook/Edit.cshtml", response.Book);
             }
 
             else if (response.Press != null)
