@@ -635,7 +635,9 @@ namespace MVCBlogApp.Persistence.Services
                     Subject = x.con.co.Subject,
                     CreateDate = x.con.co.CreateDate,
                     ContactCategoryName = x.cr.ContactCategoryName,
-                    StatusName = x.con.st.StatusName
+                    StatusName = x.con.st.StatusName,
+                    StatusId = x.con.co.StatusId,
+                    ContactCategoryId = x.con.co.ContactCategoryId
                 }).ToListAsync();
 
             return new()
@@ -698,7 +700,8 @@ namespace MVCBlogApp.Persistence.Services
                 {
                     Id = x.co.Id,
                     ContactCategoryName = x.co.ContactCategoryName,
-                    Language = x.lg.Language
+                    Language = x.lg.Language,
+                    LangId = x.co.LangId
                 }).ToListAsync();
 
             return new()

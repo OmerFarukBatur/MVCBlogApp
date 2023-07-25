@@ -1,4 +1,5 @@
 ﻿using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
+using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -42,6 +43,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region ConsultancyForms
 
         Task<ConsultancyFormsCreateCommandResponse> ConsultancyFormsCreateAsync(ConsultancyFormsCreateCommandRequest request);
+
+        #endregion
+
+        #region Contact
+
+        Task<ContactCreateCommandResponse> ContactCreateAsync(ContactCreateCommandRequest request);
 
         #endregion
     }

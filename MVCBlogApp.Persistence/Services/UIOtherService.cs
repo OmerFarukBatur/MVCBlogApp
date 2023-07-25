@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
+using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -19,6 +21,8 @@ using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
+using MVCBlogApp.Application.Repositories.Contact;
+using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
@@ -41,6 +45,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IConsultancyFormWriteRepository _consultancyFormWriteRepository;
         private readonly IMailService _mailService;
         private readonly IConsultancyFormTypeReadRepository _consultancyFormTypeReadRepository;
+        private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
+        private readonly IContactWriteRepository _contactWriteRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -54,7 +60,9 @@ namespace MVCBlogApp.Persistence.Services
             IX_BlogCategoryReadRepository x_BlogCategoryReadRepository,
             IConsultancyFormWriteRepository consultancyFormWriteRepository,
             IMailService mailService,
-            IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository)
+            IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository,
+            IContactCategoryReadRepository contactCategoryReadRepository,
+            IContactWriteRepository contactWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -68,6 +76,8 @@ namespace MVCBlogApp.Persistence.Services
             _consultancyFormWriteRepository = consultancyFormWriteRepository;
             _mailService = mailService;
             _consultancyFormTypeReadRepository = consultancyFormTypeReadRepository;
+            _contactCategoryReadRepository = contactCategoryReadRepository;
+            _contactWriteRepository = contactWriteRepository;
         }
 
 
@@ -693,6 +703,65 @@ namespace MVCBlogApp.Persistence.Services
             };
         }
 
+        #endregion
+
+        #region Contact
+
+        public async Task<ContactCreateCommandResponse> ContactCreateAsync(ContactCreateCommandRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            Contact contact = new()
+            {
+                ContactCategoryId = request.ContactCategoryId,
+                CreateDate = DateTime.Now,
+                Description = request.Description,
+                Email = request.Email,
+                IsRead = false,
+                NameSurname = request.NameSurname,
+                Phone = request.Phone,
+                StatusId = statusId,
+                Subject = request.Subject
+            };
+
+            await _contactWriteRepository.AddAsync(contact);
+            await _contactWriteRepository.SaveAsync();
+
+            string? ConCatName = await _contactCategoryReadRepository.GetWhere(x => x.Id == request.ContactCategoryId).Select(x => x.ContactCategoryName).FirstOrDefaultAsync();
+
+            string body = $@"
+                    {request.NameSurname} İsimli Danışan yeni bir iletişim formu gönderdi. 
+                    <br>
+                    <br>
+                    <b>Adı ve Soyadı:</b> {request.NameSurname}
+                    <br>
+                    <b>Mail Adresi:</b> {request.Email}
+                    <br>
+                    <b>Telefon Numarası:</b> {request.Phone}
+                    <br>
+                    <b>Başlık:</b> {request.Subject}
+                    <br>
+                    <b>Konu Başlığı:</b> {ConCatName}
+                    <br>
+                    <b>İçerik:</b>  <br> {request.Description}
+                    ";
+
+            await _mailService.SendMailAsync(
+                "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com,karahasan.ayse@gmail.com,udavutoglu@yahoo.com",
+                request.Subject + " Mail Başlığı İle Yeni Bir İletişim Formu Gönderildi",
+                body,
+                true
+                );
+
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır.",
+                State = true
+            };
+
+        }
 
         #endregion
     }

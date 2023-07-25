@@ -26,7 +26,7 @@ namespace MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyF
                 .NotNull()
                 .WithMessage("Lütfen Telefon Numarası'nı boş geçmeyiniz.")
                 .MaximumLength(14)
-                .WithMessage("Lütfen Telefon Numarasını maksimum 25 karakter olacak şekilde giriniz.");
+                .WithMessage("Lütfen Telefon Numarasını maksimum 14 karakter olacak şekilde giriniz.");
 
             RuleFor(x => x.Subject)
                 .NotEmpty()
