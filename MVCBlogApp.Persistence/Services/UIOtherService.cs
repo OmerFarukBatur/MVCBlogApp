@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
+using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -24,6 +24,7 @@ using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Contact;
 using MVCBlogApp.Application.Repositories.ContactCategory;
+using MVCBlogApp.Application.Repositories.FixBMI;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Press;
@@ -32,7 +33,6 @@ using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
-using MVCBlogApp.Persistence.Repositories.NewsPaper;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -55,6 +55,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IPressReadRepository _pressReadRepository;
         private readonly IPressTypeReadRepository _pressTypeReadRepository;
         private readonly INewsPaperReadRepository _newsPaperReadRepository;
+        private readonly IFixBMIReadRepository _fixBMIReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -73,7 +74,8 @@ namespace MVCBlogApp.Persistence.Services
             IContactWriteRepository contactWriteRepository,
             IPressReadRepository pressReadRepository,
             IPressTypeReadRepository pressTypeReadRepository,
-            INewsPaperReadRepository newsPaperReadRepository)
+            INewsPaperReadRepository newsPaperReadRepository,
+            IFixBMIReadRepository fixBMIReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -92,6 +94,7 @@ namespace MVCBlogApp.Persistence.Services
             _pressReadRepository = pressReadRepository;
             _pressTypeReadRepository = pressTypeReadRepository;
             _newsPaperReadRepository = newsPaperReadRepository;
+            _fixBMIReadRepository = fixBMIReadRepository;
         }
 
 
@@ -815,9 +818,38 @@ namespace MVCBlogApp.Persistence.Services
             return new()
             {
                 Result = vM_Presses
-            };            
+            };
         }
 
+        #endregion
+
+
+        #region BMICalculate
+
+        public async Task<BMICalculateQueryResponse> BMICalculateAsync()
+        {
+            int langId = _operationService.SessionLangId();
+
+            VM_FixBMI? vM_FixBMI = await _fixBMIReadRepository.GetWhere(x=> x.LangId == langId)
+                .Select(x=> new VM_FixBMI
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    ImgUrl = x.ImgUrl,
+                    StatusId= x.StatusId,
+                    LangId = x.LangId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            return new()
+            {
+                BMI = new()
+                {
+                    FixBMI = vM_FixBMI
+                }
+            };
+        }
 
         #endregion
     }

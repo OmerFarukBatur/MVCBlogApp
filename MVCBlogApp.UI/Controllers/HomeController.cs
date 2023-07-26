@@ -26,12 +26,16 @@ namespace MVCBlogApp.UI.Controllers
             _logger = logger;
         }
 
-
+        [Route("Danisan/uye-ol")]
+        [Route("Members/Register")]
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
+
+        [Route("Danisan/uye-ol")]
+        [Route("Members/Register")]
         [HttpPost]
         public async Task<IActionResult> Index(CreateUserCommandRequest request)
         {
@@ -113,12 +117,17 @@ namespace MVCBlogApp.UI.Controllers
             return RedirectToAction("Login", "Home");
         }
 
+
+        [Route("Danisan/sifre-sifirla")]
+        [Route("Members/password-reset")]
         [HttpGet]
         public IActionResult PasswordReset()
         {
             return View();
         }
 
+        [Route("Danisan/sifre-sifirla")]
+        [Route("Members/password-reset")]
         [HttpPost]
         public async Task<IActionResult> PasswordReset(PasswordResetCommandRequest request)
         {

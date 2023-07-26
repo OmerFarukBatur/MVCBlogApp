@@ -1,5 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
+using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -56,6 +57,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region Press
 
         Task<MedyaYansimalariPartialViewQueryResponse> MedyaYansimalariPartialAsync(MedyaYansimalariPartialViewQueryRequest request);
+
+        #endregion
+
+        #region BMICalculate
+
+        Task<BMICalculateQueryResponse> BMICalculateAsync();
 
         #endregion
     }
