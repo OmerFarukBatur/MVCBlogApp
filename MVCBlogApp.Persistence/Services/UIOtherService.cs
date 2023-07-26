@@ -13,6 +13,7 @@ using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBook.GetAllActiveBooks;
 using MVCBlogApp.Application.Features.Queries.UIBook.GetBookDetail;
+using MVCBlogApp.Application.Features.Queries.UIPress.MedyaYansimalariPartialView;
 using MVCBlogApp.Application.Helpers;
 using MVCBlogApp.Application.Repositories.Article;
 using MVCBlogApp.Application.Repositories.Blog;
@@ -24,10 +25,14 @@ using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Contact;
 using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.Navigation;
+using MVCBlogApp.Application.Repositories.NewsPaper;
+using MVCBlogApp.Application.Repositories.Press;
+using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
+using MVCBlogApp.Persistence.Repositories.NewsPaper;
 
 namespace MVCBlogApp.Persistence.Services
 {
@@ -47,6 +52,9 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IConsultancyFormTypeReadRepository _consultancyFormTypeReadRepository;
         private readonly IContactCategoryReadRepository _contactCategoryReadRepository;
         private readonly IContactWriteRepository _contactWriteRepository;
+        private readonly IPressReadRepository _pressReadRepository;
+        private readonly IPressTypeReadRepository _pressTypeReadRepository;
+        private readonly INewsPaperReadRepository _newsPaperReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -62,7 +70,10 @@ namespace MVCBlogApp.Persistence.Services
             IMailService mailService,
             IConsultancyFormTypeReadRepository consultancyFormTypeReadRepository,
             IContactCategoryReadRepository contactCategoryReadRepository,
-            IContactWriteRepository contactWriteRepository)
+            IContactWriteRepository contactWriteRepository,
+            IPressReadRepository pressReadRepository,
+            IPressTypeReadRepository pressTypeReadRepository,
+            INewsPaperReadRepository newsPaperReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -78,6 +89,9 @@ namespace MVCBlogApp.Persistence.Services
             _consultancyFormTypeReadRepository = consultancyFormTypeReadRepository;
             _contactCategoryReadRepository = contactCategoryReadRepository;
             _contactWriteRepository = contactWriteRepository;
+            _pressReadRepository = pressReadRepository;
+            _pressTypeReadRepository = pressTypeReadRepository;
+            _newsPaperReadRepository = newsPaperReadRepository;
         }
 
 
@@ -762,6 +776,48 @@ namespace MVCBlogApp.Persistence.Services
             };
 
         }
+
+        #endregion
+
+        #region Press
+
+        public async Task<MedyaYansimalariPartialViewQueryResponse> MedyaYansimalariPartialAsync(MedyaYansimalariPartialViewQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            var vM_Presses = _pressReadRepository.GetWhere(x => x.StatusId == statusId && x.LangId == langId)
+                .Join(_statusReadRepository.GetAll(), pre => pre.StatusId, st => st.Id, (pre, st) => new { pre, st })
+                .Join(_pressTypeReadRepository.GetAll(), pres => pres.pre.PressTypeId, pt => pt.Id, (pres, pt) => new { pres, pt })
+                .Join(_newsPaperReadRepository.GetAll(), press => press.pres.pre.NewsPaperId, wp => wp.Id, (press, wp) => new { press, wp })
+                .Select(x => new VM_Press
+                {
+                    Id = x.press.pres.pre.Id,
+                    StatusName = x.press.pres.st.StatusName,
+                    NewsPaperName = x.wp.NewsPaperName,
+                    PressTypeName = x.press.pt.PressTypeName,
+                    SubTitle = x.press.pres.pre.SubTitle,
+                    Title = x.press.pres.pre.Title,
+                    ImageUrl = x.press.pres.pre.ImageUrl,
+                    CreateDate = x.press.pres.pre.CreateDate,
+                    Description = x.press.pres.pre.Description,
+                    LangId = x.press.pres.pre.LangId,
+                    MetaDescription = x.press.pres.pre.MetaDescription,
+                    MetaKey = x.press.pres.pre.MetaKey,
+                    MetaTitle = x.press.pres.pre.MetaTitle,
+                    NewsPaperId = x.press.pres.pre.NewsPaperId,
+                    PressTypeId = x.press.pres.pre.PressTypeId,
+                    StatusId = x.press.pres.pre.StatusId,
+                    UrlLink = x.press.pres.pre.UrlLink,
+                    UrlRoot = x.press.pres.pre.UrlRoot
+                }).OrderByDescending(s => s.Id).GetPaged(request.page, 6);
+
+            return new()
+            {
+                Result = vM_Presses
+            };            
+        }
+
 
         #endregion
     }

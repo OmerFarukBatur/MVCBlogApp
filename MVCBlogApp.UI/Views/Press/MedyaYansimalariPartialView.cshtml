@@ -1,0 +1,76 @@
+﻿@model MVCBlogApp.Application.ViewModels.PagedResult<MVCBlogApp.Application.ViewModels.VM_Press>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+
+@{
+
+    int LangID = OperationService.SessionLangId();
+    if ( LangID == 1) { ViewData["Title"] = "Medya Yansimalari"; } else if (LangID == 2) { ViewData["Title"] = "Media Images"; }
+}
+<!-- Posts
+============================================= -->
+<div id="medya_yansimalari" class="post-grid row grid-container gutter-40" data-layout="fitRows">
+
+    @foreach (var item in Model.Results)
+    {
+
+        <div loading="lazy" class="entry col-md-4 col-sm-6 col-12">
+            <div class="grid-inner">
+                <div class="entry-image">
+                    <a href="/@item.UrlRoot">
+                        <img loading="lazy" src="@Url.Content("~/Upload/"+@item.ImageUrl)" />
+                    </a>
+                </div>
+                <div class="entry-title">
+                    <h2>  <a href="/@item.UrlRoot">@item.Title</a></h2>
+                </div>
+                <div class="entry-meta">
+                    <ul>
+                        @if (string.IsNullOrEmpty(item.UrlLink))
+                        {
+                            <li><a>@item.NewsPaperName </a>, @item.PressTypeName</li>
+                        }
+                        else
+                        {
+                            <li><a href="@item.UrlLink" target="_blank">@item.NewsPaperName </a>, @item.PressTypeName</li>
+
+                        }
+
+                    </ul>
+                </div>
+                <div class="entry-content">
+                    <p>@Html.Raw(item.SubTitle)</p>
+
+                    @if (LangID == 2)
+                    {
+                        <a href="/@item.UrlRoot" class="more-link">Read More</a>
+                    }
+                    else
+                    {
+                        <a href="/@item.UrlRoot" class="more-link">Devamını Oku</a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+</div><!-- #posts end -->
+
+
+<script>
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() > $(document).height() - 400) {
+            $(window).unbind('scroll');
+
+            if (@Model.CurrentPage < @Model.PageCount) {
+                getViewMedyaYansimalari(@Model.NextPage.ToString());
+            }
+
+        }
+    });
+
+
+</script>

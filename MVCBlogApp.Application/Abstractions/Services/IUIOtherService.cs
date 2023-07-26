@@ -10,6 +10,7 @@ using MVCBlogApp.Application.Features.Queries.UIBlog.UIBlogPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBlog.YemekTarifleriPartialView;
 using MVCBlogApp.Application.Features.Queries.UIBook.GetAllActiveBooks;
 using MVCBlogApp.Application.Features.Queries.UIBook.GetBookDetail;
+using MVCBlogApp.Application.Features.Queries.UIPress.MedyaYansimalariPartialView;
 
 namespace MVCBlogApp.Application.Abstractions.Services
 {
@@ -49,6 +50,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region Contact
 
         Task<ContactCreateCommandResponse> ContactCreateAsync(ContactCreateCommandRequest request);
+
+        #endregion
+
+        #region Press
+
+        Task<MedyaYansimalariPartialViewQueryResponse> MedyaYansimalariPartialAsync(MedyaYansimalariPartialViewQueryRequest request);
 
         #endregion
     }

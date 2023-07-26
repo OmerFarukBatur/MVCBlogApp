@@ -1,0 +1,141 @@
+﻿@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+
+@{
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+    int LangID = OperationService.SessionLangId();
+    if (LangID == 1) { ViewData["Title"] = "Medya Yansimalari"; } else if (LangID == 2) { ViewData["Title"] = "Media Images"; }
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TAYLAN KÜMELİ Media Images</h1>
+            <span>Taylan Kümeli's Articles, News and Interviews in the Media</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="#">Media Images</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <div id="divMedyaYansimalariPartialView"></div>
+
+                        <div id="divMedyaYansimalariPartialViewSpinner">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section><!-- #content end -->
+
+}
+
+else
+
+{
+
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TAYLAN KÜMELİ MEDYA YANSIMALARI</h1>
+            <span>Taylan Kümeli'nin Medyada Çıkan Yazıları, Haberleri, Röportajları</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">Medya Yansımaları</a></li>
+
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="row gutter-40 col-mb-80">
+
+                    <div class="postcontent col-lg-9 order-lg-last">
+                        <div id="divMedyaYansimalariPartialView"></div>
+
+                        <div id="divMedyaYansimalariPartialViewSpinner">
+                            <div class="spinner-border text-primary"></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar col-lg-3">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section><!-- #content end -->
+}
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        getViewMedyaYansimalari();
+
+    });
+
+    function getViewMedyaYansimalari(page) {
+
+        var requestDto = new Object();
+        requestDto.page = page;
+
+        if (page == undefined || page == null)
+            requestDto.page = 1;
+
+        $("#divMedyaYansimalariPartialViewSpinner").show();
+
+        $.ajax({
+            type: "POST",
+            url: "medya-yansimalari-partial-view",
+            data: requestDto,
+            success: function (jsReturnArgs) {
+
+                $("#divMedyaYansimalariPartialView").append(jsReturnArgs.viewString); //the HTML I returned from the controller
+                $("#divMedyaYansimalariPartialViewSpinner").hide();
+
+            },
+            error: function (xhr, status, error) {
+                $("#divMedyaYansimalariPartialView").append("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                $("#divMedyaYansimalariPartialViewSpinner").hide();
+            }
+            //error: function (errorData) { onError(errorData); }
+
+
+        });
+    }
+
+</script>
