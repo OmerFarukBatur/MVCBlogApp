@@ -49,5 +49,12 @@ namespace MVCBlogApp.UI.Controllers
             r.ViewString = this.RenderViewAsync("MedyaYansimalariPartialView", response.Result, true).Result;
             return Json(r);
         }
+
+        [Route("Press/{id}")]
+        public IActionResult Detail(string id)
+        {
+
+            return View();
+        }
     }
 }
