@@ -2,6 +2,7 @@
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
+using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
@@ -20,6 +21,7 @@ using MVCBlogApp.Application.Repositories.Blog;
 using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
+using MVCBlogApp.Application.Repositories.CalcBMI;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Contact;
@@ -29,6 +31,7 @@ using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Press;
 using MVCBlogApp.Application.Repositories.PressType;
+using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
@@ -56,6 +59,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IPressTypeReadRepository _pressTypeReadRepository;
         private readonly INewsPaperReadRepository _newsPaperReadRepository;
         private readonly IFixBMIReadRepository _fixBMIReadRepository;
+        private readonly IResultBMIReadRepository _resultBMIReadRepository;
+        private readonly ICalcBMIWriteRepository _calcBMIWriteRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -75,7 +80,9 @@ namespace MVCBlogApp.Persistence.Services
             IPressReadRepository pressReadRepository,
             IPressTypeReadRepository pressTypeReadRepository,
             INewsPaperReadRepository newsPaperReadRepository,
-            IFixBMIReadRepository fixBMIReadRepository)
+            IFixBMIReadRepository fixBMIReadRepository,
+            IResultBMIReadRepository resultBMIReadRepository,
+            ICalcBMIWriteRepository calcBMIWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -95,6 +102,8 @@ namespace MVCBlogApp.Persistence.Services
             _pressTypeReadRepository = pressTypeReadRepository;
             _newsPaperReadRepository = newsPaperReadRepository;
             _fixBMIReadRepository = fixBMIReadRepository;
+            _resultBMIReadRepository = resultBMIReadRepository;
+            _calcBMIWriteRepository = calcBMIWriteRepository;
         }
 
 
@@ -847,6 +856,61 @@ namespace MVCBlogApp.Persistence.Services
                 BMI = new()
                 {
                     FixBMI = vM_FixBMI
+                }
+            };
+        }
+
+        public async Task<BMICalculateCreateCommandResponse> BMICalculateCreateAsync(BMICalculateCreateCommandRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+
+            VM_FixBMI? vM_FixBMI = await _fixBMIReadRepository.GetAll()
+                .Select(x => new VM_FixBMI
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    FormId = x.FormId,
+                    ImgUrl = x.ImgUrl,
+                    StatusId = x.StatusId,
+                    LangId = x.LangId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            List<VM_ResultBMI>? vM_ResultBMI = await _resultBMIReadRepository.GetAll()
+                .Select(x => new VM_ResultBMI
+                {
+                    Id = x.Id,
+                    IntervalDescription = x.IntervalDescription,
+                    IntervalMax = x.IntervalMax,
+                    IntervalMin = x.IntervalMin
+                }).ToListAsync();
+
+            decimal Boy = (int)request.CalcBMI.Size;
+            decimal Kilo = (int)request.CalcBMI.Weight;
+
+            decimal Hesapla = Kilo / ((Boy / 100) * (Boy / 100));
+
+            request.CalcBMI.Result = Hesapla;
+
+            await _calcBMIWriteRepository.AddAsync(new()
+            {
+                Email = request.CalcBMI.Email,
+                Age = request.CalcBMI.Age,
+                NameSurname = request.CalcBMI.NameSurname,
+                Result = request.CalcBMI.Result,
+                Size = request.CalcBMI.Size,
+                Weight = request.CalcBMI.Weight
+            });
+
+            await _calcBMIWriteRepository.SaveAsync();
+
+            return new()
+            {
+                BMI = new()
+                {
+                    CalcBMI = request.CalcBMI,
+                    FixBMI = vM_FixBMI,
+                    ResultBMIs = vM_ResultBMI
                 }
             };
         }

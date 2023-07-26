@@ -1,5 +1,6 @@
 ﻿using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
+using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
@@ -63,6 +64,7 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region BMICalculate
 
         Task<BMICalculateQueryResponse> BMICalculateAsync();
+        Task<BMICalculateCreateCommandResponse> BMICalculateCreateAsync(BMICalculateCreateCommandRequest request);  
 
         #endregion
     }

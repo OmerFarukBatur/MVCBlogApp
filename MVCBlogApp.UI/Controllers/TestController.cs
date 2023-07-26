@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 
 namespace MVCBlogApp.UI.Controllers
@@ -36,6 +37,17 @@ namespace MVCBlogApp.UI.Controllers
             BMICalculateQueryRequest request = new();
             BMICalculateQueryResponse response = await _mediator.Send(request);
             ViewBag.IsForm = true;
+
+            return View(response.BMI);
+        }
+
+        [Route("bmi-hesapla")]
+        [Route("bmi-calc")]
+        [HttpPost]
+        public async Task<IActionResult> BMICalculate(BMICalculateCreateCommandRequest request)
+        {
+            BMICalculateCreateCommandResponse response = await _mediator.Send(request);
+            ViewBag.IsForm = false;         
 
             return View(response.BMI);
         }
