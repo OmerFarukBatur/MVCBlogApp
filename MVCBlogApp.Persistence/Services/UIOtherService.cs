@@ -5,6 +5,7 @@ using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyForms
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWhereWorkShop;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
@@ -40,6 +41,10 @@ using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.Repositories.ResultOptimum;
 using MVCBlogApp.Application.Repositories.Status;
+using MVCBlogApp.Application.Repositories.Workshop;
+using MVCBlogApp.Application.Repositories.WorkshopCategory;
+using MVCBlogApp.Application.Repositories.WorkshopEducation;
+using MVCBlogApp.Application.Repositories.WorkshopType;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
 using MVCBlogApp.Domain.Entities;
@@ -72,6 +77,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IFixOptimumReadRepository _fixOptimumReadRepository;
         private readonly IResultOptimumReadRepository _resultOptimumReadRepository;
         private readonly ICalcOptimumWriteRepository _calcOptimumWriteRepository;
+        private readonly IWorkshopReadRepository _workshopReadRepository;
+        private readonly IWorkshopEducationReadRepository _workshopEducationReadRepository;
+        private readonly IWorkshopTypeReadRepository _workshopTypeReadRepository;
+        private readonly IWorkshopCategoryReadRepository _workshopCategoryReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -97,7 +106,11 @@ namespace MVCBlogApp.Persistence.Services
             IGendersReadRepository gendersReadRepository,
             IFixOptimumReadRepository fixOptimumReadRepository,
             IResultOptimumReadRepository resultOptimumReadRepository,
-            ICalcOptimumWriteRepository calcOptimumWriteRepository)
+            ICalcOptimumWriteRepository calcOptimumWriteRepository,
+            IWorkshopReadRepository workshopReadRepository,
+            IWorkshopEducationReadRepository workshopEducationReadRepository,
+            IWorkshopTypeReadRepository workshopTypeReadRepository,
+            IWorkshopCategoryReadRepository workshopCategoryReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -123,6 +136,10 @@ namespace MVCBlogApp.Persistence.Services
             _fixOptimumReadRepository = fixOptimumReadRepository;
             _resultOptimumReadRepository = resultOptimumReadRepository;
             _calcOptimumWriteRepository = calcOptimumWriteRepository;
+            _workshopReadRepository = workshopReadRepository;
+            _workshopEducationReadRepository = workshopEducationReadRepository;
+            _workshopTypeReadRepository = workshopTypeReadRepository;
+            _workshopCategoryReadRepository = workshopCategoryReadRepository;
         }
 
 
@@ -851,7 +868,6 @@ namespace MVCBlogApp.Persistence.Services
 
         #endregion
 
-
         #region BMICalculate
 
         public async Task<BMICalculateQueryResponse> BMICalculateAsync()
@@ -1071,6 +1087,49 @@ namespace MVCBlogApp.Persistence.Services
                 }
             };
         }
+
+        #endregion
+
+        #region UIWorkShop
+
+        public async Task<GetWhereWorkShopQueryResponse> GetWhereWorkShopAsync()
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_Workshop> vM_Workshops = await _workshopReadRepository.GetWhere(x => x.LangId == langId && x.StatusId == statusId)
+                .Join(_workshopEducationReadRepository.GetAll(), w => w.WseducationId, education => education.Id, (w, education) => new { w, education })
+                .Join(_workshopCategoryReadRepository.GetAll(), wo => wo.education.WscategoryId, category => category.Id, (wo, category) => new { wo, category })
+                .Join(_workshopTypeReadRepository.GetAll(), work => work.wo.w.WstypeId, wType => wType.Id, (work, wType) => new { work, wType })
+                .Select(x => new VM_Workshop
+                {
+                    Id = x.work.wo.w.Id,
+                    Address = x.work.wo.w.Address,
+                    CreateDate = x.work.wo.w.CreateDate,
+                    CreateUserId = x.work.wo.w.CreateUserId,
+                    Description = x.work.wo.w.Description,
+                    FinishDateTime = x.work.wo.w.FinishDateTime,
+                    IsMainPage = x.work.wo.w.IsMainPage,
+                    LangId = x.work.wo.w.LangId,
+                    NavigationId = x.work.wo.w.NavigationId,
+                    Orders = x.work.wo.w.Orders,
+                    Price = x.work.wo.w.Price,
+                    StartDateTime = x.work.wo.w.StartDateTime,
+                    StatusId = x.work.wo.w.StatusId,
+                    Title = x.work.wo.w.Title,
+                    WseducationId = x.work.wo.w.WseducationId,
+                    WstypeId = x.work.wo.w.WstypeId,
+                    WsEducationName = x.work.wo.education.WsEducationName,
+                    WstypeName = x.wType.WstypeName,
+                    WscategoryName = x.work.category.WscategoryName
+                }).ToListAsync();
+
+            return new()
+            {
+                Workshops = vM_Workshops
+            };
+        }
+
 
         #endregion
     }

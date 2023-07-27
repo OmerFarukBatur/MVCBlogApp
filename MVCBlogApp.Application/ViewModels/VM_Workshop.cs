@@ -21,6 +21,7 @@
 
         
         public string? WsEducationName { get; set; }
+        public string? WscategoryName { get; set; }
         public string? WstypeName { get; set; }
         public string? Language { get; set; }
         public string? StatusName { get; set; }

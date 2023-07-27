@@ -1,0 +1,133 @@
+﻿@model IList<MVCBlogApp.Application.ViewModels.VM_Workshop>
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+
+    var culture = new System.Globalization.CultureInfo("tr-TR");
+
+    int LangID = OperationService.SessionLangId();
+    if (LangID == 1) { ViewData["Title"] = "Seminer Takvimi"; } else if (LangID == 2) { ViewData["Title"] = "Seminar Calendar"; }
+
+}
+
+@if (LangID == 2)
+{
+
+    <section id="page-title" class="page-title-mini">
+
+
+        <div class="container clearfix">
+            <h1>SEMINAR</h1>
+            <span>Seminar Event Calendar</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="UIHome">Main Page</a></li>
+
+
+                <li class="breadcrumb-item"><a href="/">Seminar Event Calendar</a></li>
+            </ol>
+        </div>
+
+
+
+    </section>
+
+    <section class="section pricing-section m-0">
+        <div class="container clearfix">
+            <h2 class="pricing-section--title center">SEMINAR | WORKSHOP | ACTIVITY</h2>
+            <div class="pricing pricing--tenzin">
+
+                @foreach (var item in Model)
+                {
+
+                    <div class="pricing--item">
+                        <h2 class="">@item.WscategoryName.ToUpper() <span class="center">@item.WstypeName.ToUpper()</span>&nbsp;  </h2>
+                        <h4 class="">@item.Title.ToUpper()</h4>
+
+                        <div class="pricing--price">
+                            Tarih: @item.StartDateTime.Value.ToShortDateString() , @culture.DateTimeFormat.GetDayName(item.StartDateTime.Value.DayOfWeek)
+                        </div>
+                        <div class="pricing--price">Time: @item.StartDateTime.Value.ToShortTimeString() </div>
+                        <div class="pricing--price">Address:</div>
+
+                        <ul class="pricing--feature-list">
+                            <li class="pricing--feature">@item.Address</li>
+                        </ul>
+                        @if (item.Price > 0)
+                        {
+                            <p>Participation Fee: @item.Price.Value.ToString("n0") &#8378;</p>
+                        }
+                        else
+                        {
+                            <p>Please contact for price information</p>
+                        }
+
+                        <a href="/seminer-basvuru-formu/@item.Id" class="pricing--action center">REGISTER</a>
+
+                    </div>
+
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section id="page-title" class="page-title-mini">
+
+
+        <div class="container clearfix">
+            <h1>Seminer</h1>
+            <span>Seminer Etkinlik Takvimi</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="UIHome">Ana Sayfa</a></li>
+
+
+                <li class="breadcrumb-item"><a href="/">Seminer Takvimi</a></li>
+            </ol>
+        </div>
+
+
+
+    </section>
+
+    <section class="section pricing-section m-0">
+        <div class="container clearfix">
+            <h2 class="pricing-section--title center">SEMİNER | ATÖLYE | ETKİNLİK</h2>
+            <div class="pricing pricing--tenzin">
+
+                @foreach (var item in Model)
+                {
+
+                    <div class="pricing--item">
+                        <h2 class="">@item.WscategoryName.ToUpper() <span class="center">@item.WstypeName.ToUpper()</span>&nbsp;  </h2>
+                        <h4 class="">@item.Title.ToUpper()</h4>
+
+                        <div class="pricing--price">
+                            Tarih: @item.StartDateTime.Value.ToShortDateString() , @culture.DateTimeFormat.GetDayName(item.StartDateTime.Value.DayOfWeek)
+                        </div>
+                        <div class="pricing--price">Saat: @item.StartDateTime.Value.ToShortTimeString() </div>
+                        <div class="pricing--price">Adres:</div>
+
+                        <ul class="pricing--feature-list">
+                            <li class="pricing--feature">@item.Address</li>
+                        </ul>
+                        @if (item.Price > 0)
+                        {
+                            <p>Katılım Ücreti: @item.Price.Value.ToString("n0") &#8378;</p>
+                        }
+                        else
+                        {
+                            <p>Lütfen fiyat bilgisi için iletişime geçiniz</p>
+                        }
+
+                        <a href="/seminer-basvuru-formu/@item.Id" class="pricing--action center">KAYIT OL</a>
+
+                    </div>
+
+                }
+            </div>
+        </div>
+    </section>
+
+}

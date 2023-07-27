@@ -2,6 +2,7 @@
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWhereWorkShop;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
@@ -69,6 +70,12 @@ namespace MVCBlogApp.Application.Abstractions.Services
         Task<BMICalculateCreateCommandResponse> BMICalculateCreateAsync(BMICalculateCreateCommandRequest request);
         Task<OptimumCalculateQueryResponse> OptimumCalculateAsync();
         Task<OptimumCalculateCreateCommandResponse> OptimumCalculateCreateAsync(OptimumCalculateCreateCommandRequest request);
+
+        #endregion
+
+        #region UIWorkShop
+
+        Task<GetWhereWorkShopQueryResponse> GetWhereWorkShopAsync();
 
         #endregion
     }
