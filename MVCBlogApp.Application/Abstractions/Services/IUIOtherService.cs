@@ -1,7 +1,9 @@
 ﻿using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
+using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
+using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -64,7 +66,9 @@ namespace MVCBlogApp.Application.Abstractions.Services
         #region BMICalculate
 
         Task<BMICalculateQueryResponse> BMICalculateAsync();
-        Task<BMICalculateCreateCommandResponse> BMICalculateCreateAsync(BMICalculateCreateCommandRequest request);  
+        Task<BMICalculateCreateCommandResponse> BMICalculateCreateAsync(BMICalculateCreateCommandRequest request);
+        Task<OptimumCalculateQueryResponse> OptimumCalculateAsync();
+        Task<OptimumCalculateCreateCommandResponse> OptimumCalculateCreateAsync(OptimumCalculateCreateCommandRequest request);
 
         #endregion
     }

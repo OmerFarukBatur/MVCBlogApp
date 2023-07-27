@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MVCBlogApp.Application.Abstractions.Services;
 using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyFormsCreate;
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
+using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
+using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UILeftNavigation;
 using MVCBlogApp.Application.Features.Queries.UIBlog.BasariHikayeleriPartialView;
@@ -22,16 +25,20 @@ using MVCBlogApp.Application.Repositories.BlogCategory;
 using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.CalcBMI;
+using MVCBlogApp.Application.Repositories.CalcOptimum;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Contact;
 using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.FixBMI;
+using MVCBlogApp.Application.Repositories.FixOptimum;
+using MVCBlogApp.Application.Repositories.Genders;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Press;
 using MVCBlogApp.Application.Repositories.PressType;
 using MVCBlogApp.Application.Repositories.ResultBMI;
+using MVCBlogApp.Application.Repositories.ResultOptimum;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.X_BlogCategory;
 using MVCBlogApp.Application.ViewModels;
@@ -61,6 +68,10 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IFixBMIReadRepository _fixBMIReadRepository;
         private readonly IResultBMIReadRepository _resultBMIReadRepository;
         private readonly ICalcBMIWriteRepository _calcBMIWriteRepository;
+        private readonly IGendersReadRepository _gendersReadRepository;
+        private readonly IFixOptimumReadRepository _fixOptimumReadRepository;
+        private readonly IResultOptimumReadRepository _resultOptimumReadRepository;
+        private readonly ICalcOptimumWriteRepository _calcOptimumWriteRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -82,7 +93,11 @@ namespace MVCBlogApp.Persistence.Services
             INewsPaperReadRepository newsPaperReadRepository,
             IFixBMIReadRepository fixBMIReadRepository,
             IResultBMIReadRepository resultBMIReadRepository,
-            ICalcBMIWriteRepository calcBMIWriteRepository)
+            ICalcBMIWriteRepository calcBMIWriteRepository,
+            IGendersReadRepository gendersReadRepository,
+            IFixOptimumReadRepository fixOptimumReadRepository,
+            IResultOptimumReadRepository resultOptimumReadRepository,
+            ICalcOptimumWriteRepository calcOptimumWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -104,6 +119,10 @@ namespace MVCBlogApp.Persistence.Services
             _fixBMIReadRepository = fixBMIReadRepository;
             _resultBMIReadRepository = resultBMIReadRepository;
             _calcBMIWriteRepository = calcBMIWriteRepository;
+            _gendersReadRepository = gendersReadRepository;
+            _fixOptimumReadRepository = fixOptimumReadRepository;
+            _resultOptimumReadRepository = resultOptimumReadRepository;
+            _calcOptimumWriteRepository = calcOptimumWriteRepository;
         }
 
 
@@ -911,6 +930,144 @@ namespace MVCBlogApp.Persistence.Services
                     CalcBMI = request.CalcBMI,
                     FixBMI = vM_FixBMI,
                     ResultBMIs = vM_ResultBMI
+                }
+            };
+        }
+
+        public async Task<OptimumCalculateQueryResponse> OptimumCalculateAsync()
+        {
+            int langId = _operationService.SessionLangId();
+
+            VM_FixOptimum? vM_FixOptimum = await _fixOptimumReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_FixOptimum
+                {
+                    FormId = x.FormId,
+                    Description = x.Description,
+                    Id = x.Id,
+                    ImgUrl = x.ImgUrl,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            List<VM_Gender> vM_Genders = await _gendersReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_Gender
+                {
+                    Id = x.Id,
+                    Gender = x.Gender,
+                    LangId = x.LangId
+                }).ToListAsync();
+
+
+            return new()
+            {
+                Genders = vM_Genders,
+                Optimum = new()
+                {
+                    CalcOptimum = null,
+                    FixOptimum = vM_FixOptimum,
+                    ResultOptimum = null
+                }
+            };
+        }
+
+        public async Task<OptimumCalculateCreateCommandResponse> OptimumCalculateCreateAsync(OptimumCalculateCreateCommandRequest request)
+        {
+            VM_FixOptimum? vM_FixOptimum = await _fixOptimumReadRepository.GetAll()
+                .Select(x => new VM_FixOptimum
+                {
+                    FormId = x.FormId,
+                    Description = x.Description,
+                    Id = x.Id,
+                    ImgUrl = x.ImgUrl,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    Title = x.Title
+                }).FirstOrDefaultAsync();
+
+            VM_ResultOptimum? vM_ResultOptimum = await _resultOptimumReadRepository.GetAll()
+                .Select(x=> new VM_ResultOptimum
+                {
+                    Id= x.Id,
+                    Result1text = x.Result1text,
+                    Result2text = x.Result2text,
+                    Result3text = x.Result3text,
+                    Result4text = x.Result4text
+                })
+                .FirstOrDefaultAsync();
+
+            double Boy = (int)request.CalcOptimum.Size;
+            double Kilo = (int)request.CalcOptimum.Weight;
+
+
+            #region Vücut Yüzey Alanı
+
+            double VYA = Math.Sqrt((Boy * Kilo / 3600));
+            request.CalcOptimum.Result1 = Math.Round(Convert.ToDecimal(VYA), 2);
+
+            #endregion
+
+            #region Yağsız Vücut Ağırlığı
+
+            if (request.CalcOptimum.Gender.Trim().ToLower() == "Erkek" || request.CalcOptimum.Gender.Trim().ToUpper() == "Erkek" || request.CalcOptimum.Gender.Trim().ToLower() == "Male" || request.CalcOptimum.Gender.Trim().ToUpper() == "Male")
+            {
+                double YVA = (1.10 * Kilo) - (128 * (Kilo * Kilo) / (Boy * Boy));
+                request.CalcOptimum.Result2 = Math.Round(Convert.ToDecimal(YVA), 2);
+            }
+            else if (request.CalcOptimum.Gender.Trim().ToLower() == "Kadın" || request.CalcOptimum.Gender.Trim().ToUpper() == "Kadın" || request.CalcOptimum.Gender.Trim().ToLower() == "Female" || request.CalcOptimum.Gender.Trim().ToUpper() == "Female")
+            {
+                double YVA = (1.07 * Kilo) - (148 * (Kilo * Kilo) / (Boy * Boy));
+                request.CalcOptimum.Result2 = Math.Round(Convert.ToDecimal(YVA), 2);
+            }
+
+            #endregion
+
+            #region Ideal Vücut Ağırlığı
+
+            double boyIn = Boy * 0.393700787;
+            if (request.CalcOptimum.Gender.Trim().ToLower() == "Erkek" || request.CalcOptimum.Gender.Trim().ToUpper() == "Erkek" || request.CalcOptimum.Gender.Trim().ToLower() == "Male" || request.CalcOptimum.Gender.Trim().ToUpper() == "Male")
+            {
+                double IVA = 50 + (2.3 * (boyIn - 60));
+                request.CalcOptimum.Result3 = Math.Round(Convert.ToDecimal(IVA), 2);
+            }
+            else if (request.CalcOptimum.Gender.Trim().ToLower() == "Kadın" || request.CalcOptimum.Gender.Trim().ToUpper() == "Kadın" || request.CalcOptimum.Gender.Trim().ToLower() == "Female" || request.CalcOptimum.Gender.Trim().ToUpper() == "Female")
+            {
+                double IVA = 45.5 + (2.3 * (boyIn - 60));
+                request.CalcOptimum.Result3 = Math.Round(Convert.ToDecimal(IVA), 2);
+            }
+
+            #endregion
+
+            #region Vücud Kitle İndeksi
+
+            double BMI = Kilo / ((Boy / 100) * (Boy / 100));
+            request.CalcOptimum.Result4 = Math.Round(Convert.ToDecimal(BMI), 2);
+
+            #endregion
+
+            await _calcOptimumWriteRepository.AddAsync(new()
+            {
+                Age = request.CalcOptimum.Age,
+                Email = request.CalcOptimum.Email,
+                NameSurname = request.CalcOptimum.NameSurname,
+                Result1 = request.CalcOptimum.Result1,
+                Result2 = request.CalcOptimum.Result2,
+                Result3 = request.CalcOptimum.Result3,
+                Result4 = request.CalcOptimum.Result4,
+                Size = request.CalcOptimum.Size,
+                Weight = request.CalcOptimum.Weight,
+                Gender = request.CalcOptimum.Gender
+            });
+
+            await _calcOptimumWriteRepository.SaveAsync();
+
+            return new()
+            {
+                Optimum = new()
+                {
+                    CalcOptimum = request.CalcOptimum,
+                    FixOptimum = vM_FixOptimum,
+                    ResultOptimum = vM_ResultOptimum
                 }
             };
         }

@@ -1,0 +1,159 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_Optimum
+
+<style>
+    .defaul-cursor {
+        cursor: default;
+    }
+</style>
+<section id="page-title" class="page-title-mini">
+
+    <div class="container clearfix">
+        <h1>@Model.FixOptimum?.Title</h1>
+
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.FixOptimum?.Title</li>
+        </ol>
+    </div>
+</section>
+
+
+
+<section id="content">
+    <div class="content-wrap">
+        <div class="container clearfix">
+            <div class="row gutter-40 col-mb-80">
+
+
+                <div class="postcontent col-lg-9 order-lg-last">
+                    <div class="fancy-title title-bottom-border"><h1>@Model.FixOptimum?.Title</h1></div>
+                    <div id="posts" class="post-grid row grid-container gutter-30" data-layout="fitRows">
+
+                        <div class="entry col-sm-6 col-12">
+                            <div class="grid-inner">
+                                <div class="entry-title">
+                                    <h2><a href="#">İdeal Kilonuzu Nasıl Bulursunuz?</a></h2>
+                                </div>
+                                <div class="entry-content">
+                                    <p>İdeal kilo sağlıklı bir vücudun vücut yüzeyine (boy) göre kilo oranı hesaplanarak bulunur. Bu ölçüme vücut kitle endeksi denir. Bu indekse göre 18,5 ile 25 arası ideal kilodur.</p>
+                                    <p>Ancak vücut kitle endeksi ideal vücut ağırlığı hesabı için tek başına yeterli olmayabilir. Vücut yağ oranı veya vücut tipleri de bizim ideal kilomuzu ve buna nasıl ulaşacağımızı belirleyebilir.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="entry col-sm-6 col-12">
+                            <div class="grid-inner">
+                                <div class="entry-image">
+                                    <a href="#"><img src="@Url.Content("~/Upload/"+@Model.FixOptimum?.ImgUrl)" title="İdeal Kilo Hesaplama" alt="Sağlıklı Beslenme Uzmanı ve Diyetisyen Taylan Kümeli ile İdeal Kilo"></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        @Html.Raw(Model.FixOptimum?.Description)
+
+                        <div class="entry col-12">
+
+                            @if (ViewBag.IsForm == true)
+                            {
+                                using (Html.BeginForm())
+                                {
+
+                                    <div class="form-group row">
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Boy</label>*@
+                                        <div class="col-lg-4 col-xl-4">
+                                            <input asp-for="CalcOptimum.Size" class="form-control form-control-lg" placeholder="Boy" required=""/>
+                                        </div>
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Kilo</label>*@
+                                        <div class="col-lg-4 col-xl-4">
+                                            <input asp-for="CalcOptimum.Weight" class="form-control form-control-lg" placeholder="Kilo" required="" />
+                                        </div>
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Yaş</label>*@
+                                        <div class="col-lg-4 col-xl-4">
+                                            <input asp-for="CalcOptimum.Age" class="form-control form-control-lg" placeholder="Yaş" required="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Cinsiyet</label>*@
+                                        <div class="col-lg-12 col-xl-12">
+                                            <select asp-for="CalcOptimum.Gender" class="form-control" asp-items="@ViewBag.Genders" required="">
+                                                <option>Cinsiyet Seçiniz..</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Ad Soyad</label>*@
+                                        <div class="col-lg-12 col-xl-12">
+                                            <input asp-for="CalcOptimum.NameSurname" class="form-control form-control-lg" placeholder="Ad Soyad" required=""/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        @*<label class="col-xl-3 col-lg-3 col-form-label defaul-cursor">Email</label>*@
+                                        <div class="col-lg-12 col-xl-12">
+                                            <input asp-for="CalcOptimum.Email" class="form-control form-control-lg" placeholder="Email" required="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <div class="col-lg-12 col-xl-12">
+
+                                            <button type="submit" class="btn btn-primary col-lg-3 float-lg-right">Hesapla</button>
+
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                    <div class="entry col-sm-6 col-12">
+                                        <div class="grid-inner">
+                                            <div class="entry-title">
+                                                <h4>@Model.ResultOptimum.Result1text : @Model.CalcOptimum.Result1 m2</h4>
+                                                <br />
+                                                <h4>@Model.ResultOptimum.Result2text : @Model.CalcOptimum.Result2 kg</h4>
+                                                <br />
+                                                <h4>@Model.ResultOptimum.Result3text : @Model.CalcOptimum.Result3 kg</h4>
+                                                <br />
+                                                <h4>@Model.ResultOptimum.Result4text : @Model.CalcOptimum.Result4 kg/m2</h4>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <a asp-action="OptimumCalculate">Bir daha hesapla</a>
+                                    </div>
+                            }
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="sidebar col-lg-3">
+                    <div class="sidebar-widgets-wrap">
+
+                        @await Component.InvokeAsync("UIHomeSLeftNavigation")
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
