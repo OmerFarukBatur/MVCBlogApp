@@ -6,6 +6,7 @@ using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
 using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWhereWorkShop;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.WorkShopApplicationForm;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
 using MVCBlogApp.Application.Features.Queries.UIArticle.UIArticleIndex;
@@ -27,6 +28,7 @@ using MVCBlogApp.Application.Repositories.BlogType;
 using MVCBlogApp.Application.Repositories.Book;
 using MVCBlogApp.Application.Repositories.CalcBMI;
 using MVCBlogApp.Application.Repositories.CalcOptimum;
+using MVCBlogApp.Application.Repositories.Case;
 using MVCBlogApp.Application.Repositories.ConsultancyForm;
 using MVCBlogApp.Application.Repositories.ConsultancyFormType;
 using MVCBlogApp.Application.Repositories.Contact;
@@ -34,6 +36,7 @@ using MVCBlogApp.Application.Repositories.ContactCategory;
 using MVCBlogApp.Application.Repositories.FixBMI;
 using MVCBlogApp.Application.Repositories.FixOptimum;
 using MVCBlogApp.Application.Repositories.Genders;
+using MVCBlogApp.Application.Repositories.HearAboutUS;
 using MVCBlogApp.Application.Repositories.Navigation;
 using MVCBlogApp.Application.Repositories.NewsPaper;
 using MVCBlogApp.Application.Repositories.Press;
@@ -81,6 +84,8 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IWorkshopEducationReadRepository _workshopEducationReadRepository;
         private readonly IWorkshopTypeReadRepository _workshopTypeReadRepository;
         private readonly IWorkshopCategoryReadRepository _workshopCategoryReadRepository;
+        private readonly IHearAboutUSReadRepository _hearAboutUSReadRepository;
+        private readonly ICaseReadRepository _caseReadRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -110,7 +115,9 @@ namespace MVCBlogApp.Persistence.Services
             IWorkshopReadRepository workshopReadRepository,
             IWorkshopEducationReadRepository workshopEducationReadRepository,
             IWorkshopTypeReadRepository workshopTypeReadRepository,
-            IWorkshopCategoryReadRepository workshopCategoryReadRepository)
+            IWorkshopCategoryReadRepository workshopCategoryReadRepository,
+            IHearAboutUSReadRepository hearAboutUSReadRepository,
+            ICaseReadRepository caseReadRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -140,6 +147,8 @@ namespace MVCBlogApp.Persistence.Services
             _workshopEducationReadRepository = workshopEducationReadRepository;
             _workshopTypeReadRepository = workshopTypeReadRepository;
             _workshopCategoryReadRepository = workshopCategoryReadRepository;
+            _hearAboutUSReadRepository = hearAboutUSReadRepository;
+            _caseReadRepository = caseReadRepository;
         }
 
 
@@ -874,14 +883,14 @@ namespace MVCBlogApp.Persistence.Services
         {
             int langId = _operationService.SessionLangId();
 
-            VM_FixBMI? vM_FixBMI = await _fixBMIReadRepository.GetWhere(x=> x.LangId == langId)
-                .Select(x=> new VM_FixBMI
+            VM_FixBMI? vM_FixBMI = await _fixBMIReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_FixBMI
                 {
                     Id = x.Id,
                     Description = x.Description,
                     FormId = x.FormId,
                     ImgUrl = x.ImgUrl,
-                    StatusId= x.StatusId,
+                    StatusId = x.StatusId,
                     LangId = x.LangId,
                     Title = x.Title
                 }).FirstOrDefaultAsync();
@@ -1002,9 +1011,9 @@ namespace MVCBlogApp.Persistence.Services
                 }).FirstOrDefaultAsync();
 
             VM_ResultOptimum? vM_ResultOptimum = await _resultOptimumReadRepository.GetAll()
-                .Select(x=> new VM_ResultOptimum
+                .Select(x => new VM_ResultOptimum
                 {
-                    Id= x.Id,
+                    Id = x.Id,
                     Result1text = x.Result1text,
                     Result2text = x.Result2text,
                     Result3text = x.Result3text,
@@ -1128,6 +1137,133 @@ namespace MVCBlogApp.Persistence.Services
             {
                 Workshops = vM_Workshops
             };
+        }
+
+        public async Task<WorkShopApplicationFormQueryResponse> WorkShopApplicationFormAsync(WorkShopApplicationFormQueryRequest request)
+        {
+            int langId = _operationService.SessionLangId();
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_Gender> vM_Genders = await _gendersReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_Gender
+                {
+                    Id = x.Id,
+                    Gender = x.Gender,
+                    LangId = x.LangId
+                }).ToListAsync();
+
+            List<VM_HearAboutUS> vM_HearAboutUs = await _hearAboutUSReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_HearAboutUS
+                {
+                    Id = x.Id,
+                    HearAboutUsname = x.HearAboutUsname,
+                    LangId = x.LangId
+                }).ToListAsync();
+
+            List<VM_Case> vM_Cases = await _caseReadRepository.GetWhere(x => x.LangId == langId)
+                .Select(x => new VM_Case
+                {
+                    Id = x.Id,
+                    CaseName = x.CaseName,
+                    LangId = x.LangId
+                }).ToListAsync();
+
+            if (request.id == 0 || request.id < 0)
+            {
+                List<VM_WorkshopCategory> vM_category = await _workshopCategoryReadRepository.GetWhere(x => x.LangId == langId)
+                    .Select(x => new VM_WorkshopCategory
+                    {
+                        Id = x.Id,
+                        LangId = x.LangId,
+                        WscategoryName = x.WscategoryName
+                    }).ToListAsync();
+
+                return new()
+                {
+                    Cases = vM_Cases,
+                    Genders = vM_Genders,
+                    HearAboutUs = vM_HearAboutUs,
+                    WorkshopCategories = vM_category,
+                    WorkshopEducations = null,
+                    Workshops = null
+                };
+            }
+            else
+            {
+                int workshopEducationID = await _workshopReadRepository.GetWhere(x => x.Id == request.id).Select(x => (int)x.WseducationId).FirstOrDefaultAsync();
+
+                if (workshopEducationID > 0)
+                {
+                    int workshopCategoryID = await _workshopEducationReadRepository.GetWhere(x => x.Id == workshopEducationID).Select(x => (int)x.WscategoryId).FirstAsync();
+
+                    if (workshopCategoryID > 0)
+                    {
+                        List<VM_WorkshopCategory> vM_WorkshopCategories = await _workshopCategoryReadRepository.GetWhere(x => x.LangId == langId)
+                            .Select(x => new VM_WorkshopCategory
+                            {
+                                Id = x.Id,
+                                LangId = x.LangId,
+                                WscategoryName = x.WscategoryName
+                            }).ToListAsync();
+
+                        List<VM_WorkshopEducation> vM_WorkshopEducations = await _workshopEducationReadRepository.GetWhere(x => x.WscategoryId == workshopCategoryID && x.StatusId == statusId)
+                            .Select(x => new VM_WorkshopEducation
+                            {
+                                Id = x.Id,
+                                LangId = x.LangId,
+                                StatusId = x.StatusId,
+                                WscategoryId = x.WscategoryId,
+                                WsEducationName = x.WsEducationName
+                            }).ToListAsync();
+
+                        List<VM_Workshop> vM_Workshops = await _workshopReadRepository.GetWhere(x => x.WseducationId == workshopEducationID && x.LangId == langId)
+                            .Select(x => new VM_Workshop
+                            {
+                                Id = x.Id,
+                                LangId = x.LangId,
+                                StatusId = x.StatusId,
+                                WseducationId = x.WseducationId,
+                                Title = x.Title,
+                                WstypeId = x.WstypeId,
+                                NavigationId = x.NavigationId
+                            }).ToListAsync();
+
+                        return new()
+                        {
+                            Cases = vM_Cases,
+                            Genders = vM_Genders,
+                            HearAboutUs = vM_HearAboutUs,
+                            WorkshopCategories = vM_WorkshopCategories,
+                            Workshops = vM_Workshops,
+                            WorkshopEducations = vM_WorkshopEducations,
+                            workshopCategoryID = workshopCategoryID,
+                            workshopEducationID = workshopEducationID
+                        };
+                    }
+                    return new()
+                    {
+                        Cases = vM_Cases,
+                        Genders = vM_Genders,
+                        HearAboutUs = vM_HearAboutUs,
+                        WorkshopCategories = null,
+                        Workshops = null,
+                        WorkshopEducations = null,
+                        workshopEducationID = workshopEducationID,
+                        workshopCategoryID = workshopCategoryID
+                    };
+                }
+                return new()
+                {
+                    Cases = vM_Cases,
+                    Genders = vM_Genders,
+                    HearAboutUs = vM_HearAboutUs,
+                    WorkshopCategories = null,
+                    Workshops = null,
+                    WorkshopEducations = null
+                };
+            }
+
+
         }
 
 

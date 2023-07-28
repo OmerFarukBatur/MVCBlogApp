@@ -1,0 +1,442 @@
+﻿@model MVCBlogApp.Application.ViewModels.VM_WorkShopApplicationFormModel
+@using MVCBlogApp.Application.Abstractions.Services;
+@inject IOperationService OperationService
+@{
+    Layout = "~/Views/Shared/_UILayout.cshtml";
+    int LangID = OperationService.SessionLangId();
+    if ( LangID == 1) { ViewData["Title"] = "Seminer Başvuru Formu"; } else if (LangID == 2) { ViewData["Title"] = "Seminar Application Form"; }
+
+}
+
+@if (LangID == 2)
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT SEMINAR APPLICATION FORM</h1>
+            <span>Taylan Kümeli ALL SEMINAR</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Main Page</a></li>
+                <li class="breadcrumb-item"><a href="#">Seminar</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Seminar Application Form</li>
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="form-widget">
+                    <div class="form-result"></div>
+
+                    <form asp-action="WorkShopApplicationForm" asp-controller="Workshop" method="post">
+
+
+                        <div class="row" id="genel-basvuru-formu-tr">
+
+                            @if (ViewBag.Result == "Success")
+                            {
+                                <div class="col-12 alert-success">
+                                    <p class="ql-color-yellow">Successful.</p>
+                                </div>
+                            }
+                            else if (ViewBag.Result == "Error")
+                            {
+
+                                <div class="col-12 alert-warning">
+                                    <p class="ql-color-yellow">@ViewBag.Message</p>
+                                </div>
+                            }
+
+                            <div class="col-12">
+                                <h3>Please proceed by choosing the seminar, workshop or event you want to attend and the type of form.</h3>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-tipi-tr">TYPE OF FORM YOU WANT TO APPLY</label>
+
+                                <select asp-items="ViewBag.WorkshopCategory" id="WsCategory" required="" class="sm-form-control">
+                                    <option value="">-- select --</option>
+                                </select>
+
+
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-adi-tr">KATILMAK İSTEDİĞİNİZ SEMİNER/ATÖLYE/ETKİNLİK </label>
+                                <select asp-items="ViewBag.WorkshopEducation" id="WsEducation" class="sm-form-control" required="">
+                                    <option value="">-- select --</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-tarih-tr">WORKSHOP</label>
+                                <select asp-for="WorkShopID" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
+                                    <option value="">-- select --</option>
+                                </select>
+                            </div>
+
+                            <div class="divider divider-center"><i class="i-circled icon-apple-alt" style="background-color:#a1c41e"></i></div>
+
+                            <div class="col-lg-6">
+                                <div class="row checkout-form-billing">
+                                    <div class="col-12">
+                                        <h3>
+
+                                            Personal Information
+                                        </h3>
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>Name Surname:</label>
+                                        <input type="text" asp-for="NameSurname" value="" placeholder="name surname" id="genel-basvuru-form-ad-soyad-tr" required="" class="form-control required" />
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>E-Mail:</label>
+                                        <input type="email" asp-for="Email" id="genel-basvuru-form-eposta-tr" class="form-control required" value="" required="" placeholder="username@domain.com" />
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>Phone (GSM):</label><br />
+                                        <input type="text" asp-for="Phone" id="genel-basvuru-form-tel-tr" class="form-control required" value="" required="" placeholder="Mobile Phone" />
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>Gender:</label>
+
+
+                                        <select asp-for="Gender" asp-items="ViewBag.Gender" required="" class="sm-form-control">
+                                            <option value="">-- select --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>Birth Day:</label><br>
+                                        <input type="date" asp-for="BirthDate" required="" id="genel-basvuru-form-dogum-tarihi-tr" value="" class="form-control required" />
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>Job:</label><br />
+                                        <input type="text" asp-for="Job" required="" id="genel-basvuru-form-meslek-tr" class="form-control required" value="" placeholder="job" />
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label>YOUR CONTACT ADDRESS:</label>
+                                        <textarea asp-for="Address" required="" class="form-control required" id="genel-basvuru-form-posta-adresi-tr" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label>WHERE DID YOU HEAR ABOUT US?</label>
+                                        <select asp-for="HearAboutusID" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
+                                            <option value="">-- select --</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-5 mt-lg-0">
+                                <div class="row checkout-form-shipping">
+                                    <div class="col-12">
+                                        <h3>Let's Get to Know You Closer</h3>
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>WHAT IS YOUR PURPOSE / EXPECTATION?</label>
+                                        <textarea asp-for="AttendancePurpose" required="" class="form-control" id="genel-basvuru-form-amac-tr" rows="3" placeholder="Please write in a few sentences your purpose and expectation of participation in our seminars, online trainings and workshops."></textarea>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>ARE YOU SATISFIED WITH YOUR LIFE STYLE?</label>
+                                        <select asp-for="LifeContented" required="" asp-items="ViewBag.Case" class="sm-form-control">
+                                            <option value="">-- select --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>Have you ever had a diet before / to lose weight?</label>
+                                        <select asp-for="Diet" required="" asp-items="ViewBag.Case" class="sm-form-control">
+                                            <option value="">-- select --</option>
+                                        </select>
+                                    </div>
+
+
+
+
+                                    <div class="col-12 form-group">
+                                        <label>Note:</label>
+                                        <textarea asp-for="Note" required="" class="form-control" id="genel-basvuru-form-notlar-tr" rows="3" placeholder="Please note the issues you find missing in the form and want to specify here."></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input asp-for="IsApprove" id="IsApprove" class="form-check-input" type="checkbox">
+                                            <label class="form-check-label" for="IsApprove">
+                                                Kişisel Verilerin Korunması ve İşlenmesi Aydınlatma Metni’ni okudum ve bu kapsamda kişisel verilerimin, şirket operasyonel faaliyetlerinin yürütülmesi, strateji planlama, iş ortakları yönetimi, müşteriye dokunan süreç ve operasyonların yürütülmesi, şirket iç operasyonlarının yürütülmesi, hukuksal & teknik ve idari sonucu olan faaliyetlerin gerçekleştirilmesi, finansal operasyonların yürütülmesi amaçlarıyla işlenmesini kabul ediyorum.
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <div class="d-none">
+                                            <input type="text" id="genel-basvuru-form-botcheck-tr" value="" />
+                                        </div>
+                                        <div class="form-group center">
+                                            <button type="submit" id="btnSendForm" class="button" disabled="disabled" style="background-color:gray"> FORMU GÖNDER </button>
+                                        </div>
+                                        <input type="hidden" value="genel-basvuru-form-">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section id="page-title" class="page-title-mini">
+
+        <div class="container clearfix">
+            <h1>TK TAYLIGHT SEMİNER BAŞVURU FORMU</h1>
+            <span>Taylan Kümeli Tüm Seminerleri</span>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#">Seminerler</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Seminer Başvurusu Yap</li>
+            </ol>
+        </div>
+
+    </section>
+
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container clearfix">
+
+                <div class="form-widget">
+                    <div class="form-result"></div>
+
+                    <form asp-action="WorkShopApplicationForm" asp-controller="Workshop" method="post">
+
+
+                        <div class="row" id="genel-basvuru-formu-tr">
+
+                            @if (ViewBag.Result == "Success")
+                            {
+                                <div class="col-12 alert-success">
+                                    <p class="ql-color-yellow">Form başarıyla gönderildi.</p>
+                                </div>
+                            }
+                            else if (ViewBag.Result == "Error")
+                            {
+
+                                <div class="col-12 alert-warning">
+                                    <p class="ql-color-yellow">@ViewBag.Message</p>
+                                </div>
+                            }
+
+                            <div class="col-12">
+                                <h3>Lütfen katılmak istediğiniz seminer, atölye veya etkinliği, form tipini seçerek ilerleyiniz.</h3>
+                            </div>
+
+
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-tipi-tr">BAŞVURUDA BULUNMAK İSTEDİĞİNİZ FORM TİPİ</label>
+
+                                <select asp-items="ViewBag.WorkshopCategory" id="WsCategory" required="" class="sm-form-control">
+                                    <option value="">-- Seçiniz --</option>
+                                </select>
+
+
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-adi-tr">KATILMAK İSTEDİĞİNİZ SEMİNER/ATÖLYE/ETKİNLİK </label>
+                                <select asp-items="ViewBag.WorkshopEducation" id="WsEducation" class="sm-form-control" required="">
+                                    <option value="">-- Seçiniz --</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group col-md-4">
+                                <label for="genel-basvuru-form-tarih-tr">WORKSHOP</label>
+                                <select asp-for="WorkShopID" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
+                                    <option value="">-- Seçiniz --</option>
+                                </select>
+                            </div>
+
+                            <div class="divider divider-center"><i class="i-circled icon-apple-alt" style="background-color:#a1c41e"></i></div>
+
+                            <div class="col-lg-6">
+                                <div class="row checkout-form-billing">
+                                    <div class="col-12">
+                                        <h3>Kişisel Bilgiler</h3>
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>ADINIZ SOYADINIZ:</label>
+                                        <input type="text" asp-for="NameSurname" value="" placeholder="Lütfen isim soyisim giriniz" id="genel-basvuru-form-ad-soyad-tr" required="" class="form-control required" />
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>E-Posta:</label>
+                                        <input type="email" asp-for="Email" id="genel-basvuru-form-eposta-tr" class="form-control required" value="" required="" placeholder="username@domain.com" />
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>TELEFON (GSM):</label><br />
+                                        <input type="text" asp-for="Phone" id="genel-basvuru-form-tel-tr" class="form-control required" value="" required="" placeholder="Cep Telefonu No" />
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>CİNSİYET:</label>
+
+
+                                        <select asp-for="Gender" asp-items="ViewBag.Gender" required="" class="sm-form-control">
+                                            <option value="">-- Seçiniz --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>DOĞUM TARİHİ:</label><br>
+                                        <input type="date" asp-for="BirthDate" required="" id="genel-basvuru-form-dogum-tarihi-tr" value="" class="form-control required" />
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>MESLEĞİNİZ:</label><br />
+                                        <input type="text" asp-for="Job" required="" id="genel-basvuru-form-meslek-tr" class="form-control required" value="" placeholder="Mesleğiniz" />
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label>İRTİBAT ADRESİNİZ:</label>
+                                        <textarea asp-for="Address" required="" class="form-control required" id="genel-basvuru-form-posta-adresi-tr" rows="3"></textarea>
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label>BİZİ NEREDEN DUYDUNUZ?</label>
+                                        <select asp-for="HearAboutusID" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
+                                            <option value="">-- Seçiniz --</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mt-5 mt-lg-0">
+                                <div class="row checkout-form-shipping">
+                                    <div class="col-12">
+                                        <h3>Sizi Daha Yakından Tanıyalım</h3>
+                                    </div>
+                                    <div class="col-12 form-group">
+                                        <label>KATILIM AMACINIZ / BEKLENTİNİZ NEDİR?</label>
+                                        <textarea asp-for="AttendancePurpose" required="" class="form-control" id="genel-basvuru-form-amac-tr" rows="3" placeholder="Lütfen bir kaç cümle ile seminer, online eğitim ve atölyelerimize katılım amacınızı ve beklentinizi yazınız."></textarea>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>YAŞAM TARZINIZDAN MEMNUN MUSUNUZ?</label>
+                                        <select asp-for="LifeContented" required="" asp-items="ViewBag.Case" class="sm-form-control">
+                                            <option value="">-- Seçiniz --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6 form-group">
+                                        <label>KİLO VERMEK / ALMAK İÇİN DAHA ÖNCE HİÇ DİYET YAPTINIZ MI?</label>
+                                        <select asp-for="Diet" required="" asp-items="ViewBag.Case" class="sm-form-control">
+                                            <option value="">-- Seçiniz --</option>
+                                        </select>
+                                    </div>
+
+
+
+
+                                    <div class="col-12 form-group">
+                                        <label>NOTLAR:</label>
+                                        <textarea asp-for="Note" required="" class="form-control" id="genel-basvuru-form-notlar-tr" rows="3" placeholder="Lütfen formda eksik bulduğunuz ve belirtmek istediğiniz konuları buraya not ediniz."></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input asp-for="IsApprove" id="IsApprove" class="form-check-input" type="checkbox">
+                                            <label class="form-check-label" for="IsApprove">
+                                                Kişisel Verilerin Korunması ve İşlenmesi Aydınlatma Metni’ni okudum ve bu kapsamda kişisel verilerimin, şirket operasyonel faaliyetlerinin yürütülmesi, strateji planlama, iş ortakları yönetimi, müşteriye dokunan süreç ve operasyonların yürütülmesi, şirket iç operasyonlarının yürütülmesi, hukuksal & teknik ve idari sonucu olan faaliyetlerin gerçekleştirilmesi, finansal operasyonların yürütülmesi amaçlarıyla işlenmesini kabul ediyorum.
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <div class="d-none">
+                                            <input type="text" id="genel-basvuru-form-botcheck-tr" value="" />
+                                        </div>
+                                        <div class="form-group center">
+                                            <button type="submit" id="btnSendForm" class="button" disabled="disabled" style="background-color:gray"> FORMU GÖNDER </button>
+                                        </div>
+                                        <input type="hidden" value="genel-basvuru-form-">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+}
+
+
+
+<script src="~/Tk_FrontEnd/js/jquerymin.js"></script>
+
+<script>
+
+    $("#IsApprove").change(function () {
+        if (this.checked) {
+            $("#btnSendForm").removeAttr("disabled");
+            $("#btnSendForm").css("background-color", "");
+        } else {
+            $("#btnSendForm").attr("disabled", true);
+            $("#btnSendForm").css("background-color", "gray");
+        }
+    })
+
+    $("#WsCategory").change(function () {
+        var WsCategoryID = $("#WsCategory").val();
+        var url = "/Workshop/GetWorkshopEducation";
+
+
+        $.getJSON(url, { WsCategoryID: WsCategoryID }, function (data) {
+            var item = "";
+            $("#WsEducation").empty();
+            item += '<option value="">-- Seçiniz --</option>'
+
+            for (let ws of data) {
+                item += '<option value="' + ws.Value + '">' + ws.Text + '</option>'
+            }
+
+            $("#WsEducation").html(item);
+        });
+    });
+
+
+    $("#WsEducation").change(function () {
+        var WsEducationID = $("#WsEducation").val();
+        var url = "/Workshop/GetWorkshop";
+
+
+        $.getJSON(url, { WsEducationID: WsEducationID }, function (data) {
+            var item = "";
+            $("#WorkShopID").empty();
+            item += '<option value="">-- Seçiniz --</option>'
+
+            for (let ws of data) {
+                item += '<option value="' + ws.Value + '">' + ws.Text + '</option>'
+            }
+
+            $("#WorkShopID").html(item);
+        });
+    });
+</script>
