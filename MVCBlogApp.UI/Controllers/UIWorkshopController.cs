@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MVCBlogApp.Application.Abstractions.Services;
+using MVCBlogApp.Application.Features.Commands.UIWorkShop.CreateWorkShopApplicationForm;
 using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWhereWorkShop;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWorkshop;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWorkshopEducation;
 using MVCBlogApp.Application.Features.Queries.IUWorkShop.WorkShopApplicationForm;
 
 namespace MVCBlogApp.UI.Controllers
@@ -82,6 +85,47 @@ namespace MVCBlogApp.UI.Controllers
                 ViewBag.WorkshopCategory = new SelectList(response.WorkshopCategories, "Id", "WscategoryName", response.workshopCategoryID.ToString());
                 ViewBag.WorkshopEducation = new SelectList(response.WorkshopEducations, "Id", "WsEducationName", response.workshopEducationID.ToString());
                 ViewBag.Workshop = new SelectList(response.Workshops, "Id", "Title", request.id.ToString());
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetWorkshopEducation(int WsCategoryID)
+        {
+            GetWorkshopEducationQueryRequest request = new() { WsCategoryID = WsCategoryID };
+            GetWorkshopEducationQueryResponse response = await _mediator.Send(request);
+            var citylist = new SelectList(response.WorkshopEducations, "Id", "WsEducationName");
+            return Json(citylist);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetWorkshop(int WsEducationID)
+        {
+            GetWorkshopQueryRequest request = new()
+            {
+                WsEducationID = WsEducationID
+            };
+            GetWorkshopQueryResponse response = await _mediator.Send(request);
+            var citylist = new SelectList(response.Workshops, "Id", "Title");
+            return Json(citylist);
+        }
+
+        [HttpPost]
+        [Route("seminer-basvuru-formu/{id?}")]
+        [Route("seminar-application-form/{id?}")]
+        public async Task<IActionResult> WorkShopApplicationForm(CreateWorkShopApplicationFormCommandRequest request)
+        {
+            CreateWorkShopApplicationFormCommandResponse response = await _mediator.Send(request);
+
+            if (response.State)
+            {
+                ViewBag.Result = "Success";
+            }
+            else
+            {
+                ViewBag.Result = "Error";
+                return View(request);
             }
 
             return View();

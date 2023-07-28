@@ -1,4 +1,4 @@
-﻿@model MVCBlogApp.Application.ViewModels.VM_WorkShopApplicationFormModel
+﻿@model MVCBlogApp.Application.ViewModels.VM_WorkShopApplicationForm
 @using MVCBlogApp.Application.Abstractions.Services;
 @inject IOperationService OperationService
 @{
@@ -31,7 +31,7 @@
                 <div class="form-widget">
                     <div class="form-result"></div>
 
-                    <form asp-action="WorkShopApplicationForm" asp-controller="Workshop" method="post">
+                    <form asp-action="WorkShopApplicationForm" asp-controller="UIWorkshop" method="post">
 
 
                         <div class="row" id="genel-basvuru-formu-tr">
@@ -75,7 +75,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="genel-basvuru-form-tarih-tr">WORKSHOP</label>
-                                <select asp-for="WorkShopID" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
+                                <select asp-for="WorkShopId" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
                                     <option value="">-- select --</option>
                                 </select>
                             </div>
@@ -128,7 +128,7 @@
 
                                     <div class="col-12 form-group">
                                         <label>WHERE DID YOU HEAR ABOUT US?</label>
-                                        <select asp-for="HearAboutusID" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
+                                        <select asp-for="HearAboutusId" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
                                             <option value="">-- select --</option>
                                         </select>
                                     </div>
@@ -169,7 +169,7 @@
 
                                     <div class="col-12">
                                         <div class="form-check">
-                                            <input asp-for="IsApprove" id="IsApprove" class="form-check-input" type="checkbox">
+                                            <input name="IsApprove" id="IsApprove" class="form-check-input" type="checkbox" data-val="true" value="true">
                                             <label class="form-check-label" for="IsApprove">
                                                 Kişisel Verilerin Korunması ve İşlenmesi Aydınlatma Metni’ni okudum ve bu kapsamda kişisel verilerimin, şirket operasyonel faaliyetlerinin yürütülmesi, strateji planlama, iş ortakları yönetimi, müşteriye dokunan süreç ve operasyonların yürütülmesi, şirket iç operasyonlarının yürütülmesi, hukuksal & teknik ve idari sonucu olan faaliyetlerin gerçekleştirilmesi, finansal operasyonların yürütülmesi amaçlarıyla işlenmesini kabul ediyorum.
                                             </label>
@@ -221,7 +221,7 @@ else
                 <div class="form-widget">
                     <div class="form-result"></div>
 
-                    <form asp-action="WorkShopApplicationForm" asp-controller="Workshop" method="post">
+                    <form asp-action="WorkShopApplicationForm" asp-controller="UIWorkshop" method="post">
 
 
                         <div class="row" id="genel-basvuru-formu-tr">
@@ -265,7 +265,7 @@ else
 
                             <div class="form-group col-md-4">
                                 <label for="genel-basvuru-form-tarih-tr">WORKSHOP</label>
-                                <select asp-for="WorkShopID" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
+                                <select asp-for="WorkShopId" asp-items="ViewBag.Workshop" id="WorkShopID" required="" class="sm-form-control">
                                     <option value="">-- Seçiniz --</option>
                                 </select>
                             </div>
@@ -315,7 +315,7 @@ else
 
                                     <div class="col-12 form-group">
                                         <label>BİZİ NEREDEN DUYDUNUZ?</label>
-                                        <select asp-for="HearAboutusID" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
+                                        <select asp-for="HearAboutusId" required="" asp-items="ViewBag.HearAboutUs" class="sm-form-control">
                                             <option value="">-- Seçiniz --</option>
                                         </select>
                                     </div>
@@ -356,7 +356,7 @@ else
 
                                     <div class="col-12">
                                         <div class="form-check">
-                                            <input asp-for="IsApprove" id="IsApprove" class="form-check-input" type="checkbox">
+                                            <input name="IsApprove" id="IsApprove" class="form-check-input" type="checkbox" data-val="true" value="true">
                                             <label class="form-check-label" for="IsApprove">
                                                 Kişisel Verilerin Korunması ve İşlenmesi Aydınlatma Metni’ni okudum ve bu kapsamda kişisel verilerimin, şirket operasyonel faaliyetlerinin yürütülmesi, strateji planlama, iş ortakları yönetimi, müşteriye dokunan süreç ve operasyonların yürütülmesi, şirket iç operasyonlarının yürütülmesi, hukuksal & teknik ve idari sonucu olan faaliyetlerin gerçekleştirilmesi, finansal operasyonların yürütülmesi amaçlarıyla işlenmesini kabul ediyorum.
                                             </label>
@@ -405,7 +405,7 @@ else
 
     $("#WsCategory").change(function () {
         var WsCategoryID = $("#WsCategory").val();
-        var url = "/Workshop/GetWorkshopEducation";
+        var url = "/UIWorkshop/GetWorkshopEducation";
 
 
         $.getJSON(url, { WsCategoryID: WsCategoryID }, function (data) {
@@ -424,7 +424,7 @@ else
 
     $("#WsEducation").change(function () {
         var WsEducationID = $("#WsEducation").val();
-        var url = "/Workshop/GetWorkshop";
+        var url = "/UIWorkshop/GetWorkshop";
 
 
         $.getJSON(url, { WsEducationID: WsEducationID }, function (data) {

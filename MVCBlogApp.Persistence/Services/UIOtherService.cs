@@ -5,7 +5,10 @@ using MVCBlogApp.Application.Features.Commands.ConsultancyForms.ConsultancyForms
 using MVCBlogApp.Application.Features.Commands.Contact.ContactCreate;
 using MVCBlogApp.Application.Features.Commands.Test.BMICalculateCreate;
 using MVCBlogApp.Application.Features.Commands.Test.OptimumCalculateCreate;
+using MVCBlogApp.Application.Features.Commands.UIWorkShop.CreateWorkShopApplicationForm;
 using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWhereWorkShop;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWorkshop;
+using MVCBlogApp.Application.Features.Queries.IUWorkShop.GetWorkshopEducation;
 using MVCBlogApp.Application.Features.Queries.IUWorkShop.WorkShopApplicationForm;
 using MVCBlogApp.Application.Features.Queries.Test.BMICalculate;
 using MVCBlogApp.Application.Features.Queries.Test.OptimumCalculate;
@@ -45,6 +48,7 @@ using MVCBlogApp.Application.Repositories.ResultBMI;
 using MVCBlogApp.Application.Repositories.ResultOptimum;
 using MVCBlogApp.Application.Repositories.Status;
 using MVCBlogApp.Application.Repositories.Workshop;
+using MVCBlogApp.Application.Repositories.WorkShopApplicationForm;
 using MVCBlogApp.Application.Repositories.WorkshopCategory;
 using MVCBlogApp.Application.Repositories.WorkshopEducation;
 using MVCBlogApp.Application.Repositories.WorkshopType;
@@ -86,6 +90,7 @@ namespace MVCBlogApp.Persistence.Services
         private readonly IWorkshopCategoryReadRepository _workshopCategoryReadRepository;
         private readonly IHearAboutUSReadRepository _hearAboutUSReadRepository;
         private readonly ICaseReadRepository _caseReadRepository;
+        private readonly IWorkShopApplicationFormWriteRepository _workshopApplicationFormWriteRepository;
 
         public UIOtherService(
             IOperationService operationService,
@@ -117,7 +122,8 @@ namespace MVCBlogApp.Persistence.Services
             IWorkshopTypeReadRepository workshopTypeReadRepository,
             IWorkshopCategoryReadRepository workshopCategoryReadRepository,
             IHearAboutUSReadRepository hearAboutUSReadRepository,
-            ICaseReadRepository caseReadRepository)
+            ICaseReadRepository caseReadRepository,
+            IWorkShopApplicationFormWriteRepository workshopApplicationFormWriteRepository)
         {
             _operationService = operationService;
             _statusReadRepository = statusReadRepository;
@@ -149,6 +155,7 @@ namespace MVCBlogApp.Persistence.Services
             _workshopCategoryReadRepository = workshopCategoryReadRepository;
             _hearAboutUSReadRepository = hearAboutUSReadRepository;
             _caseReadRepository = caseReadRepository;
+            _workshopApplicationFormWriteRepository = workshopApplicationFormWriteRepository;
         }
 
 
@@ -1264,6 +1271,117 @@ namespace MVCBlogApp.Persistence.Services
             }
 
 
+        }
+
+        public async Task<GetWorkshopEducationQueryResponse> GetWorkshopEducationAsync(GetWorkshopEducationQueryRequest request)
+        {
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_WorkshopEducation> vM_WorkshopEducations = await _workshopEducationReadRepository.GetWhere(x => x.WscategoryId == request.WsCategoryID && x.StatusId == statusId)
+                .Select(x => new VM_WorkshopEducation
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    WscategoryId = x.WscategoryId,
+                    WsEducationName = x.WsEducationName
+                }).ToListAsync();
+
+            return new()
+            {
+                WorkshopEducations = vM_WorkshopEducations
+            };
+        }
+
+        public async Task<GetWorkshopQueryResponse> GetWorkshopAsync(GetWorkshopQueryRequest request)
+        {
+            int statusId = await _statusReadRepository.GetWhere(x => x.StatusName == "Aktif").Select(x => x.Id).FirstAsync();
+
+            List<VM_Workshop> vM_Workshops = await _workshopReadRepository.GetWhere(x => x.WseducationId == request.WsEducationID && x.StatusId == statusId)
+                .Select(x => new VM_Workshop
+                {
+                    Id = x.Id,
+                    LangId = x.LangId,
+                    StatusId = x.StatusId,
+                    WseducationId = x.WseducationId,
+                    Title = x.Title,
+                    WstypeId = x.WstypeId,
+                    NavigationId = x.NavigationId
+                }).ToListAsync();
+
+            return new()
+            {
+                Workshops = vM_Workshops
+            };
+        }
+
+        public async Task<CreateWorkShopApplicationFormCommandResponse> CreateWorkShopApplicationFormAsync(CreateWorkShopApplicationFormCommandRequest request)
+        {
+            await _workshopApplicationFormWriteRepository.AddAsync(new()
+            {
+                Address = request.Address,
+                AttendancePurpose = request.AttendancePurpose,
+                BirthDate = request.BirthDate,
+                CreateDateTime = DateTime.Now,
+                Diet = request.Diet,
+                Email = request.Email,
+                Gender = request.Gender,
+                HearAboutusId = request.HearAboutusId,
+                IsApprove = request.IsApprove,
+                Job = request.Job,
+                LifeContented = request.LifeContented,
+                NameSurname = request.NameSurname,
+                Note = request.Note,
+                Phone = request.Phone,
+                WorkShopId = request.WorkShopId
+            });
+
+            await _workshopApplicationFormWriteRepository.SaveAsync();
+
+
+            string body = $@"
+                    {request.NameSurname} İsimli Danışan yeni bir seminer başvuru formu gönderdi. 
+                    <br>
+                    <br>
+                    <b>WorkShop:</b> {_workshopReadRepository.GetWhere(x=> x.Id == request.WorkShopId).Select(x=> x.Title).First()}
+                    <br>
+                    <b>Adı Soyadı:</b> {request.NameSurname}
+                    <br>
+                    <b>Mail Adresi:</b> {request.Email}
+                    <br>
+                    <b>Telefon Numarası:</b> {request.Phone}
+                    <br>
+                    <b>Doğum Tarihi:</b> {request.BirthDate.ToString("dd/MM/yyyy")}
+                    <br>
+                    <b>Cinsiyeti:</b> {_gendersReadRepository.GetWhere(x=> x.Id == request.Gender).Select(x=> x.Gender).First()}
+                    <br>
+                    <b>Mesleği:</b> {request.Job}
+                    <br>
+                    <b>Adresi:</b> {request.Address}
+                    <br>
+                    <b>Bizi Nereden Duydunuz:</b> {_hearAboutUSReadRepository.GetWhere(x=> x.Id == request.HearAboutusId).Select(x=> x.HearAboutUsname).First()}
+                    <br>
+                    <b>Katılım Amacınız / Beklentiniz Nedir:</b> {request.AttendancePurpose}
+                    <br>
+                    <b>Yaşam Tarzından Memnun Musunuz:</b> {_caseReadRepository.GetWhere(x=> x.Id == request.LifeContented).Select(x=> x.CaseName).First()}
+                    <br>
+                    <b>Kilo Vermek / Almak İçin Daha Önce Hiç Diyet Yaptınız Mı:</b> {_caseReadRepository.GetWhere(x => x.Id == request.Diet).Select(x => x.CaseName).First()}
+                    <br>
+                    <b>İçerik:</b> <br> {request.Note}
+                    ";
+
+            await _mailService.SendMailAsync(
+                "cansu@taylankumeli.com,info@taylankumeli.com,ceren@taylankumeli.com,karahasan.ayse@gmail.com,udavutoglu@yahoo.com",
+                "Tarafınıza Yeni Bir Seminer Başvuru Formu Gönderildi",
+                body,
+                true
+                );
+
+            return new()
+            {
+                Message = "Kayıt işlemi başarıyla yapılmıştır",
+                State = true
+            };
         }
 
 
