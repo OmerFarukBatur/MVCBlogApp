@@ -30,7 +30,7 @@ namespace MVCBlogApp.UI.Controllers
             _mediator = mediator;
             _operationService = operationService;
         }
-
+        [Route("Admin/Index")]
         public async Task<IActionResult> Index(GetDashboardItemListQueryRequest request)
         {
             GetDashboardItemListQueryResponse response = await _mediator.Send(request);

@@ -47,28 +47,6 @@
     <Folder Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\upload\" />
     <Folder Include="wwwroot\UI\images\_taylan\form\" />
     <Folder Include="wwwroot\UI\images\_taylan\icons\" />
-    <Folder Include="wwwroot\Upload\article-files\" />
-    <Folder Include="wwwroot\Upload\banner-files\" />
-    <Folder Include="wwwroot\Upload\blog-files\" />
-    <Folder Include="wwwroot\Upload\book-files\" />
-    <Folder Include="wwwroot\Upload\carousel-files\" />
-    <Folder Include="wwwroot\Upload\egitmenler\" />
-    <Folder Include="wwwroot\Upload\fixBmh-files\" />
-    <Folder Include="wwwroot\Upload\fixPulse-files\" />
-    <Folder Include="wwwroot\Upload\form\" />
-    <Folder Include="wwwroot\Upload\haber\" />
-    <Folder Include="wwwroot\Upload\image-files\" />
-    <Folder Include="wwwroot\Upload\kitap\" />
-    <Folder Include="wwwroot\Upload\kurumsal_wellbeing\" />
-    <Folder Include="wwwroot\Upload\nefes\" />
-    <Folder Include="wwwroot\Upload\ourteam-files\" />
-    <Folder Include="wwwroot\Upload\press-files\" />
-    <Folder Include="wwwroot\Upload\profile-image-files\" />
-    <Folder Include="wwwroot\Upload\reference-files\" />
-    <Folder Include="wwwroot\Upload\seminarVisuals-files\" />
-    <Folder Include="wwwroot\Upload\taylaK-logo-files\" />
-    <Folder Include="wwwroot\Upload\wellaging\" />
-    <Folder Include="wwwroot\Upload\wellbeing\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -148,7 +126,6 @@
     <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\f9\07e44b3330e3ed1763e42746a2943234adb94d" />
     <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\fd\4bbccdf1643f4ff5022fbc59b82546e259317e" />
     <None Include="wwwroot\UI\assets\plugins\custom\ckeditor\plugins\zsmanager\.git\objects\fd\572489fd9d0a61d98bfcd5a4be15b0f0fa652d" />
-    <None Include="wwwroot\Upload\icons\iconalt.svg" />
   </ItemGroup>
 
 </Project>
