@@ -1134,7 +1134,8 @@ namespace MVCBlogApp.Persistence.Services
                     MetaTitle = y.MetaTitle,
                     OrderNo = y.OrderNo,
                     Type = y.Type,
-                    UrlRoot = y.UrlRoot
+                    UrlRoot = y.UrlRoot,
+                    NavigationName = y.NavigationName                    
                 }).ToListAsync();
 
             navigations.AddRange(newNavigation.Select(y => new VM_Navigation
